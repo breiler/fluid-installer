@@ -405,7 +405,7 @@ programButton.onclick = async () => {
 addFile.onclick();
 
 function showRelease(release) {
-    console.log(release.
+    console.log(release.name);
 }
 
 document.onload = async () => {

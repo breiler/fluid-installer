@@ -15,7 +15,7 @@
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </head>
-    <body>
+    <body onload="prepPage()">
         <h2 align="center"><p><img src="./assets/FluidNC.svg" width="200" height="70" style="vertical-align:middle"></img>&nbsp;Installer</p></h1>
         <div id="safariErr" style="display:none"><p align="center" style="color:red">This tool is not supported on Safari browser!</p>
         </div>
@@ -29,6 +29,10 @@
                     <option value="460800">460800</option>
                     <option value="230400">230400</option>
                     <option value="115200">115200</option>
+                </select>
+
+                <label for="releases" id="lblReleases">Release:</label>
+                <select name="releases" id="releases">
                 </select>
 
                 <input class="btn btn-info btn-sm" type="button" id="connectButton" value="Connect" />

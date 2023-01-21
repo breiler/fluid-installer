@@ -276,6 +276,7 @@ disconnectButton.onclick = async () => {
   filesDiv.style.display = 'none';
   alertDiv.style.display = 'none';
   consoleDiv.style.display = 'initial';
+  lblBaudrate.style.display = 'initial';
   cleanUp();
 };
 
@@ -402,3 +403,17 @@ programButton.onclick = async () => {
 };
 
 addFile.onclick();
+
+function showRelease(release) {
+    console.log(release.
+}
+
+function prepPage() {
+    fetch("https://api.github.com/repos/bdring/FluidNC/releases")
+    .then(res => res.json())
+    .then(releases =>
+        releases.forEach(showRelease);
+    )
+    .catch(err => { throw err });
+}
+

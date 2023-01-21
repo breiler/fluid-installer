@@ -408,12 +408,11 @@ function showRelease(release) {
     console.log(release.
 }
 
-function prepPage() {
+document.onload = async () => {
     fetch("https://api.github.com/repos/bdring/FluidNC/releases")
     .then(res => res.json())
     .then(releases =>
         releases.forEach(showRelease);
     )
     .catch(err => { throw err });
-}
-
+};

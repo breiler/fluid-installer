@@ -404,15 +404,11 @@ programButton.onclick = async () => {
 
 addFile.onclick();
 
-function showRelease(release) {
-    console.log(release.name);
-}
-
 document.onload = async () => {
     fetch("https://api.github.com/repos/bdring/FluidNC/releases")
     .then(res => res.json())
     .then(releases =>
-        releases.forEach(showRelease);
+        releases.forEach(release => console.log(release.name);
     )
     .catch(err => { throw err });
 };

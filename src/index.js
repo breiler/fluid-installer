@@ -16,8 +16,7 @@ const tableBody = document.getElementById('tableBody');
 const table = document.getElementById('fileTable');
 const alertDiv = document.getElementById('alertDiv');
 
-// import { Transport } from './cp210x-webusb.js'
-import * as esptooljs from "./bundle.js";
+import * as esptooljs from "esptool-js";
 const ESPLoader = esptooljs.ESPLoader;
 const Transport = esptooljs.Transport;
 
@@ -407,8 +406,6 @@ addFile.onclick();
 document.onload = async () => {
     fetch("https://api.github.com/repos/bdring/FluidNC/releases")
     .then(res => res.json())
-    .then(releases =>
-        releases.forEach(release => console.log(release.name);
-    )
+    .then(releases => releases.forEach(release => console.log(release.name)))
     .catch(err => { throw err });
 };

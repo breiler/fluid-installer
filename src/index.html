@@ -9,11 +9,23 @@
             href="https://fonts.googleapis.com/css?family=Orbitron"
             rel="stylesheet"
         />
-        <link rel="icon" href="favicon.ico" />
+        <!--link rel="icon" href="src/favicon.ico" /-->
          <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+         <script src="./index.js" type="module"></script>
+         <script>
+             // Safari 3.0+ "[object HTMLElementConstructor]"
+             var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+ 
+             if(isSafari)
+             {
+                document.getElementById("safariErr").style.display = "inline";
+                document.getElementById("main").style.display = "none";
+             }
+         </script> 
     </head>
     <body>
         <h2 align="center"><p><img src="./assets/FluidNC.svg" width="200" height="70" style="vertical-align:middle"></img>&nbsp;Installer</p></h1>
@@ -75,16 +87,5 @@
             </div>
             <div id="terminal"></div>
         </div>
-        <script src="index.js" type="module"></script>
-        <script>
-            // Safari 3.0+ "[object HTMLElementConstructor]"
-            var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
-
-            if(isSafari)
-            {
-               document.getElementById("safariErr").style.display = "inline";
-               document.getElementById("main").style.display = "none";
-            }
-        </script>
     </body>
 </html>

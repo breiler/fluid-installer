@@ -1,5 +1,7 @@
 import { useContext, useState } from "react";
-import { AppContext, Status } from "../../app";
+import { AppContext } from "../../app";
+import Status from "../../model/status";
+
 
 const Connection = ({ onConnect }) => {
   const { baudRate, setBaudRate, chip, status} =

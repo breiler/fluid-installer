@@ -1,45 +1,15 @@
-import { createContext, useState, useRef } from "react";
-import Header from "./components/header";
-import Connection from "./panels/connection";
+import { createContext, useState } from "react";
 import { ESPLoader, Transport } from "esptool-js";
-import Firmware from "./panels/firmware";
 import JSZip from "jszip";
 import CryptoJS from "crypto-js";
-import Progress from "./panels/progress";
-import Done from "./panels/done";
+import Header from "./components/header/header";
+import Connection from "./panels/connection/connection";
+import Progress from "./panels/progress/progress";
+import Done from "./panels/done/done";
+import Firmware from "./panels/firmware/firmware";
+import Status from "./model/status";
 
-export const Status = {
-  DISCONNECTED: "disconnected",
-  CONNECTING: "connecting",
-  CONNECTED: "connected",
-  DOWNLOADING: "downloading",
-  EXTRACTING: "extracting",
-  FLASHING: "flashing",
-  DONE: "done",
-  ERROR: "error",
-};
-
-function convertUint8ArrayToBinaryString(u8Array) {
-  var i,
-    len = u8Array.length,
-    b_str = "";
-  for (i = 0; i < len; i++) {
-    b_str += String.fromCharCode(u8Array[i]);
-  }
-  return b_str;
-}
-
-const isSafari = () => {
-  return (
-    /constructor/i.test(window.HTMLElement) ||
-    (function (p) {
-      return p.toString() === "[object SafariRemoteNotification]";
-    })(
-      !window["safari"] ||
-        (typeof safari !== "undefined" && safari.pushNotification)
-    )
-  );
-};
+import { isSafari, convertUint8ArrayToBinaryString } from "./utils";
 
 let espLoaderTerminal = {
   clean() {
@@ -76,10 +46,10 @@ const App = () => {
   const [status, setStatus] = useState(Status.DISCONNECTED);
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState({
-    currentFile: 0,
-    count: 0,
+    fileIndex: 2,
+    fileCount: 4,
     fileName: "Firmware",
-    sent: 0,
+    fileProgress: 50,
   });
 
   const onConnect = async () => {
@@ -137,7 +107,11 @@ const App = () => {
     );
 
     setStatus(Status.DOWNLOADING);
-    fetch(asset.browser_download_url)
+    fetch(asset.url, {
+      headers: {
+        "Accept": "application/octet-stream",
+      }
+    })
       .then(function (response) {
         // 2) filter on 200 OK
         if (response.status === 200 || response.status === 0) {
@@ -207,10 +181,10 @@ const App = () => {
                   fileName = "Partitions";
                 }
                 setProgress({
-                  currentFile: fileIndex,
-                  count: fileArray.length,
+                  fileIndex: fileIndex,
+                  fileCount: fileArray.length,
                   fileName: fileName,
-                  sent: Math.round((written / total) * 100),
+                  fileProgress: Math.round((written / total) * 100),
                 });
                 console.log(fileIndex, written, total);
               },

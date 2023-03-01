@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { AppContext, Status } from "../../app";
+import { AppContext } from "../../app";
+import Status from "../../model/status";
+
 import * as classes from "./firmware.module.css";
 
 const Firmware = ({ onInstallFirmware, onDisconnect }) => {

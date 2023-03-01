@@ -20,9 +20,20 @@
   },
   "homepage": "https://github.com/breiler/fluid-installer#readme",
   "devDependencies": {
-    "parcel": "^2.8.3"
+    "@parcel/transformer-sass": "^2.8.3",
+    "buffer": "^5.7.1",
+    "parcel": "^2.8.3",
+    "prettier": "2.8.4",
+    "process": "^0.11.10"
   },
   "dependencies": {
-    "esptool-js": "^0.2.1"
+    "bootstrap": "^5.2.3",
+    "crypto-js": "^4.1.1",
+    "esptool-js": "^0.2.1",
+    "jszip": "^3.10.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^8.0.5",
+    "xterm": "^5.1.0"
   }
 }

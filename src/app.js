@@ -108,6 +108,7 @@ const App = () => {
 
     setStatus(Status.DOWNLOADING);
     fetch(asset.url, {
+      mode: "no-cors",
       headers: {
         "Accept": "application/octet-stream",
       }

@@ -1,7 +1,18 @@
-.logo {
-    width: 100px;
-}
-
 .nav {
     margin-bottom: 20px;
+}
+
+.nav a {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.nav img {
+    padding-bottom: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.logo {
+    width: 100px;
 }

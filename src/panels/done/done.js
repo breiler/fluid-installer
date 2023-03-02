@@ -1,11 +1,12 @@
-const Done = () => {
+import { Button, Spinner } from "../../components";
+
+const Done = ({onContinue}) => {
   return (
-    <div className="card">
-      <div className="card-body">
-        <h2>Done</h2>
-        <p>The controller has been successfully installed.</p>
-      </div>
-    </div>
+    <>
+      <h2>Done</h2>
+      <p>The controller has been successfully installed and is ready to be used.</p>
+      <Button onClick={onContinue}>Continue</Button>
+    </>
   );
 };
 

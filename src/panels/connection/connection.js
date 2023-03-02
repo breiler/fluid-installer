@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../../app";
+import { Button } from "../../components";
 import Status from "../../model/status";
 import * as classes from "./connection.module.css";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
 
 const Connection = ({ onConnect }) => {
-  const { baudRate, setBaudRate, chip, status} =
-    useContext(AppContext);
+  const { baudRate, setBaudRate, status } = useContext(AppContext);
   const { showAdvanced, setShowAdvanced } = useState(false);
 
   return (
@@ -15,11 +15,20 @@ const Connection = ({ onConnect }) => {
       {(status === Status.DISCONNECTED || status === Status.CONNECTING) && (
         <>
           <h2>FluidNC Web Installer</h2>
-          <p>This tool will make it easy to install or upgrade FluidNC on your controller.<br/>Plug in your controller and press Connect to continue.</p>
-          <p><img className={classes.image} src={connectImageUrl} alt="Connect" /></p>
+          <p>
+            This tool will make it easy to install or upgrade FluidNC on your
+            controller. Plug in your controller and press Connect to continue.
+          </p>
+
+          <div className="mx-auto" style={{ textAlign: "center" }}>
+            <img
+              className={classes.image}
+              src={connectImageUrl}
+              alt="Connect"
+            />
+          </div>
         </>
       )}
-
 
       {status !== Status.CONNECTED && showAdvanced && (
         <div>
@@ -38,24 +47,17 @@ const Connection = ({ onConnect }) => {
       )}
 
       {status !== Status.CONNECTED && (
-        <button
-          className="btn btn-primary btn-lg"
-          type="button"
-          onClick={onConnect}
-          disabled={status === Status.CONNECTING}
-        >
-          {status === Status.CONNECTING && (
-            <>
-              <span
-                className="spinner-border spinner-border-sm"
-                role="status"
-                aria-hidden="true"
-              />{" "}
-              Connecting
-            </>
-          )}
-          {status === Status.DISCONNECTED && "Connect"}
-        </button>
+        <div className="mx-auto" style={{ textAlign: "center" }}>
+          <Button
+            style={{ width: "460px", marginRight: "0px" }}
+            onClick={onConnect}
+            disabled={status === Status.CONNECTING}
+            loading={status === Status.CONNECTING}
+          >
+            {status === Status.CONNECTING && "Connecting"}
+            {status === Status.DISCONNECTED && "Connect"}
+          </Button>
+        </div>
       )}
     </>
   );

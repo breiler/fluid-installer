@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="539"
-   height="253.701"
-   viewBox="0 0 142.61082 67.125479"
+   width="460"
+   height="240"
+   viewBox="0 0 121.70898 63.500399"
    version="1.1"
    id="svg5"
    xml:space="preserve"
@@ -24,15 +24,15 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="2.6511273"
-     inkscape:cx="235.37157"
-     inkscape:cy="174.07689"
+     inkscape:zoom="1.3249068"
+     inkscape:cx="235.48825"
+     inkscape:cy="179.25789"
      inkscape:window-width="1431"
      inkscape:window-height="989"
      inkscape:window-x="1129"
-     inkscape:window-y="162"
+     inkscape:window-y="134"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g683" /><defs
+     inkscape:current-layer="layer1" /><defs
      id="defs2"><style
        id="style605">.a{fill:#ffffff;}.b{fill:#211715;}.c{fill:#88c5e9;}.d{fill:#fec578;}.e{fill:#74c66d;}.f{fill:#cfcfcf;}</style><style
        type="text/css"
@@ -53,10 +53,11 @@
   </style></defs><g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1"><g
+     id="layer1"
+     transform="translate(-2.7958102,-1.9970073)"><g
        style="fill:#000000;stroke:#000000;stroke-width:6.85882;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
        id="g603"
-       transform="matrix(0.03662096,0,0,0.04344535,104.80777,33.067782)"><g
+       transform="matrix(0.03662096,0,0,0.04344535,105.33694,33.067782)"><g
          id="g581"
          style="stroke:#000000;stroke-width:6.85882;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1">
 	<g
@@ -131,7 +132,7 @@
 	</g>
 </g></g><g
        id="g683"
-       transform="matrix(0.25472013,0,0,0.29165063,8.4821904,-16.966318)"
+       transform="matrix(0.25472013,0,0,0.29165063,9.0113601,-16.966318)"
        style="stroke-width:0.726854"><path
          class="a"
          d="m 14.668554,182.02221 c -0.013,-32.511 -0.03,-75.6 -0.04,-103.110997 a 9.738,9.738 0 0 1 9.742,-9.743 c 41.976,-0.013 163.607996,-0.054 213.378996,-0.071 a 9.744,9.744 0 0 1 9.75,9.746 c 0,36.899997 0.016,96.834997 0.03,135.017997 7.708,10.832 24.245,33.628 32.332,47.437 a 8.931,8.931 0 0 1 1.219,4.525 c 0,1.409 -0.03,3.115 -0.03,4.876 a 6.766,6.766 0 0 1 -6.765,6.757 H -13.245446 a 5.641,5.641 0 0 1 -5.642,-5.639 c 0,-8.7 -0.032,2.554 -0.032,-5.982 a 8.984,8.984 0 0 1 1.226,-4.545 c 8.1750004,-13.959 24.7780004,-37.473 32.378,-48.142 -0.007,-7.87 -0.011,-18.729 -0.016,-31.126 z"
@@ -178,7 +179,7 @@
    id="CorelCorpID_0Corel-Layer" />
   <polygon
    class="fil0"
-   points="0,803 78,331 400,331 384,424 176,424 161,520 348,521 332,613 145,613 114,803 "
+   points="400,331 384,424 176,424 161,520 348,521 332,613 145,613 114,803 0,803 78,331 "
    id="polygon1807"
    style="stroke-width:3.76872" />
   <polygon
@@ -203,7 +204,7 @@
    style="stroke-width:3.76872" />
   <polygon
    class="fil0"
-   points="2258,326 2398,598 2402,598 2447,326 2561,326 2482,798 2386,798 2244,525 2241,525 2195,798 2081,798 2159,326 "
+   points="2241,525 2195,798 2081,798 2159,326 2258,326 2398,598 2402,598 2447,326 2561,326 2482,798 2386,798 2244,525 "
    id="polygon1813"
    style="stroke-width:3.76872" />
   <path
@@ -235,6 +236,6 @@
          y="158.04106"
          ry="2.442219" /></g><path
        style="fill:none;stroke:#000000;stroke-width:1.02351;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
-       d="M 73.869379,48.815006 C 113.24637,53.976517 67.051039,35.5227 104.89992,38.765804"
+       d="M 74.398549,48.815006 C 113.77554,53.976517 67.580209,35.5227 105.42909,38.765804"
        id="path1463"
        sodipodi:nodetypes="cc" /></g></svg>

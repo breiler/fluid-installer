@@ -1,9 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { AppContext } from "../../app";
+import { Card } from "../../components";
+import Button, { ButtonType } from "../../components/button";
 import Status from "../../model/status";
-
+import { FirmwareType } from "../../utils";
 import * as classes from "./firmware.module.css";
+
+const bluetoothImageUrl = new URL(
+  "../../assets/bluetooth.svg",
+  import.meta.url
+);
+const wifiImageUrl = new URL("../../assets/wifi.svg", import.meta.url);
 
 const Firmware = ({ onInstallFirmware, onDisconnect }) => {
   const { status } = useContext(AppContext);
@@ -13,6 +21,7 @@ const Firmware = ({ onInstallFirmware, onDisconnect }) => {
   const chooseFirmware = (id) => {
     const firmware = firmwares.find((firmware) => firmware.id + "" === id);
     setSelectedFirmware(firmware);
+    console.log(firmware);
   };
 
   useEffect(() => {
@@ -53,44 +62,49 @@ const Firmware = ({ onInstallFirmware, onDisconnect }) => {
       </select>
 
       {selectedFirmware && (
-        <div className="card">
-          <div className="card-body">
-            <ReactMarkdown
-              children={selectedFirmware.body}
-              className="card-text"
-            />
-          </div>
-
-          <div className="card-footer">
-            <button
-              className={classes.button + " btn btn-danger btn-lg"}
-              type="button"
-              onClick={onDisconnect}
+        <>
+          <Card className={"text-bg-light " + classes.card}>
+            <p>
+              Choose this option if you plan to use your controller on a
+              wireless network or connecting to it through USB.
+            </p>
+            <Button
+              onClick={() =>
+                onInstallFirmware(selectedFirmware, FirmwareType.WIFI)
+              }
+              loading={status !== Status.CONNECTED}
               disabled={status !== Status.CONNECTED}
             >
-              Disconnect
-            </button>
+              <img src={wifiImageUrl} className={classes.buttonImage} />
+              {status !== Status.CONNECTED && "Installing"}
+              {status === Status.CONNECTED && "Install with WiFi support"}
+            </Button>
+          </Card>
 
-            <button
-              type="button"
-              className={classes.button + " btn btn-primary btn-lg"}
-              onClick={() => onInstallFirmware(selectedFirmware)}
+          <Card className={"text-bg-light " + classes.card}>
+            <p>
+              Choose this option if you plan to use your controller through
+              Bluetooth or connecting to it through USB.
+            </p>
+
+            <Button
+              onClick={() =>
+                onInstallFirmware(selectedFirmware, FirmwareType.BLUETOOTH)
+              }
+              loading={status !== Status.CONNECTED}
               disabled={status !== Status.CONNECTED}
             >
-              {status !== Status.CONNECTED && (
-                <>
-                  <span
-                    className="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  />{" "}
-                  Installing
-                </>
-              )}
-              {status === Status.CONNECTED && "Install"}
-            </button>
-          </div>
-        </div>
+              <img src={bluetoothImageUrl} className={classes.buttonImage} />
+              {status !== Status.CONNECTED && "Installing"}
+              {status === Status.CONNECTED && "Install with Bluetooth support"}
+            </Button>
+          </Card>
+
+          <ReactMarkdown
+            children={selectedFirmware.body}
+            className="card-text"
+          />
+        </>
       )}
     </>
   );

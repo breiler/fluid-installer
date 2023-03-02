@@ -1,6 +1,5 @@
 import { createContext, useState } from "react";
 import { ESPLoader, Transport } from "esptool-js";
-import JSZip from "jszip";
 import CryptoJS from "crypto-js";
 import Header from "./components/header/header";
 import Connection from "./panels/connection/connection";
@@ -9,7 +8,14 @@ import Done from "./panels/done/done";
 import Firmware from "./panels/firmware/firmware";
 import Status from "./model/status";
 
-import { isSafari, convertUint8ArrayToBinaryString } from "./utils";
+import {
+  isSafari,
+  convertUint8ArrayToBinaryString,
+  fetchAsset,
+  unzipAssetData,
+  convertToFlashFiles,
+  FirmwareType,
+} from "./utils";
 
 let espLoaderTerminal = {
   clean() {
@@ -25,11 +31,13 @@ let espLoaderTerminal = {
   },
 };
 
-const findFileInZip = (zip, fileName) => {
-  return Object.values(zip.files).find((file) => file.name.endsWith(fileName));
-};
-
 export const AppContext = createContext();
+const initialProgress = {
+  fileIndex: 0,
+  fileCount: 1,
+  fileName: "",
+  fileProgress: 0,
+};
 
 const App = () => {
   if (isSafari()) {
@@ -45,12 +53,7 @@ const App = () => {
   const [baudRate, setBaudRate] = useState(230400);
   const [status, setStatus] = useState(Status.DISCONNECTED);
   const [message, setMessage] = useState("");
-  const [progress, setProgress] = useState({
-    fileIndex: 0,
-    fileCount: 1,
-    fileName: "Firmware",
-    fileProgress: 0,
-  });
+  const [progress, setProgress] = useState(initialProgress);
 
   const onConnect = async () => {
     setMessage("");
@@ -81,129 +84,73 @@ const App = () => {
     return Promise.resolve();
   };
 
-  const onDisconnect = async () => {
+  const disconnect = async () => {
     if (transport) await transport.disconnect();
-
     setDevice(null);
     setTransport(null);
     setEspLoader(null);
-    setStatus(Status.DISCONNECTED);
+    setProgress(initialProgress);
   };
+
+  const onDisconnect = () =>
+    disconnect().then(() => setStatus(Status.DISCONNECTED));
+  const onDone = () => disconnect().then(() => setStatus(Status.DONE));
 
   const onErase = async () => {
     try {
       await espLoader.erase_flash();
     } catch (e) {
       console.error(e);
-      //term.writeln(`Error: ${e.message}`);
     }
   };
 
-  const onInstall = (firmware) => {
-    console.log(firmware);
+  const flashDevice = async (files) => {
+    console.log(files);
 
+    return espLoader.write_flash(
+      files,
+      "keep",
+      undefined,
+      undefined,
+      false,
+      true,
+      (fileIndex, written, total) => {
+        setProgress({
+          fileIndex: fileIndex,
+          fileCount: files.length,
+          fileName: files[fileIndex].fileName,
+          fileProgress: Math.round((written / total) * 100),
+        });
+        console.log(fileIndex, written, total);
+      },
+      (image) => {
+        return CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image));
+      }
+    );
+  };
+
+  const onInstall = async (firmware, firmwareType = FirmwareType.WIFI) => {
+    console.log("Installing " + firmware.name + " with " + firmwareType);
     const asset = firmware.assets.find((asset) =>
       asset.name.endsWith("-posix.zip")
     );
 
-    setStatus(Status.DOWNLOADING);
-    fetch("https://breiler.com/proxy/?url=" + asset.browser_download_url)
-      .then(function (response) {
-        // 2) filter on 200 OK
-        if (response.status === 200 || response.status === 0) {
-          return Promise.resolve(response.blob());
-        } else {
-          return Promise.reject(new Error(response.statusText));
-        }
-      })
-      .then(JSZip.loadAsync) // 3) chain with the zip promise
-      .then(function (zip) {
-        setStatus(Status.EXTRACTING);
-        console.log(zip.files);
+    try {
+      setStatus(Status.DOWNLOADING);
+      const zipData = await fetchAsset(asset);
 
-        const bootLoaderFile = findFileInZip(
-          zip,
-          "/common/bootloader_dio_80m.bin"
-        );
-        const bootAppFile = findFileInZip(zip, "/common/boot_app0.bin");
-        const firmwareFile = findFileInZip(zip, "/wifi/firmware.bin");
-        const partitionsFile = findFileInZip(zip, "/wifi/partitions.bin");
+      setStatus(Status.EXTRACTING);
+      const files = await unzipAssetData(zipData, firmwareType);
 
-        return Promise.all([
-          zip.file(bootLoaderFile.name).async("uint8array"),
-          zip.file(bootAppFile.name).async("uint8array"),
-          zip.file(firmwareFile.name).async("uint8array"),
-          zip.file(partitionsFile.name).async("uint8array"),
-        ]);
-      })
-      .then((files) => {
-        setStatus(Status.FLASHING);
-        console.log(files);
-        const fileArray = [
-          {
-            data: convertUint8ArrayToBinaryString(files[0]),
-            address: parseInt("0x1000"),
-          },
-          {
-            data: convertUint8ArrayToBinaryString(files[1]),
-            address: parseInt("0xe000"),
-          },
-          {
-            data: convertUint8ArrayToBinaryString(files[2]),
-            address: parseInt("0x10000"),
-          },
-          {
-            data: convertUint8ArrayToBinaryString(files[3]),
-            address: parseInt("0x8000"),
-          },
-        ];
+      setStatus(Status.FLASHING);
+      const flashFiles = convertToFlashFiles(files);
+      await flashDevice(flashFiles);
+    } catch (error) {
+      console.error(error);
+      setStatus(Status.ERROR);
+    }
 
-        try {
-          return espLoader
-            .write_flash(
-              fileArray,
-              "keep",
-              undefined,
-              undefined,
-              false,
-              true,
-              (fileIndex, written, total) => {
-                let fileName = "Bootloader";
-                if (fileIndex == 1) {
-                  fileName = "Boot app";
-                } else if (fileIndex == 2) {
-                  fileName = "Firmware";
-                } else {
-                  fileName = "Partitions";
-                }
-                setProgress({
-                  fileIndex: fileIndex,
-                  fileCount: fileArray.length,
-                  fileName: fileName,
-                  fileProgress: Math.round((written / total) * 100),
-                });
-                console.log(fileIndex, written, total);
-              },
-              (image) => {
-                return CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image));
-              }
-            )
-            .finally(() => {
-              if (transport)
-                transport.disconnect().then(() => {
-                  setDevice(null);
-                  setTransport(null);
-                  setEspLoader(null);
-                  setStatus(Status.DONE);
-                });
-            });
-        } catch (e) {
-          console.error(e);
-          term.writeln(`Error: ${e.message}`);
-        } finally {
-          console.log("done");
-        }
-      });
+    onDone();
   };
 
   return (
@@ -228,18 +175,21 @@ const App = () => {
             <Connection onConnect={onConnect} />
           )}
 
-          {(status === Status.CONNECTED || status === Status.DOWNLOADING) && (
+          {status === Status.CONNECTED && (
             <Firmware
               onInstallFirmware={onInstall}
               onDisconnect={onDisconnect}
             />
           )}
 
-          {(status === Status.EXTRACTING || status === Status.FLASHING) && (
-            <Progress progress={progress} />
+          {(status === Status.DOWNLOADING ||
+            status === Status.EXTRACTING ||
+            status === Status.FLASHING) && (
+            <Progress progress={progress} status={status} />
           )}
 
-          {status === Status.DONE && <Done />}
+          {status === Status.DONE && <Done onContinue={onDisconnect} />}
+          {status === Status.ERROR && <>Bollocks!</>}
         </div>
       </AppContext.Provider>
     </>

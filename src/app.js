@@ -46,10 +46,10 @@ const App = () => {
   const [status, setStatus] = useState(Status.DISCONNECTED);
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState({
-    fileIndex: 2,
-    fileCount: 4,
+    fileIndex: 0,
+    fileCount: 1,
     fileName: "Firmware",
-    fileProgress: 50,
+    fileProgress: 0,
   });
 
   const onConnect = async () => {
@@ -107,12 +107,7 @@ const App = () => {
     );
 
     setStatus(Status.DOWNLOADING);
-    fetch(asset.url, {
-      mode: "no-cors",
-      headers: {
-        "Accept": "application/octet-stream",
-      }
-    })
+    fetch("https://breiler.com/proxy/?url=" + asset.browser_download_url)
       .then(function (response) {
         // 2) filter on 200 OK
         if (response.status === 200 || response.status === 0) {

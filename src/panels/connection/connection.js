@@ -1,7 +1,9 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../../app";
 import Status from "../../model/status";
+import * as classes from "./connection.module.css";
 
+const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
 
 const Connection = ({ onConnect }) => {
   const { baudRate, setBaudRate, chip, status} =
@@ -13,8 +15,8 @@ const Connection = ({ onConnect }) => {
       {(status === Status.DISCONNECTED || status === Status.CONNECTING) && (
         <>
           <h2>FluidNC Web Installer</h2>
-          <p>This tool will make it easy to install or upgrade FluidNC on your controller.</p>
-          <p>Make sure that your controller is connected to your computer via a USB then press Connect.</p>
+          <p>This tool will make it easy to install or upgrade FluidNC on your controller.<br/>Plug in your controller and press Connect to continue.</p>
+          <p><img className={classes.image} src={connectImageUrl} alt="Connect" /></p>
         </>
       )}
 

@@ -6,7 +6,7 @@ import Button from "../../components/button";
 import Status from "../../model/Status";
 import { InstallerState } from "../../pages/installer/Installer";
 import { FirmwareType } from "../../utils/utils";
-import "./firmware.scss";
+import "./Firmware.scss";
 
 const bluetoothImageUrl = new URL(
     "../../assets/bluetooth.svg",

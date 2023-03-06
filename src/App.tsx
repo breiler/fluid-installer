@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Header } from "./components";
 import Page from "./model/Page";
 import { Installer, Terminal } from "./pages";
+import FileBrowser from "./pages/filebrowser";
 import SelectMode from "./pages/selectmode";
 import { Connection } from "./panels";
 import { SerialPort } from "./utils/serialport/SerialPort";
@@ -59,6 +60,7 @@ const App = () => {
                         onClose={() => setPage(undefined)}
                     />
                 )}
+                {serialPort && page === Page.FILEBROWSER && <FileBrowser />}
             </div>
         </>
     );

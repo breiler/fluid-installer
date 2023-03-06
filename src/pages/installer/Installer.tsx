@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import Progress from "../../panels/progress/Progress";
 import Done from "../../panels/done/Done";
@@ -30,6 +30,7 @@ const initialProgress = {
 const Installer = ({ onClose, serialPort }) => {
     const [status, setStatus] = useState(InstallerState.SELECT_PACKAGE);
     const [progress, setProgress] = useState(initialProgress);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
     const onInstall = async (
         firmware,
@@ -40,22 +41,39 @@ const Installer = ({ onClose, serialPort }) => {
             asset.name.endsWith("-posix.zip")
         );
 
+        let zipData: Blob | undefined = undefined;
         try {
             setStatus(InstallerState.DOWNLOADING);
-            const zipData = await fetchAsset(asset);
-
-            setStatus(InstallerState.EXTRACTING);
-            const files = await unzipAssetData(zipData, firmwareType);
-
-            setStatus(InstallerState.FLASHING);
-            const flashFiles = convertToFlashFiles(files);
-            await flashDevice(serialPort, flashFiles, setProgress);
+            zipData = await fetchAsset(asset);
         } catch (error) {
             console.error(error);
+            setErrorMessage("Could not download package");
             setStatus(InstallerState.ERROR);
+            return;
         }
 
-        setStatus(InstallerState.DONE);
+        let files: any[] | undefined;
+        try {
+            setStatus(InstallerState.EXTRACTING);
+            files = await unzipAssetData(zipData, firmwareType);
+        } catch (error) {
+            console.error(error);
+            setErrorMessage("Could not unzip package, it seems corrupted");
+            setStatus(InstallerState.ERROR);
+            return;
+        }
+
+        try {
+            setStatus(InstallerState.FLASHING);
+            const flashFiles = convertToFlashFiles(files!);
+            await flashDevice(serialPort, flashFiles, setProgress);
+            setStatus(InstallerState.DONE);
+        } catch (error) {
+            console.error(error);
+            setErrorMessage("Was not able to flash device");
+            setStatus(InstallerState.ERROR);
+            return;
+        }
     };
 
     return (
@@ -70,11 +88,10 @@ const Installer = ({ onClose, serialPort }) => {
                 <Progress progress={progress} status={status} />
             )}
 
-            {status === InstallerState.DONE && (
-                <Done onContinue={onClose} />
+            {status === InstallerState.DONE && <Done onContinue={onClose} />}
+            {status === InstallerState.ERROR && (
+                <div className="alert alert-danger">{errorMessage}</div>
             )}
-            {status === InstallerState.ERROR && <>Bollocks!</>}
-
         </>
     );
 };

@@ -26,6 +26,7 @@ export const convertUint8ArrayToBinaryString = (u8Array) => {
 };
 
 const CORS_PROXY_URL = "https://breiler.com/proxy/?url=";
+
 /**
  *
  * @param {{browser_download_url:string}} asset
@@ -92,7 +93,7 @@ export const unzipAssetData = (
     });
 };
 
-export const convertToFlashFiles = (files) => {
+export const convertToFlashFiles = (files: any[]) => {
     if (files?.length != 4) {
         throw new Error("Could not extract files from package");
     }

@@ -1,18 +1,13 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBluetooth } from "@fortawesome/free-brands-svg-icons";
+import { faWifi } from "@fortawesome/free-solid-svg-icons";
+
 import { Card } from "../../components";
 import Button from "../../components/button";
-import Status from "../../model/Status";
-import { InstallerState } from "../../pages/installer/Installer";
 import { FirmwareType } from "../../utils/utils";
 import "./Firmware.scss";
-
-const bluetoothImageUrl = new URL(
-    "../../assets/bluetooth.svg",
-    import.meta.url
-);
-const wifiImageUrl = new URL("../../assets/wifi.svg", import.meta.url);
 
 type Props = {
     onInstallFirmware: (firmware: any, firmwareType: FirmwareType) => void;
@@ -21,6 +16,7 @@ type Props = {
 const Firmware = ({ onInstallFirmware }: Props) => {
     const [firmwares, setFirmwares] = useState<any[]>([]);
     const [selectedFirmware, setSelectedFirmware] = useState<any>(null);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
     const chooseFirmware = (id) => {
         const firmware = firmwares.find((firmware) => firmware.id + "" === id);
@@ -46,23 +42,31 @@ const Firmware = ({ onInstallFirmware }: Props) => {
                 setFirmwares(availableReleases);
             })
             .catch((err) => {
-                throw err;
+                console.error(err);
+                setErrorMessage("Could not download releases");
             });
-    }, [setFirmwares, setSelectedFirmware]);
+    }, [setFirmwares, setSelectedFirmware, setErrorMessage]);
 
     return (
         <div className="firmware-component">
             <h2>Select firmware</h2>
             <p>Select which firmware you want to install on your controller.</p>
-            <select
-                className="form-select form-select-lg mb-3"
-                onChange={(event) => chooseFirmware(event.target.value)}>
-                {firmwares.map((release) => (
-                    <option key={release.id} value={release.id}>
-                        {release.name}
-                    </option>
-                ))}
-            </select>
+
+            {errorMessage && (
+                <div className="alert alert-danger">{errorMessage}</div>
+            )}
+            {!errorMessage && (
+                <select
+                    className="form-select form-select-lg mb-3"
+                    onChange={(event) => chooseFirmware(event.target.value)}>
+                    {!firmwares?.length && <option>Loading...</option>}
+                    {firmwares.map((release) => (
+                        <option key={release.id} value={release.id}>
+                            {release.name}
+                        </option>
+                    ))}
+                </select>
+            )}
 
             {selectedFirmware && (
                 <>
@@ -80,10 +84,7 @@ const Firmware = ({ onInstallFirmware }: Props) => {
                                 )
                             }>
                             <>
-                                <img
-                                    src={wifiImageUrl.toString()}
-                                    className="button-image"
-                                />
+                                <FontAwesomeIcon icon={faWifi} />
                                 Install with WiFi support
                             </>
                         </Button>
@@ -104,10 +105,7 @@ const Firmware = ({ onInstallFirmware }: Props) => {
                                 )
                             }>
                             <>
-                                <img
-                                    src={bluetoothImageUrl.toString()}
-                                    className="button-image"
-                                />
+                                <FontAwesomeIcon icon={faBluetooth} />
                                 Install with Bluetooth support
                             </>
                         </Button>

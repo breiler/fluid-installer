@@ -11,24 +11,29 @@ type Props = {
 };
 
 const Connection = ({ onConnect }: Props) => {
+    const [errorMessage, setErrorMessage] = useState<string|undefined>();
     const [connectionState, setConnectionState] = useState<ConnectionState>(
         ConnectionState.DISCONNECTED
     );
 
-    
     const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
     const connect = () => {
+        setErrorMessage(undefined);
         setConnectionState(ConnectionState.CONNECTING);
         (navigator as any).serial
             .requestPort()
-            .then((serialPortDevice) => {
-                onConnect(serialPortDevice);
-            })
+            .then((serialPortDevice) =>
+                serialPortDevice.open({ baudRate: 115200 }).then(() => {
+                    serialPortDevice.close();
+                    setConnectionState(ConnectionState.CONNECTED);
+                    onConnect(serialPortDevice);
+                }).catch(error => {
+                    setErrorMessage("Could not connect to selected serial port");
+                    throw error;
+                })
+            )
             .catch(() => {
                 setConnectionState(ConnectionState.DISCONNECTED);
-            })
-            .finally(() => {
-                setConnectionState(ConnectionState.CONNECTED);
             });
     };
 
@@ -43,7 +48,6 @@ const Connection = ({ onConnect }: Props) => {
                         FluidNC on your controller. Plug in your controller and
                         press Connect to continue.
                     </p>
-
                     <div className="mx-auto" style={{ textAlign: "center" }}>
                         <img
                             className="image"
@@ -54,6 +58,7 @@ const Connection = ({ onConnect }: Props) => {
                 </>
             )}
 
+            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
             {connectionState !== ConnectionState.CONNECTED && (
                 <div className="mx-auto" style={{ textAlign: "center" }}>
                     <Button

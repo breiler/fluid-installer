@@ -1,6 +1,5 @@
 import React, { createRef, useEffect, useState } from "react";
 import "xterm/css/xterm.css";
-import { Button } from "../../components";
 import Xterm from "../../components/xterm/Xterm";
 import { SerialPort, SerialPortState } from "../../utils/serialport/SerialPort";
 
@@ -9,9 +8,9 @@ type Props = {
     onClose: () => void;
 };
 
-const Terminal = ({ serialPort, onClose }: Props) => {
+const Terminal = ({ serialPort }: Props) => {
     const xtermRef: React.RefObject<Xterm> = createRef<Xterm>();
-    const [error, setError] = useState();
+    const [error, setError] = useState<string | undefined>();
 
     const onResponse = (data) => {
         xtermRef.current?.terminal.write(data);
@@ -22,16 +21,22 @@ const Terminal = ({ serialPort, onClose }: Props) => {
             serialPort
                 .open(115200)
                 .then(() => serialPort.addReader(onResponse))
-                .then(() => serialPort.write(String.fromCharCode(0x18)))
-                .then(() => serialPort.write(String.fromCharCode(0x05)))
-                .catch((error) => setError(error));
+                .then(() => serialPort.write(String.fromCharCode(0x18))) // CTRL-X reset controller
+                .then(() => serialPort.write(String.fromCharCode(0x14))) // CTRL-T activate echo mode in FluidNC
+                .then(() => serialPort.write(String.fromCharCode(0x05))) // CTRL-E
+                .catch((error) => {
+                    console.log(error);
+                    setError("Could not open a connection");
+                });
         }
 
         return () => {
             if (serialPort.getState() === SerialPortState.CONNECTED) {
                 console.log("Closing connection");
-                serialPort.write(String.fromCharCode(0x0c));
-                new Promise((f) => setTimeout(f, 1000)).then(() => serialPort.close());
+                serialPort.write(String.fromCharCode(0x0c)); // CTRL-L Restting echo mode
+                new Promise((f) => setTimeout(f, 1000)).then(() =>
+                    serialPort.close()
+                );
             }
         };
     }, [serialPort, xtermRef]);
@@ -42,10 +47,10 @@ const Terminal = ({ serialPort, onClose }: Props) => {
                 <Xterm
                     ref={xtermRef}
                     onData={serialPort.write}
-                    options={{ cursorBlink: true }}
+                    options={{ cursorBlink: true, convertEol: true }}
                 />
             )}
-            {error && { error }}
+            {error && <div className="alert alert-danger">{error}</div>}
         </>
     );
 };

@@ -1,6 +1,7 @@
 export enum Page {
     TERMINAL = "Terminal",
-    INSTALLER = "Installer"
+    INSTALLER = "Installer",
+    FILEBROWSER = "File browser"
 }
 
 export default Page;

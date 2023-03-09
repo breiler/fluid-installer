@@ -35,8 +35,7 @@ const CORS_PROXY_URL = "https://breiler.com/proxy/?url=";
 export const fetchAsset = async (asset) => {
     return fetch(asset.url, {
         headers: {
-            "Accept": "application/octet-stream",
-            "X-GitHub-Api-Version": "2022-11-28"
+            "Accept": "application/octet-stream"
         }
     }).then(
         (response) => {

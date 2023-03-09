@@ -33,7 +33,12 @@ const CORS_PROXY_URL = "https://breiler.com/proxy/?url=";
  * @returns
  */
 export const fetchAsset = async (asset) => {
-    return fetch(CORS_PROXY_URL + asset.browser_download_url).then(
+    return fetch(asset.url, {
+        headers: {
+            "Accept": "application/octet-stream",
+            "X-GitHub-Api-Version": "2022-11-28"
+        }
+    }).then(
         (response) => {
             if (response.status === 200 || response.status === 0) {
                 return Promise.resolve(response.blob());
@@ -56,7 +61,7 @@ const findFileInZip = (zip: any, fileName: any): any => {
 
 export enum FirmwareType {
     WIFI = "wifi",
-    BLUETOOTH = "bt",
+    BLUETOOTH = "bt"
 }
 
 /**
@@ -88,7 +93,7 @@ export const unzipAssetData = (
             zip.file(bootLoaderFile.name).async("uint8array"),
             zip.file(bootAppFile.name).async("uint8array"),
             zip.file(firmwareFile.name).async("uint8array"),
-            zip.file(partitionsFile.name).async("uint8array"),
+            zip.file(partitionsFile.name).async("uint8array")
         ]);
     });
 };
@@ -101,22 +106,26 @@ export const convertToFlashFiles = (files: any[]) => {
         {
             fileName: "Bootloader",
             data: convertUint8ArrayToBinaryString(files[0]),
-            address: parseInt("0x1000"),
+            address: parseInt("0x1000")
         },
         {
             fileName: "Boot app",
             data: convertUint8ArrayToBinaryString(files[1]),
-            address: parseInt("0xe000"),
+            address: parseInt("0xe000")
         },
         {
             fileName: "Firmware",
             data: convertUint8ArrayToBinaryString(files[2]),
-            address: parseInt("0x10000"),
+            address: parseInt("0x10000")
         },
         {
             fileName: "Partitions",
             data: convertUint8ArrayToBinaryString(files[3]),
-            address: parseInt("0x8000"),
-        },
+            address: parseInt("0x8000")
+        }
     ];
+};
+
+export const checkConnection = async (serialPortDevice) => {
+    return serialPortDevice.open({ baudRate: 115200 }).then(() => serialPortDevice.close());
 };

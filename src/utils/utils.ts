@@ -25,15 +25,15 @@ export const convertUint8ArrayToBinaryString = (u8Array) => {
     return b_str;
 };
 
-const CORS_PROXY_URL = "https://breiler.com/proxy/?url=";
-
 /**
  *
  * @param {{browser_download_url:string}} asset
  * @returns
  */
 export const fetchAsset = async (asset) => {
-    return fetch(asset.url, {
+
+    const assetUrl = "https://raw.githubusercontent.com/breiler/fluid-installer/master/releases/" + asset.name;
+    return fetch(assetUrl, {
         headers: {
             "Accept": "application/octet-stream"
         }

@@ -76,7 +76,7 @@ export const unzipAssetData = (
     return JSZip.loadAsync(zipData).then((zip: any) => {
         const bootLoaderFile = findFileInZip(
             zip,
-            "/common/bootloader_dio_80m.bin"
+            "/" + firmwareType + "/bootloader.bin"
         );
         const bootAppFile = findFileInZip(zip, "/common/boot_app0.bin");
         const firmwareFile = findFileInZip(

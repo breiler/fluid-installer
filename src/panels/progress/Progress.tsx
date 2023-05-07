@@ -1,17 +1,11 @@
 import React from "react";
 import { Spinner } from "../../components";
 import ProgressBar from "../../components/progressbar/ProgressBar";
-import { InstallerState } from "../../pages/installer/Installer";
-
-type FileProgress = {
-    fileIndex: number;
-    fileCount: number;
-    fileName: string;
-    fileProgress: number;
-};
+import { InstallerState } from "../../services/InstallService";
+import { FlashProgress } from "../../services/FlashService";
 
 type Props = {
-    progress: FileProgress;
+    progress: FlashProgress;
     status: InstallerState;
 };
 

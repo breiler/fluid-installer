@@ -25,7 +25,7 @@ const App = () => {
             <Header />
             <div className="container">
                 {!serialPort && <Connection onConnect={onConnect} />}
-                {serialPort && !page && <SelectMode onSelect={setPage} />}
+                {serialPort && !page && <SelectMode onSelect={setPage} serialPort={new SerialPort(serialPort)} />}
                 {serialPort && page && (
                     <>
                         <nav aria-label="breadcrumb">

@@ -1,5 +1,6 @@
 import { ESPLoader, Transport } from "esptool-js";
 import CryptoJS from "crypto-js";
+import { FlashProgress } from "../services/FlashService";
 
 const FLASH_BAUD_RATE = 921600;
 
@@ -18,7 +19,7 @@ let espLoaderTerminal = {
 export const flashDevice = async (
     serialPort,
     files,
-    onProgress,
+    onProgress : (progress: FlashProgress) => void,
     terminal = espLoaderTerminal
 ) => {
     const transport = new Transport(serialPort);

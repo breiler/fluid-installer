@@ -6,69 +6,71 @@ import { faWifi } from "@fortawesome/free-solid-svg-icons";
 
 import { Card } from "../../components";
 import Button from "../../components/button";
-import { FirmwareType } from "../../utils/utils";
+import { GithubRelease, GithubService } from "../../services/GitHubService";
 import "./Firmware.scss";
+import { FirmwareType } from "../../services/InstallService";
 
 type Props = {
-    onInstallFirmware: (firmware: any, firmwareType: FirmwareType) => void;
+    onInstall: (
+        release: GithubRelease,
+        firmwareType: FirmwareType
+    ) => void;
 };
 
-const Firmware = ({ onInstallFirmware }: Props) => {
-    const [firmwares, setFirmwares] = useState<any[]>([]);
-    const [selectedFirmware, setSelectedFirmware] = useState<any>(null);
+const Firmware = ({ onInstall}: Props) => {
+    const [releases, setReleases] = useState<GithubRelease[]>([]);
+    const [selectedRelease, setSelectedRelease] = useState<GithubRelease>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
     const chooseFirmware = (id) => {
-        const firmware = firmwares.find((firmware) => firmware.id + "" === id);
-        setSelectedFirmware(firmware);
-        console.log(firmware);
+        const firmware = releases.find((firmware) => firmware.id + "" === id);
+        setSelectedRelease(firmware as GithubRelease);
     };
 
-    useEffect(() => {
-        fetch("https://api.github.com/repos/bdring/FluidNC/releases")
-            .then((res) => res.json())
+    const fetchReleases = () => {
+        GithubService.getReleases()
             .then((releases) => {
-                const availableReleases = releases
-                    .filter((release) => !release.draft && !release.prerelease)
-                    .filter((release) =>
-                        release.assets.filter(
-                            (asset) =>
-                                asset.name.endsWith("-posix.zip").length > 0
-                        )
-                    )
-                    .sort((release1, release2) => release1.id > release2.id);
-
-                setSelectedFirmware(availableReleases?.[0]);
-                setFirmwares(availableReleases);
+                setSelectedRelease(releases?.[0]);
+                setReleases(releases);
             })
             .catch((err) => {
                 console.error(err);
-                setErrorMessage("Could not download releases");
+                setErrorMessage(
+                    "Could not download releases, please again later"
+                );
             });
-    }, [setFirmwares, setSelectedFirmware, setErrorMessage]);
+    };
+
+    useEffect(() => fetchReleases(), []);
 
     return (
         <div className="firmware-component">
-            <h2>Select firmware</h2>
-            <p>Select which firmware you want to install on your controller.</p>
-
             {errorMessage && (
                 <div className="alert alert-danger">{errorMessage}</div>
             )}
             {!errorMessage && (
-                <select
-                    className="form-select form-select-lg mb-3"
-                    onChange={(event) => chooseFirmware(event.target.value)}>
-                    {!firmwares?.length && <option>Loading...</option>}
-                    {firmwares.map((release) => (
-                        <option key={release.id} value={release.id}>
-                            {release.name}
-                        </option>
-                    ))}
-                </select>
+                <>
+                    <h2>Select firmware</h2>
+                    <p>
+                        Select which firmware you want to install on your
+                        controller.
+                    </p>
+                    <select
+                        className="form-select form-select-lg mb-3"
+                        onChange={(event) =>
+                            chooseFirmware(event.target.value)
+                        }>
+                        {!releases?.length && <option>Loading...</option>}
+                        {releases.map((release) => (
+                            <option key={release.id} value={release.id}>
+                                {release.name}
+                            </option>
+                        ))}
+                    </select>
+                </>
             )}
 
-            {selectedFirmware && (
+            {selectedRelease && (
                 <>
                     <Card className="text-bg-light card">
                         <p>
@@ -78,8 +80,8 @@ const Firmware = ({ onInstallFirmware }: Props) => {
                         </p>
                         <Button
                             onClick={() =>
-                                onInstallFirmware(
-                                    selectedFirmware,
+                                onInstall(
+                                    selectedRelease,
                                     FirmwareType.WIFI
                                 )
                             }>
@@ -99,8 +101,8 @@ const Firmware = ({ onInstallFirmware }: Props) => {
 
                         <Button
                             onClick={() =>
-                                onInstallFirmware(
-                                    selectedFirmware,
+                                onInstall(
+                                    selectedRelease,
                                     FirmwareType.BLUETOOTH
                                 )
                             }>
@@ -112,7 +114,7 @@ const Firmware = ({ onInstallFirmware }: Props) => {
                     </Card>
 
                     <ReactMarkdown
-                        children={selectedFirmware.body}
+                        children={selectedRelease.body}
                         className="card-text"
                     />
                 </>

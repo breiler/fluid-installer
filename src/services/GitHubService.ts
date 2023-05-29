@@ -104,7 +104,7 @@ export const GithubService = {
         release: GithubRelease
     ): Promise<GithubReleaseManifest> => {
         const manifestBaseUrl =
-            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest3/";
+            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest4/";
         const manifestUrl = manifestBaseUrl + "/manifest.json";
 
         return fetch(manifestUrl, {
@@ -125,7 +125,7 @@ export const GithubService = {
         images: FirmwareImage[]
     ): Promise<string[]> => {
         const baseUrl =
-            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest3/";
+            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest4/";
 
         return Promise.all(
             images.map((image) => {

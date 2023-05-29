@@ -105,6 +105,10 @@ const convertImagesToFlashFiles = (
         throw new Error("Could not extract files from package");
     }
 
+    images.forEach((image, index) => {
+        console.log("Image: " + image.path, "Offset: " + image.offset,  "Image size: " + files[index].length + " bytes")
+    })
+
     return images.map((image, index) => {
         return {
             fileName: image.path,

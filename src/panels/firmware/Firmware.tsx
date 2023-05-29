@@ -6,31 +6,48 @@ import { faWifi } from "@fortawesome/free-solid-svg-icons";
 
 import { Card } from "../../components";
 import Button from "../../components/button";
-import { GithubRelease, GithubService } from "../../services/GitHubService";
+import {
+    FirmwareChoice,
+    GithubRelease,
+    GithubReleaseManifest,
+    GithubService
+} from "../../services/GitHubService";
 import "./Firmware.scss";
 import { FirmwareType } from "../../services/InstallService";
 
 type Props = {
     onInstall: (
         release: GithubRelease,
-        firmwareType: FirmwareType
+        manifest: GithubReleaseManifest,
+        choice: FirmwareChoice
     ) => void;
 };
 
-const Firmware = ({ onInstall}: Props) => {
+const Firmware = ({ onInstall }: Props) => {
     const [releases, setReleases] = useState<GithubRelease[]>([]);
     const [selectedRelease, setSelectedRelease] = useState<GithubRelease>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
+    const [releaseManifest, setReleaseManifest] = useState<
+        GithubReleaseManifest | undefined
+    >();
+
+    const [choice, setChoice] = useState<FirmwareChoice | undefined>();
 
     const chooseFirmware = (id) => {
-        const firmware = releases.find((firmware) => firmware.id + "" === id);
-        setSelectedRelease(firmware as GithubRelease);
+        const release = releases.find((r) => r.id + "" === id + "");
+        setChoice(undefined);
+        setSelectedRelease(release);
+        if (release) {
+            GithubService.getReleaseManifest(release).then((manifest) => {
+                setReleaseManifest(manifest);
+                setChoice(manifest.installable);
+            });
+        }
     };
 
     const fetchReleases = () => {
         GithubService.getReleases()
             .then((releases) => {
-                setSelectedRelease(releases?.[0]);
                 setReleases(releases);
             })
             .catch((err) => {
@@ -40,6 +57,13 @@ const Firmware = ({ onInstall}: Props) => {
                 );
             });
     };
+
+    useEffect(() => {
+        if (releases && releases.length) {
+            console.log(releases[0].id);
+            chooseFirmware(releases[0].id);
+        }
+    }, [releases]);
 
     useEffect(() => fetchReleases(), []);
 
@@ -72,46 +96,34 @@ const Firmware = ({ onInstall}: Props) => {
 
             {selectedRelease && (
                 <>
-                    <Card className="text-bg-light card">
-                        <p>
-                            Choose this option if you plan to use your
-                            controller on a wireless network or connecting to it
-                            through USB.
-                        </p>
-                        <Button
-                            onClick={() =>
-                                onInstall(
-                                    selectedRelease,
-                                    FirmwareType.WIFI
-                                )
-                            }>
-                            <>
-                                <FontAwesomeIcon icon={faWifi} />
-                                Install with WiFi support
-                            </>
-                        </Button>
-                    </Card>
+                    {choice && !choice.images && (
+                        <>
+                            <Card className="text-bg-light card">
+                                <h2>{choice["choice-name"]}</h2>
+                                <p>{choice.description}</p>
 
-                    <Card className="text-bg-light card">
-                        <p>
-                            Choose this option if you plan to use your
-                            controller through Bluetooth or connecting to it
-                            through USB.
-                        </p>
-
-                        <Button
-                            onClick={() =>
-                                onInstall(
-                                    selectedRelease,
-                                    FirmwareType.BLUETOOTH
-                                )
-                            }>
-                            <>
-                                <FontAwesomeIcon icon={faBluetooth} />
-                                Install with Bluetooth support
-                            </>
-                        </Button>
-                    </Card>
+                                <>
+                                    {choice.choices.map((subChoice) => (
+                                        <Button
+                                            key={subChoice.name}
+                                            onClick={() => {
+                                                if (subChoice.images) {
+                                                    onInstall(
+                                                        selectedRelease,
+                                                        releaseManifest!,
+                                                        subChoice
+                                                    );
+                                                } else {
+                                                    setChoice(subChoice);
+                                                }
+                                            }}>
+                                            <>{subChoice.description}</>
+                                        </Button>
+                                    ))}
+                                </>
+                            </Card>
+                        </>
+                    )}
 
                     <ReactMarkdown
                         children={selectedRelease.body}

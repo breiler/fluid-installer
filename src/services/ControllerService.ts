@@ -40,9 +40,18 @@ export class VersionCommand extends Command {
     }
 
     getVersionNumber = () => {
-        const versionLine = this.response.find(line => line.indexOf("[VER:") === 0)
-        return versionLine;
-    }
+        const versionLine = this.response.find(
+            (line) => line.indexOf("[VER:") === 0
+        );
+        if (!versionLine) {
+            return undefined;
+        }
+
+        const versionRegex = new RegExp("^\\[VER:([0-9\\.]+).*$", "g");
+        console.log(versionRegex.source, versionLine, versionRegex.exec(versionLine));
+
+        return versionRegex.exec(versionLine);
+    };
 }
 
 export class ControllerService {
@@ -83,7 +92,6 @@ export class ControllerService {
     };
 
     send = <T>(command: T): Promise<T> => {
-        console.log(">>> " + command);
         this.commands.push(command as Command);
         const result = new Promise<T>((resolve) => {
             (command as Command).onDone = async () => resolve(command);

@@ -19,6 +19,7 @@ let espLoaderTerminal = {
 export const flashDevice = async (
     serialPort,
     files,
+    erase: boolean,
     onProgress : (progress: FlashProgress) => void,
     terminal = espLoaderTerminal
 ) => {
@@ -34,7 +35,7 @@ export const flashDevice = async (
             "keep",
             undefined,
             undefined,
-            false,
+            erase,
             true,
             (fileIndex, written, total) => {
                 onProgress({

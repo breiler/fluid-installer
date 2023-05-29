@@ -1,3 +1,5 @@
+import { convertUint8ArrayToBinaryString } from "../utils/utils";
+
 export type GithubReleaseAsset = {
     id: number;
     name: string;
@@ -15,6 +17,34 @@ export type GithubRelease = {
     draft: boolean;
     prerelease: boolean;
     assets: GithubReleaseAsset[];
+};
+
+export type FirmwareImageSignature = {
+    algorithm: string;
+    value: string;
+};
+
+export type FirmwareImage = {
+    size: number;
+    offset: string;
+    path: string;
+    signature: FirmwareImageSignature;
+};
+
+export type FirmwareChoice = {
+    name: string;
+    description: string;
+    "choice-name": string;
+    images: string[] | undefined;
+    erase: boolean | undefined;
+    choices: FirmwareChoice[];
+};
+
+export type GithubReleaseManifest = {
+    name: string;
+    version: string;
+    images: Map<string, FirmwareImage>;
+    installable: FirmwareChoice;
 };
 
 export const GithubService = {
@@ -68,5 +98,54 @@ export const GithubService = {
                 return Promise.reject(new Error(response.statusText));
             }
         });
+    },
+
+    getReleaseManifest: (
+        release: GithubRelease
+    ): Promise<GithubReleaseManifest> => {
+        const manifestBaseUrl =
+            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest/";
+        const manifestUrl = manifestBaseUrl + "/manifest.json";
+
+        return fetch(manifestUrl, {
+            headers: {
+                Accept: "application/json"
+            }
+        }).then((response) => {
+            if (response.status === 200 || response.status === 0) {
+                return response.json();
+            } else {
+                return Promise.reject(new Error(response.statusText));
+            }
+        });
+    },
+
+    getImageFiles: (
+        asset: GithubRelease,
+        images: FirmwareImage[]
+    ): Promise<string[]> => {
+        const baseUrl =
+            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest/";
+
+        return Promise.all(
+            images.map((image) => {
+                return fetch(baseUrl + image.path, {
+                    headers: {
+                        Accept: "application/octet-stream"
+                    }
+                })
+                    .then((response) => {
+                        if (response.status === 200 || response.status === 0) {
+                            return response.arrayBuffer();
+                        } else {
+                            return Promise.reject(
+                                new Error(response.statusText)
+                            );
+                        }
+                    })
+                    .then((buffer) => new Uint8Array(buffer))
+                    .then((buffer) => convertUint8ArrayToBinaryString(buffer));
+            })
+        );
     }
 };

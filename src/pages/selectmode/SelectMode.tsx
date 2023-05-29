@@ -1,15 +1,11 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faTerminal,
-    faFolderOpen,
-    faDownload
-} from "@fortawesome/free-solid-svg-icons";
+import { faTerminal, faFolderOpen } from "@fortawesome/free-solid-svg-icons";
 
-import { Button, Card } from "../../components";
 import Page from "../../model/Page";
-import { Version } from "../../panels/version/Version";
+import { Button, Card } from "../../components";
 import { SerialPort } from "../../utils/serialport/SerialPort";
+import { InstallCard } from "../../components/installcard/InstallCard";
 import "./SelectMode.scss";
 
 type Props = {
@@ -22,26 +18,11 @@ const SelectMode = ({ onSelect, serialPort }: Props) => {
         <div className="container text-center">
             <div className="row">
                 <div className="col">
-                    <Card className="select-card">
-                        <Version serialPort={serialPort} />
-                    </Card>
+                    <InstallCard
+                        onClick={() => onSelect(Page.INSTALLER)}
+                        serialPort={serialPort}
+                    />
                 </div>
-                <div className="col">
-                    <Card
-                        className="select-card"
-                        footer={
-                            <Button onClick={() => onSelect(Page.INSTALLER)}>
-                                <>Install FluidNC</>
-                            </Button>
-                        }>
-                        <div className="select-icon">
-                            <FontAwesomeIcon icon={faDownload} size="4x" />
-                        </div>
-                        <>Install or upgrade FluidNC on your controller</>
-                    </Card>
-                </div>
-            </div>
-            <div className="row">
                 <div className="col">
                     <Card
                         className="select-card"

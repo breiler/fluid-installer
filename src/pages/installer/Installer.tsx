@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Progress from "../../panels/progress/Progress";
 import Done from "../../panels/done/Done";
 import Firmware from "../../panels/firmware/Firmware";
-import { GithubRelease } from "../../services/GitHubService";
+import { FirmwareChoice, GithubRelease, GithubReleaseManifest, GithubService } from "../../services/GitHubService";
 import { FirmwareType, InstallService, InstallerState } from "../../services/InstallService";
 import { SerialPort } from "../../utils/serialport/SerialPort";
 import { FlashProgress } from "../../services/FlashService";
@@ -27,13 +27,15 @@ const Installer = ({ onClose, serialPort }: InstallerProps) => {
 
     const onInstall = async (
         release: GithubRelease,
-        firmwareType: FirmwareType = FirmwareType.WIFI
+        manifest: GithubReleaseManifest,
+        choice: FirmwareChoice
     ) => {
-        console.log("Installing " + release.name + " with " + firmwareType);
-        InstallService.installRelease(
+        console.log("Installing " + release.name + " with " + choice.name);
+        InstallService.installChoice(
             release,
             serialPort,
-            firmwareType,
+            manifest,
+            choice,
             setProgress,
             setState
         ).catch(setErrorMessage);

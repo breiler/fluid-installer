@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBluetooth } from "@fortawesome/free-brands-svg-icons";
@@ -24,6 +24,9 @@ type Props = {
 };
 
 const Firmware = ({ onInstall }: Props) => {
+    const [selectedChoices, setSelectedChoices] = useState<FirmwareChoice[]>(
+        []
+    );
     const [releases, setReleases] = useState<GithubRelease[]>([]);
     const [selectedRelease, setSelectedRelease] = useState<GithubRelease>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -31,16 +34,21 @@ const Firmware = ({ onInstall }: Props) => {
         GithubReleaseManifest | undefined
     >();
 
-    const [choice, setChoice] = useState<FirmwareChoice | undefined>();
-
+    const choice = useMemo(
+        () => selectedChoices[selectedChoices.length - 1],
+        [selectedChoices]
+    );
     const chooseFirmware = (id) => {
         const release = releases.find((r) => r.id + "" === id + "");
-        setChoice(undefined);
         setSelectedRelease(release);
+
+
         if (release) {
             GithubService.getReleaseManifest(release).then((manifest) => {
                 setReleaseManifest(manifest);
-                setChoice(manifest.installable);
+                setSelectedChoices(() =>
+                manifest?.installable ? [manifest?.installable] : []
+            );
             });
         }
     };
@@ -99,12 +107,41 @@ const Firmware = ({ onInstall }: Props) => {
                     {choice && !choice.images && (
                         <>
                             <Card className="text-bg-light card">
+                                {(selectedChoices.length > 1) && (<><nav aria-label="breadcrumb">
+                                    <ol className="breadcrumb">
+                                        {selectedChoices
+                                            .slice(1)
+                                            .map((choice) => (
+                                                <li className="breadcrumb-item">
+                                                    <a
+                                                        href="#"
+                                                        onClick={() => {
+                                                            setSelectedChoices(
+                                                                (choices) => [
+                                                                    ...choices.splice(
+                                                                        0,
+                                                                        choices.indexOf(
+                                                                            choice
+                                                                        ) + 1
+                                                                    )
+                                                                ]
+                                                            );
+                                                        }}>
+                                                        {choice.name}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                    </ol>
+                                </nav>
+                                <hr /></>)}
+
                                 <h2>{choice["choice-name"]}</h2>
                                 <p>{choice.description}</p>
 
-                                <>
+                                <div className="d-grid gap-2">
                                     {choice.choices.map((subChoice) => (
                                         <Button
+                                            style={{minHeight: "60px"}}
                                             key={subChoice.name}
                                             onClick={() => {
                                                 if (subChoice.images) {
@@ -114,13 +151,29 @@ const Firmware = ({ onInstall }: Props) => {
                                                         subChoice
                                                     );
                                                 } else {
-                                                    setChoice(subChoice);
+                                                    setSelectedChoices(
+                                                        (choices) => [
+                                                            ...choices,
+                                                            subChoice
+                                                        ]
+                                                    );
                                                 }
                                             }}>
-                                            <>{subChoice.description}</>
+                                            <>
+                                                {subChoice.description}
+                                                {subChoice.erase && (
+                                                    <>
+                                                        <br />
+                                                        <span className="badge text-bg-danger">
+                                                            Will erase files and
+                                                            configuration!
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </>
                                         </Button>
                                     ))}
-                                </>
+                                </div>
                             </Card>
                         </>
                     )}

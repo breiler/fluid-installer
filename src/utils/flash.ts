@@ -1,10 +1,11 @@
 import { ESPLoader, Transport } from "esptool-js";
 import CryptoJS from "crypto-js";
 import { FlashProgress } from "../services/FlashService";
+import { NativeSerialPort } from "./serialport/typings";
 
 const FLASH_BAUD_RATE = 921600;
 
-let espLoaderTerminal = {
+export const espLoaderTerminal = {
     clean() {
         //term.clear();
     },
@@ -20,7 +21,7 @@ export const flashDevice = async (
     serialPort,
     files,
     erase: boolean,
-    onProgress : (progress: FlashProgress) => void,
+    onProgress: (progress: FlashProgress) => void,
     terminal = espLoaderTerminal
 ) => {
     const transport = new Transport(serialPort);
@@ -57,4 +58,15 @@ export const flashDevice = async (
         await transport.disconnect();
     }
     return Promise.resolve();
+};
+
+export type DeviceInfo = {
+    description: string;
+    features: string[];
+    frequency: number;
+    mac: string;
+    flashId: number;
+    manufacturer: string;
+    device: string;
+    flashSize: string;
 };

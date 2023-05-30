@@ -11,10 +11,11 @@ import {
 
 type InstallCardProps = {
     serialPort: SerialPort;
+    disabled: boolean;
     onClick: () => void;
 };
 
-export const InstallCard = ({ serialPort, onClick }) => {
+export const InstallCard = ({ serialPort, onClick, disabled = false }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [version, setVersion] = useState<string>();
 
@@ -33,7 +34,7 @@ export const InstallCard = ({ serialPort, onClick }) => {
         <Card
             className="select-card"
             footer={
-                <Button onClick={onClick}>
+                <Button onClick={onClick} disabled={disabled}>
                     <>{version ? "Upgrade" : "Install"} FluidNC</>
                 </Button>
             }>

@@ -1,11 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBluetooth } from "@fortawesome/free-brands-svg-icons";
-import { faWifi } from "@fortawesome/free-solid-svg-icons";
 
 import { Card } from "../../components";
-import Button from "../../components/button";
 import {
     FirmwareChoice,
     GithubRelease,
@@ -13,7 +9,7 @@ import {
     GithubService
 } from "../../services/GitHubService";
 import "./Firmware.scss";
-import { FirmwareType } from "../../services/InstallService";
+import Choice from "../../components/choice";
 
 type Props = {
     onInstall: (
@@ -42,13 +38,10 @@ const Firmware = ({ onInstall }: Props) => {
         const release = releases.find((r) => r.id + "" === id + "");
         setSelectedRelease(release);
 
-
         if (release) {
             GithubService.getReleaseManifest(release).then((manifest) => {
                 setReleaseManifest(manifest);
-                setSelectedChoices(() =>
-                manifest?.installable ? [manifest?.installable] : []
-            );
+                setSelectedChoices([manifest.installable]);
             });
         }
     };
@@ -66,9 +59,15 @@ const Firmware = ({ onInstall }: Props) => {
             });
     };
 
+    const onSelect = (choice: FirmwareChoice) => {
+        setSelectedChoices((choices) => [...choices, choice]);
+        if (choice.images) {
+            onInstall(selectedRelease!, releaseManifest!, choice);
+        }
+    };
+
     useEffect(() => {
         if (releases && releases.length) {
-            console.log(releases[0].id);
             chooseFirmware(releases[0].id);
         }
     }, [releases]);
@@ -104,76 +103,47 @@ const Firmware = ({ onInstall }: Props) => {
 
             {selectedRelease && (
                 <>
-                    {choice && !choice.images && (
+                    {choice && releaseManifest && !choice.images && (
                         <>
                             <Card className="text-bg-light card">
-                                {(selectedChoices.length > 1) && (<><nav aria-label="breadcrumb">
-                                    <ol className="breadcrumb">
-                                        {selectedChoices
-                                            .slice(1)
-                                            .map((choice) => (
-                                                <li className="breadcrumb-item">
-                                                    <a
-                                                        href="#"
-                                                        onClick={() => {
-                                                            setSelectedChoices(
-                                                                (choices) => [
-                                                                    ...choices.splice(
-                                                                        0,
-                                                                        choices.indexOf(
-                                                                            choice
-                                                                        ) + 1
-                                                                    )
-                                                                ]
-                                                            );
-                                                        }}>
-                                                        {choice.name}
-                                                    </a>
-                                                </li>
-                                            ))}
-                                    </ol>
-                                </nav>
-                                <hr /></>)}
-
-                                <h2>{choice["choice-name"]}</h2>
-                                <p>{choice.description}</p>
-
-                                <div className="d-grid gap-2">
-                                    {choice.choices.map((subChoice) => (
-                                        <Button
-                                            style={{minHeight: "60px"}}
-                                            key={subChoice.name}
-                                            onClick={() => {
-                                                if (subChoice.images) {
-                                                    onInstall(
-                                                        selectedRelease,
-                                                        releaseManifest!,
-                                                        subChoice
-                                                    );
-                                                } else {
-                                                    setSelectedChoices(
-                                                        (choices) => [
-                                                            ...choices,
-                                                            subChoice
-                                                        ]
-                                                    );
-                                                }
-                                            }}>
-                                            <>
-                                                {subChoice.description}
-                                                {subChoice.erase && (
-                                                    <>
-                                                        <br />
-                                                        <span className="badge text-bg-danger">
-                                                            Will erase files and
-                                                            configuration!
-                                                        </span>
-                                                    </>
+                                {selectedChoices.length > 1 && (
+                                    <>
+                                        <nav aria-label="breadcrumb">
+                                            <ol className="breadcrumb">
+                                                {selectedChoices.map(
+                                                    (choice) => (
+                                                        <li
+                                                            className="breadcrumb-item"
+                                                            key={choice.name}>
+                                                            <a
+                                                                href="#"
+                                                                onClick={() => {
+                                                                    setSelectedChoices(
+                                                                        (
+                                                                            choices
+                                                                        ) => [
+                                                                            ...choices.splice(
+                                                                                0,
+                                                                                choices.indexOf(
+                                                                                    choice
+                                                                                ) +
+                                                                                    1
+                                                                            )
+                                                                        ]
+                                                                    );
+                                                                }}>
+                                                                {choice.name}
+                                                            </a>
+                                                        </li>
+                                                    )
                                                 )}
-                                            </>
-                                        </Button>
-                                    ))}
-                                </div>
+                                            </ol>
+                                        </nav>
+                                        <hr />
+                                    </>
+                                )}
+
+                                <Choice choice={choice} onSelect={onSelect} />
                             </Card>
                         </>
                     )}

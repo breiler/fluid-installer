@@ -32,11 +32,9 @@ const Terminal = ({ serialPort }: Props) => {
 
         return () => {
             if (serialPort.getState() === SerialPortState.CONNECTED) {
-                console.log("Closing connection");
-                serialPort.write(String.fromCharCode(0x0c)); // CTRL-L Restting echo mode
-                new Promise((f) => setTimeout(f, 1000)).then(() =>
-                    serialPort.close()
-                );
+                serialPort
+                    .write(String.fromCharCode(0x0c)) // CTRL-L Restting echo mode
+                    .then(() => serialPort.close());
             }
         };
     }, [serialPort, xtermRef]);

@@ -10,12 +10,12 @@ export const Version = ({ serialPort }: VersionProps) => {
     const [version, setVersion] = useState<string>();
 
     useEffect(() => {
-        const controllerService = new ControllerService(serialPort);
+        /*const controllerService = new ControllerService(serialPort);
         controllerService.connect().then(async () => {
             const versionCommand = await controllerService.send(new VersionCommand());
             setVersion(versionCommand.getVersionNumber());
             controllerService.disconnect();
-        });
+        });*/
 
     }, [setVersion]);
 

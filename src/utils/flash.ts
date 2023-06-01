@@ -18,7 +18,7 @@ export const espLoaderTerminal = {
 };
 
 export const flashDevice = async (
-    serialPort,
+    serialPort : NativeSerialPort,
     files,
     erase: boolean,
     onProgress: (progress: FlashProgress) => void,

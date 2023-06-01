@@ -28,13 +28,11 @@ const Choice = ({ choice, onSelect }: ChoiceProps) => {
                                 <>
                                     <br />
                                     <span className="badge text-bg-danger">
-                                        Will erase files and configuration!
+                                        This will erase all files and configurations!
                                     </span>
-                                    <Ribbon></Ribbon>
+                                    <Ribbon>CAUTION!</Ribbon>
                                 </>
                             )}
-
-                            
                         </>
                     </Button>
                 ))}

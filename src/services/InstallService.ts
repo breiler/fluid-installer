@@ -147,7 +147,7 @@ export const InstallService = {
             const flashFiles = await convertImagesToFlashFiles(images, files);
             console.log(flashFiles);
             await flashDevice(
-                serialPort,
+                serialPort.getNativeSerialPort(),
                 flashFiles,
                 choice.erase || false,
                 onProgress

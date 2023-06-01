@@ -14,10 +14,10 @@ const App = () => {
     if (isSafari()) {
         return <h1>This tool is not supported on Safari!</h1>;
     }
-    const [serialPort, setSerialPort] = useState();
+    const [serialPort, setSerialPort] = useState<SerialPort>();
 
     const onConnect = (port) => {
-        setSerialPort(port);
+        setSerialPort(new SerialPort(port));
     };
 
     return (
@@ -25,7 +25,7 @@ const App = () => {
             <Header />
             <div className="container">
                 {!serialPort && <Connection onConnect={onConnect} />}
-                {serialPort && !page && <SelectMode onSelect={setPage} serialPort={new SerialPort(serialPort)} />}
+                {serialPort && !page && <SelectMode onSelect={setPage} serialPort={serialPort} />}
                 {serialPort && page && (
                     <>
                         <nav aria-label="breadcrumb">
@@ -56,11 +56,11 @@ const App = () => {
                 )}
                 {serialPort && page === Page.TERMINAL && (
                     <Terminal
-                        serialPort={new SerialPort(serialPort)}
+                        serialPort={serialPort}
                         onClose={() => setPage(undefined)}
                     />
                 )}
-                {serialPort && page === Page.FILEBROWSER && <FileBrowser />}
+                {serialPort && page === Page.FILEBROWSER && <FileBrowser serialPort={serialPort}/>}
             </div>
         </>
     );

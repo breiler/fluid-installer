@@ -2,6 +2,7 @@ import { ESPLoader, Transport } from "esptool-js";
 import { DeviceInfo, espLoaderTerminal } from "../flash";
 import { convertUint8ArrayToBinaryString } from "../utils";
 import { NativeSerialPort } from "./typings";
+import { Buffer } from "buffer";
 
 export enum SerialPortState {
     DISCONNECTED,
@@ -10,7 +11,7 @@ export enum SerialPortState {
     DISCONNECTING
 }
 
-type SerialReader = (data: string) => void;
+type SerialReader = (data: Buffer) => void;
 const FLASH_BAUD_RATE = 921600;
 
 export class SerialPort {
@@ -127,6 +128,10 @@ export class SerialPort {
         this.readers.push(reader);
     };
 
+    removeReader = (reader: SerialReader) => {
+        this.readers = this.readers.filter(r => r === reader);
+    }
+
     private startReading = async () => {
         while (this.state === SerialPortState.CONNECTED) {
             if (!this.serialPort.readable) {
@@ -142,7 +147,7 @@ export class SerialPort {
                 }
                 if (value) {
                     this.readers.forEach((reader) =>
-                        reader(convertUint8ArrayToBinaryString(value))
+                        reader(Buffer.from(value))
                     );
                 }
             }

@@ -1,44 +1,44 @@
 {
-  "name": "fluid-installer",
-  "version": "1.0.0",
-  "description": "",
-  "source": "src/index.html",
-  "scripts": {
-    "prebuild": "rm -rf dist",
-    "start": "parcel",
-    "build": "parcel build --public-url .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/breiler/fluid-installer.git"
-  },
-  "author": "Joacim Breiler",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/breiler/fluid-installer/issues"
-  },
-  "homepage": "https://github.com/breiler/fluid-installer#readme",
-  "devDependencies": {
-    "@parcel/transformer-sass": "^2.8.3",
-    "buffer": "^5.7.1",
-    "parcel": "^2.8.3",
-    "prettier": "2.8.4",
-    "process": "^0.11.10"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.3.0",
-    "@fortawesome/free-solid-svg-icons": "^6.3.0",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "bootstrap": "^5.2.3",
-    "chonky": "^2.3.2",
-    "chonky-icon-fontawesome": "^2.3.2",
-    "crypto-js": "^4.1.1",
-    "esptool-js": "^0.2.1",
-    "jszip": "^3.10.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-markdown": "^8.0.5",
-    "xterm": "^5.1.0"
-  }
+    "name": "fluid-installer",
+    "version": "1.0.0",
+    "description": "",
+    "source": "src/index.html",
+    "scripts": {
+        "prebuild": "rm -rf dist",
+        "start": "parcel",
+        "build": "parcel build --public-url .",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/breiler/fluid-installer.git"
+    },
+    "author": "Joacim Breiler",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/breiler/fluid-installer/issues"
+    },
+    "homepage": "https://github.com/breiler/fluid-installer#readme",
+    "devDependencies": {
+        "@parcel/transformer-sass": "^2.8.3",
+        "@types/node": "^20.2.5",
+        "buffer": "^5.5.0",
+        "events": "^3.3.0",
+        "parcel": "^2.8.3",
+        "prettier": "2.8.4",
+        "process": "^0.11.10"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.3.0",
+        "@fortawesome/free-brands-svg-icons": "^6.4.0",
+        "@fortawesome/free-solid-svg-icons": "^6.3.0",
+        "@fortawesome/react-fontawesome": "^0.2.0",
+        "bootstrap": "^5.2.3",
+        "crypto-js": "^4.1.1",
+        "esptool-js": "^0.2.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-markdown": "^8.0.5",
+        "xterm": "^5.1.0"
+    }
 }

@@ -29,7 +29,7 @@ const Button = ({
     return (
         <button
             style={style}
-            className={"component-button btn " + buttonType + " btn-md"}
+            className={"component-button btn " + buttonType + " btn-md btn-block position-relative"}
             type="button"
             onClick={onClick}
             disabled={disabled}>

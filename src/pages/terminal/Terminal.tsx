@@ -31,7 +31,7 @@ const Terminal = ({ serialPort }: Props) => {
         }
 
         return () => {
-            if (serialPort.getState() === SerialPortState.CONNECTED) {
+            if (serialPort && serialPort.getState() === SerialPortState.CONNECTED) {
                 serialPort
                     .write(String.fromCharCode(0x0c)) // CTRL-L Restting echo mode
                     .then(() => serialPort.close());
@@ -45,7 +45,7 @@ const Terminal = ({ serialPort }: Props) => {
                 <Xterm
                     ref={xtermRef}
                     onData={serialPort.write}
-                    options={{ cursorBlink: true, convertEol: true }}
+                    options={{ cursorBlink: true, convertEol: true, cols: 72 }}
                 />
             )}
             {error && <div className="alert alert-danger">{error}</div>}

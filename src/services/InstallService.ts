@@ -1,5 +1,3 @@
-import JSZip from "jszip";
-
 import {
     FirmwareChoice,
     FirmwareImage,
@@ -33,40 +31,6 @@ const findFileInZip = (zip: any, fileName: any): any => {
         throw new Error("Missing file '" + fileName + "' from package");
     }
     return file;
-};
-
-/**
- * Unzips the given data and returns a promise with four files
- * @param {string} zipData
- * @param {FirmwareType} firmwareType
- * @returns
- */
-const unzipAssetData = (
-    zipData: any,
-    firmwareType: FirmwareType = FirmwareType.WIFI
-) => {
-    return JSZip.loadAsync(zipData).then((zip: any) => {
-        const bootLoaderFile = findFileInZip(
-            zip,
-            "/" + firmwareType + "/bootloader.bin"
-        );
-        const bootAppFile = findFileInZip(zip, "/common/boot_app0.bin");
-        const firmwareFile = findFileInZip(
-            zip,
-            "/" + firmwareType + "/firmware.bin"
-        );
-        const partitionsFile = findFileInZip(
-            zip,
-            "/" + firmwareType + "/partitions.bin"
-        );
-
-        return Promise.all([
-            zip.file(bootLoaderFile.name).async("uint8array"),
-            zip.file(bootAppFile.name).async("uint8array"),
-            zip.file(firmwareFile.name).async("uint8array"),
-            zip.file(partitionsFile.name).async("uint8array")
-        ]);
-    });
 };
 
 const convertToFlashFiles = (files: any[]) => {
@@ -106,8 +70,12 @@ const convertImagesToFlashFiles = (
     }
 
     images.forEach((image, index) => {
-        console.log("Image: " + image.path, "Offset: " + image.offset,  "Image size: " + files[index].length + " bytes")
-    })
+        console.log(
+            "Image: " + image.path,
+            "Offset: " + image.offset,
+            "Image size: " + files[index].length + " bytes"
+        );
+    });
 
     return images.map((image, index) => {
         return {
@@ -152,49 +120,6 @@ export const InstallService = {
                 choice.erase || false,
                 onProgress
             );
-            onState(InstallerState.DONE);
-        } catch (error) {
-            console.error(error);
-            onState(InstallerState.ERROR);
-            throw "Was not able to flash device";
-        }
-
-        return Promise.resolve();
-    },
-
-    installRelease: async (
-        release: GithubRelease,
-        serialPort: SerialPort,
-        firmwareType: FirmwareType,
-        onProgress: (FlashProgress) => void,
-        onState: (state: InstallerState) => void
-    ): Promise<void> => {
-        const asset = GithubService.getReleaseAsset(release);
-
-        let zipData: Blob | undefined = undefined;
-        try {
-            onState(InstallerState.DOWNLOADING);
-            zipData = await GithubService.getReleaseAssetZip(asset!);
-        } catch (error) {
-            console.error(error);
-            onState(InstallerState.ERROR);
-            throw "Could not download package";
-        }
-
-        let files: any[] | undefined;
-        try {
-            onState(InstallerState.EXTRACTING);
-            files = await unzipAssetData(zipData, firmwareType);
-        } catch (error) {
-            console.error(error);
-            onState(InstallerState.ERROR);
-            throw "Could not unzip package, it seems corrupted";
-        }
-
-        try {
-            onState(InstallerState.FLASHING);
-            const flashFiles = convertToFlashFiles(files!);
-            //await flashDevice(serialPort, flashFiles, onProgress);
             onState(InstallerState.DONE);
         } catch (error) {
             console.error(error);

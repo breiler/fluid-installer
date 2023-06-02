@@ -1,6 +1,7 @@
+import { buffer } from "stream/consumers";
+
 export interface XModemSocket {
-    peekByte(): Promise<Buffer>;
-    readByte(): Promise<Buffer>;
+    peekByte(): Promise<number | undefined>;
     write: (buffer: Buffer) => Promise<void>;
     read: () => Promise<Buffer>;
     close: () => void;
@@ -19,7 +20,9 @@ const ERROR_COULD_NOT_START = "Transmission could not start";
 const ERROR_WRONG_BLOCK_NUMBER = "Got the wrong block number";
 const ERROR_DUPLICATE_BLOCK = "Duplicate block";
 const ERROR_MISSING_HEADER = "Missing header";
-const ERROR_CHECKSUM = "Checksum error"
+const ERROR_CHECKSUM = "Checksum error";
+const ERROR_COULD_NOT_DOWNLOAD = "Could not download!";
+const ERROR_COULD_NOT_UPLOAD = "Could not upload!";
 
 var crcTable = [
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7, 0x8108,
@@ -62,19 +65,115 @@ const crc16 = (buffer: Buffer) => {
     return crc;
 };
 
+const crc16Hex = (buffer: Buffer) => {
+    let crcString = crc16(buffer).toString(16);
+    // Need to avoid odd string for Buffer creation
+    if (crcString.length % 2 == 1) {
+        crcString = "0".concat(crcString);
+    }
+    // CRC must be 2 bytes of length
+    if (crcString.length === 2) {
+        crcString = "00".concat(crcString);
+    }
+    return crcString;
+};
+
 export class XModem {
     private socket: XModemSocket;
-    private maxErrors = 10;
-    private blockTimeout = 3000;
-    private requestTimeout = 3000;
-    private waitForReceiverTimeout = 20000;
-    private sendBlockTimeout = 10000;
+    private maxTransmissionRestarts = 4;
+    private maxUploadErrors = 5;
 
     constructor(socket: XModemSocket) {
         this.socket = socket;
     }
 
-    receive = async (): Promise<Buffer> => {
+    async send(fileData: Buffer) {
+        let startByte;
+
+        // Wait for send to start
+        let transmissionStartErrors = 0;
+        while (transmissionStartErrors < this.maxTransmissionRestarts) {
+            startByte = (await this.socket.read()).at(0);
+            if (startByte === NAK || startByte === EOT) throw ERROR_COULD_NOT_UPLOAD;
+            else if (startByte === CRC_MODE) {
+                break;
+            } 
+            transmissionStartErrors++;
+            await new Promise((r) => setTimeout(r, 100));
+        }
+
+        let blockNumber = 1;
+        while (fileData.length > 0) {
+            let blockData = fileData.subarray(0, 1024);
+            fileData = fileData.subarray(
+                fileData.length > 1024 ? 1024 : fileData.length
+            );
+
+            if (blockData.length < 1024) {
+                blockData = Buffer.concat([
+                    blockData,
+                    Buffer.alloc(1024 - blockData.length, FILLER)
+                ]);
+            }
+
+            let crcHexString = crc16Hex(blockData);
+
+            let errorCount = 0;
+            let blockDone = false;
+            while (!blockDone) {
+                if (errorCount > this.maxUploadErrors) {
+                    throw ERROR_COULD_NOT_UPLOAD;
+                }
+
+                const packet = Buffer.concat([
+                    Buffer.from([STX, blockNumber, 0xff - blockNumber]),
+                    Buffer.concat([blockData, Buffer.from(crcHexString, "hex")])
+                ]);
+                console.log(
+                    "Sending block #" + blockNumber + " CRC " + crcHexString
+                );
+                await this.socket.write(packet);
+
+                while (true) {
+                    startByte = (await this.socket.read()).at(0);
+                    console.debug("Waiting for ACK... ", startByte);
+                    if (startByte === ACK) {
+                        console.debug("Block done #" + blockNumber);
+                        blockDone = true;
+                        blockNumber++;
+                        break;
+                    }
+                    if (startByte === NAK || startByte === CRC_MODE) {
+                        console.log("Recived error for block #" + blockNumber);
+                        errorCount++;
+                        break;
+                    }
+                    if (startByte === CAN) {
+                        console.log("Recieved CAN from controller, aborting");
+                        throw ERROR_COULD_NOT_UPLOAD;
+                    }
+                    await new Promise((r) => setTimeout(r, 100));
+                }
+            }
+        }
+
+        // Done sending, finish with EOT
+        while (true) {
+            console.log("Transfer complete, sending EOT");
+            this.socket.write(Buffer.from([EOT]));
+            await new Promise((r) => setTimeout(r, 100));
+
+            let readByte = (await this.socket.read()).at(0);
+            if (readByte == ACK) {
+                break;
+            } else if (readByte == CAN) {
+                throw ERROR_COULD_NOT_UPLOAD;
+            }
+
+        }
+    }
+
+    async receive(): Promise<Buffer> {
         await this.requestTransmissionStart();
 
         let blockNumber = 1;
@@ -85,44 +184,35 @@ export class XModem {
 
             try {
                 block = await this.readBlock(blockNumber);
+                errorCount = 0;
             } catch (error) {
-                errorCount++;
-                console.error(error)
-                if (errorCount > 5) {
-                    throw "Could not download!";
-                } 
-
+                if (++errorCount >= this.maxUploadErrors) {
+                    throw ERROR_COULD_NOT_DOWNLOAD;
+                }
                 continue;
             }
 
             if (block.length > 5) {
-                console.log("Concatinating block #" + blockNumber);
+                console.debug("Concatinating block #" + blockNumber);
                 blockNumber++;
                 result = Buffer.concat([result, block]);
                 await this.socket.write(Buffer.from([ACK]));
             } else if (block.length === 0) {
-                // Trim any trailing FILLER
-                let i = result.length - 1;
-                while (i >= 0 && result.at(i) === FILLER) {
-                    i--;
-                }
-
-                return Promise.resolve(result.subarray(0, i));
+                return trimBuffer(result);
             }
         }
-    };
+    }
 
     async readBlock(blockNumber: number, useXModem1K = true): Promise<Buffer> {
         let block = Buffer.alloc(0);
         const blockSize = useXModem1K ? 1024 : 128;
 
-        console.log("Reading block #" + blockNumber);
+        console.debug("Reading block #" + blockNumber);
         await new Promise((r) => setTimeout(r, 100));
         block = await this.socket.read();
-        console.log("Received block: ", block);
 
         if (block.at(0) === EOT) {
-            console.log("Reached last block");
+            console.debug("Reached last block");
             await this.socket.write(Buffer.from([ACK]));
             return Promise.resolve(Buffer.alloc(0));
         } else if (block.at(0) !== STX) {
@@ -133,7 +223,7 @@ export class XModem {
             block.at(1) === blockNumber - 1 &&
             block.at(1)! + block.at(2)! === 0xff
         ) {
-            console.log("Repeated block " + (blockNumber - 1));
+            console.debug("Skipping repeated block #" + (blockNumber - 1));
             await this.socket.write(Buffer.from([ACK]));
             throw ERROR_DUPLICATE_BLOCK;
         } else if (block.at(1) !== blockNumber) {
@@ -151,42 +241,12 @@ export class XModem {
             throw ERROR_WRONG_BLOCK_NUMBER;
         }
 
-
         // Calculate CRC
         const blockPayload = block.subarray(3, blockSize + 3);
-        const blockPayloadChecksum = crc16(blockPayload);
         const crcData = block.subarray(blockSize + 3, blockSize + 3 + 2);
-
-        let checkSum = 0;
-        for (let j = 0; j < crcData.length; j++) {
-            checkSum = (checkSum << 8) + crcData.at(j)!;
-        }
-
-        if(blockPayloadChecksum.toString(16) !== checkSum.toString(16)) {
-            console.log(
-                "Block #" +
-                    blockNumber +
-                    " CRC " +
-                    checkSum.toString(16) +
-                    "/" +
-                    blockPayloadChecksum.toString(16) +
-                    " is not ok!"
-            );
-            await this.socket.write(Buffer.from([NAK]));
-            throw ERROR_CHECKSUM;
-        }
-
+        await this.checkCrc(blockPayload, crcData, blockNumber);
 
         try {
-            console.log(
-                "Block #" +
-                    blockNumber +
-                    " CRC " +
-                    checkSum.toString(16) +
-                    "/" +
-                    blockPayloadChecksum.toString(16) +
-                    " is ok!"
-            );
             return Promise.resolve(blockPayload);
         } catch (error) {
             console.error(error);
@@ -194,27 +254,77 @@ export class XModem {
         }
     }
 
+    private async checkCrc(
+        blockPayload: Buffer,
+        crcData: Buffer,
+        blockNumber: number
+    ) {
+        const calculatedChecksum = crc16(blockPayload);
+        let expectedCheckSum = 0;
+        for (let j = 0; j < crcData.length; j++) {
+            expectedCheckSum = (expectedCheckSum << 8) + crcData.at(j)!;
+        }
+
+        if (calculatedChecksum.toString(16) !== expectedCheckSum.toString(16)) {
+            console.debug(
+                "Block #" +
+                    blockNumber +
+                    " CRC16 " +
+                    calculatedChecksum.toString(16) +
+                    "/" +
+                    expectedCheckSum.toString(16) +
+                    " is not ok!"
+            );
+            await this.socket.write(Buffer.from([NAK]));
+            throw ERROR_CHECKSUM;
+        }
+
+        console.debug(
+            "Block #" +
+                blockNumber +
+                " CRC16 " +
+                calculatedChecksum.toString(16) +
+                " is ok!"
+        );
+    }
+
     async requestTransmissionStart() {
         // Clear the buffer
         await this.socket.read();
 
         let tryCount = 0;
-        let data = Buffer.alloc(0);
-        while (data.length === 0) {
-            console.log("Attempting to start transmission");
-            await new Promise((r) => setTimeout(r, 500));
-            if (tryCount++ > 4) {
-                console.log("Aborting");
+        while (true) {
+            await new Promise((r) => setTimeout(r, 200));
+            console.log("Attempting to start transmission #" + tryCount);
+            if (++tryCount >= this.maxTransmissionRestarts) {
+                console.log("Could not start transmission");
                 throw ERROR_COULD_NOT_START;
             }
             await this.socket.write(Buffer.from([CRC_MODE]));
-            data = await this.socket.peekByte();
+            await new Promise((r) => setTimeout(r, 200));
 
-            if (data.at(0) === STX) {
-                console.log("Using XModem-1K");
-            } else {
-                data = Buffer.alloc(0);
+            const byte = await this.socket.peekByte();
+            if (byte === STX) {
+                console.debug("Found XModem-1K");
+                break;
+            } else if (byte === SOH) {
+                console.error("Does not support legacy XModem protocol");
+                throw ERROR_COULD_NOT_START;
             }
         }
     }
+
+    close() {
+        this.socket.close();
+    }
 }
+
+const trimBuffer = (result: Buffer): Buffer => {
+    // Trim any trailing FILLER characters
+    let i = result.length - 1;
+    while (i >= 0 && result.at(i) === FILLER) {
+        i--;
+    }
+
+    return result.subarray(0, i);
+};

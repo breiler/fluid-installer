@@ -7,6 +7,7 @@ import { Button, Card } from "../../components";
 import { SerialPort } from "../../utils/serialport/SerialPort";
 import { InstallCard } from "../../components/installcard/InstallCard";
 import "./SelectMode.scss";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 type Props = {
     onSelect: (page: Page) => void;
@@ -32,7 +33,7 @@ const SelectMode = ({ onSelect, serialPort }: Props) => {
                             </Button>
                         }>
                         <div className="select-icon">
-                            <FontAwesomeIcon icon={faTerminal} size="4x" />
+                            <FontAwesomeIcon icon={faTerminal as IconDefinition} size="4x" />
                         </div>
                         <>Connect with your controller using a terminal</>
                     </Card>
@@ -46,7 +47,7 @@ const SelectMode = ({ onSelect, serialPort }: Props) => {
                             </Button>
                         }>
                         <div className="select-icon">
-                            <FontAwesomeIcon icon={faFolderOpen} size="4x" />
+                            <FontAwesomeIcon icon={faFolderOpen as IconDefinition} size="4x" />
                         </div>
                         <>Manage files on the controller</>
                     </Card>

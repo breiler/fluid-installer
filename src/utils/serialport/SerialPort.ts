@@ -1,6 +1,5 @@
 import { ESPLoader, Transport } from "esptool-js";
 import { DeviceInfo, espLoaderTerminal } from "../flash";
-import { convertUint8ArrayToBinaryString } from "../utils";
 import { NativeSerialPort } from "./typings";
 import { Buffer } from "buffer";
 
@@ -11,10 +10,12 @@ export enum SerialPortState {
     DISCONNECTING
 }
 
-type SerialReader = (data: Buffer) => void;
+export type SerialReader = (data: Buffer) => void;
+
 const FLASH_BAUD_RATE = 921600;
 
 export class SerialPort {
+
     private serialPort: NativeSerialPort;
     private state: SerialPortState = SerialPortState.DISCONNECTED;
     private readers: SerialReader[] = [];
@@ -25,8 +26,8 @@ export class SerialPort {
         this.serialPort = serialPort;
     }
 
-    getInfo = async () : Promise<DeviceInfo> => {
-        if(this.deviceInfo) {
+    getInfo = async (): Promise<DeviceInfo> => {
+        if (this.deviceInfo) {
             return Promise.resolve(this.deviceInfo);
         }
 
@@ -38,12 +39,12 @@ export class SerialPort {
                 espLoaderTerminal
             );
             await loader.main_fn();
-    
+
             // We need to wait after connecting...
             await new Promise((f) => setTimeout(f, 2000));
             const flashId = await loader.read_flash_id();
             const flashIdLowbyte = (flashId >> 16) & 0xff;
-    
+
             this.deviceInfo = {
                 description: await loader.chip.get_chip_description(loader),
                 features: await loader.chip.get_chip_features(loader),
@@ -56,7 +57,7 @@ export class SerialPort {
                     flashIdLowbyte.toString(16),
                 flashSize: loader.DETECTED_FLASH_SIZES[flashIdLowbyte]
             };
-    
+
             return Promise.resolve(this.deviceInfo);
         } finally {
             // Reset the controller
@@ -66,7 +67,7 @@ export class SerialPort {
             await transport.disconnect();
         }
         return Promise.reject();
-    }
+    };
 
     open = async (baudRate = 115200): Promise<void> => {
         if (this.state === SerialPortState.CONNECTED) {
@@ -79,6 +80,10 @@ export class SerialPort {
             this.startReading();
         });
     };
+
+    isOpen() {
+        return this.state === SerialPortState.CONNECTED || this.state === SerialPortState.CONNECTING;
+    }
 
     close = async (): Promise<void> => {
         if (this.state !== SerialPortState.CONNECTED) {
@@ -104,33 +109,41 @@ export class SerialPort {
         return this.state;
     };
 
-    getNativeSerialPort = () : NativeSerialPort => {
-        return this.serialPort;
+    getReaders(): SerialReader[] {
+        return this.readers;
     }
 
-    write = async (data: string): Promise<void> => {
+    getNativeSerialPort = (): NativeSerialPort => {
+        return this.serialPort;
+    };
+
+    write = async (data: Buffer): Promise<void> => {
         if (this.state !== SerialPortState.CONNECTED) {
             return Promise.reject("Not connected");
         }
 
-        const encoder = new TextEncoder();
         const writer = this.serialPort.writable!.getWriter();
-        return writer.write(encoder.encode(data)).finally(() => {
+        return writer.write(data).finally(() => {
             writer.releaseLock();
         });
     };
 
     /**
-     * Adds a reader that will be noitified everytime there is serial data:
+     * Adds a reader that will be noitified everytime there is serial data
+     * 
      * @param reader
+     * @returns a function for unregistering the reader
      */
-    addReader = (reader: SerialReader) => {
+    addReader = (reader: SerialReader) : () => void => {
         this.readers.push(reader);
+
+        // Return method for removing the reader
+        return () => this.removeReader(reader);
     };
 
     removeReader = (reader: SerialReader) => {
-        this.readers = this.readers.filter(r => r === reader);
-    }
+        this.readers = this.readers.filter((r) => r !== reader);
+    };
 
     private startReading = async () => {
         while (this.state === SerialPortState.CONNECTED) {

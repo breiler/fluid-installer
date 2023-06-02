@@ -6,10 +6,11 @@ import "./Button.css";
 
 export const ButtonType = {
     PRIMARY: "btn-primary",
-    DANGER: "btn-danger",
+    DANGER: "btn-danger"
 };
 
 type Props = {
+    title?: string;
     loading?: boolean;
     disabled?: boolean;
     onClick?: MouseEventHandler;
@@ -19,17 +20,23 @@ type Props = {
 };
 
 const Button = ({
+    title,
     loading,
     disabled,
     onClick,
     children,
     buttonType = ButtonType.PRIMARY,
-    style,
+    style
 }: Props) => {
     return (
         <button
+            title={title}
             style={style}
-            className={"component-button btn " + buttonType + " btn-md btn-block position-relative"}
+            className={
+                "component-button btn " +
+                buttonType +
+                " btn-md btn-block position-relative"
+            }
             type="button"
             onClick={onClick}
             disabled={disabled}>

@@ -1,5 +1,4 @@
 import { SerialPort } from "../utils/serialport/SerialPort";
-import { convertUint8ArrayToBinaryString } from "../utils/utils";
 import { XModem, XModemSocket } from "../utils/xmodem/xmodem";
 
 enum CommandState {
@@ -89,6 +88,14 @@ export class ListFilesCommand extends Command {
     };
 }
 
+export class DeleteFileCommand extends Command {
+    constructor(file: string) {
+        super("$LocalFS/Delete=/localfs/" + file);
+    }
+}
+
+
+
 export class ReceiveFileCommand extends Command {
     constructor() {
         super("$Xmodem/Receive");
@@ -97,19 +104,28 @@ export class ReceiveFileCommand extends Command {
 
 class XModemSocketAdapter implements XModemSocket {
     private serialPort: SerialPort;
-    private buffer: Buffer = Buffer.from("");
+    private buffer: Buffer = Buffer.alloc(0);
+    private unregister: () => void;
 
     constructor(serialPort: SerialPort) {
         this.serialPort = serialPort;
-        this.serialPort.addReader((d) => this.onData(d));
+
+        // Registers a reader and store the function for unregistering
+        this.unregister = this.serialPort.addReader((data) =>
+            this.onData(data)
+        );
     }
 
     onData(data: Buffer) {
-        this.buffer = Buffer.concat([this.buffer, data]);
+        if (!this.buffer) {
+            this.buffer = data;
+        } else {
+            this.buffer = Buffer.concat([this.buffer, data]);
+        }
     }
 
     write(buffer) {
-        return this.serialPort.write(convertUint8ArrayToBinaryString(buffer));
+        return this.serialPort.write(buffer);
     }
 
     read(): Promise<Buffer> {
@@ -118,27 +134,12 @@ class XModemSocketAdapter implements XModemSocket {
         return Promise.resolve(result);
     }
 
-    peekByte(): Promise<Buffer> {
-        if (this.buffer.length === 0) {
-            return Promise.resolve(Buffer.alloc(0));
-        }
-
-        const result = this.buffer.subarray(0, 1);
-        return Promise.resolve(result);
-    }
-
-    readByte(): Promise<Buffer> {
-        if (this.buffer.length === 0) {
-            return Promise.resolve(Buffer.alloc(0));
-        }
-
-        const result = this.buffer.subarray(0, 1);
-        this.buffer = this.buffer.subarray(1);
-        return Promise.resolve(result);
+    peekByte(): Promise<number | undefined> {
+        return Promise.resolve(this.buffer.at(0));
     }
 
     close() {
-        this.serialPort.removeReader(this.onData);
+        this.unregister && this.unregister();
     }
 }
 
@@ -156,7 +157,10 @@ export class ControllerService {
 
     connect = (): Promise<void> => {
         this.serialPort.addReader(this.onData);
-        return this.serialPort.open(115200);
+        if (!this.serialPort.isOpen()) {
+            return this.serialPort.open(115200);
+        }
+        return Promise.resolve();
     };
 
     disconnect = (): Promise<void> => {
@@ -192,22 +196,39 @@ export class ControllerService {
         const result = new Promise<T>((resolve) => {
             (command as Command).onDone = async () => resolve(command);
         });
-        this.serialPort.write((command as Command).command + "\n");
+        this.serialPort.write(Buffer.from((command as Command).command + "\n"));
         return result;
     };
 
-    fetchFile = async (file: string): Promise<Buffer> => {
+    downloadFile = async (file: string): Promise<Buffer> => {
         this.xmodemMode = true;
-        await this.serialPort.write("$X\r\n");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await this.serialPort.write(Buffer.from("$X\r\n"));
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
-        await this.serialPort.write("$Xmodem/Send=" + file + "\r\n");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await this.serialPort.write(Buffer.from("$Xmodem/Send=" + file + "\r\n"));
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
         const fileData = await xmodem.receive();
+        xmodem.close();
         this.xmodemMode = false;
 
         return Promise.resolve(fileData);
+    };
+
+    uploadFile = async (file: string, fileData: Buffer): Promise<void> => {
+        this.xmodemMode = true;
+        await this.serialPort.write(Buffer.from("$X\r\n"));
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        await this.serialPort.write(Buffer.from("$Xmodem/Receive=" + file + "\r\n"));
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
+        await xmodem.send(fileData);
+        xmodem.close();
+        this.xmodemMode = false;
+
+        return Promise.resolve();
     };
 }

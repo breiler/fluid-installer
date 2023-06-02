@@ -4,10 +4,7 @@ import Button from "../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { SerialPort } from "../../utils/serialport/SerialPort";
-import {
-    ControllerService,
-    VersionCommand
-} from "../../services/ControllerService";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 type InstallCardProps = {
     serialPort: SerialPort;
@@ -29,7 +26,7 @@ export const InstallCard = ({ serialPort, onClick, disabled = false }) => {
             //controllerService.disconnect();
         });*/
     }, [setVersion, setIsLoading, serialPort]);
-    console.log(version);
+
     return (
         <Card
             className="select-card"
@@ -39,7 +36,7 @@ export const InstallCard = ({ serialPort, onClick, disabled = false }) => {
                 </Button>
             }>
             <div className="select-icon">
-                <FontAwesomeIcon icon={faDownload} size="4x" />
+                <FontAwesomeIcon icon={faDownload as IconDefinition} size="4x" />
             </div>
             <>
                 <p>{version ? "Upgrade" : "Install"} FluidNC on your controller</p>

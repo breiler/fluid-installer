@@ -7,7 +7,6 @@ import {
 } from "./GitHubService";
 import { SerialPort } from "../utils/serialport/SerialPort";
 import { flashDevice } from "../utils/flash";
-import { convertUint8ArrayToBinaryString } from "../utils/utils";
 
 export enum FirmwareType {
     WIFI = "wifi",
@@ -22,44 +21,6 @@ export enum InstallerState {
     DONE,
     ERROR
 }
-
-const findFileInZip = (zip: any, fileName: any): any => {
-    const file = Object.values(zip.files).find((file: any) =>
-        file.name.endsWith(fileName)
-    );
-    if (!file) {
-        throw new Error("Missing file '" + fileName + "' from package");
-    }
-    return file;
-};
-
-const convertToFlashFiles = (files: any[]) => {
-    if (files?.length != 4) {
-        throw new Error("Could not extract files from package");
-    }
-    return [
-        {
-            fileName: "Bootloader",
-            data: convertUint8ArrayToBinaryString(files[0]),
-            address: parseInt("0x1000")
-        },
-        {
-            fileName: "Boot app",
-            data: convertUint8ArrayToBinaryString(files[1]),
-            address: parseInt("0xe000")
-        },
-        {
-            fileName: "Firmware",
-            data: convertUint8ArrayToBinaryString(files[2]),
-            address: parseInt("0x10000")
-        },
-        {
-            fileName: "Partitions",
-            data: convertUint8ArrayToBinaryString(files[3]),
-            address: parseInt("0x8000")
-        }
-    ];
-};
 
 const convertImagesToFlashFiles = (
     images: FirmwareImage[],

@@ -28,6 +28,7 @@ const Connection = ({ onConnect }: Props) => {
                     setConnectionState(ConnectionState.CONNECTED);
                     onConnect(serialPortDevice);
                 }).catch(error => {
+                    console.error(error);
                     setErrorMessage("Could not connect to selected serial port");
                     throw error;
                 })

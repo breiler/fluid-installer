@@ -2,6 +2,7 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Header.scss";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 const logoUrl = new URL("../../assets/logo.svg", import.meta.url);
 
@@ -16,7 +17,7 @@ const Header = () => (
                 <a
                     className="nav-link active"
                     href="https://github.com/breiler/fluid-installer">
-                    Github <FontAwesomeIcon icon={faGithub} />
+                    Github <FontAwesomeIcon icon={faGithub as IconDefinition} />
                 </a>
             </div>
         </div>

@@ -7,6 +7,8 @@ import {
 } from "./GitHubService";
 import { SerialPort } from "../utils/serialport/SerialPort";
 import { flashDevice } from "../utils/flash";
+import sha256 from "crypto-js/sha256";
+import { enc } from "crypto-js/core";
 
 export enum FirmwareType {
     WIFI = "wifi",
@@ -16,7 +18,7 @@ export enum FirmwareType {
 export enum InstallerState {
     SELECT_PACKAGE,
     DOWNLOADING,
-    EXTRACTING,
+    CHECKING_SIGNATURES,
     FLASHING,
     DONE,
     ERROR
@@ -72,9 +74,16 @@ export const InstallService = {
         }
 
         try {
-            onState(InstallerState.FLASHING);
+            onState(InstallerState.CHECKING_SIGNATURES);
+            validateImageSignatures(images, files);
+        } catch (error) {
+            onState(InstallerState.ERROR);
+            throw error;
+        }
+
+        try {
             const flashFiles = await convertImagesToFlashFiles(images, files);
-            console.log(flashFiles);
+            onState(InstallerState.FLASHING);
             await flashDevice(
                 serialPort.getNativeSerialPort(),
                 flashFiles,
@@ -91,3 +100,32 @@ export const InstallService = {
         return Promise.resolve();
     }
 };
+function validateImageSignatures(images: FirmwareImage[], files: string[]) {
+    images.forEach((image, index) => {
+        if (image.signature.algorithm === "SHA2-256") {
+            const signature = sha256(enc.Latin1.parse(files[index])).toString();
+            if (image.signature.value !== signature) {
+                console.error(
+                    "The image " +
+                    image.path +
+                    " is possible corrupt. Signature was " +
+                    signature +
+                    " but manifest says " +
+                    image.signature.value
+                );
+                throw (
+                    "The image " +
+                    image.path +
+                    " might be corrupt as its signature does not match the manifest."
+                );
+            }
+        } else {
+            throw (
+                "The image " +
+                image.path +
+                " has an unknown signature algorithm: " + image.signature.algorithm
+            );
+        }
+    });
+}
+

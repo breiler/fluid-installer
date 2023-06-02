@@ -21,9 +21,9 @@ const Progress = ({ progress, status }: Props) => {
                         Downloading package... <Spinner />
                     </>
                 )}
-                {status === InstallerState.EXTRACTING && (
+                {status === InstallerState.CHECKING_SIGNATURES && (
                     <>
-                        Extracting package... <Spinner />
+                        Validating images... <Spinner />
                     </>
                 )}
                 {status === InstallerState.FLASHING && (

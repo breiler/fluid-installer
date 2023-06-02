@@ -1,15 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { Buffer } from "buffer";
 import { Button, Spinner } from "../../components";
 import { Modal } from "react-bootstrap";
 import {
-    faTrash,
-    faFile,
-    faFileLines,
-    faFileImage,
-    faFileZipper,
-    faPen,
-    faUpload,
     faSave,
     faClose
 } from "@fortawesome/free-solid-svg-icons";

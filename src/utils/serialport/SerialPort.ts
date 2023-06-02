@@ -14,8 +14,24 @@ export type SerialReader = (data: Buffer) => void;
 
 const FLASH_BAUD_RATE = 921600;
 
-export class SerialPort {
 
+export enum SerialPortEvent {
+    DISCONNECTED,
+    CONNECTION_ERROR
+}
+
+export class SerialPort {
+    dispatchEvent(eventType: SerialPortEvent) {
+        let listenersList: (() => void)[] = this.listeners.get(eventType) ?? [];
+        listenersList.forEach((listener) => listener());
+    }
+    on(eventType: SerialPortEvent, callback: () => void) {
+        let listenersList: (() => void)[] = this.listeners.get(eventType) ?? [];
+        listenersList.push(callback);
+        this.listeners.set(eventType, listenersList);
+    }
+
+    private listeners: Map<SerialPortEvent, (() => void)[]> = new Map();
     private serialPort: NativeSerialPort;
     private state: SerialPortState = SerialPortState.DISCONNECTED;
     private readers: SerialReader[] = [];
@@ -70,19 +86,32 @@ export class SerialPort {
     };
 
     open = async (baudRate = 115200): Promise<void> => {
+        if (this.state === SerialPortState.DISCONNECTING) {
+            await new Promise(r => setTimeout(r, 1000));
+        }
+
         if (this.state === SerialPortState.CONNECTED) {
             return Promise.reject("Already connected");
         }
 
         this.state = SerialPortState.CONNECTING;
-        return this.serialPort.open({ baudRate }).then(() => {
-            this.state = SerialPortState.CONNECTED;
-            this.startReading();
-        });
+        return this.serialPort
+            .open({ baudRate })
+            .then(() => {
+                this.state = SerialPortState.CONNECTED;
+                this.startReading();
+            })
+            .catch((error) => {
+                this.dispatchEvent(SerialPortEvent.CONNECTION_ERROR);
+                throw error;
+            });
     };
 
     isOpen() {
-        return this.state === SerialPortState.CONNECTED || this.state === SerialPortState.CONNECTING;
+        return (
+            this.state === SerialPortState.CONNECTED ||
+            this.state === SerialPortState.CONNECTING
+        );
     }
 
     close = async (): Promise<void> => {
@@ -101,6 +130,7 @@ export class SerialPort {
         }
 
         return this.serialPort.close().then(() => {
+            console.log("SerialPort disconnected");
             this.state = SerialPortState.DISCONNECTED;
         });
     };
@@ -122,19 +152,24 @@ export class SerialPort {
             return Promise.reject("Not connected");
         }
 
-        const writer = this.serialPort.writable!.getWriter();
-        return writer.write(data).finally(() => {
-            writer.releaseLock();
-        });
+        try {
+            const writer = this.serialPort.writable!.getWriter();
+            return writer.write(data).finally(() => {
+                writer.releaseLock();
+            });
+        } catch(error) {
+            console.log("Got error while trying to release lock, ignore...", error);
+            return Promise.resolve();
+        }
     };
 
     /**
      * Adds a reader that will be noitified everytime there is serial data
-     * 
+     *
      * @param reader
      * @returns a function for unregistering the reader
      */
-    addReader = (reader: SerialReader) : () => void => {
+    addReader = (reader: SerialReader): (() => void) => {
         this.readers.push(reader);
 
         // Return method for removing the reader
@@ -146,24 +181,28 @@ export class SerialPort {
     };
 
     private startReading = async () => {
-        while (this.state === SerialPortState.CONNECTED) {
-            if (!this.serialPort.readable) {
-                continue;
-            }
-
-            this.reader = this.serialPort.readable.getReader();
+        try {
             while (this.state === SerialPortState.CONNECTED) {
-                const { value, done } = await this.reader.read();
-                if (done) {
-                    this.reader.releaseLock();
-                    break;
+                if (!this.serialPort.readable) {
+                    continue;
                 }
-                if (value) {
-                    this.readers.forEach((reader) =>
-                        reader(Buffer.from(value))
-                    );
+
+                this.reader = this.serialPort.readable.getReader();
+                while (this.state === SerialPortState.CONNECTED) {
+                    const { value, done } = await this.reader.read();
+                    if (done) {
+                        this.reader.releaseLock();
+                        break;
+                    }
+                    if (value) {
+                        this.readers.forEach((reader) =>
+                            reader(Buffer.from(value))
+                        );
+                    }
                 }
             }
+        } catch (error) {
+            this.dispatchEvent(SerialPortEvent.CONNECTION_ERROR);
         }
     };
 }

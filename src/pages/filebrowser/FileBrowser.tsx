@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SerialPort } from "../../utils/serialport/SerialPort";
 import {
     ControllerService,
@@ -6,8 +6,8 @@ import {
     File,
     DeleteFileCommand
 } from "../../services/ControllerService";
-import { Button, Spinner } from "../../components";
-import { Modal } from "react-bootstrap";
+import { Button } from "../../components";
+import { Alert } from "react-bootstrap";
 import {
     faTrash,
     faFile,
@@ -19,57 +19,31 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import CodeMirror from "@uiw/react-codemirror";
-
-import { yaml } from "@codemirror/legacy-modes/mode/yaml";
-import { StreamLanguage } from "@codemirror/language";
 import EditorModal from "../../components/editormodal/EditorModal";
-
-type FileBrowserProps = {
-    serialPort: SerialPort;
-};
-
-class SocketAdapter {
-    serialPort: SerialPort;
-    listeners: ((data: Buffer) => void)[] = [];
-
-    constructor(serialPort: SerialPort) {
-        this.serialPort = serialPort;
-
-        this.serialPort.addReader((data) => {
-            this.listeners.forEach((listener) => listener(Buffer.from(data)));
-        });
-    }
-
-    write(data: Buffer) {
-        this.serialPort.write(data);
-    }
-
-    on(channel: string, listener: (data: Buffer) => void) {
-        this.listeners.push(listener);
-    }
-}
+import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import { SerialPortContext } from "../../context/SerialPortContext";
 
 type EditFile = {
     file: File;
     fileData: Buffer;
 };
 
-const FileBrowser = ({ serialPort }: FileBrowserProps) => {
+const FileBrowser = () => {
+    const serialPort = useContext(SerialPortContext);
     const [files, setFiles] = useState<File[]>([]);
     const [editFile, setEditFile] = useState<EditFile | undefined>();
+    const [uploadError, setUploadError] = useState<string | undefined>();
 
     const [controllerService, setControllerService] =
         useState<ControllerService>();
-    const [working, setWorking] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
-        const service = new ControllerService(serialPort);
-        setWorking(false);
+        const service = new ControllerService(serialPort!);
         service.connect().then(async () => {
-            await serialPort.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
-            await serialPort.getNativeSerialPort();
+            await serialPort!.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
+            await serialPort!.getNativeSerialPort();
             const listCommand = await service.send(new ListFilesCommand());
             setFiles(listCommand.getFiles());
         });
@@ -106,7 +80,7 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
         if (!controllerService) {
             return;
         }
-        setWorking(true);
+        setIsDownloading(true);
 
         try {
             const fileData = await controllerService.downloadFile(
@@ -122,7 +96,7 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
             document.body.appendChild(a);
             a.click();
         } finally {
-            setWorking(false);
+            setIsDownloading(false);
         }
     };
 
@@ -131,11 +105,11 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
             return;
         }
 
-        setWorking(true);
+        setIsDownloading(true);
         const fileData = await controllerService.downloadFile(
             "/littlefs/" + file.name
         );
-        setWorking(false);
+        setIsDownloading(false);
         setEditFile({ file, fileData });
     };
 
@@ -158,13 +132,9 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
                 }
 
                 setIsUploading(true);
-                controllerService
-                    ?.uploadFile(file.name, Buffer.from(content))
-                    .then(async () => {
-                        await refreshFileList();
-                        setIsUploading(false);
-                    })
-                    .finally(() => setIsUploading(false));
+                onSave(file, Buffer.from(content)).finally(() =>
+                    setIsUploading(false)
+                );
             };
             reader.readAsArrayBuffer(file);
         };
@@ -174,25 +144,14 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
     const onSave = async (file: File, fileData: Buffer) => {
         return await controllerService
             ?.uploadFile(file.name, fileData)
-            .then(async () => {
-                await new Promise(r => setTimeout(r, 2000))
-                await refreshFileList();
-            });
+            .then(async () => await refreshFileList())
+            .catch((error) => setUploadError(error));
     };
 
     return (
         <>
-            <Modal show={working} centered>
-                <Modal.Body>
-                    Downloading... <Spinner />
-                </Modal.Body>
-            </Modal>
-
-            <Modal show={isUploading} centered>
-                <Modal.Body>
-                    Uploading... <Spinner />
-                </Modal.Body>
-            </Modal>
+            <SpinnerModal show={isDownloading} text="Downloading..." />
+            <SpinnerModal show={isUploading} text="Uploading..." />
 
             <EditorModal
                 file={editFile?.file}
@@ -234,7 +193,7 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
                                             className="align-self-center"
                                             href="#"
                                             onClick={() => onDownload(file)}
-                                            aria-disabled={working}>
+                                            aria-disabled={isDownloading}>
                                             <div className="align-middle">
                                                 <FontAwesomeIcon
                                                     style={{
@@ -263,7 +222,7 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
                                         <Button
                                             title={"Delete " + file.name}
                                             style={{ marginRight: "0px" }}
-                                            disabled={working}
+                                            disabled={isDownloading}
                                             buttonType={"btn-danger"}
                                             onClick={() => onDelete(file)}>
                                             <>
@@ -282,7 +241,7 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
                                         {(file.name.endsWith(".yml") ||
                                             file.name.endsWith(".yaml")) && (
                                             <Button
-                                                disabled={working}
+                                                disabled={isDownloading}
                                                 style={{ marginRight: "0px" }}
                                                 title={"Edit " + file.name}
                                                 onClick={() => onEdit(file)}>
@@ -302,6 +261,16 @@ const FileBrowser = ({ serialPort }: FileBrowserProps) => {
                         );
                     })}
                 </ul>
+
+                {uploadError && (
+                    <Alert
+                        variant="danger"
+                        onClose={() => setUploadError(undefined)}
+                        dismissible
+                        style={{ marginTop: "16px" }}>
+                        {uploadError}
+                    </Alert>
+                )}
 
                 <div
                     className="d-flex justify-content-end"

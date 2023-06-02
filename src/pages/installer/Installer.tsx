@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import Progress from "../../panels/progress/Progress";
 import Done from "../../panels/done/Done";
@@ -7,6 +7,7 @@ import { FirmwareChoice, GithubRelease, GithubReleaseManifest, GithubService } f
 import { FirmwareType, InstallService, InstallerState } from "../../services/InstallService";
 import { SerialPort } from "../../utils/serialport/SerialPort";
 import { FlashProgress } from "../../services/FlashService";
+import { SerialPortContext } from "../../context/SerialPortContext";
 
 const initialProgress: FlashProgress = {
     fileIndex: 0,
@@ -17,10 +18,10 @@ const initialProgress: FlashProgress = {
 
 type InstallerProps = {
     onClose: () => void;
-    serialPort: SerialPort;
 };
 
-const Installer = ({ onClose, serialPort }: InstallerProps) => {
+const Installer = ({ onClose }: InstallerProps) => {
+    const serialPort = useContext(SerialPortContext);
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
     const [progress, setProgress] = useState(initialProgress);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -33,7 +34,7 @@ const Installer = ({ onClose, serialPort }: InstallerProps) => {
         console.log("Installing " + release.name + " with " + choice.name);
         InstallService.installChoice(
             release,
-            serialPort,
+            serialPort!,
             manifest,
             choice,
             setProgress,
@@ -48,7 +49,7 @@ const Installer = ({ onClose, serialPort }: InstallerProps) => {
             )}
 
             {(state === InstallerState.DOWNLOADING ||
-                state === InstallerState.EXTRACTING ||
+                state === InstallerState.CHECKING_SIGNATURES ||
                 state === InstallerState.FLASHING) && (
                 <Progress progress={progress} status={state} />
             )}

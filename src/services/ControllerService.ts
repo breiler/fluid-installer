@@ -33,6 +33,10 @@ export class Command {
             }
         }
     };
+
+    getCommand() {
+        return this.command;
+    }
 }
 
 export class VersionCommand extends Command {
@@ -94,11 +98,25 @@ export class DeleteFileCommand extends Command {
     }
 }
 
-
-
 export class ReceiveFileCommand extends Command {
     constructor() {
         super("$Xmodem/Receive");
+    }
+}
+
+export class GetConfigCommand extends Command {
+
+    constructor(config: string) {
+        super(config);
+    }
+
+    getValue(): string {
+        const response = this.response.find((line) => line.indexOf(this.getCommand()) === 0);
+        if (!response) {
+            return "";
+        }
+
+        return response.substring(this.getCommand().length + 1);
     }
 }
 
@@ -205,7 +223,9 @@ export class ControllerService {
         await this.serialPort.write(Buffer.from("$X\r\n"));
         await new Promise((resolve) => setTimeout(resolve, 300));
 
-        await this.serialPort.write(Buffer.from("$Xmodem/Send=" + file + "\r\n"));
+        await this.serialPort.write(
+            Buffer.from("$Xmodem/Send=" + file + "\r\n")
+        );
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
@@ -221,7 +241,9 @@ export class ControllerService {
         await this.serialPort.write(Buffer.from("$X\r\n"));
         await new Promise((resolve) => setTimeout(resolve, 300));
 
-        await this.serialPort.write(Buffer.from("$Xmodem/Receive=" + file + "\r\n"));
+        await this.serialPort.write(
+            Buffer.from("$Xmodem/Receive=" + file + "\r\n")
+        );
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
@@ -229,6 +251,7 @@ export class ControllerService {
         xmodem.close();
         this.xmodemMode = false;
 
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         return Promise.resolve();
     };
 }

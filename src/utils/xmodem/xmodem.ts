@@ -1,5 +1,3 @@
-import { buffer } from "stream/consumers";
-
 export interface XModemSocket {
     peekByte(): Promise<number | undefined>;
     write: (buffer: Buffer) => Promise<void>;
@@ -148,7 +146,7 @@ export class XModem {
                         errorCount++;
                         break;
                     }
-                    if (startByte === CAN) {
+                    if (startByte === CAN || startByte === EOT) {
                         console.log("Recieved CAN from controller, aborting");
                         throw ERROR_COULD_NOT_UPLOAD;
                     }

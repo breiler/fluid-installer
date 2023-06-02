@@ -1,22 +1,21 @@
 import React, {
     createRef,
     useCallback,
+    useContext,
     useEffect,
     useState
 } from "react";
 import "xterm/css/xterm.css";
 import Xterm from "../../components/xterm/Xterm";
-import {
-    SerialPort,
-    SerialPortState
-} from "../../utils/serialport/SerialPort";
+import { SerialPortState } from "../../utils/serialport/SerialPort";
+import { SerialPortContext } from "../../context/SerialPortContext";
 
 type Props = {
-    serialPort: SerialPort;
     onClose: () => void;
 };
 
-const Terminal = ({ serialPort }: Props) => {
+const Terminal = ({}: Props) => {
+    const serialPort = useContext(SerialPortContext);
     const xtermRef: React.RefObject<Xterm> = createRef<Xterm>();
     const [error, setError] = useState<string | undefined>();
 
@@ -51,7 +50,7 @@ const Terminal = ({ serialPort }: Props) => {
                     .then(() => serialPort.close());
             }
 
-            serialPort.removeReader(onResponse);
+            serialPort!.removeReader(onResponse);
         };
     }, [serialPort, onResponse, xtermRef]);
 
@@ -60,7 +59,7 @@ const Terminal = ({ serialPort }: Props) => {
             {!error && (
                 <Xterm
                     ref={xtermRef}
-                    onData={(data) => serialPort.write(Buffer.from(data))}
+                    onData={(data) => serialPort!.write(Buffer.from(data))}
                     options={{ cursorBlink: true, convertEol: true, cols: 72 }}
                 />
             )}

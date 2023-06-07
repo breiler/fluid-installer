@@ -9,7 +9,7 @@ import { Connection, Done } from "./panels";
 import { SerialPort, SerialPortEvent } from "./utils/serialport/SerialPort";
 import { isSafari } from "./utils/utils";
 import { SerialPortContext } from "./context/SerialPortContext";
-import InitConfig from "./panels/initconfig/InitConfig";
+import Configuration from "./pages/configuration";
 
 const App = () => {
     const [page, setPage] = useState<Page | undefined>(undefined);
@@ -70,6 +70,13 @@ const App = () => {
                             onClose={() => setPage(undefined)}
                         />
                     )}
+
+                    {serialPort && page === Page.CONFIGURATION && (
+                        <Configuration
+                            onClose={() => setPage(undefined)}
+                        />
+                    )}
+
                     {serialPort && page === Page.FILEBROWSER && <FileBrowser/>}
                 </div>
             </SerialPortContext.Provider>

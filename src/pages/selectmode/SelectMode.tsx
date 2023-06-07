@@ -4,6 +4,7 @@ import { InstallCard } from "../../components/installcard/InstallCard";
 import "./SelectMode.scss";
 import { TerminalCard } from "../../components/terminalcard/TerminalCard";
 import { FileBrowserCard } from "../../components/filebrowsercard/FileBrowserCard";
+import { ConfigurationCard } from "../../components/configurationcard/ConfigurationCard";
 
 type Props = {
     onSelect: (page: Page) => void;
@@ -18,6 +19,13 @@ const SelectMode = ({ onSelect }: Props) => {
                 </div>
                 <div className="col">
                     <TerminalCard onClick={() => onSelect(Page.TERMINAL)} />
+                </div>
+            </div>
+            <div className="row">
+                <div className="col">
+                    <ConfigurationCard
+                        onClick={() => onSelect(Page.CONFIGURATION)}
+                    />
                 </div>
                 <div className="col">
                     <FileBrowserCard

@@ -71,7 +71,7 @@ const App = () => {
                         />
                     )}
 
-                    {serialPort && page === Page.CONFIGURATION && (
+                    {page === Page.CONFIGURATION && (
                         <Configuration
                             onClose={() => setPage(undefined)}
                         />

@@ -93,6 +93,7 @@ const Configuration = ({onClose}) => {
         <Container>
             <br/>
             <Nav
+                fill
                 variant="tabs"
                 defaultActiveKey="general"
                 onSelect={(tabId) => setTab(tabId as string)}>
@@ -115,6 +116,7 @@ const Configuration = ({onClose}) => {
 
             {tab === "general" && (
                 <>
+                    <h4>Board information</h4>
                     <TextField
                         label="Name"
                         placeholder="A descriptive name of the configuration"

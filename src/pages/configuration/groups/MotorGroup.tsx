@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import {
     PinConfig,
     I2ISO as I2ISOConfig,
@@ -22,9 +22,10 @@ type MotorProps = {
 const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
     return (
         <>
+            <h5>Motor 1</h5>
             <Form.Check
                 type="switch"
-                label="Motor 1"
+                label="Enabled"
                 checked={!!motor}
                 onClick={() => {
                     if (!!motor) {
@@ -34,6 +35,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                     }
                 }}></Form.Check>
 
+            <br/><br/>
             {motor && (
                 <>
                     <PinField

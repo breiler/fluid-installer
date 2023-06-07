@@ -22,7 +22,7 @@ const AxisGroup = ({
 
         <Form.Check
             type="switch"
-            label="Enabled"
+            label="Include"
             checked={!!axis}
             onClick={() => {
                 if (!!axis) {

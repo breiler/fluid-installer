@@ -58,7 +58,7 @@ const App = () => {
                             <hr />
                         </>
                     )}
-
+                    
                     {serialPort && page === Page.INSTALLER && (
                         <Installer
                             onClose={() => setPage(undefined)}

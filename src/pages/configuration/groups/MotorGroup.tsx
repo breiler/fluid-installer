@@ -25,7 +25,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
             <h5>Motor 1</h5>
             <Form.Check
                 type="switch"
-                label="Enabled"
+                label="Include"
                 checked={!!motor}
                 onClick={() => {
                     if (!!motor) {

@@ -87,11 +87,11 @@ export type Axis = {
 };
 
 export type Stepping = {
-    engine: string;
-    idle_ms: number;
-    pulse_us: number;
-    dir_delay_us: number;
-    disable_delay_us: number;
+    engine?: string;
+    idle_ms?: number;
+    pulse_us?: number;
+    dir_delay_us?: number;
+    disable_delay_us?: number;
 };
 
 export type I2ISO = {
@@ -132,15 +132,15 @@ export type Macros = {
 };
 
 export type Homing = {
-    cycle: number;
+    cycle?: number;
     allow_single_axis?: boolean;
-    positive_direction: boolean;
-    mpos_mm: number;
-    seek_mm_per_min: number;
-    feed_mm_per_min: number;
-    settle_ms: number;
-    seek_scaler: number;
-    feed_scaler: number;
+    positive_direction?: boolean;
+    mpos_mm?: number;
+    seek_mm_per_min?: number;
+    feed_mm_per_min?: number;
+    settle_ms?: number;
+    seek_scaler?: number;
+    feed_scaler?: number;
 };
 
 export type Motor = {

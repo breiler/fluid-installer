@@ -1,21 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Config } from "../../model/Config";
-import {
-
-    Container,
-
-    Nav,
-    Row,
-    Tab
-} from "react-bootstrap";
+import { Container, Nav, Tab } from "react-bootstrap";
 import TextField from "./fields/TextField";
 import SelectField from "./fields/SelectField";
-import yamlConfig from "../../configs/6P_extn";
 import jsYaml from "js-yaml";
-
-import { StreamLanguage } from "@codemirror/language";
-import { linter, lintGutter } from "@codemirror/lint";
-import * as yamlMode from "@codemirror/legacy-modes/mode/yaml";
 import AxesGroup from "./groups/AxesGroup";
 import { Boards } from "../../model/Boards";
 import SPIGroup from "./groups/SPIGroup";
@@ -29,33 +17,9 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 const DEFAULT_CONFIG: Config = {};
 
-const yamlExtension = StreamLanguage.define(yamlMode.yaml);
-
-const yamlLinter = linter((view) => {
-    const diagnostics: any[] = [];
-
-    try {
-        jsYaml.load(view.state.doc);
-    } catch (e) {
-        const loc = e.mark;
-        const from = loc ? loc.position : 0;
-        const to = from;
-        const severity = "error";
-
-        diagnostics.push({
-            from,
-            to,
-            message: e.message,
-            severity
-        });
-    }
-
-    return diagnostics;
-});
-
-const Configuration = ({ onClose }) => {
+const Configuration = ({ onClose, value }) => {
     const [config, setConfig] = useState<Config>(DEFAULT_CONFIG);
-    const [configString, setConfigString] = useState<string>(yamlConfig);
+    const [configString, setConfigString] = useState<string>(value);
     const [tab, setTab] = useState<string>("general");
     const [lintErrors, setLintErrors] = useState<any[]>([]);
 
@@ -64,16 +28,6 @@ const Configuration = ({ onClose }) => {
         setConfig(newConfig);
         setConfigString(jsYaml.dump(newConfig));
     };
-
-    useEffect(() => {
-        try {
-            const data = jsYaml.load(configString);
-            const newData = { ...data, ...config };
-            setConfigString(jsYaml.dump(newData));
-        } catch (error) {
-            console.log("Could not parse yaml");
-        }
-    }, []);
 
     useEffect(() => {
         try {
@@ -176,11 +130,6 @@ const Configuration = ({ onClose }) => {
                             value={config.meta}
                             setValue={(value) => appendConfig({ meta: value })}
                         />
-
-                        <br />
-                        <br />
-
-                        <SteppingGroup steppingConfig={config.stepping} />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axes">
                         <AxesGroup
@@ -190,6 +139,11 @@ const Configuration = ({ onClose }) => {
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="io">
+                        <SteppingGroup
+                            steppingConfig={config.stepping}
+                            setValue={(stepping) => appendConfig({ stepping })}
+                        />
+
                         <I2SOGroup
                             board={Boards[0]}
                             i2so={config.i2so}
@@ -214,7 +168,6 @@ const Configuration = ({ onClose }) => {
                             onChange={setConfigString}
                             onLint={setLintErrors}
                             maxHeight="800px"
-                            extensions={[lintGutter(), yamlLinter]}
                         />
                     </Tab.Pane>
                 </Tab.Content>

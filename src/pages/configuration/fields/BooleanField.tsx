@@ -6,33 +6,32 @@ type BooleanFieldProps = {
     value?: boolean;
     setValue: (value: boolean) => void;
     placeholder?: string;
+    helpText?: string;
 };
 
 const BooleanField = ({
     label,
     value,
     setValue,
-    placeholder = ""
+    placeholder = "",
+    helpText
 }: BooleanFieldProps) => {
     return (
-        <>
-            <Form>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm="3">
-                        {label}
-                    </Form.Label>
-                    <Col sm="9">
-                        <Form.Check
-                            aria-label={placeholder}
-                            onChange={(event) =>
-                                setValue(event.target.value + "" === "true")
-                            }
-                            checked={value}
-                        />
-                    </Col>
-                </Form.Group>
-            </Form>
-        </>
+        <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3">
+                {label}
+            </Form.Label>
+            <Col sm="9">
+                <Form.Check
+                    aria-label={placeholder}
+                    onChange={(event) =>
+                        setValue(Boolean(event.target.checked))
+                    }
+                    checked={Boolean(value)}
+                />
+                {helpText && <Form.Text muted>{helpText}</Form.Text>}
+            </Col>
+        </Form.Group>
     );
 };
 

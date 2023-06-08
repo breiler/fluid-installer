@@ -11,6 +11,7 @@ import { Board } from "../../../model/Boards";
 import BooleanField from "../fields/BooleanField";
 import TextField from "../fields/TextField";
 import MotorDriverGroup from "./MotorDriverGroup";
+import HomingGroup from "./HomingGroup";
 
 type MotorProps = {
     label: string;
@@ -35,7 +36,8 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                     }
                 }}></Form.Check>
 
-            <br/><br/>
+            <br />
+            <br />
             {motor && (
                 <>
                     <PinField
@@ -73,15 +75,27 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                     />
                     <TextField
                         label="Pull off"
-                        value={motor?.pulloff_mm}
+                        value={motor?.pulloff_mm ?? 1}
                         unit="mm"
+                        setValue={(value) => {
+                            setValue({
+                                ...motor,
+                                ...{ pulloff_mm: Number(value) }
+                            });
+                        }}
                     />
                     <BooleanField
                         label="Hard limits"
-                        value={motor?.hard_limits}
-                        setValue={(value) => console.log(value)}
+                        value={motor?.hard_limits ?? false}
+                        setValue={(value) => {
+                            setValue({
+                                ...motor,
+                                ...{ hard_limits: value }
+                            });
+                        }}
+                        helpText="Enable this when you want to use the switches defined above as hard limits. Hard limits immediately stops all motion when the switch is activated. Position is considered lost and rehoming is required."
                     />
-                    <br/>
+                    <br />
                     <MotorDriverGroup
                         board={board}
                         motor={motor}

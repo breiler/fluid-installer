@@ -5,6 +5,7 @@ import TextField from "../fields/TextField";
 import MotorGroup from "./MotorGroup";
 import { Boards } from "../../../model/Boards";
 import BooleanField from "../fields/BooleanField";
+import HomingGroup from "./HomingGroup";
 
 type SelectFieldProps = {
     axisLabel: string;
@@ -40,29 +41,42 @@ const AxisGroup = ({
             <Container>
                 <TextField
                     label="Steps/mm"
-                    value={axis.steps_per_mm}
+                    value={axis.steps_per_mm ?? 80}
                     placeholder="Steps per mm"
+                    setValue={(value) =>
+                        setValue({
+                            ...axis,
+                            ...{ steps_per_mm: Number(value) }
+                        })
+                    }
                 />
                 <TextField
                     label="Max rate"
-                    value={axis.max_rate_mm_per_min}
+                    value={axis.max_rate_mm_per_min ?? 1000}
                     placeholder="Max rate"
                     unit="mm/min"
+                    setValue={(value) =>
+                        setValue({
+                            ...axis,
+                            ...{ max_rate_mm_per_min: Number(value) }
+                        })
+                    }
                 />
                 <TextField
                     label="Acceleration"
-                    value={axis.acceleration_mm_per_sec2}
+                    value={axis.acceleration_mm_per_sec2 ?? 25}
                     placeholder="Acceleration"
                     unit="mm/sec²"
-                />
-                <BooleanField
-                    label="Soft limits"
-                    value={axis?.soft_limits}
-                    setValue={(value) => console.log(value)}
+                    setValue={(value) =>
+                        setValue({
+                            ...axis,
+                            ...{ acceleration_mm_per_sec2: Number(value) }
+                        })
+                    }
                 />
                 <TextField
                     label="Max travel"
-                    value={axis.max_travel_mm}
+                    value={axis.max_travel_mm ?? 1000.0}
                     placeholder="Max travel"
                     unit="mm"
                     setValue={(value) =>
@@ -71,6 +85,28 @@ const AxisGroup = ({
                             ...{ max_travel_mm: Number(value) }
                         })
                     }
+                />
+                <BooleanField
+                    label="Soft limits"
+                    value={axis?.soft_limits ?? false}
+                    setValue={(value) =>
+                        setValue({
+                            ...axis,
+                            ...{ soft_limits: Boolean(value) }
+                        })
+                    }
+                    helpText="If enabled, commands that would cause the machine to exceed 'Max travel' will be aborted. Soft limits relies on an accurate machine position. This typically requires homing first. If you use soft limits always home the axis before moving the axis via jogs or gcode."
+                />
+                <br />
+                <br />
+                <HomingGroup
+                    homing={axis?.homing}
+                    setValue={(value) => {
+                        setValue({
+                            ...axis,
+                            ...{ homing: value }
+                        });
+                    }}
                 />
                 <br />
                 <br />

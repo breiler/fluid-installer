@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
-import {  SPI as SPIConfig, Stepping } from "../../../model/Config";
+import { SPI as SPIConfig, Stepping } from "../../../model/Config";
 import TextField from "../fields/TextField";
 
 type SteppingGroupProps = {
@@ -8,7 +8,10 @@ type SteppingGroupProps = {
     setValue?: (config: Stepping) => void;
 };
 
-const SteppingGroup = ({ steppingConfig, setValue }: SteppingGroupProps) => {
+const SteppingGroup = ({
+    steppingConfig,
+    setValue = (config) => {}
+}: SteppingGroupProps) => {
     return (
         <>
             <h4>Stepping</h4>
@@ -19,7 +22,13 @@ const SteppingGroup = ({ steppingConfig, setValue }: SteppingGroupProps) => {
                 <Col sm="9">
                     <Form.Select
                         aria-label={"Engine"}
-                        value={steppingConfig?.engine}>
+                        value={steppingConfig?.engine}
+                        onChange={(event) =>
+                            setValue({
+                                ...steppingConfig,
+                                ...{ engine: event.target.value }
+                            })
+                        }>
                         <option id={"RMT"} value={"RMT"}>
                             RMT
                         </option>
@@ -37,23 +46,47 @@ const SteppingGroup = ({ steppingConfig, setValue }: SteppingGroupProps) => {
             </Form.Group>
             <TextField
                 label="Idle time"
-                value={steppingConfig?.idle_ms}
+                value={steppingConfig?.idle_ms ?? 250}
                 unit={"ms"}
+                setValue={(value) =>
+                    setValue({
+                        ...steppingConfig,
+                        ...{ idle_ms: Number(value) }
+                    })
+                }
             />
             <TextField
                 label="Pulse time"
-                value={steppingConfig?.pulse_us}
+                value={steppingConfig?.pulse_us ?? 4}
                 unit={"μs"}
+                setValue={(value) =>
+                    setValue({
+                        ...steppingConfig,
+                        ...{ pulse_us: Number(value) }
+                    })
+                }
             />
             <TextField
                 label="Direction delay"
                 value={steppingConfig?.dir_delay_us}
                 unit={"μs"}
+                setValue={(value) =>
+                    setValue({
+                        ...steppingConfig,
+                        ...{ dir_delay_us: Number(value) }
+                    })
+                }
             />
             <TextField
                 label="Disable delay"
-                value={steppingConfig?.disable_delay_us}
+                value={steppingConfig?.disable_delay_us ?? 0}
                 unit={"μs"}
+                setValue={(value) =>
+                    setValue({
+                        ...steppingConfig,
+                        ...{ disable_delay_us: Number(value) }
+                    })
+                }
             />
 
             <br />

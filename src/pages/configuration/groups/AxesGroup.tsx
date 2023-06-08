@@ -3,10 +3,10 @@ import { Axes } from "../../../model/Config";
 import AxisGroup from "./AxisGroup";
 import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
-import { Card, Col, Nav, Row, Tab } from "react-bootstrap";
+import { Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faBan, faLinkSlash } from "@fortawesome/free-solid-svg-icons";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
 
 type SelectFieldProps = {
     board: Board;
@@ -37,7 +37,7 @@ const AxesGroup = ({
             <br />
             <br />
 
-            <Tab.Container id="left-tabs-example" defaultActiveKey="axisx">
+            <Tab.Container defaultActiveKey="axisx">
                 <Nav fill variant="tabs">
                     <Nav.Item>
                         <Nav.Link eventKey="axisx">
@@ -102,6 +102,7 @@ const AxesGroup = ({
                 </Nav>
 
                 <Tab.Content>
+                    <br/>
                     <Tab.Pane eventKey="axisx">
                         <AxisGroup
                             axisLabel="X"

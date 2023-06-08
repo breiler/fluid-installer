@@ -3,6 +3,8 @@ import { PinConfig, Motor } from "../../../model/Config";
 import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
 import SelectField from "../fields/SelectField";
+import TextField from "../fields/TextField";
+import BooleanField from "../fields/BooleanField";
 
 type MotorDriverProps = {
     board: Board;
@@ -295,6 +297,168 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                             updateMotorDriverValue({
                                 stepstick: {
                                     ms2_pin: value.toString()
+                                }
+                            })
+                        }
+                    />
+
+                    <PinField
+                        label="MS3 pin"
+                        board={board}
+                        value={PinConfig.fromString(motor?.stepstick?.ms3_pin)}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                stepstick: {
+                                    ms3_pin: value.toString()
+                                }
+                            })
+                        }
+                    />
+                </>
+            )}
+
+            {driverType === DriverType.TMC_2130 && (
+                <>
+                    <PinField
+                        label="Step pin"
+                        board={board}
+                        value={PinConfig.fromString(motor?.tmc_2130?.step_pin)}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    step_pin: value.toString()
+                                }
+                            })
+                        }
+                    />
+
+                    <PinField
+                        label="Direction pin"
+                        board={board}
+                        value={PinConfig.fromString(
+                            motor?.tmc_2130?.direction_pin
+                        )}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    direction_pin: value.toString()
+                                }
+                            })
+                        }
+                    />
+
+                    <PinField
+                        label="Disable pin"
+                        board={board}
+                        value={PinConfig.fromString(
+                            motor?.tmc_2130?.disable_pin
+                        )}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                stepstick: {
+                                    disable_pin: value.toString()
+                                }
+                            })
+                        }
+                    />
+
+                    <PinField
+                        label="CS pin"
+                        board={board}
+                        value={PinConfig.fromString(motor?.tmc_2130?.cs_pin)}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    cs_pin: value.toString()
+                                }
+                            })
+                        }
+                    />
+
+                    <TextField
+                        label="SPI index"
+                        value={motor?.tmc_2130?.spi_index ?? -1}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    spi_index: value + ""
+                                }
+                            })
+                        }
+                    />
+
+                    <TextField
+                        label="R Sense"
+                        value={motor?.tmc_2130?.r_sense_ohms ?? 0.11}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    r_sense_ohms: Number(value)
+                                }
+                            })
+                        }
+                        unit="Ω"
+                    />
+                    <TextField
+                        label="Hold amps"
+                        value={motor?.tmc_2130?.hold_amps ?? 0.5}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    hold_amps: Number(value)
+                                }
+                            })
+                        }
+                        unit="A"
+                        helpText="This value sets the driver's output current when the driver is not outputing steps."
+                    />
+                    <SelectField
+                        label="Microsteps"
+                        value={
+                            motor?.tmc_2130?.microsteps
+                                ? motor?.tmc_2130?.microsteps + ""
+                                : "16"
+                        }
+                        options={[
+                            { name: "1", value: "1" },
+                            { name: "2", value: "2" },
+                            { name: "4", value: "4" },
+                            { name: "8", value: "8" },
+                            { name: "16", value: "16" },
+                            { name: "32", value: "32" },
+                            { name: "128", value: "128" },
+                            { name: "256", value: "256" }
+                        ]}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    microsteps: Number(value)
+                                }
+                            })
+                        }
+                    />
+                    <TextField
+                        label="Stallguard"
+                        value={motor?.tmc_2130?.stallguard ?? 0}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    stallguard: Number(value)
+                                }
+                            })
+                        }
+                        helpText={
+                            "Stallguard threshold level where a higher value makes stallGuard2 less sensitive and requires more torque to indicate a stall. See datasheet for more details."
+                        }
+                    />
+
+                    <BooleanField
+                        label="Stallguard debug"
+                        value={motor?.tmc_2130?.stallguard_debug ?? false}
+                        setValue={(value) =>
+                            updateMotorDriverValue({
+                                tmc_2130: {
+                                    stallguard_debug: Boolean(value)
                                 }
                             })
                         }

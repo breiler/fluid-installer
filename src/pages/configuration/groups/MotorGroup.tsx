@@ -81,6 +81,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                         value={motor?.hard_limits}
                         setValue={(value) => console.log(value)}
                     />
+                    <br/>
                     <MotorDriverGroup
                         board={board}
                         motor={motor}

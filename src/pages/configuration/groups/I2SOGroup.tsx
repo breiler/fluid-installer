@@ -16,7 +16,7 @@ const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
             <h4>I2SO</h4>
             <Form.Check
                 type="switch"
-                label="Enabled"
+                label="Include"
                 checked={!!i2so}
                 onClick={() => {
                     if (!!i2so) {

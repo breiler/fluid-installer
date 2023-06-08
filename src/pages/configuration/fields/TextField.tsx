@@ -8,6 +8,7 @@ type TextFieldProps = {
     placeholder?: string;
     unit?: string;
     maxLength?: number;
+    helpText?: string;
 };
 
 const TextField = ({
@@ -16,7 +17,8 @@ const TextField = ({
     setValue = (value) => {},
     placeholder = "",
     unit,
-    maxLength = 80
+    maxLength = 80,
+    helpText
 }: TextFieldProps) => {
     return (
         <Form.Group as={Row} className="mb-3">
@@ -27,7 +29,6 @@ const TextField = ({
                 <InputGroup>
                     <Form.Control
                         type="text"
-                        
                         placeholder={placeholder}
                         maxLength={maxLength}
                         value={value ?? ""}
@@ -35,6 +36,7 @@ const TextField = ({
                     />
                     {unit && <InputGroup.Text>{unit}</InputGroup.Text>}
                 </InputGroup>
+                {helpText && <Form.Text muted>{helpText}</Form.Text>}
             </Col>
         </Form.Group>
     );

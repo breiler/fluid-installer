@@ -16,7 +16,7 @@ const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
             <h4>SD Card</h4>
             <Form.Check
                 type="switch"
-                label="Enabled"
+                label="Include"
                 checked={!!sdcard}
                 onClick={() => {
                     if (!!sdcard) {

@@ -44,7 +44,7 @@ const PinField = ({
                                 key={option.pin}
                                 id={option.pin}
                                 value={option.pin}>
-                                {option.pin}
+                                {option.pin} {!option.pull && option.pin !== Pin.NO_PIN && ("- pull unavailable")}
                             </option>
                         ))}
                     </Form.Select>

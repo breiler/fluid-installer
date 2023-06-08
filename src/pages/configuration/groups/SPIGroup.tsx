@@ -16,7 +16,7 @@ const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
             <h4>SPI</h4>
             <Form.Check
                 type="switch"
-                label="Enabled"
+                label="Include"
                 checked={!!spi}
                 onClick={() => {
                     if (!!spi) {

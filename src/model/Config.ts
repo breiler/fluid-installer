@@ -149,7 +149,7 @@ export type Motor = {
     limit_all_pin?: string;
     hard_limits?: boolean;
     pulloff_mm?: number;
-    
+
     standard_stepper?: MotorDriverStandardStepper;
     stepstick?: MotorDriverStepStick;
     tmc_2130?: MotorDriverTMC2130;
@@ -163,29 +163,29 @@ export type Motor = {
 
 export type MotorDriverStandardStepper = {
     /**
-     * Some external drivers require an inverted step pulse. You can invert the pulse by 
+     * Some external drivers require an inverted step pulse. You can invert the pulse by
      * changing the active state attribute (:high or :low)
      */
     step_pin?: string;
 
     /**
-     * This is used to control the direction. You can invert the direction by changing the 
+     * This is used to control the direction. You can invert the direction by changing the
      * active state attribute (:high or :low)
      */
     direction_pin?: string;
 
     /**
-     * This is used if your controller uses individual disable pins for each driver. 
-     * Most basic controllers use a common disable pin for all drivers and that is set 
-     * elsewhere in the config file. You can invert the direction by changing the active 
+     * This is used if your controller uses individual disable pins for each driver.
+     * Most basic controllers use a common disable pin for all drivers and that is set
+     * elsewhere in the config file. You can invert the direction by changing the active
      * state attribute (:high or :low)
      */
     disable_pin?: string;
 };
 
 export type MotorDriverStepStick = {
-    step_pin?: string,
-    direction_pin?: string,
+    step_pin?: string;
+    direction_pin?: string;
     disable_pin?: string;
     ms1_pin?: string;
     ms2_pin?: string;
@@ -193,7 +193,32 @@ export type MotorDriverStepStick = {
     reset_pin?: string;
 };
 
-type MotorDriverTMC2130 = {};
+export enum TrinamicMode {
+    STEALTH_CHOP = "StealthChop",
+    COOL_STEP = "CoolStep",
+    STALLGUARD = "Stallguard"
+}
+
+export type MotorDriverTMC2130 = {
+    step_pin?: string;
+    direction_pin?: string;
+    disable_pin?: string;
+    cs_pin?: string;
+    spi_index?: string;
+    r_sense_ohms?: number;
+    run_amps?: number;
+    hold_amps?: number;
+    microsteps?: number;
+    stallguard?: number;
+    stallguard_debug?: boolean;
+    toff_disable?: number;
+    toff_stealthchop?: number;
+    toff_coolstep?: string;
+    run_mode?: TrinamicMode;
+    homing_mode?: TrinamicMode;
+    use_enable?: boolean;
+};
+
 type MotorDriverTMC2208 = {};
 type MotorDriverTMC2209 = {};
 type MotorDriverTMC5160 = {};
@@ -231,8 +256,13 @@ export class PinConfig {
             return this.pin;
         }
 
-
-        return (this.pin === Pin.NO_PIN ? "NO_PIN" : this.pin) + ":" + this.pull + ":" + this.active;
+        return (
+            (this.pin === Pin.NO_PIN ? "NO_PIN" : this.pin) +
+            ":" +
+            this.pull +
+            ":" +
+            this.active
+        );
     }
 }
 

@@ -7,7 +7,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 const logoUrl = new URL("../../assets/logo.svg", import.meta.url);
 
 const Header = () => (
-    <nav className="nav navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="header nav navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
             <a className="navbar-brand" href="./">
                 <img src={logoUrl.toString()} alt="logo" width={100} />

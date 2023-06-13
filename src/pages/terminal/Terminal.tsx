@@ -9,6 +9,10 @@ import "xterm/css/xterm.css";
 import Xterm from "../../components/xterm/Xterm";
 import { SerialPortState } from "../../utils/serialport/SerialPort";
 import { SerialPortContext } from "../../context/SerialPortContext";
+import { Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 type Props = {
     onClose: () => void;
@@ -57,11 +61,29 @@ const Terminal = ({}: Props) => {
     return (
         <>
             {!error && (
-                <Xterm
-                    ref={xtermRef}
-                    onData={(data) => serialPort!.write(Buffer.from(data))}
-                    options={{ cursorBlink: true, convertEol: true, cols: 72 }}
-                />
+                <>
+                    <div style={{ marginBottom: "16px" }}>
+                        <Button
+                            onClick={() =>
+                                serialPort?.write(Buffer.from("$Bye\n"))
+                            }
+                            variant="danger"
+                            title="Restart">
+                            <FontAwesomeIcon
+                                icon={faArrowsRotate as IconDefinition}
+                            />
+                        </Button>{" "}
+                    </div>
+                    <Xterm
+                        ref={xtermRef}
+                        onData={(data) => serialPort!.write(Buffer.from(data))}
+                        options={{
+                            cursorBlink: true,
+                            convertEol: true,
+                            cols: 72
+                        }}
+                    />
+                </>
             )}
             {error && <div className="alert alert-danger">{error}</div>}
         </>

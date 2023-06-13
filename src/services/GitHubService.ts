@@ -5,6 +5,9 @@ export type GithubReleaseAsset = {
     name: string;
 };
 
+const RESOURCES_BASE_URL =
+    "https://raw.githubusercontent.com/bdring/fluidnc.github.io/gh-pages/releases";
+
 /**
  * Contract for a github release
  * (https://api.github.com/repos/bdring/FluidNC/releases)
@@ -57,15 +60,17 @@ export const GithubService = {
         return fetch("https://api.github.com/repos/bdring/FluidNC/releases")
             .then((res) => res.json())
             .then((releases) => {
-                return releases
-                    .filter((release) => !release.draft && !release.prerelease)
-                    .filter((release) =>
-                        release.assets.filter(
-                            (asset) =>
-                                asset.name.endsWith("-posix.zip").length > 0
+                return (
+                    releases
+                        //.filter((release) => !release.draft && !release.prerelease)
+                        .filter((release) =>
+                            release.assets.filter(
+                                (asset) =>
+                                    asset.name.endsWith("-posix.zip").length > 0
+                            )
                         )
-                    )
-                    .sort((release1, release2) => release1.id > release2.id);
+                        .sort((release1, release2) => release1.id > release2.id)
+                );
             });
     },
 
@@ -103,8 +108,7 @@ export const GithubService = {
     getReleaseManifest: (
         release: GithubRelease
     ): Promise<GithubReleaseManifest> => {
-        const manifestBaseUrl =
-            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest4/";
+        const manifestBaseUrl = RESOURCES_BASE_URL + "/v3.7.2-pre";
         const manifestUrl = manifestBaseUrl + "/manifest.json";
 
         return fetch(manifestUrl, {
@@ -124,8 +128,7 @@ export const GithubService = {
         asset: GithubRelease,
         images: FirmwareImage[]
     ): Promise<string[]> => {
-        const baseUrl =
-            "https://raw.githubusercontent.com/MitchBradley/MitchBradley.github.io/gh-pages/releases/rTest4/";
+        const baseUrl = RESOURCES_BASE_URL + "/v3.7.2-pre/";
 
         return Promise.all(
             images.map((image) => {

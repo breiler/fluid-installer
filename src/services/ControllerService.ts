@@ -92,6 +92,26 @@ export class ListFilesCommand extends Command {
     };
 }
 
+export class GetConfigFilenameCommand extends Command {
+    constructor() {
+        super("$Config/Filename");
+    }
+
+    getFilename = (): string => {
+        return (
+            this.response
+                .find((line) => line.indexOf("$Config/Filename=") == 0)
+                ?.substring(17) ?? "config.yaml"
+        );
+    };
+}
+
+export class SetConfigFilenameCommand extends Command {
+    constructor(fileName: string) {
+        super("$Config/Filename=" + fileName);
+    }
+}
+
 export class DeleteFileCommand extends Command {
     constructor(file: string) {
         super("$LocalFS/Delete=/localfs/" + file);
@@ -105,13 +125,14 @@ export class ReceiveFileCommand extends Command {
 }
 
 export class GetConfigCommand extends Command {
-
     constructor(config: string) {
         super(config);
     }
 
     getValue(): string {
-        const response = this.response.find((line) => line.indexOf(this.getCommand()) === 0);
+        const response = this.response.find(
+            (line) => line.indexOf(this.getCommand()) === 0
+        );
         if (!response) {
             return "";
         }

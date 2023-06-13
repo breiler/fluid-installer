@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { Config } from "../../model/Config";
 import jsYaml from "js-yaml";
 import { linter, lintGutter } from "@codemirror/lint";
 import { basicSetup } from "codemirror";
+import { StreamLanguage } from "@codemirror/language"
+import { yaml } from "@codemirror/legacy-modes/mode/yaml"
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -29,25 +31,13 @@ const yamlLinter = linter((view) => {
     return diagnostics;
 });
 
-const Editor = ({ value, onLint, onChange, maxHeight }) => {
-    useEffect(() => {
-        try {
-            jsYaml.load(value);
-            onLint([]);
-        } catch (error) {
-            if(error?.name === "YAMLException") {
-                onLint([error.message]);
-            }
-        }
-    }, [value]);
-
+const Editor = ({ value,  onChange }) => {
     return (
         <>
             <ReactCodeMirror
                 value={value}
                 onChange={onChange}
-                maxHeight={maxHeight}
-                extensions={[lintGutter(), yamlLinter, basicSetup]}
+                extensions={[lintGutter(), yamlLinter, basicSetup]} //StreamLanguage.define(yaml)]}
             />
         </>
     );

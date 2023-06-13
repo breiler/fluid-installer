@@ -1,13 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { SerialPort } from "../../utils/serialport/SerialPort";
+import { Buffer } from "buffer";
 import {
     ControllerService,
     ListFilesCommand,
     File,
-    DeleteFileCommand
+    DeleteFileCommand,
+    GetConfigFilenameCommand,
+    SetConfigFilenameCommand
 } from "../../services/ControllerService";
 import { Button } from "../../components";
-import { Alert } from "react-bootstrap";
+import {
+    Alert,
+    ToggleButton
+} from "react-bootstrap";
 import {
     faTrash,
     faFile,
@@ -15,7 +20,7 @@ import {
     faFileImage,
     faFileZipper,
     faPen,
-    faUpload
+    faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -31,6 +36,7 @@ type EditFile = {
 const FileBrowser = () => {
     const serialPort = useContext(SerialPortContext);
     const [files, setFiles] = useState<File[]>([]);
+    const [configFilename, setConfigFilename] = useState<string>("");
     const [editFile, setEditFile] = useState<EditFile | undefined>();
     const [uploadError, setUploadError] = useState<string | undefined>();
 
@@ -46,11 +52,16 @@ const FileBrowser = () => {
             await serialPort!.getNativeSerialPort();
             const listCommand = await service.send(new ListFilesCommand());
             setFiles(listCommand.getFiles());
+
+            setConfigFilename(
+                await (
+                    await service.send(new GetConfigFilenameCommand())
+                ).getFilename()
+            );
         });
         setControllerService(service);
 
         return () => {
-            console.log("Disconnecting...");
             service.disconnect();
         };
     }, [serialPort]);
@@ -106,11 +117,25 @@ const FileBrowser = () => {
         }
 
         setIsDownloading(true);
-        const fileData = await controllerService.downloadFile(
-            "/littlefs/" + file.name
-        );
-        setIsDownloading(false);
-        setEditFile({ file, fileData });
+        controllerService
+            .downloadFile("/littlefs/" + file.name)
+            .then((fileData) => {
+                setEditFile({ file, fileData });
+            })
+            .finally(() => {
+                setIsDownloading(false);
+            });
+    };
+
+    const onCreateConfig = async () => {
+        if (!controllerService) {
+            return;
+        }
+
+        setEditFile({
+            file: { id: configFilename, name: configFilename, size: 0 },
+            fileData: Buffer.from("name: New configuration")
+        });
     };
 
     const onUpload = async () => {
@@ -143,9 +168,20 @@ const FileBrowser = () => {
 
     const onSave = async (file: File, fileData: Buffer) => {
         return await controllerService
-            ?.uploadFile(file.name, fileData)
+            ?.uploadFile("/littlefs/" + file.name, fileData)
             .then(async () => await refreshFileList())
             .catch((error) => setUploadError(error));
+    };
+
+    const onChangeConfig = async (fileName: string) => {
+        await await controllerService?.send(
+            new SetConfigFilenameCommand(fileName)
+        );
+        setConfigFilename(
+            await (
+                await controllerService!.send(new GetConfigFilenameCommand())
+            ).getFilename()
+        );
     };
 
     return (
@@ -153,12 +189,30 @@ const FileBrowser = () => {
             <SpinnerModal show={isDownloading} text="Downloading..." />
             <SpinnerModal show={isUploading} text="Uploading..." />
 
-            <EditorModal
-                file={editFile?.file}
-                fileData={editFile?.fileData}
-                onSave={onSave}
-                onClose={() => setEditFile(undefined)}
-            />
+            {editFile && (
+                <EditorModal
+                    file={editFile?.file}
+                    fileData={editFile?.fileData}
+                    onSave={onSave}
+                    onClose={() => setEditFile(undefined)}
+                />
+            )}
+
+            {configFilename &&
+                !files.find((file) => file.name === configFilename) && (
+                    <>
+                        <Alert variant="warning">
+                            The configuration file{" "}
+                            <strong>{configFilename}</strong> is missing, do you
+                            want to create it?
+                            <br />
+                            <br />
+                            <Button onClick={onCreateConfig}>
+                                <>Create config</>
+                            </Button>
+                        </Alert>
+                    </>
+                )}
 
             <div style={{ height: 300 }}>
                 <ul className="list-group">
@@ -237,12 +291,11 @@ const FileBrowser = () => {
                                     </div>
                                     <div
                                         className="align-self-center"
-                                        style={{ minWidth: "44px" }}>
+                                        style={{ minWidth: "60px" }}>
                                         {(file.name.endsWith(".yml") ||
                                             file.name.endsWith(".yaml")) && (
                                             <Button
                                                 disabled={isDownloading}
-                                                style={{ marginRight: "0px" }}
                                                 title={"Edit " + file.name}
                                                 onClick={() => onEdit(file)}>
                                                 <>
@@ -254,6 +307,36 @@ const FileBrowser = () => {
                                                     />
                                                 </>
                                             </Button>
+                                        )}
+                                    </div>
+                                    <div
+                                        className="align-self-center"
+                                        style={{ minWidth: "130px" }}>
+                                        {(file.name.endsWith(".yml") ||
+                                            file.name.endsWith(".yaml")) && (
+                                            <ToggleButton
+                                                id={"select-file-" + file.name}
+                                                type="checkbox"
+                                                variant="outline-primary"
+                                                title="Select as config"
+                                                checked={
+                                                    file.name === configFilename
+                                                }
+                                                value={file.name}
+                                                onChange={(event) =>
+                                                    onChangeConfig(
+                                                        event.target.value
+                                                    )
+                                                }>
+                                                {file.name ===
+                                                    configFilename && (
+                                                    <>Active config</>
+                                                )}
+                                                {file.name !==
+                                                    configFilename && (
+                                                    <>Select config</>
+                                                )}
+                                            </ToggleButton>
                                         )}
                                     </div>
                                 </div>

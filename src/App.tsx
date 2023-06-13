@@ -5,11 +5,11 @@ import Page from "./model/Page";
 import { Installer, Terminal } from "./pages";
 import FileBrowser from "./pages/filebrowser";
 import SelectMode from "./pages/selectmode";
-import { Connection, Done } from "./panels";
+import { Connection } from "./panels";
 import { SerialPort, SerialPortEvent } from "./utils/serialport/SerialPort";
 import { isSafari } from "./utils/utils";
 import { SerialPortContext } from "./context/SerialPortContext";
-import Configuration from "./pages/configuration";
+import ConfigurationPage from "./pages/configurationpage";
 
 const App = () => {
     const [page, setPage] = useState<Page | undefined>(undefined);
@@ -58,26 +58,18 @@ const App = () => {
                             <hr />
                         </>
                     )}
-                    
+
                     {serialPort && page === Page.INSTALLER && (
-                        <Installer
-                            onClose={() => setPage(undefined)}
-                        />
+                        <Installer onClose={() => setPage(undefined)} />
                     )}
 
                     {serialPort && page === Page.TERMINAL && (
-                        <Terminal
-                            onClose={() => setPage(undefined)}
-                        />
+                        <Terminal onClose={() => setPage(undefined)} />
                     )}
 
-                    {page === Page.CONFIGURATION && (
-                        <Configuration
-                            onClose={() => setPage(undefined)}
-                        />
-                    )}
+                    {page === Page.CONFIGURATION && <ConfigurationPage />}
 
-                    {serialPort && page === Page.FILEBROWSER && <FileBrowser/>}
+                    {serialPort && page === Page.FILEBROWSER && <FileBrowser />}
                 </div>
             </SerialPortContext.Provider>
         </>

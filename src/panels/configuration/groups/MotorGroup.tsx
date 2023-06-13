@@ -23,7 +23,7 @@ type MotorProps = {
 const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
     return (
         <>
-            <h5>Motor 1</h5>
+            <h5>{label}</h5>
             <Form.Check
                 type="switch"
                 label="Include"

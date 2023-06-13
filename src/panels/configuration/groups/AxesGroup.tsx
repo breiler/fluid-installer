@@ -1,9 +1,9 @@
 import React from "react";
-import { Axes } from "../../../model/Config";
+import { Axes, Pin, PinConfig } from "../../../model/Config";
 import AxisGroup from "./AxisGroup";
 import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
-import { Nav, Tab } from "react-bootstrap";
+import { Form, Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
@@ -23,16 +23,65 @@ const AxesGroup = ({
         <>
             <h4>Axes</h4>
 
-            <PinField
-                label="Shared disable pin"
-                board={board}
-                setValue={(value) => {}}
-            />
-            <PinField
-                label="Shared reset pin"
-                board={board}
-                setValue={(value) => {}}
-            />
+            <br />
+            <Form.Check
+                type="switch"
+                label="Use shared pins"
+                checked={
+                    !!axes?.shared_stepper_disable_pin ||
+                    !!axes?.shared_stepper_reset_pin
+                }
+                onClick={() => {
+                    if (
+                        !!axes?.shared_stepper_disable_pin ||
+                        !!axes?.shared_stepper_reset_pin
+                    ) {
+                        setValue({
+                            ...axes,
+                            shared_stepper_disable_pin: undefined,
+                            shared_stepper_reset_pin: undefined
+                        });
+                    } else {
+                        setValue({
+                            ...axes,
+                            shared_stepper_disable_pin: PinConfig.fromString(
+                                Pin.NO_PIN
+                            ).toString(),
+                            shared_stepper_reset_pin: PinConfig.fromString(
+                                Pin.NO_PIN
+                            ).toString()
+                        });
+                    }
+                }}></Form.Check>
+
+            {!!axes?.shared_stepper_disable_pin && (
+                <PinField
+                    label="Shared disable pin"
+                    board={board}
+                    value={PinConfig.fromString(
+                        axes?.shared_stepper_disable_pin
+                    )}
+                    setValue={(value) =>
+                        setValue({
+                            ...axes,
+                            shared_stepper_disable_pin: value.toString()
+                        })
+                    }
+                />
+            )}
+            {!!axes?.shared_stepper_reset_pin && (
+                <PinField
+                    label="Shared reset pin"
+                    board={board}
+                    value={PinConfig.fromString(axes?.shared_stepper_reset_pin)}
+                    setValue={(value) =>
+                        setValue({
+                            ...axes,
+                            shared_stepper_reset_pin: value.toString()
+                        })
+                    }
+                />
+            )}
 
             <br />
             <br />
@@ -102,7 +151,7 @@ const AxesGroup = ({
                 </Nav>
 
                 <Tab.Content>
-                    <br/>
+                    <br />
                     <Tab.Pane eventKey="axisx">
                         <AxisGroup
                             axisLabel="X"

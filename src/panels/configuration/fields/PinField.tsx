@@ -19,8 +19,12 @@ const PinField = ({
     placeholder
 }: SelectFieldProps) => {
     const [pin, setPin] = useState<string>(value?.pin + "" ?? Pin.NO_PIN);
-    const [pull, setPull] = useState<PinPull>(PinPull.NONE);
-    const [active, setActive] = useState<PinActive>(PinActive.HIGH);
+    const [pull, setPull] = useState<string>(value?.pull + "" ?? PinPull.NONE);
+    const [active, setActive] = useState<string>(
+        value?.active + "" ?? PinActive.HIGH
+    );
+
+    console.log(value);
 
     useEffect(() => {
         setValue(new PinConfig(pin, pull, active));
@@ -44,20 +48,49 @@ const PinField = ({
                                 key={option.pin}
                                 id={option.pin}
                                 value={option.pin}>
-                                {option.pin} {!option.pull && option.pin !== Pin.NO_PIN && ("- pull unavailable")}
+                                {option.pin}{" "}
+                                {!option.pull &&
+                                    option.pin !== Pin.NO_PIN &&
+                                    "- pull unavailable"}
                             </option>
                         ))}
                     </Form.Select>
                     {boardPinConfig?.pull && (
-                        <Form.Select aria-label="Pulling resistor">
-                            <option>No pull</option>
-                            <option>Pull up</option>
-                            <option>Pull down</option>
+                        <Form.Select
+                            aria-label="Pulling resistor"
+                            value={pull + ""}
+                            onChange={(event) => setPull(event.target.value)}>
+                            <option key={"none"} id={"none"} value="">
+                                No pull
+                            </option>
+                            <option
+                                key={PinPull.UP}
+                                id={PinPull.UP}
+                                value={PinPull.UP}>
+                                Pull up
+                            </option>
+                            <option
+                                key={PinPull.DOWN}
+                                id={PinPull.DOWN}
+                                value={PinPull.DOWN}>
+                                Pull down
+                            </option>
                         </Form.Select>
                     )}
                     {pin !== Pin.NO_PIN && (
-                        <InputGroup.Text id="basic-addon1">
-                            <Form.Check type="checkbox" label="Invert" />
+                        <InputGroup.Text>
+                            <Form.Check
+                                type="checkbox"
+                                label="Invert"
+                                checked={active == PinActive.LOW}
+                                onChange={(event) => {
+                                    if (event.target.checked) {
+                                        setActive(PinActive.LOW);
+                                    } else {
+                                        setActive(PinActive.HIGH);
+                                    }
+                                }}
+                            />
                         </InputGroup.Text>
                     )}
                 </InputGroup>

@@ -2,16 +2,14 @@ import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import {
     PinConfig,
-    I2ISO as I2ISOConfig,
+    Motor,
     Pin,
-    Motor
 } from "../../../model/Config";
 import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
 import BooleanField from "../fields/BooleanField";
 import TextField from "../fields/TextField";
 import MotorDriverGroup from "./MotorDriverGroup";
-import HomingGroup from "./HomingGroup";
 
 type MotorProps = {
     label: string;
@@ -19,6 +17,14 @@ type MotorProps = {
     motor?: Motor;
     setValue: (motor?: Motor) => void;
 };
+
+const DEFAULT_CONFIG : Motor = {
+    limit_all_pin: PinConfig.fromString(Pin.NO_PIN).toString(),
+    limit_neg_pin: PinConfig.fromString(Pin.NO_PIN).toString(),
+    limit_pos_pin: PinConfig.fromString(Pin.NO_PIN).toString(),
+    hard_limits: false,
+    pulloff_mm: 1
+}
 
 const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
     return (
@@ -32,7 +38,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                     if (!!motor) {
                         setValue(undefined);
                     } else {
-                        setValue({});
+                        setValue(DEFAULT_CONFIG);
                     }
                 }}></Form.Check>
 

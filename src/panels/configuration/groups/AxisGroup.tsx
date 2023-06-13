@@ -13,6 +13,13 @@ type SelectFieldProps = {
     setValue?: (axis?: Axis) => void;
 };
 
+const DEFAULT_CONFIG: Axis = {
+    steps_per_mm: 80,
+    max_rate_mm_per_min: 1000,
+    acceleration_mm_per_sec2: 25,
+    max_travel_mm: 1000
+}
+
 const AxisGroup = ({
     axisLabel,
     axis,
@@ -29,9 +36,7 @@ const AxisGroup = ({
                 if (!!axis) {
                     setValue(undefined);
                 } else {
-                    setValue({
-                        steps_per_mm: 100
-                    });
+                    setValue(DEFAULT_CONFIG);
                 }
             }}></Form.Check>
         <br />

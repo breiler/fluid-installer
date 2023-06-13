@@ -24,7 +24,9 @@ const HomingGroup = ({ homing, setValue }: HomingProps) => {
                     if (!!homing) {
                         setValue(undefined);
                     } else {
-                        setValue({});
+                        setValue({
+                            cycle: -1
+                        });
                     }
                 }}></Form.Check>
 

@@ -72,18 +72,21 @@ const Configuration = ({
                         placeholder="A descriptive name of the configuration"
                         value={config.name}
                         setValue={(value) => appendConfig({ name: value })}
+                        maxLength={80}
                     />
                     <SelectField
                         label="Board"
-                        value={config.board}
-                        options={[{ name: "6 Pack", value: "6 Pack" }]}
+                        value={config.board ?? "None"}
+                        options={[
+                            { name: "None", value: "None" },
+                            { name: "6 Pack", value: "6 Pack" }]}
                         setValue={(value) => appendConfig({ board: value })}
                     />
                     <TextField
                         label="Meta"
-                        placeholder="Meta information"
                         value={config.meta}
                         setValue={(value) => appendConfig({ meta: value })}
+                        maxLength={80}
                     />
                 </Container>
             )}

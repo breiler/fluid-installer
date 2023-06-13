@@ -59,8 +59,8 @@ type Start = {
 };
 
 export type Axes = {
-    shared_stepper_disable_pin?: PinConfig;
-    shared_stepper_reset_pin?: PinConfig;
+    shared_stepper_disable_pin?: string;
+    shared_stepper_reset_pin?: string;
     x?: Axis;
     y?: Axis;
     z?: Axis;
@@ -226,21 +226,22 @@ type MotorDriverRCServo = {};
 type MotorDriverSolenoid = {};
 type MotorDriverDynamixel2 = {};
 
-
-export type Spindle10V = {
-
-}
+export type Spindle10V = {};
 
 export class PinConfig {
-    constructor(pin: Pin | string, pull: PinPull, active: PinActive) {
+    constructor(
+        pin: Pin | string,
+        pull: PinPull | string,
+        active: PinActive | string
+    ) {
         this.pin = pin;
         this.pull = pull;
         this.active = active;
     }
 
     public pin: string;
-    public pull: PinPull = PinPull.NONE;
-    public active: PinActive = PinActive.HIGH;
+    public pull: string = PinPull.NONE;
+    public active: string = PinActive.HIGH;
 
     static fromString(pin: string | undefined): PinConfig {
         if (!pin) {
@@ -248,21 +249,37 @@ export class PinConfig {
         }
 
         const pinParts = pin.toLocaleLowerCase().split(":");
-        return new PinConfig(pinParts[0], PinPull.NONE, PinActive.HIGH);
+        let parsedPin: string = Pin.NO_PIN;
+        let parsedPinPull: string = PinPull.NONE;
+        let parsedPinActive: string = PinActive.HIGH;
+
+        pinParts.forEach((pinPart, index) => {
+            if (index === 0) {
+                parsedPin = pinPart;
+            } else if (pinPart === PinPull.UP || pinPart === PinPull.DOWN) {
+                parsedPinPull = pinPart;
+            } else if (pinPart === PinActive.LOW) {
+                parsedPinActive = pinPart;
+            }
+        });
+
+        return new PinConfig(parsedPin, parsedPinPull, parsedPinActive);
     }
 
     toString() {
-        if (!this.pull || this.pull === PinPull.NONE + "") {
-            return this.pin;
+        let result = this.pin === Pin.NO_PIN ? "NO_PIN" : this.pin;
+
+        if (this.pin !== Pin.NO_PIN) {
+            if (this.pull) {
+                result += ":" + this.pull;
+            }
+
+            if (this.active === PinActive.LOW) {
+                result += ":" + this.active;
+            }
         }
 
-        return (
-            (this.pin === Pin.NO_PIN ? "NO_PIN" : this.pin) +
-            ":" +
-            this.pull +
-            ":" +
-            this.active
-        );
+        return result;
     }
 }
 

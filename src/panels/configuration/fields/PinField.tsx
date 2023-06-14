@@ -24,8 +24,6 @@ const PinField = ({
         value?.active + "" ?? PinActive.HIGH
     );
 
-    console.log(value);
-
     useEffect(() => {
         setValue(new PinConfig(pin, pull, active));
     }, [pin, pull, active]);
@@ -47,11 +45,13 @@ const PinField = ({
                             <option
                                 key={option.pin}
                                 id={option.pin}
-                                value={option.pin}>
+                                value={option.pin}
+                                disabled={option.restricted}>
                                 {option.pin}{" "}
                                 {!option.pull &&
                                     option.pin !== Pin.NO_PIN &&
                                     "- pull unavailable"}
+                            
                             </option>
                         ))}
                     </Form.Select>

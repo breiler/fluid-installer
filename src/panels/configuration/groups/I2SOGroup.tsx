@@ -12,7 +12,7 @@ type SPIProps = {
 
 const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
     return (
-        <>
+        <div style={{marginBottom: "48px"}}>
             <h4>I2SO</h4>
             <Form.Check
                 type="switch"
@@ -68,9 +68,7 @@ const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
                     />
                 </>
             )}
-            <br />
-            <br />
-        </>
+        </div>
     );
 };
 

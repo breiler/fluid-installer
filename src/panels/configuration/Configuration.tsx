@@ -11,6 +11,7 @@ import SteppingGroup from "./groups/SteppingGroup";
 import I2SOGroup from "./groups/I2SOGroup";
 import SDCardGroup from "./groups/SDCardGroup";
 import Editor from "../../components/editor/Editor";
+import SpindleDriverGroup from "./groups/SpindleDriverGroup";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -60,12 +61,12 @@ const Configuration = ({
         } catch (error) {
             onChange(value, true);
         }
-    }
+    };
 
     return (
         <>
             {currentTab === ConfigurationTab.GENERAL && (
-                <Container style={{paddingTop: "32px"}}>
+                <Container style={{ paddingTop: "32px" }}>
                     <h4>Board information</h4>
                     <TextField
                         label="Name"
@@ -79,7 +80,8 @@ const Configuration = ({
                         value={config.board ?? "None"}
                         options={[
                             { name: "None", value: "None" },
-                            { name: "6 Pack", value: "6 Pack" }]}
+                            { name: "6 Pack", value: "6 Pack" }
+                        ]}
                         setValue={(value) => appendConfig({ board: value })}
                     />
                     <TextField
@@ -91,7 +93,7 @@ const Configuration = ({
                 </Container>
             )}
             {currentTab === ConfigurationTab.AXES && (
-                <Container style={{paddingTop: "32px"}}>
+                <Container style={{ paddingTop: "32px" }}>
                     <AxesGroup
                         board={Boards[0]}
                         axes={config.axes}
@@ -101,7 +103,7 @@ const Configuration = ({
             )}
 
             {currentTab === ConfigurationTab.IO && (
-                <Container style={{paddingTop: "32px"}}>
+                <Container style={{ paddingTop: "32px" }}>
                     <SteppingGroup
                         steppingConfig={config.stepping}
                         setValue={(stepping) => appendConfig({ stepping })}
@@ -127,12 +129,19 @@ const Configuration = ({
                 </Container>
             )}
 
+            {currentTab === ConfigurationTab.SPINDLE && (
+                <Container style={{ paddingTop: "32px" }}>
+                    <SpindleDriverGroup
+                        board={Boards[0]}
+                        config={config}
+                        setValue={(config) => appendConfig(config)}
+                    />
+                </Container>
+            )}
+
             {currentTab === ConfigurationTab.SOURCE && (
                 <>
-                    <Editor
-                        value={value}
-                        onChange={updateValue}
-                    />
+                    <Editor value={value} onChange={updateValue} />
                 </>
             )}
         </>

@@ -12,7 +12,7 @@ type SPIProps = {
 
 const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
     return (
-        <>
+        <div style={{marginBottom: "48px"}}>
             <h4>SD Card</h4>
             <Form.Check
                 type="switch"
@@ -53,11 +53,9 @@ const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
                             });
                         }}
                     />
-                    <br />
-                    <br />
                 </>
             )}
-        </>
+        </div>
     );
 };
 

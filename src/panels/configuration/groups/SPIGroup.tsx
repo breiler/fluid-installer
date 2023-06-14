@@ -12,7 +12,7 @@ type SPIProps = {
 
 const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
     return (
-        <>
+        <div style={{marginBottom: "48px"}}>
             <h4>SPI</h4>
             <Form.Check
                 type="switch"
@@ -67,9 +67,7 @@ const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
                     />
                 </>
             )}
-            <br />
-            <br />
-        </>
+        </div>
     );
 };
 

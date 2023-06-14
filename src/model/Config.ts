@@ -38,7 +38,18 @@ export type Config = {
     coolant?: Coolant;
     macros?: Macros;
     probe?: Probe;
-    "10V"?: Spindle10V;
+
+    "10V"?: SpindleDriver10V;
+    besc?: SpindleDriverBesc;
+    DAC?: SpindleDriverDAC;
+    Huanyang?: SpindleDriverHuanyang;
+    YL620?: SpindleDriverYL620;
+    NowForever?: SpindleDriverNowForever;
+    pwm?: SpindleDriverPWM;
+    HBridge?: SpindleDriverHBridge;
+    Laser?: SpindleDriverLaser;
+    relay?: SpindleDriverRelay;
+    NoSpindle?: SpindleDriverNoSpindle;
 };
 
 type Start = {
@@ -213,20 +224,213 @@ export type MotorDriverTMC2130 = {
     stallguard_debug?: boolean;
     toff_disable?: number;
     toff_stealthchop?: number;
-    toff_coolstep?: string;
-    run_mode?: TrinamicMode;
-    homing_mode?: TrinamicMode;
+    toff_coolstep?: number;
+    run_mode?: TrinamicMode | string;
+    homing_mode?: TrinamicMode | string;
     use_enable?: boolean;
 };
 
-type MotorDriverTMC2208 = {};
-type MotorDriverTMC2209 = {};
-type MotorDriverTMC5160 = {};
-type MotorDriverRCServo = {};
-type MotorDriverSolenoid = {};
-type MotorDriverDynamixel2 = {};
+type MotorDriverTMC2208 = {
+    step_pin?: string;
+    direction_pin?: string;
+    disable_pin?: string;
+    r_sense_ohms?: number;
+    run_amps?: number;
+    hold_amps?: number;
+    microsteps?: number;
+};
 
-export type Spindle10V = {};
+type MotorDriverTMC2209 = {
+    step_pin?: string;
+    direction_pin?: string;
+    disable_pin?: string;
+    uart_num?: number;
+    addr?: number;
+    r_sense_ohms?: number;
+    run_amps?: number;
+    hold_amps?: number;
+    microsteps?: number;
+    stallguard?: number;
+    stallguard_debug?: boolean;
+    toff_disable?: number;
+    toff_stealthchop?: number;
+    toff_coolstep?: number;
+    run_mode?: TrinamicMode | string;
+    homing_mode?: TrinamicMode | string;
+    use_enable?: boolean;
+};
+
+type MotorDriverTMC5160 = {
+    step_pin?: string;
+    direction_pin?: string;
+    disable_pin?: string;
+    cs_pin?: string;
+    spi_index?: string;
+    r_sense_ohms?: number;
+    run_amps?: number;
+    hold_amps?: number;
+    stallguard?: number;
+    stallguard_debug?: boolean;
+    toff_disable?: number;
+    toff_stealthchop?: number;
+    toff_coolstep?: number;
+    run_mode?: TrinamicMode | string;
+    homing_mode?: TrinamicMode | string;
+    use_enable?: boolean;
+    tpfd?: number;
+};
+
+type MotorDriverRCServo = {
+    output_pin?: string;
+    pwm_hz?: number;
+    min_pulse_us?: number;
+    max_pulse_us?: number;
+};
+
+type MotorDriverSolenoid = {
+    output_pin?: string;
+    pwm_hz?: number;
+    off_percent?: number;
+    pull_percent?: number;
+    hold_percent?: number;
+    pull_ms?: number;
+};
+
+type MotorDriverDynamixel2 = {
+    id?: number;
+    uart_num?: number;
+    count_min?: number;
+    count_max?: number;
+};
+
+export type SpindleDriver10V = {
+    forward_pin?: string;
+    reverse_pin?: string;
+    pwm_hz?: number;
+    output_pin?: string;
+    enable_pin?: string;
+    direction_pin?: string;
+    disable_with_s0?: boolean;
+    s0_with_disable?: boolean;
+    spinup_ms?: number;
+    spindown_ms?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: boolean;
+};
+
+export type SpindleDriverBesc = {
+    pwm_hz?: number;
+    output_pin?: string;
+    enable_pin?: string;
+    direction_pin?: string;
+    disable_with_s0?: boolean;
+    s0_with_disable?: boolean;
+    spinup_ms?: number;
+    spindown_ms?: number;
+    tool_num?: number;
+    speed_map?: string;
+    min_pulse_us?: number;
+    max_pulse_us?: number;
+    off_on_alarm?: boolean;
+};
+
+export type SpindleDriverDAC = {
+    output_pin?: string;
+    enable_pin?: string;
+    direction_pin?: string;
+    disable_with_s0?: boolean;
+    s0_with_disable?: boolean;
+    spinup_ms?: number;
+    spindown_ms?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: boolean;
+};
+export type SpindleDriverHuanyang = {
+    uart?: Uart;
+    modbus_id?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: string;
+};
+
+export type SpindleDriverYL620 = {
+    uart?: Uart;
+    modbus_id?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: string;
+};
+
+export type SpindleDriverNowForever = {
+    uart?: Uart;
+    modbus_id?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: string;
+};
+
+export type SpindleDriverPWM = {
+    pwm_hz?: number;
+    output_pin?: string;
+    enable_pin?: string;
+    direction_pin?: string;
+    disable_with_s0?: boolean;
+    s0_with_disable?: boolean;
+    spinup_ms?: number;
+    spindown_ms?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: boolean;
+};
+
+export type SpindleDriverHBridge = {
+    pwm_hz?: number;
+    output_cw_pin?: string;
+    output_ccw_pin?: string;
+    enable_pin?: string;
+    disable_with_s0?: boolean;
+    spinup_ms?: number;
+    spindown_ms?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: boolean;
+};
+
+export type SpindleDriverLaser = {
+    pwm_hz?: number;
+    output_pin?: string;
+    enable_pin?: string;
+    disable_with_s0?: boolean;
+    s0_with_disable?: boolean;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: boolean;
+};
+
+export type SpindleDriverRelay = {
+    direction_pin?: string;
+    output_pin?: string;
+    enable_pin?: string;
+    disable_with_s0?: boolean;
+    s0_with_disable?: boolean;
+    spinup_ms?: number;
+    spindown_ms?: number;
+    tool_num?: number;
+    speed_map?: string;
+    off_on_alarm?: boolean;
+};
+
+export type SpindleDriverNoSpindle = {};
+
+export type Uart = {
+    txd_pin?: string;
+    rxd_pin?: string;
+    rts_pin?: string;
+    baud?: number;
+    mode?: string;
+};
 
 export class PinConfig {
     constructor(

@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Form, Row } from "react-bootstrap";
-import { SPI as SPIConfig, Stepping } from "../../../model/Config";
+import { Stepping } from "../../../model/Config";
 import TextField from "../fields/TextField";
+
+const DEFAULT_CONFIG: Stepping = {
+    engine: "RMT",
+    idle_ms: 250,
+    pulse_us: 4,
+    dir_delay_us: 0,
+    disable_delay_us: 0
+};
 
 type SteppingGroupProps = {
     steppingConfig?: Stepping;
@@ -12,8 +20,15 @@ const SteppingGroup = ({
     steppingConfig,
     setValue = (config) => {}
 }: SteppingGroupProps) => {
+
+    useEffect(() => {
+        if (!steppingConfig) {
+            setValue(DEFAULT_CONFIG);
+        }
+    }, [steppingConfig]);
+
     return (
-        <>
+        <div style={{marginBottom: "48px"}}>
             <h4>Stepping</h4>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm="3">
@@ -68,7 +83,7 @@ const SteppingGroup = ({
             />
             <TextField
                 label="Direction delay"
-                value={steppingConfig?.dir_delay_us}
+                value={steppingConfig?.dir_delay_us ?? 0}
                 unit={"μs"}
                 setValue={(value) =>
                     setValue({
@@ -88,10 +103,7 @@ const SteppingGroup = ({
                     })
                 }
             />
-
-            <br />
-            <br />
-        </>
+        </div>
     );
 };
 

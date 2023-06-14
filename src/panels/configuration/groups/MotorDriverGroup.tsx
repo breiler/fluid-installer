@@ -1,10 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { PinConfig, Motor } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import React, { useEffect, useState } from "react";
+import { Motor } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
 import SelectField from "../fields/SelectField";
-import TextField from "../fields/TextField";
-import BooleanField from "../fields/BooleanField";
+import StandardStepper from "../motordriver/StandardStepper";
+import Stepstick from "../motordriver/StepStick";
+import TMC2130 from "../motordriver/TMC2130";
+import TMC2208 from "../motordriver/TMC2208";
+import TMC2209 from "../motordriver/TMC2209";
+import TMC5160 from "../motordriver/TMC5160";
+import RCServo from "../motordriver/RCServo";
+import Solenoid from "../motordriver/Solenoid";
+import Dynamixel2 from "../motordriver/Dynamixel2";
+import { deepMerge } from "../../../utils/utils";
 
 type MotorDriverProps = {
     board: Board;
@@ -25,40 +32,6 @@ enum DriverType {
     SOLENOID = "solenoid",
     DYNAMIXEL2 = "dynamixel2"
 }
-
-type Props = Record<string, any>;
-
-const deepMerge = (target: Props, ...sources: Props[]): Props => {
-    if (!sources.length) {
-        return target;
-    }
-
-    Object.entries(sources.shift() ?? []).forEach(([key, value]) => {
-        if (value) {
-            if (!target[key]) {
-                Object.assign(target, { [key]: {} });
-            }
-
-            if (
-                value.constructor === Object ||
-                (value.constructor === Array &&
-                    value.find((v) => v.constructor === Object))
-            ) {
-                deepMerge(target[key], value);
-            } else if (value.constructor === Array) {
-                Object.assign(target, {
-                    [key]: value.find((v) => v.constructor === Array)
-                        ? target[key].concat(value)
-                        : [...new Set([...target[key], ...value])]
-                });
-            } else {
-                Object.assign(target, { [key]: value });
-            }
-        }
-    });
-
-    return target;
-};
 
 const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
     const [driverType, setDriverType] = useState<string>();
@@ -185,298 +158,75 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
             />
 
             {driverType === DriverType.STANDARD_STEPPER && (
-                <>
-                    <PinField
-                        label="Step pin"
-                        board={board}
-                        value={PinConfig.fromString(
-                            motor?.standard_stepper?.step_pin
-                        )}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                standard_stepper: {
-                                    step_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-                    <PinField
-                        label="Direction pin"
-                        board={board}
-                        value={PinConfig.fromString(
-                            motor?.standard_stepper?.direction_pin
-                        )}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                standard_stepper: {
-                                    direction_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-                    <PinField
-                        label="Disable pin"
-                        board={board}
-                        value={PinConfig.fromString(
-                            motor?.standard_stepper?.disable_pin
-                        )}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                standard_stepper: {
-                                    disable_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-                </>
+                <StandardStepper
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
             )}
 
             {driverType === DriverType.STEPSTICK && (
-                <>
-                    <PinField
-                        label="Step pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.stepstick?.step_pin)}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    step_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-
-                    <PinField
-                        label="Direction pin"
-                        board={board}
-                        value={PinConfig.fromString(
-                            motor?.stepstick?.direction_pin
-                        )}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    direction_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-
-                    <PinField
-                        label="Disable pin"
-                        board={board}
-                        value={PinConfig.fromString(
-                            motor?.stepstick?.disable_pin
-                        )}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    disable_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-
-                    <PinField
-                        label="MS1 pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.stepstick?.ms1_pin)}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    ms1_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-
-                    <PinField
-                        label="MS2 pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.stepstick?.ms2_pin)}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    ms2_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-
-                    <PinField
-                        label="MS3 pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.stepstick?.ms3_pin)}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    ms3_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-                </>
+                <Stepstick
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
             )}
 
             {driverType === DriverType.TMC_2130 && (
-                <>
-                    <PinField
-                        label="Step pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.tmc_2130?.step_pin)}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    step_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
+                <TMC2130
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
+            )}
 
-                    <PinField
-                        label="Direction pin"
-                        board={board}
-                        value={PinConfig.fromString(
-                            motor?.tmc_2130?.direction_pin
-                        )}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    direction_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
+            {driverType === DriverType.TMC_2208 && (
+                <TMC2208
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
+            )}
 
-                    <PinField
-                        label="Disable pin"
-                        board={board}
-                        value={PinConfig.fromString(
-                            motor?.tmc_2130?.disable_pin
-                        )}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    disable_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
+            {driverType === DriverType.TMC_2209 && (
+                <TMC2209
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
+            )}
 
-                    <PinField
-                        label="CS pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.tmc_2130?.cs_pin)}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    cs_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
+            {driverType === DriverType.TMC_5160 && (
+                <TMC5160
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
+            )}
 
-                    <TextField
-                        label="SPI index"
-                        value={motor?.tmc_2130?.spi_index ?? -1}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    spi_index: value + ""
-                                }
-                            })
-                        }
-                    />
+            {driverType === DriverType.RC_SERVO && (
+                <RCServo
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
+            )}
 
-                    <TextField
-                        label="R Sense"
-                        value={motor?.tmc_2130?.r_sense_ohms ?? 0.11}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    r_sense_ohms: Number(value)
-                                }
-                            })
-                        }
-                        unit="Ω"
-                    />
-                    <TextField
-                        label="Hold amps"
-                        value={motor?.tmc_2130?.hold_amps ?? 0.5}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    hold_amps: Number(value)
-                                }
-                            })
-                        }
-                        unit="A"
-                        helpText="This value sets the driver's output current when the driver is not outputing steps."
-                    />
-                    <SelectField
-                        label="Microsteps"
-                        value={
-                            motor?.tmc_2130?.microsteps
-                                ? motor?.tmc_2130?.microsteps + ""
-                                : "16"
-                        }
-                        options={[
-                            { name: "1", value: "1" },
-                            { name: "2", value: "2" },
-                            { name: "4", value: "4" },
-                            { name: "8", value: "8" },
-                            { name: "16", value: "16" },
-                            { name: "32", value: "32" },
-                            { name: "128", value: "128" },
-                            { name: "256", value: "256" }
-                        ]}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    microsteps: Number(value)
-                                }
-                            })
-                        }
-                    />
-                    <TextField
-                        label="Stallguard"
-                        value={motor?.tmc_2130?.stallguard ?? 0}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    stallguard: Number(value)
-                                }
-                            })
-                        }
-                        helpText={
-                            "Stallguard threshold level where a higher value makes stallGuard2 less sensitive and requires more torque to indicate a stall. See datasheet for more details."
-                        }
-                    />
+            {driverType === DriverType.SOLENOID && (
+                <Solenoid
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
+            )}
 
-                    <BooleanField
-                        label="Stallguard debug"
-                        value={motor?.tmc_2130?.stallguard_debug ?? false}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                tmc_2130: {
-                                    stallguard_debug: Boolean(value)
-                                }
-                            })
-                        }
-                    />
-
-                    <PinField
-                        label="MS3 pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.stepstick?.ms3_pin)}
-                        setValue={(value) =>
-                            updateMotorDriverValue({
-                                stepstick: {
-                                    ms3_pin: value.toString()
-                                }
-                            })
-                        }
-                    />
-                </>
+            {driverType === DriverType.DYNAMIXEL2 && (
+                <Dynamixel2
+                    board={board}
+                    motor={motor ?? {}}
+                    updateMotorDriverValue={updateMotorDriverValue}
+                />
             )}
         </>
     );

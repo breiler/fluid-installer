@@ -44,6 +44,29 @@ const HomingGroup = ({ homing, setValue }: HomingProps) => {
                             });
                         }}
                     />
+                    <TextField
+                        label="Position"
+                        value={Number(homing?.mpos_mm ?? 0)}
+                        setValue={(value) => {
+                            setValue({
+                                ...homing,
+                                ...{ cycle: Number(value) }
+                            });
+                        }}
+                        unit="mm"
+                        helpText="Sets the machine position after homing and limit switch pull-off in millimeters. If you want the machine position to be zero at the limit switch, set this to zero. Keep in mind the homing direction when you choose this number."
+                    />
+                     <BooleanField
+                        label="Positive direction"
+                        value={homing?.positive_direction ?? true}
+                        setValue={(value) => {
+                            setValue({
+                                ...homing,
+                                ...{ positive_direction: Boolean(value) }
+                            });
+                        }}
+                        helpText="Controls the direction in which the axis moves when homing."
+                    />
                 </>
             )}
         </>

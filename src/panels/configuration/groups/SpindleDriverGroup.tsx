@@ -3,6 +3,7 @@ import { Board } from "../../../model/Boards";
 import { Config } from "../../../model/Config";
 import { deepMerge } from "../../../utils/utils";
 import BescSpindle from "../spindledriver/BescSpindle";
+import PwmSpindle from "../spindledriver/PwmSpindle";
 import TenVSpindle from "../spindledriver/TenVSpindle";
 
 type SpindleDriverGroupProps = {
@@ -29,6 +30,12 @@ const SpindleDriverGroup = ({
                 updateSpindleDriverValue={updateSpindleDriverValue}
             />
             <BescSpindle
+                board={board}
+                config={config}
+                setValue={setValue}
+                updateSpindleDriverValue={updateSpindleDriverValue}
+            />
+            <PwmSpindle
                 board={board}
                 config={config}
                 setValue={setValue}

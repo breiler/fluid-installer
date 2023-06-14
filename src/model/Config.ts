@@ -47,7 +47,7 @@ export type Config = {
     Huanyang?: SpindleDriverHuanyang;
     YL620?: SpindleDriverYL620;
     NowForever?: SpindleDriverNowForever;
-    pwm?: SpindleDriverPWM;
+    PWM?: SpindleDriverPWM;
     HBridge?: SpindleDriverHBridge;
     Laser?: SpindleDriverLaser;
     relay?: SpindleDriverRelay;

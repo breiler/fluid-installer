@@ -32,7 +32,7 @@ const AxisGroup = ({
             type="switch"
             label="Include"
             checked={!!axis}
-            onClick={() => {
+            onChange={() => {
                 if (!!axis) {
                     setValue(undefined);
                 } else {

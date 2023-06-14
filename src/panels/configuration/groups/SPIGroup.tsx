@@ -18,7 +18,7 @@ const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
                 type="switch"
                 label="Include"
                 checked={!!spi}
-                onClick={() => {
+                onChange={() => {
                     if (!!spi) {
                         setValue(undefined);
                     } else {

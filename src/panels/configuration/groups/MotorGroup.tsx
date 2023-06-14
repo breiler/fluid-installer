@@ -34,7 +34,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                 type="switch"
                 label="Include"
                 checked={!!motor}
-                onClick={() => {
+                onChange={() => {
                     if (!!motor) {
                         setValue(undefined);
                     } else {

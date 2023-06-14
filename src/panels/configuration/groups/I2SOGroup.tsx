@@ -18,7 +18,7 @@ const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
                 type="switch"
                 label="Include"
                 checked={!!i2so}
-                onClick={() => {
+                onChange={() => {
                     if (!!i2so) {
                         setValue(undefined);
                     } else {

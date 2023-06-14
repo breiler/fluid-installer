@@ -31,7 +31,7 @@ const AxesGroup = ({
                     !!axes?.shared_stepper_disable_pin ||
                     !!axes?.shared_stepper_reset_pin
                 }
-                onClick={() => {
+                onChange={() => {
                     if (
                         !!axes?.shared_stepper_disable_pin ||
                         !!axes?.shared_stepper_reset_pin

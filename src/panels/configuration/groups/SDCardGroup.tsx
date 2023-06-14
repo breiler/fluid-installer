@@ -18,7 +18,7 @@ const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
                 type="switch"
                 label="Include"
                 checked={!!sdcard}
-                onClick={() => {
+                onChange={() => {
                     if (!!sdcard) {
                         setValue(undefined);
                     } else {

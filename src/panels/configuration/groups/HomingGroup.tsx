@@ -20,7 +20,7 @@ const HomingGroup = ({ homing, setValue }: HomingProps) => {
                 type="switch"
                 label="Include"
                 checked={!!homing}
-                onClick={() => {
+                onChange={() => {
                     if (!!homing) {
                         setValue(undefined);
                     } else {

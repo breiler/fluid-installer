@@ -42,6 +42,8 @@ const Firmware = ({ onInstall }: Props) => {
             GithubService.getReleaseManifest(release).then((manifest) => {
                 setReleaseManifest(manifest);
                 setSelectedChoices([manifest.installable]);
+            }).catch(error => {
+                setErrorMessage("Could not download the release asset " + error);
             });
         }
     };

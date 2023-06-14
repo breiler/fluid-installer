@@ -6,7 +6,7 @@ export type GithubReleaseAsset = {
 };
 
 const RESOURCES_BASE_URL =
-    "https://raw.githubusercontent.com/bdring/fluidnc.github.io/gh-pages/releases";
+    "https://raw.githubusercontent.com/bdring/fluidnc-releases/main/releases";
 
 /**
  * Contract for a github release
@@ -74,41 +74,10 @@ export const GithubService = {
             });
     },
 
-    getReleaseAsset: (
-        release: GithubRelease
-    ): GithubReleaseAsset | undefined => {
-        return release.assets.find((asset) =>
-            asset.name.endsWith("-posix.zip")
-        );
-    },
-
-    /**
-     * Get the release asset zip data
-     *
-     * @param asset the release asset to download
-     * @returns the asset zip data
-     */
-    getReleaseAssetZip: (asset: GithubReleaseAsset): Promise<Blob> => {
-        const assetUrl =
-            "https://raw.githubusercontent.com/breiler/fluid-installer/master/releases/" +
-            asset.name;
-        return fetch(assetUrl, {
-            headers: {
-                Accept: "application/octet-stream"
-            }
-        }).then((response) => {
-            if (response.status === 200 || response.status === 0) {
-                return Promise.resolve(response.blob());
-            } else {
-                return Promise.reject(new Error(response.statusText));
-            }
-        });
-    },
-
     getReleaseManifest: (
         release: GithubRelease
     ): Promise<GithubReleaseManifest> => {
-        const manifestBaseUrl = RESOURCES_BASE_URL + "/v3.7.2-pre";
+        const manifestBaseUrl =  RESOURCES_BASE_URL + "/v3.7.2";
         const manifestUrl = manifestBaseUrl + "/manifest.json";
 
         return fetch(manifestUrl, {
@@ -125,10 +94,10 @@ export const GithubService = {
     },
 
     getImageFiles: (
-        asset: GithubRelease,
+        release: GithubRelease,
         images: FirmwareImage[]
     ): Promise<string[]> => {
-        const baseUrl = RESOURCES_BASE_URL + "/v3.7.2-pre/";
+        const baseUrl = RESOURCES_BASE_URL + "/v3.7.2/";
 
         return Promise.all(
             images.map((image) => {

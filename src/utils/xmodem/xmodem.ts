@@ -324,5 +324,5 @@ const trimBuffer = (result: Buffer): Buffer => {
         i--;
     }
 
-    return result.subarray(0, i);
+    return result.subarray(0, i+1);
 };

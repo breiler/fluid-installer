@@ -181,7 +181,8 @@ export default class Xterm extends React.Component<IProps> {
 	componentDidMount() {
 		if (this.terminalRef.current) {
 			// Creates the terminal within the container element.
-			this.terminal.open(this.terminalRef.current)
+			this.terminal.open(this.terminalRef.current);
+			this.terminal.focus();
 		}
 	}
 

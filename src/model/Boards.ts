@@ -14,7 +14,7 @@ export const Boards : Board[]= [
                 input: true,
                 pull: false,
                 output: true,
-                restricted: true,
+                restricted: false,
             },
             {
                 pin: Pin.GPIO_0,

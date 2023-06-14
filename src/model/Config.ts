@@ -30,6 +30,8 @@ export type Config = {
 
     stepping?: Stepping;
 
+    start?: Start;
+
     axes?: Axes;
 
     i2so?: I2ISO;
@@ -56,17 +58,17 @@ type Start = {
     /**
      * This controls whether you are required to home at startup or not. You will get an homing alarm at startup if this value is true. This prevents motion until you home the machine or clear the alarm.
      */
-    must_home: boolean;
+    must_home?: boolean;
 
     /**
      * Turns off the parking feature.
      */
-    deactivate_parking: boolean;
+    deactivate_parking?: boolean;
 
     /**
      *  If true this will report if any limit switches are active at startup if hard_limits is true for the axis.
      */
-    check_limit: boolean;
+    check_limit?: boolean;
 };
 
 export type Axes = {

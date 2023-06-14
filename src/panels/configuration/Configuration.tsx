@@ -96,8 +96,8 @@ const Configuration = ({
                 <Container style={{ paddingTop: "32px" }}>
                     <AxesGroup
                         board={Boards[0]}
-                        axes={config.axes}
-                        setValue={(value) => appendConfig({ axes: value })}
+                        config={config}
+                        setValue={(value) => appendConfig(value)}
                     />
                 </Container>
             )}

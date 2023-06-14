@@ -1,5 +1,5 @@
 import React from "react";
-import { Axes, Pin, PinConfig } from "../../../model/Config";
+import { Axes, Config, Pin, PinConfig } from "../../../model/Config";
 import AxisGroup from "./AxisGroup";
 import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
@@ -7,77 +7,137 @@ import { Form, Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
+import { deepMerge } from "../../../utils/utils";
+import BooleanField from "../fields/BooleanField";
 
 type SelectFieldProps = {
     board: Board;
-    axes?: Axes;
-    setValue?: (value: Axes) => void;
+    config?: Config;
+    setValue?: (value: Config) => void;
 };
 
 const AxesGroup = ({
     board,
-    axes,
-    setValue = (value: Axes) => {}
+    config,
+    setValue = (value: Config) => {}
 }: SelectFieldProps) => {
     return (
         <>
             <h4>Axes</h4>
+            <br />
+
+            <BooleanField
+                label="Require homing on startup"
+                value={config?.start?.must_home ?? true}
+                setValue={(value) =>
+                    setValue({
+                        ...config!,
+                        start: {
+                            ...config?.start,
+                            must_home: Boolean(value)
+                        }
+                    })
+                }
+                helpText="This controls whether you are required to home at startup or not. You will get an homing alarm at startup if this value is true. This prevents motion until you home the machine or clear the alarm."
+            />
+
+            <BooleanField
+                label="Deactivate parking"
+                value={config?.start?.deactivate_parking ?? true}
+                setValue={(value) =>
+                    setValue({
+                        ...config!,
+                        start: {
+                            ...config?.start,
+                            deactivate_parking: Boolean(value)
+                        }
+                    })
+                }
+            />
+
+            <BooleanField
+                label="Check limits"
+                value={config?.start?.check_limit ?? false}
+                setValue={(value) =>
+                    setValue({
+                        ...config!,
+                        start: {
+                            ...config?.start,
+                            check_limit: Boolean(value)
+                        }
+                    })
+                }
+                helpText="If true this will report if any limit switches are active at startup if hard_limits is true for the axis."
+            />
 
             <br />
             <Form.Check
                 type="switch"
                 label="Use shared pins"
                 checked={
-                    !!axes?.shared_stepper_disable_pin ||
-                    !!axes?.shared_stepper_reset_pin
+                    !!config?.axes?.shared_stepper_disable_pin ||
+                    !!config?.axes?.shared_stepper_reset_pin
                 }
                 onChange={() => {
                     if (
-                        !!axes?.shared_stepper_disable_pin ||
-                        !!axes?.shared_stepper_reset_pin
+                        !!config?.axes?.shared_stepper_disable_pin ||
+                        !!config?.axes?.shared_stepper_reset_pin
                     ) {
                         setValue({
-                            ...axes,
-                            shared_stepper_disable_pin: undefined,
-                            shared_stepper_reset_pin: undefined
+                            ...config,
+                            axes: {
+                                ...config.axes,
+                                shared_stepper_disable_pin: undefined,
+                                shared_stepper_reset_pin: undefined
+                            }
                         });
                     } else {
                         setValue({
-                            ...axes,
-                            shared_stepper_disable_pin: PinConfig.fromString(
-                                Pin.NO_PIN
-                            ).toString(),
-                            shared_stepper_reset_pin: PinConfig.fromString(
-                                Pin.NO_PIN
-                            ).toString()
+                            ...config,
+                            axes: {
+                                ...config!.axes,
+                                shared_stepper_disable_pin:
+                                    PinConfig.fromString(Pin.NO_PIN).toString(),
+                                shared_stepper_reset_pin: PinConfig.fromString(
+                                    Pin.NO_PIN
+                                ).toString()
+                            }
                         });
                     }
                 }}></Form.Check>
 
-            {!!axes?.shared_stepper_disable_pin && (
+            {!!config?.axes?.shared_stepper_disable_pin && (
                 <PinField
                     label="Shared disable pin"
                     board={board}
                     value={PinConfig.fromString(
-                        axes?.shared_stepper_disable_pin
+                        config?.axes?.shared_stepper_disable_pin
                     )}
                     setValue={(value) =>
                         setValue({
-                            ...axes,
-                            shared_stepper_disable_pin: value.toString()
+                            ...config,
+                            axes: {
+                                ...config.axes,
+                                shared_stepper_disable_pin: value.toString()
+                            }
                         })
                     }
                 />
             )}
-            {!!axes?.shared_stepper_reset_pin && (
+            {!!config?.axes?.shared_stepper_reset_pin && (
                 <PinField
                     label="Shared reset pin"
                     board={board}
-                    value={PinConfig.fromString(axes?.shared_stepper_reset_pin)}
+                    value={PinConfig.fromString(
+                        config?.axes?.shared_stepper_reset_pin
+                    )}
                     setValue={(value) =>
                         setValue({
-                            ...axes,
-                            shared_stepper_reset_pin: value.toString()
+                            ...config,
+                            axes: {
+                                ...config.axes,
+                                shared_stepper_reset_pin: value.toString()
+                            }
                         })
                     }
                 />
@@ -91,7 +151,7 @@ const AxesGroup = ({
                     <Nav.Item>
                         <Nav.Link eventKey="axisx">
                             X{" "}
-                            {!axes?.x && (
+                            {!config?.axes?.x && (
                                 <FontAwesomeIcon
                                     icon={faBan as IconDefinition}
                                 />
@@ -101,7 +161,7 @@ const AxesGroup = ({
                     <Nav.Item>
                         <Nav.Link eventKey="axisy">
                             Y{" "}
-                            {!axes?.y && (
+                            {!config?.axes?.y && (
                                 <FontAwesomeIcon
                                     icon={faBan as IconDefinition}
                                 />
@@ -111,7 +171,7 @@ const AxesGroup = ({
                     <Nav.Item>
                         <Nav.Link eventKey="axisz">
                             Z{" "}
-                            {!axes?.z && (
+                            {!config?.axes?.z && (
                                 <FontAwesomeIcon
                                     icon={faBan as IconDefinition}
                                 />
@@ -121,7 +181,7 @@ const AxesGroup = ({
                     <Nav.Item>
                         <Nav.Link eventKey="axisa">
                             A{" "}
-                            {!axes?.a && (
+                            {!config?.axes?.a && (
                                 <FontAwesomeIcon
                                     icon={faBan as IconDefinition}
                                 />
@@ -131,7 +191,7 @@ const AxesGroup = ({
                     <Nav.Item>
                         <Nav.Link eventKey="axisb">
                             B{" "}
-                            {!axes?.b && (
+                            {!config?.axes?.b && (
                                 <FontAwesomeIcon
                                     icon={faBan as IconDefinition}
                                 />
@@ -140,8 +200,8 @@ const AxesGroup = ({
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link eventKey="axisc">
-                            Z{" "}
-                            {!axes?.c && (
+                            C{" "}
+                            {!config?.axes?.c && (
                                 <FontAwesomeIcon
                                     icon={faBan as IconDefinition}
                                 />
@@ -155,54 +215,78 @@ const AxesGroup = ({
                     <Tab.Pane eventKey="axisx">
                         <AxisGroup
                             axisLabel="X"
-                            axis={axes?.x}
+                            axis={config?.axes?.x}
                             setValue={(value) =>
-                                setValue({ ...axes, x: value })
+                                setValue(
+                                    deepMerge(config!, {
+                                        axes: { x: value }
+                                    })
+                                )
                             }
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisy">
                         <AxisGroup
                             axisLabel="Y"
-                            axis={axes?.y}
+                            axis={config?.axes?.y}
                             setValue={(value) =>
-                                setValue({ ...axes, y: value })
+                                setValue(
+                                    deepMerge(config!, {
+                                        axes: { y: value }
+                                    })
+                                )
                             }
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisz">
                         <AxisGroup
                             axisLabel="Z"
-                            axis={axes?.z}
+                            axis={config?.axes?.z}
                             setValue={(value) =>
-                                setValue({ ...axes, z: value })
+                                setValue(
+                                    deepMerge(config!, {
+                                        axes: { z: value }
+                                    })
+                                )
                             }
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisa">
                         <AxisGroup
                             axisLabel="A"
-                            axis={axes?.a}
+                            axis={config?.axes?.a}
                             setValue={(value) =>
-                                setValue({ ...axes, a: value })
+                                setValue(
+                                    deepMerge(config!, {
+                                        axes: { a: value }
+                                    })
+                                )
                             }
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisb">
                         <AxisGroup
                             axisLabel="B"
-                            axis={axes?.b}
+                            axis={config?.axes?.b}
                             setValue={(value) =>
-                                setValue({ ...axes, b: value })
+                                setValue(
+                                    deepMerge(config!, {
+                                        axes: { b: value }
+                                    })
+                                )
                             }
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisc">
                         <AxisGroup
                             axisLabel="C"
-                            axis={axes?.c}
+                            axis={config?.axes?.c}
                             setValue={(value) =>
-                                setValue({ ...axes, c: value })
+                                setValue(
+                                    deepMerge(config!, {
+                                        axes: { c: value }
+                                    })
+                                )
                             }
                         />
                     </Tab.Pane>

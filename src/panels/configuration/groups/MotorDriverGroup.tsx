@@ -3,7 +3,7 @@ import { Motor } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
 import SelectField from "../fields/SelectField";
 import StandardStepper from "../motordriver/StandardStepper";
-import Stepstick from "../motordriver/StepStick";
+import Stepstick from "../motordriver/Stepstick";
 import TMC2130 from "../motordriver/TMC2130";
 import TMC2208 from "../motordriver/TMC2208";
 import TMC2209 from "../motordriver/TMC2209";

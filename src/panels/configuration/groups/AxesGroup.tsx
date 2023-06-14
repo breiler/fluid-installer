@@ -217,11 +217,10 @@ const AxesGroup = ({
                             axisLabel="X"
                             axis={config?.axes?.x}
                             setValue={(value) =>
-                                setValue(
-                                    deepMerge(config!, {
-                                        axes: { x: value }
-                                    })
-                                )
+                                setValue({
+                                    ...config!,
+                                    axes: { ...config?.axes, x: value }
+                                })
                             }
                         />
                     </Tab.Pane>
@@ -230,11 +229,10 @@ const AxesGroup = ({
                             axisLabel="Y"
                             axis={config?.axes?.y}
                             setValue={(value) =>
-                                setValue(
-                                    deepMerge(config!, {
-                                        axes: { y: value }
-                                    })
-                                )
+                                setValue({
+                                    ...config!,
+                                    axes: { ...config?.axes, y: value }
+                                })
                             }
                         />
                     </Tab.Pane>
@@ -256,11 +254,10 @@ const AxesGroup = ({
                             axisLabel="A"
                             axis={config?.axes?.a}
                             setValue={(value) =>
-                                setValue(
-                                    deepMerge(config!, {
-                                        axes: { a: value }
-                                    })
-                                )
+                                setValue({
+                                    ...config!,
+                                    axes: { ...config?.axes, a: value }
+                                })
                             }
                         />
                     </Tab.Pane>
@@ -269,11 +266,10 @@ const AxesGroup = ({
                             axisLabel="B"
                             axis={config?.axes?.b}
                             setValue={(value) =>
-                                setValue(
-                                    deepMerge(config!, {
-                                        axes: { b: value }
-                                    })
-                                )
+                                setValue({
+                                    ...config!,
+                                    axes: { ...config?.axes, b: value }
+                                })
                             }
                         />
                     </Tab.Pane>
@@ -282,11 +278,10 @@ const AxesGroup = ({
                             axisLabel="C"
                             axis={config?.axes?.c}
                             setValue={(value) =>
-                                setValue(
-                                    deepMerge(config!, {
-                                        axes: { c: value }
-                                    })
-                                )
+                                setValue({
+                                    ...config!,
+                                    axes: { ...config?.axes, c: value }
+                                })
                             }
                         />
                     </Tab.Pane>

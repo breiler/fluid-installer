@@ -13,6 +13,12 @@ export type NativeSerialPortInfo = {
     usbProductId: number;
 };
 
+export type NativeSerialSignalOptions = {
+    dataTerminalReady?: boolean;
+    requestToSend?: boolean;
+    break?: boolean;
+}
+
 export type NativeEventFunction = (event: Event) => void;
 
 export enum NativeSerialPortEvent {
@@ -27,4 +33,6 @@ export type NativeSerialPort = {
     close: () => Promise<void>;
     getInfo: () => NativeSerialPortInfo;
     addEventListener: (NativeSerialPortEvent, NativeEventFunction) => void;
+    setSignals: (options: NativeSerialSignalOptions) => Promise<void>;
+    getSignals: () => Promise<NativeSerialSignalOptions>;
 };

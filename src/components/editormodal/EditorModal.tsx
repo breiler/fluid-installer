@@ -6,7 +6,7 @@ import { faSave, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-import { File } from "../../services/ControllerService";
+import { File } from "../../services/controllerservice";
 import Configuration, {
     ConfigurationTab
 } from "../../panels/configuration/Configuration";

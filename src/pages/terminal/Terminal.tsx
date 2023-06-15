@@ -8,18 +8,18 @@ import React, {
 import "xterm/css/xterm.css";
 import Xterm from "../../components/xterm/Xterm";
 import { SerialPortState } from "../../utils/serialport/SerialPort";
-import { SerialPortContext } from "../../context/SerialPortContext";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 
 type Props = {
     onClose: () => void;
 };
 
-const Terminal = ({}: Props) => {
-    const serialPort = useContext(SerialPortContext);
+const Terminal = ({ }: Props) => {
+    const controllerService = useContext(ControllerServiceContext);
     const xtermRef: React.RefObject<Xterm> = createRef<Xterm>();
     const [error, setError] = useState<string | undefined>();
 
@@ -31,13 +31,18 @@ const Terminal = ({}: Props) => {
     );
 
     useEffect(() => {
-        if (serialPort) {
-            serialPort
-                .open(115200)
-                .then(() => serialPort.addReader(onResponse))
-                .then(() => serialPort.write(Buffer.from([0x18]))) // CTRL-X reset controller
-                .then(() => serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
-                .then(() => serialPort.write(Buffer.from([0x05]))) // CTRL-E
+        if (controllerService) {
+            console.log("initiating terminal");
+            controllerService
+                .connect()
+                .then(() => controllerService
+                    .serialPort.addReader(onResponse))
+                .then(() => controllerService
+                    .serialPort.write(Buffer.from([0x18]))) // CTRL-X reset controller
+                .then(() => controllerService
+                    .serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
+                .then(() => controllerService
+                    .serialPort.write(Buffer.from([0x05]))) // CTRL-E
                 .catch((error) => {
                     console.log(error);
                     setError("Could not open a connection");
@@ -46,17 +51,16 @@ const Terminal = ({}: Props) => {
 
         return () => {
             if (
-                serialPort &&
-                serialPort.getState() === SerialPortState.CONNECTED
+                controllerService &&
+                controllerService.serialPort.getState() === SerialPortState.CONNECTED
             ) {
-                serialPort
-                    .write(Buffer.from([0x0c])) // CTRL-L Restting echo mode
-                    .then(() => serialPort.close());
+                controllerService.serialPort
+                    .write(Buffer.from([0x0c])); // CTRL-L Resetting echo mode
+                controllerService.serialPort!.removeReader(onResponse);
             }
 
-            serialPort!.removeReader(onResponse);
         };
-    }, [serialPort, onResponse, xtermRef]);
+    }, [controllerService, onResponse, xtermRef]);
 
     return (
         <>
@@ -65,7 +69,7 @@ const Terminal = ({}: Props) => {
                     <div style={{ marginBottom: "16px" }}>
                         <Button
                             onClick={() =>
-                                serialPort?.write(Buffer.from("$Bye\n"))
+                                controllerService?.hardReset()
                             }
                             variant="danger"
                             title="Restart">
@@ -76,7 +80,7 @@ const Terminal = ({}: Props) => {
                     </div>
                     <Xterm
                         ref={xtermRef}
-                        onData={(data) => serialPort!.write(Buffer.from(data))}
+                        onData={(data) => controllerService?.serialPort?.write(Buffer.from(data))}
                         options={{
                             cursorBlink: true,
                             convertEol: true,

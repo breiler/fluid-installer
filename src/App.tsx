@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Header } from "./components";
+import { Header, Spinner } from "./components";
 import Page from "./model/Page";
 import { Installer, Terminal } from "./pages";
 import FileBrowser from "./pages/filebrowser";
@@ -8,7 +8,10 @@ import SelectMode from "./pages/selectmode";
 import { Connection } from "./panels";
 import { SerialPort, SerialPortEvent } from "./utils/serialport/SerialPort";
 import { isSafari } from "./utils/utils";
-import { SerialPortContext } from "./context/SerialPortContext";
+import { ControllerService } from "./services/controllerservice";
+import { ControllerServiceContext } from "./context/ControllerServiceContext";
+import SpinnerModal from "./components/spinnermodal/SpinnerModal";
+import { ControllerStatus } from "./services/controllerservice/ControllerService";
 
 const App = () => {
     const [page, setPage] = useState<Page | undefined>(undefined);
@@ -16,6 +19,7 @@ const App = () => {
         return <h1>This tool is not supported on Safari!</h1>;
     }
     const [serialPort, setSerialPort] = useState<SerialPort>();
+    const [controllerService, setControllerService] = useState<ControllerService>();
 
     const onConnect = (port) => {
         const serialPort = new SerialPort(port);
@@ -28,15 +32,30 @@ const App = () => {
         setSerialPort(serialPort);
     };
 
+    useEffect(() => {
+        if (serialPort) {
+            const timeout = setTimeout(() => {
+                const service = new ControllerService(serialPort);
+                service.connect().then(() => setControllerService(service)).catch(error =>
+                    console.log("Could not connect", error));
+            }, 1000);
+
+            return () => clearTimeout(timeout);
+        } else {
+            setControllerService(undefined);
+        }
+    }, [serialPort]);
+
     return (
         <>
-            <SerialPortContext.Provider value={serialPort}>
+            <ControllerServiceContext.Provider value={controllerService}>
                 <Header />
                 <div className="container">
                     {!serialPort && <Connection onConnect={onConnect} />}
-                    {serialPort && !page && <SelectMode onSelect={setPage} />}
+                    {serialPort && !controllerService && <SpinnerModal show={true} text="Connecting to controller..." />}
+                    {controllerService && !page && <SelectMode onSelect={setPage} />}
 
-                    {serialPort && page && (
+                    {controllerService && page && (
                         <>
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb">
@@ -58,17 +77,17 @@ const App = () => {
                         </>
                     )}
 
-                    {serialPort && page === Page.INSTALLER && (
+                    {controllerService && page === Page.INSTALLER && (
                         <Installer onClose={() => setPage(undefined)} />
                     )}
 
-                    {serialPort && page === Page.TERMINAL && (
+                    {controllerService && page === Page.TERMINAL && (
                         <Terminal onClose={() => setPage(undefined)} />
                     )}
 
-                    {serialPort && page === Page.FILEBROWSER && <FileBrowser />}
+                    {controllerService && page === Page.FILEBROWSER && <FileBrowser />}
                 </div>
-            </SerialPortContext.Provider>
+            </ControllerServiceContext.Provider>
         </>
     );
 };

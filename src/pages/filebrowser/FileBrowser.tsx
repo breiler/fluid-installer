@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import {
-    ControllerService,
     ListFilesCommand,
-    File,
+    ControllerFile,
     DeleteFileCommand,
     GetConfigFilenameCommand,
     SetConfigFilenameCommand
-} from "../../services/ControllerService";
+} from "../../services/controllerservice";
 import { Button } from "../../components";
 import {
     Alert,
@@ -26,45 +25,41 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import EditorModal from "../../components/editormodal/EditorModal";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
-import { SerialPortContext } from "../../context/SerialPortContext";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 
 type EditFile = {
-    file: File;
+    file: ControllerFile;
     fileData: Buffer;
 };
 
 const FileBrowser = () => {
-    const serialPort = useContext(SerialPortContext);
-    const [files, setFiles] = useState<File[]>([]);
+    const controllerService = useContext(ControllerServiceContext);
+    const [files, setFiles] = useState<ControllerFile[]>([]);
     const [configFilename, setConfigFilename] = useState<string>("");
     const [editFile, setEditFile] = useState<EditFile | undefined>();
     const [uploadError, setUploadError] = useState<string | undefined>();
 
-    const [controllerService, setControllerService] =
-        useState<ControllerService>();
     const [isDownloading, setIsDownloading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
-        const service = new ControllerService(serialPort!);
-        service.connect().then(async () => {
-            await serialPort!.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
-            await serialPort!.getNativeSerialPort();
-            const listCommand = await service.send(new ListFilesCommand());
+        if (!controllerService) {
+            return;
+        }
+
+        controllerService.connect().then(async () => {
+            await controllerService.serialPort.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
+            const listCommand = await controllerService.send(new ListFilesCommand());
             setFiles(listCommand.getFiles());
 
             setConfigFilename(
                 await (
-                    await service.send(new GetConfigFilenameCommand())
+                    await controllerService.send(new GetConfigFilenameCommand())
                 ).getFilename()
             );
         });
-        setControllerService(service);
 
-        return () => {
-            service.disconnect();
-        };
-    }, [serialPort]);
+    }, [controllerService]);
 
     const refreshFileList = async (): Promise<void> => {
         if (!controllerService) {
@@ -78,7 +73,7 @@ const FileBrowser = () => {
             });
     };
 
-    const onDelete = async (file: File) => {
+    const onDelete = async (file: ControllerFile) => {
         if (!controllerService) {
             return;
         }
@@ -87,7 +82,7 @@ const FileBrowser = () => {
         await refreshFileList();
     };
 
-    const onDownload = async (file: File) => {
+    const onDownload = async (file: ControllerFile) => {
         if (!controllerService) {
             return;
         }
@@ -111,7 +106,7 @@ const FileBrowser = () => {
         }
     };
 
-    const onEdit = async (file: File) => {
+    const onEdit = async (file: ControllerFile) => {
         if (!controllerService) {
             return;
         }
@@ -294,50 +289,50 @@ const FileBrowser = () => {
                                         style={{ minWidth: "60px" }}>
                                         {(file.name.endsWith(".yml") ||
                                             file.name.endsWith(".yaml")) && (
-                                            <Button
-                                                disabled={isDownloading}
-                                                title={"Edit " + file.name}
-                                                onClick={() => onEdit(file)}>
-                                                <>
-                                                    <FontAwesomeIcon
-                                                        icon={
-                                                            faPen as IconDefinition
-                                                        }
-                                                        size="xs"
-                                                    />
-                                                </>
-                                            </Button>
-                                        )}
+                                                <Button
+                                                    disabled={isDownloading}
+                                                    title={"Edit " + file.name}
+                                                    onClick={() => onEdit(file)}>
+                                                    <>
+                                                        <FontAwesomeIcon
+                                                            icon={
+                                                                faPen as IconDefinition
+                                                            }
+                                                            size="xs"
+                                                        />
+                                                    </>
+                                                </Button>
+                                            )}
                                     </div>
                                     <div
                                         className="align-self-center"
                                         style={{ minWidth: "130px" }}>
                                         {(file.name.endsWith(".yml") ||
                                             file.name.endsWith(".yaml")) && (
-                                            <ToggleButton
-                                                id={"select-file-" + file.name}
-                                                type="checkbox"
-                                                variant="outline-primary"
-                                                title="Select as config"
-                                                checked={
-                                                    file.name === configFilename
-                                                }
-                                                value={file.name}
-                                                onChange={(event) =>
-                                                    onChangeConfig(
-                                                        event.target.value
-                                                    )
-                                                }>
-                                                {file.name ===
-                                                    configFilename && (
-                                                    <>Active config</>
-                                                )}
-                                                {file.name !==
-                                                    configFilename && (
-                                                    <>Select config</>
-                                                )}
-                                            </ToggleButton>
-                                        )}
+                                                <ToggleButton
+                                                    id={"select-file-" + file.name}
+                                                    type="checkbox"
+                                                    variant="outline-primary"
+                                                    title="Select as config"
+                                                    checked={
+                                                        file.name === configFilename
+                                                    }
+                                                    value={file.name}
+                                                    onChange={(event) =>
+                                                        onChangeConfig(
+                                                            event.target.value
+                                                        )
+                                                    }>
+                                                    {file.name ===
+                                                        configFilename && (
+                                                            <>Active config</>
+                                                        )}
+                                                    {file.name !==
+                                                        configFilename && (
+                                                            <>Select config</>
+                                                        )}
+                                                </ToggleButton>
+                                            )}
                                     </div>
                                 </div>
                             </li>

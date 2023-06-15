@@ -20,6 +20,7 @@ export enum InstallerState {
     DOWNLOADING,
     CHECKING_SIGNATURES,
     FLASHING,
+    FLASH_DONE,
     DONE,
     ERROR
 }
@@ -90,7 +91,7 @@ export const InstallService = {
                 choice.erase || false,
                 onProgress
             );
-            onState(InstallerState.DONE);
+            onState(InstallerState.FLASH_DONE);
         } catch (error) {
             console.error(error);
             onState(InstallerState.ERROR);

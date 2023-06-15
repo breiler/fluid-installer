@@ -3,12 +3,11 @@ import React, { useContext, useState } from "react";
 import Progress from "../../panels/progress/Progress";
 import Done from "../../panels/done/Done";
 import Firmware from "../../panels/firmware/Firmware";
-import { FirmwareChoice, GithubRelease, GithubReleaseManifest, GithubService } from "../../services/GitHubService";
-import { FirmwareType, InstallService, InstallerState } from "../../services/InstallService";
-import { SerialPort } from "../../utils/serialport/SerialPort";
+import { FirmwareChoice, GithubRelease, GithubReleaseManifest } from "../../services/GitHubService";
+import { InstallService, InstallerState } from "../../services/InstallService";
 import { FlashProgress } from "../../services/FlashService";
-import { SerialPortContext } from "../../context/SerialPortContext";
-
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import { ControllerStatus } from "../../services/controllerservice/ControllerService";
 const initialProgress: FlashProgress = {
     fileIndex: 0,
     fileCount: 1,
@@ -21,7 +20,7 @@ type InstallerProps = {
 };
 
 const Installer = ({ onClose }: InstallerProps) => {
-    const serialPort = useContext(SerialPortContext);
+    const controllerService = useContext(ControllerServiceContext);
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
     const [progress, setProgress] = useState(initialProgress);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -32,14 +31,35 @@ const Installer = ({ onClose }: InstallerProps) => {
         choice: FirmwareChoice
     ) => {
         console.log("Installing " + release.name + " with " + choice.name);
-        InstallService.installChoice(
+        try {
+            await controllerService?.disconnect();
+        } catch (error) {
+            // never mind
+        }
+
+        await InstallService.installChoice(
             release,
-            serialPort!,
+            controllerService!.serialPort!,
             manifest,
             choice,
             setProgress,
             setState
-        ).catch(setErrorMessage);
+        ).catch((error) => {
+            setErrorMessage(error);
+            setState(InstallerState.ERROR);
+        });
+
+        try {
+            let status = await controllerService?.connect();
+            if(status !== ControllerStatus.CONNECTED) {
+                setErrorMessage("An error occured while reconnecting, please reboot the controller");
+                setState(InstallerState.ERROR);
+            }
+            setState(InstallerState.DONE);
+        } catch (error) {
+            setErrorMessage(error);
+            setState(InstallerState.ERROR);
+        }
     };
 
     return (
@@ -50,9 +70,10 @@ const Installer = ({ onClose }: InstallerProps) => {
 
             {(state === InstallerState.DOWNLOADING ||
                 state === InstallerState.CHECKING_SIGNATURES ||
-                state === InstallerState.FLASHING) && (
-                <Progress progress={progress} status={state} />
-            )}
+                state === InstallerState.FLASHING ||
+                state === InstallerState.FLASH_DONE) && (
+                    <Progress progress={progress} status={state} />
+                )}
 
             {state === InstallerState.DONE && <Done onContinue={onClose} />}
             {state === InstallerState.ERROR && (

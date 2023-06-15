@@ -53,8 +53,10 @@ export const flashDevice = async (
     } finally {
         // Reset the controller
         await transport.setDTR(false);
+        await transport.setRTS(true);
         await new Promise((resolve) => setTimeout(resolve, 100));
         await transport.setDTR(true);
+        await new Promise(r => setTimeout(r, 50));
         await transport.disconnect();
     }
     return Promise.resolve();

@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import { sleep } from "../../utils/utils";
 
 type Props = {
     onClose: () => void;
@@ -70,6 +71,11 @@ const Terminal = ({ }: Props) => {
                         <Button
                             onClick={() =>
                                 controllerService?.hardReset()
+                                    .then(() => sleep(3000))
+                                    .then(() => controllerService
+                                        .serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
+                                    .then(() => controllerService
+                                        .serialPort.write(Buffer.from([0x05]))) // CTRL-E
                             }
                             variant="danger"
                             title="Restart">

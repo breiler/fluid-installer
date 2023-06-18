@@ -64,3 +64,7 @@ export const deepMerge = (target: Props, ...sources: Props[]): Props => {
 
     return target;
 };
+
+export const sleep = (milliseconds: number) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}

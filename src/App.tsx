@@ -6,53 +6,23 @@ import { Installer, Terminal } from "./pages";
 import FileBrowser from "./pages/filebrowser";
 import SelectMode from "./pages/selectmode";
 import { Connection } from "./panels";
-import { SerialPort, SerialPortEvent } from "./utils/serialport/SerialPort";
 import { isSafari } from "./utils/utils";
-import { ControllerService } from "./services/controllerservice";
+import { ControllerService } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
-import SpinnerModal from "./components/spinnermodal/SpinnerModal";
-import { ControllerStatus } from "./services/controllerservice/ControllerService";
 
 const App = () => {
     const [page, setPage] = useState<Page | undefined>(undefined);
     if (isSafari()) {
         return <h1>This tool is not supported on Safari!</h1>;
     }
-    const [serialPort, setSerialPort] = useState<SerialPort>();
     const [controllerService, setControllerService] = useState<ControllerService>();
-
-    const onConnect = (port) => {
-        const serialPort = new SerialPort(port);
-
-        // Registers a listener which
-        serialPort.on(SerialPortEvent.CONNECTION_ERROR, () => {
-            setSerialPort(undefined);
-            setPage(undefined);
-        });
-        setSerialPort(serialPort);
-    };
-
-    useEffect(() => {
-        if (serialPort) {
-            const timeout = setTimeout(() => {
-                const service = new ControllerService(serialPort);
-                service.connect().then(() => setControllerService(service)).catch(error =>
-                    console.log("Could not connect", error));
-            }, 1000);
-
-            return () => clearTimeout(timeout);
-        } else {
-            setControllerService(undefined);
-        }
-    }, [serialPort]);
 
     return (
         <>
             <ControllerServiceContext.Provider value={controllerService}>
                 <Header />
                 <div className="container">
-                    {!serialPort && <Connection onConnect={onConnect} />}
-                    {serialPort && !controllerService && <SpinnerModal show={true} text="Connecting to controller..." />}
+                    {!controllerService && <Connection onConnect={setControllerService} />}
                     {controllerService && !page && <SelectMode onSelect={setPage} />}
 
                     {controllerService && page && (

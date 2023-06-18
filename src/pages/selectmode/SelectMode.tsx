@@ -1,16 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import Page from "../../model/Page";
 import { InstallCard } from "../../components/installcard/InstallCard";
 import "./SelectMode.scss";
 import { TerminalCard } from "../../components/terminalcard/TerminalCard";
 import { FileBrowserCard } from "../../components/filebrowsercard/FileBrowserCard";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 
 type Props = {
     onSelect: (page: Page) => void;
 };
 
 const SelectMode = ({ onSelect }: Props) => {
-    return (
+    const controllerService = useContext(ControllerServiceContext);
+    console.log(controllerService?.currentVersion);
+    return (<>
+        <div className="container">
+            <div className="col">
+                <>{controllerService?.currentVersion}</>
+            </div>
+        </div>
         <div className="container text-center">
             <div className="row">
                 <div className="col">
@@ -19,13 +27,14 @@ const SelectMode = ({ onSelect }: Props) => {
                 <div className="col">
                     <TerminalCard onClick={() => onSelect(Page.TERMINAL)} />
                 </div>
-                <div className="col">
+                {controllerService?.currentVersion && <div className="col">
                     <FileBrowserCard
                         onClick={() => onSelect(Page.FILEBROWSER)}
                     />
-                </div>
+                </div>}
             </div>
         </div>
+    </>
     );
 };
 

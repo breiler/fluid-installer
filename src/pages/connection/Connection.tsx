@@ -19,27 +19,30 @@ const Connection = ({ onConnect }: Props) => {
     );
 
     const connect = async () => {
-        setErrorMessage(undefined);
-        setConnectionState(ConnectionState.CONNECTING);
-        const serialPortDevice = await (navigator as any).serial
-            .requestPort()
-            .then(port => new SerialPort(port))
-            .catch(error => {
+        try {
+            setErrorMessage(undefined);
+            setConnectionState(ConnectionState.CONNECTING);
+            const serialPortDevice = await (navigator as any).serial
+                .requestPort()
+                .then(port => new SerialPort(port))
+                .catch(error => {
+                    setConnectionState(ConnectionState.DISCONNECTED);
+                    throw error;
+                })
+
+            const controllerService = new ControllerService(serialPortDevice);
+            await controllerService.connect().catch(error => {
                 console.error(error);
-                setErrorMessage("Could not connect to selected serial port");
+                setErrorMessage("Could not establish connection to the controller. Please check that nothing else is connected to it");
+                setConnectionState(ConnectionState.DISCONNECTED);
                 throw error;
-            })
+            });
 
-        const controllerService = new ControllerService(serialPortDevice);
-        await controllerService.connect().catch(error => {
-            console.error(error);
-            setErrorMessage("Could not establish connection to the controller");
-            setConnectionState(ConnectionState.DISCONNECTED);
-            throw error;
-        });
-
-        setConnectionState(ConnectionState.CONNECTED);
-        onConnect(controllerService);
+            setConnectionState(ConnectionState.CONNECTED);
+            onConnect(controllerService);
+        } catch (error) {
+            //Never mind
+        }
     };
 
     return (

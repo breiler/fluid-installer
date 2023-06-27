@@ -32,7 +32,7 @@ export type NativeSerialPort = {
     open: (options: NativeOpenOptions) => Promise<void>;
     close: () => Promise<void>;
     getInfo: () => NativeSerialPortInfo;
-    addEventListener: (NativeSerialPortEvent, NativeEventFunction) => void;
+    addEventListener: (event: NativeSerialPortEvent, listener: NativeEventFunction) => void;
     setSignals: (options: NativeSerialSignalOptions) => Promise<void>;
     getSignals: () => Promise<NativeSerialSignalOptions>;
 };

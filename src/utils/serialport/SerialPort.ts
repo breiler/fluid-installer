@@ -2,6 +2,7 @@ import { ESPLoader, Transport } from "esptool-js";
 import { DeviceInfo, espLoaderTerminal } from "../flash";
 import { NativeSerialPort } from "./typings";
 import { Buffer } from "buffer";
+import { sleep } from "../utils";
 
 export enum SerialPortState {
     DISCONNECTED,
@@ -28,14 +29,13 @@ export class SerialBufferedReader {
         return result;
     }
 
-    private _readLine(): Buffer {
+    async readLine(): Promise<Buffer> {
         const index = this.buffer.indexOf('\n');
         if (index >= 0) {
-            let line = this.buffer.subarray(0, index + 1);
+            let line = this.buffer.subarray(0, index);
             this.buffer = this.buffer.subarray(index + 1);
-
             // remove trailing CR
-            if (line.at(line.length) === 13) {
+            if (line.at(line.length - 1) === 13) {
                 line = line.subarray(0, line.length - 1);
             }
             return line;
@@ -44,20 +44,22 @@ export class SerialBufferedReader {
         return Buffer.from([]);
     }
 
-    readLine(timeoutMs: number = 99999): Promise<Buffer> {
-        return new Promise(async (resolve, reject) => {
-            const timer = setTimeout(() => reject("Read line timed out"), timeoutMs);
-            let line = this._readLine();
-            while (line.length === 0) {
-                await new Promise(r => setTimeout(r, 100));
-                line = this._readLine();
-            }
-            resolve(line);
-        });
-    }
-
     getReader(): SerialReader {
         return this.reader;
+    }
+
+    async waitForLine(timeoutMs: number): Promise<Buffer> {
+        const currentTime = Date.now();
+
+        while (currentTime + timeoutMs > Date.now()) {
+            const response = (await this.readLine());
+            if (response.length > 0) {
+                return response;
+            }
+            await sleep(10);
+        }
+
+        return Promise.resolve(Buffer.from([]));
     }
 
 }

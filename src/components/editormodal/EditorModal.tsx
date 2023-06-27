@@ -6,17 +6,17 @@ import { faSave, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-import { File } from "../../services/controllerservice";
 import Configuration, {
     ConfigurationTab
 } from "../../panels/configuration/Configuration";
 import ConfigurationTabs from "../../panels/configuration/ConfigurationTabs";
+import { ControllerFile } from "../../services/controllerservice";
 
 type EditorModalProps = {
-    file?: File;
+    file?: ControllerFile;
     fileData?: Buffer;
     onClose: () => void;
-    onSave: (file: File, fileData: Buffer) => Promise<void>;
+    onSave: (file: ControllerFile, fileData: Buffer) => Promise<void>;
 };
 
 const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {

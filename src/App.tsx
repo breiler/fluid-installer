@@ -1,58 +1,57 @@
 import React, { useEffect, useState } from "react";
 
-import { Header, Spinner } from "./components";
+import { Header } from "./components";
 import Page from "./model/Page";
 import { Installer, Terminal } from "./pages";
 import FileBrowser from "./pages/filebrowser";
 import SelectMode from "./pages/selectmode";
 import { Connection } from "./panels";
-import { SerialPort, SerialPortEvent } from "./utils/serialport/SerialPort";
 import { isSafari } from "./utils/utils";
-import { ControllerService } from "./services/controllerservice";
+import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
-import SpinnerModal from "./components/spinnermodal/SpinnerModal";
-import { ControllerStatus } from "./services/controllerservice/ControllerService";
+import { Button, Modal } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
     const [page, setPage] = useState<Page | undefined>(undefined);
     if (isSafari()) {
         return <h1>This tool is not supported on Safari!</h1>;
     }
-    const [serialPort, setSerialPort] = useState<SerialPort>();
     const [controllerService, setControllerService] = useState<ControllerService>();
-
-    const onConnect = (port) => {
-        const serialPort = new SerialPort(port);
-
-        // Registers a listener which
-        serialPort.on(SerialPortEvent.CONNECTION_ERROR, () => {
-            setSerialPort(undefined);
-            setPage(undefined);
-        });
-        setSerialPort(serialPort);
-    };
+    const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(ControllerStatus.DISCONNECTED);
 
     useEffect(() => {
-        if (serialPort) {
-            const timeout = setTimeout(() => {
-                const service = new ControllerService(serialPort);
-                service.connect().then(() => setControllerService(service)).catch(error =>
-                    console.log("Could not connect", error));
-            }, 1000);
-
-            return () => clearTimeout(timeout);
-        } else {
-            setControllerService(undefined);
-        }
-    }, [serialPort]);
+        controllerService?.addListener((status) => {
+            if (status === ControllerStatus.DISCONNECTED) {
+                setControllerService(undefined);
+            } else if (status === ControllerStatus.CONNECTION_LOST) {
+                setControllerStatus(status);
+            }
+        });
+    }, [controllerService])
 
     return (
         <>
+            <Modal show={controllerStatus === ControllerStatus.CONNECTION_LOST} size="sm" scrollable={true} centered={false}>
+                <Modal.Body>
+                    Lost the connection to the controller
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => { setControllerService(undefined); setControllerStatus(ControllerStatus.DISCONNECTED); }}>
+                        <>
+                            <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}
+                            Close
+                        </>
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <ControllerServiceContext.Provider value={controllerService}>
                 <Header />
                 <div className="container">
-                    {!serialPort && <Connection onConnect={onConnect} />}
-                    {serialPort && !controllerService && <SpinnerModal show={true} text="Connecting to controller..." />}
+                    {!controllerService && <Connection onConnect={setControllerService} />}
                     {controllerService && !page && <SelectMode onSelect={setPage} />}
 
                     {controllerService && page && (
@@ -82,7 +81,7 @@ const App = () => {
                     )}
 
                     {controllerService && page === Page.TERMINAL && (
-                        <Terminal onClose={() => setPage(undefined)} />
+                        <Terminal onClose={() => setPage(undefined)}/>
                     )}
 
                     {controllerService && page === Page.FILEBROWSER && <FileBrowser />}

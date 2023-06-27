@@ -6,6 +6,7 @@ import 'xterm/css/xterm.css'
 // We are using these as types.
 // eslint-disable-next-line no-unused-vars
 import { Terminal, ITerminalOptions, ITerminalAddon, ITerminalInitOnlyOptions } from 'xterm'
+import { FitAddon } from 'xterm-addon-fit';
 
 interface IProps {
 	/**
@@ -113,6 +114,9 @@ export default class Xterm extends React.Component<IProps> {
 	 */
 	terminal!: Terminal // This is assigned in the setupTerminal() which is called from the constructor
 
+	fitAddon: FitAddon;
+	fitEventListener: () => void;
+
 	static propTypes = {
 		className: PropTypes.string,
 		options: PropTypes.object,
@@ -160,6 +164,10 @@ export default class Xterm extends React.Component<IProps> {
 			})
 		}
 
+		this.fitAddon = new FitAddon();
+		this.fitAddon.activate(this.terminal);
+		this.terminal.loadAddon(this.fitAddon);
+
 		// Create Listeners
 		this.terminal.onBinary(this.onBinary)
 		this.terminal.onCursorMove(this.onCursorMove)
@@ -175,7 +183,7 @@ export default class Xterm extends React.Component<IProps> {
 		// Add Custom Key Event Handler
 		if (this.props.customKeyEventHandler) {
 			this.terminal.attachCustomKeyEventHandler(this.props.customKeyEventHandler)
-        }
+		}
 	}
 
 	componentDidMount() {
@@ -183,12 +191,18 @@ export default class Xterm extends React.Component<IProps> {
 			// Creates the terminal within the container element.
 			this.terminal.open(this.terminalRef.current);
 			this.terminal.focus();
+			this.fitAddon.fit();
+
+			this.fitEventListener = () => this.fitAddon?.fit();
+			window.addEventListener('resize', this.fitEventListener);
 		}
 	}
 
 	componentWillUnmount() {
+		window.removeEventListener('resize', this.fitEventListener);
+
 		// When the component unmounts dispose of the terminal and all of its listeners.
-		this.terminal.dispose()
+		this.terminal.dispose();
 	}
 
 	private onBinary(data: string) {
@@ -231,9 +245,9 @@ export default class Xterm extends React.Component<IProps> {
 		if (this.props.onTitleChange) this.props.onTitleChange(newTitle)
 	}
 
-    private loadAddOn(addon : ITerminalAddon) {
-        this.terminal.loadAddon(addon);
-    }
+	private loadAddOn(addon: ITerminalAddon) {
+		this.terminal.loadAddon(addon);
+	}
 
 	render() {
 		return <div className={this.props.className} ref={this.terminalRef} />

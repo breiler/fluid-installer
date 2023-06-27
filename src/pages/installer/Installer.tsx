@@ -8,6 +8,10 @@ import { InstallService, InstallerState } from "../../services/InstallService";
 import { FlashProgress } from "../../services/FlashService";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import { ControllerStatus } from "../../services/controllerservice/ControllerService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+
 const initialProgress: FlashProgress = {
     fileIndex: 0,
     fileCount: 1,
@@ -30,13 +34,13 @@ const Installer = ({ onClose }: InstallerProps) => {
         manifest: GithubReleaseManifest,
         choice: FirmwareChoice
     ) => {
-        console.log("Installing " + release.name + " with " + choice.name);
         try {
             await controllerService?.disconnect();
         } catch (error) {
             // never mind
         }
 
+        let hasErrors = false;
         await InstallService.installChoice(
             release,
             controllerService!.serialPort!,
@@ -47,15 +51,19 @@ const Installer = ({ onClose }: InstallerProps) => {
         ).catch((error) => {
             setErrorMessage(error);
             setState(InstallerState.ERROR);
+            hasErrors = true;
         });
 
         try {
             let status = await controllerService?.connect();
-            if(status !== ControllerStatus.CONNECTED) {
+            if (status !== ControllerStatus.CONNECTED) {
                 setErrorMessage("An error occured while reconnecting, please reboot the controller");
                 setState(InstallerState.ERROR);
             }
-            setState(InstallerState.DONE);
+
+            if (!hasErrors) {
+                setState(InstallerState.DONE);
+            }
         } catch (error) {
             setErrorMessage(error);
             setState(InstallerState.ERROR);
@@ -77,7 +85,7 @@ const Installer = ({ onClose }: InstallerProps) => {
 
             {state === InstallerState.DONE && <Done onContinue={onClose} />}
             {state === InstallerState.ERROR && (
-                <div className="alert alert-danger">{errorMessage}</div>
+                <div className="alert alert-danger"><FontAwesomeIcon icon={faBan as IconDefinition}/> {errorMessage}</div>
             )}
         </>
     );

@@ -25,7 +25,7 @@ export const TerminalCard = ({ disabled = false, onClick }) => {
                     size="4x"
                 />
             </div>
-            <>Connect with your controller using a terminal</>
+            <>Open a serial terminal to your controller</>
         </Card>
     );
 };

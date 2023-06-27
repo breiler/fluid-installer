@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Page from "../../model/Page";
-import { InstallCard } from "../../components/installcard/InstallCard";
 import "./SelectMode.scss";
 import { TerminalCard } from "../../components/terminalcard/TerminalCard";
+import { InstallCard } from "../../components/installcard/InstallCard";
 import { FileBrowserCard } from "../../components/filebrowsercard/FileBrowserCard";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { Button } from "../../components";
+import { ButtonType } from "../../components/button";
+import { Stats } from "../../services/controllerservice/GetStatsCommand";
 
 type Props = {
     onSelect: (page: Page) => void;
 };
 
 const SelectMode = ({ onSelect }: Props) => {
-    return (
+    const controllerService = useContext(ControllerServiceContext);
+    const [stats, setStats] = useState<Stats>();
+
+    useEffect(() => {
+        if (!controllerService) return;
+        controllerService.getStats().then(setStats);
+    }, [controllerService])
+
+
+    return (<>
         <div className="container text-center">
             <div className="row">
                 <div className="col">
@@ -19,13 +35,15 @@ const SelectMode = ({ onSelect }: Props) => {
                 <div className="col">
                     <TerminalCard onClick={() => onSelect(Page.TERMINAL)} />
                 </div>
-                <div className="col">
+                {stats?.version && <div className="col">
                     <FileBrowserCard
                         onClick={() => onSelect(Page.FILEBROWSER)}
                     />
-                </div>
+                </div>}
             </div>
         </div>
+
+    </>
     );
 };
 

@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 
 type Props = {
     onClose: () => void;
@@ -22,6 +23,7 @@ const Terminal = ({ }: Props) => {
     const controllerService = useContext(ControllerServiceContext);
     const xtermRef: React.RefObject<Xterm> = createRef<Xterm>();
     const [error, setError] = useState<string | undefined>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onResponse = useCallback(
         (data) => {
@@ -64,19 +66,29 @@ const Terminal = ({ }: Props) => {
 
     return (
         <>
+            <SpinnerModal show={isLoading} text="Restarting controller..." />
             {!error && (
                 <>
-                    <div style={{ marginBottom: "16px" }}>
+                    <div style={{ marginBottom: "16px", height: "100%" }}>
                         <Button
-                            onClick={() =>
+                            onClick={() => {
+                                setIsLoading(true);
                                 controllerService?.hardReset()
+                                    .then(() => controllerService
+                                        .serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
+                                    .then(() => controllerService
+                                        .serialPort.write(Buffer.from([0x05]))) // CTRL-E
+                                    .finally(() => setIsLoading(false));
+                                xtermRef.current?.terminal.focus();
+                            }
                             }
                             variant="danger"
-                            title="Restart">
+                            title="Restart"
+                            disabled={isLoading}>
                             <FontAwesomeIcon
                                 icon={faArrowsRotate as IconDefinition}
-                            />
-                        </Button>{" "}
+                            /> Restart
+                        </Button>
                     </div>
                     <Xterm
                         ref={xtermRef}
@@ -84,7 +96,6 @@ const Terminal = ({ }: Props) => {
                         options={{
                             cursorBlink: true,
                             convertEol: true,
-                            cols: 72
                         }}
                     />
                 </>

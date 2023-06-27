@@ -2,6 +2,7 @@ import { ESPLoader, Transport } from "esptool-js";
 import { DeviceInfo, espLoaderTerminal } from "../flash";
 import { NativeSerialPort } from "./typings";
 import { Buffer } from "buffer";
+import { sleep } from "../utils";
 
 export enum SerialPortState {
     DISCONNECTED,
@@ -11,6 +12,57 @@ export enum SerialPortState {
 }
 
 export type SerialReader = (data: Buffer) => void;
+
+export class SerialBufferedReader {
+    clear() {
+        this.buffer = Buffer.from([]);
+    }
+    private buffer: Buffer = Buffer.from([]);
+
+    private reader: SerialReader = (data: Buffer) => {
+        this.buffer = Buffer.concat([this.buffer, data]);
+    }
+
+    read(): Buffer {
+        const result = this.buffer;
+        this.buffer = Buffer.from([]);
+        return result;
+    }
+
+    async readLine(): Promise<Buffer> {
+        const index = this.buffer.indexOf('\n');
+        if (index >= 0) {
+            let line = this.buffer.subarray(0, index);
+            this.buffer = this.buffer.subarray(index + 1);
+            // remove trailing CR
+            if (line.at(line.length - 1) === 13) {
+                line = line.subarray(0, line.length - 1);
+            }
+            return line;
+        }
+
+        return Buffer.from([]);
+    }
+
+    getReader(): SerialReader {
+        return this.reader;
+    }
+
+    async waitForLine(timeoutMs: number): Promise<Buffer> {
+        const currentTime = Date.now();
+
+        while (currentTime + timeoutMs > Date.now()) {
+            const response = (await this.readLine());
+            if (response.length > 0) {
+                return response;
+            }
+            await sleep(10);
+        }
+
+        return Promise.resolve(Buffer.from([]));
+    }
+
+}
 
 const FLASH_BAUD_RATE = 921600;
 
@@ -47,6 +99,10 @@ export class SerialPort {
             return Promise.resolve(this.deviceInfo);
         }
 
+        if (this.state === SerialPortState.CONNECTED) {
+            await this.close();
+        }
+
         const transport = new Transport(this.serialPort);
         try {
             const loader = new ESPLoader(
@@ -76,11 +132,15 @@ export class SerialPort {
 
             return Promise.resolve(this.deviceInfo);
         } finally {
+
             // Reset the controller
+            await transport.setRTS(true);
             await transport.setDTR(false);
             await new Promise((resolve) => setTimeout(resolve, 100));
             await transport.setDTR(true);
+            await new Promise((resolve) => setTimeout(resolve, 100));
             await transport.disconnect();
+            await this.open();
         }
         return Promise.reject();
     };
@@ -157,7 +217,7 @@ export class SerialPort {
             return writer.write(data).finally(() => {
                 writer.releaseLock();
             });
-        } catch(error) {
+        } catch (error) {
             console.log("Got error while trying to release lock, ignore...", error);
             return Promise.resolve();
         }
@@ -179,6 +239,13 @@ export class SerialPort {
     removeReader = (reader: SerialReader) => {
         this.readers = this.readers.filter((r) => r !== reader);
     };
+
+    hardReset = async () => {
+        await this.serialPort.setSignals({ dataTerminalReady: false, requestToSend: true });
+        await new Promise(r => setTimeout(r, 100));
+        await this.serialPort.setSignals({ dataTerminalReady: true });
+        await new Promise(r => setTimeout(r, 50));
+    }
 
     private startReading = async () => {
         try {

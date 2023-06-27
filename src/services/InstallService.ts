@@ -90,8 +90,7 @@ export const InstallService = {
                 flashFiles,
                 choice.erase || false,
                 onProgress
-            );
-            onState(InstallerState.FLASH_DONE);
+            ).then(() => onState(InstallerState.FLASH_DONE));
         } catch (error) {
             console.error(error);
             onState(InstallerState.ERROR);

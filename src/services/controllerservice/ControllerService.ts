@@ -1,6 +1,9 @@
-import { SerialPort } from "../../utils/serialport/SerialPort";
+import { SerialBufferedReader, SerialPort } from "../../utils/serialport/SerialPort";
+import { NativeSerialPortEvent } from "../../utils/serialport/typings";
+import { sleep } from "../../utils/utils";
 import { XModem, XModemSocket } from "../../utils/xmodem/xmodem";
 import { Command, CommandState } from "./Command";
+import { GetStatsCommand, Stats } from "./GetStatsCommand";
 import { PingCommand } from "./PingCommand";
 
 class XModemSocketAdapter implements XModemSocket {
@@ -46,6 +49,7 @@ class XModemSocketAdapter implements XModemSocket {
 
 
 export enum ControllerStatus {
+    CONNECTION_LOST,
     DISCONNECTED,
     CONNECTING,
     CONNECTED,
@@ -54,41 +58,106 @@ export enum ControllerStatus {
 
 const MAX_PING_COUNT = 10;
 
+export type ControllerStatusListener = (status: ControllerStatus) => void;
+
 export class ControllerService {
+
     serialPort: SerialPort;
     buffer: string;
     commands: Command[];
     xmodemMode: boolean = false;
     status: ControllerStatus = ControllerStatus.DISCONNECTED;
+    currentVersion: string | undefined;
+    statusListeners: ControllerStatusListener[];
+    stats: Stats;
 
     constructor(serialPort: SerialPort) {
         this.serialPort = serialPort;
         this.buffer = "";
         this.commands = [];
+        this.statusListeners = [];
+    }
+
+    async getStats() {
+        if (!this.stats) {
+            const command = await this.send(new GetStatsCommand());
+            this.stats = command.getStats();
+        }
+        return this.stats;
     }
 
     connect = async (): Promise<ControllerStatus> => {
         if (!this.serialPort.isOpen()) {
-            console.log("Connecting to serial port...");
-            this.serialPort.addReader(this.onData);
+            const bufferedReader = new SerialBufferedReader();
             await this.serialPort.open(115200);
-
-            // Wait for the connection to establish
-            await new Promise(r => setTimeout(r, 500));
-
-            await this._detectController().catch(async () => {
-                console.error("Could not connect to controller, attempting hard reset.");
-                this.hardReset();
-                await new Promise(r => setTimeout(r, 1000));
-                await this._detectController().catch(() => console.error("Still no contact proceed in restricted mode"));
+            this.serialPort.getNativeSerialPort().addEventListener(NativeSerialPortEvent.DISCONNECT, (event) => {
+                this._notifyStatus(ControllerStatus.CONNECTION_LOST);
             });
 
+            try {
+                this.serialPort.addReader(bufferedReader.getReader());
+                // Send reset echo mode and reset controller
+                await this.serialPort.write(Buffer.from([0x0c, 0x18]));
+                await this._initializeController(bufferedReader);
+            } finally {
+                this.serialPort.removeReader(bufferedReader.getReader());
+            }
+
+            this.status = ControllerStatus.CONNECTED;
+            this.serialPort.addReader(this.onData);
         }
+
+        await this.getStats();
 
         return Promise.resolve(this.status);
     };
 
-    _detectController = async (): Promise<void> => {
+    private async _initializeController(bufferedReader: SerialBufferedReader) {
+        const gotWelcomeString = await this.waitForWelcomeString(bufferedReader);
+        if (gotWelcomeString) {
+            await this.waitForSettle(bufferedReader);
+
+            // Clear send and read buffers
+            await this.serialPort.write(Buffer.from("\n"));
+            await bufferedReader.waitForLine(2000);
+
+            // Try and query for version
+            await this.serialPort.write(Buffer.from("$I\n"));
+            let versionResponse = await bufferedReader.waitForLine(2000);
+            this.currentVersion = versionResponse.toString();
+            await this.waitForSettle(bufferedReader);
+        }
+    }
+
+    private async waitForSettle(bufferedReader: SerialBufferedReader) {
+        while ((await bufferedReader.waitForLine(500)).length > 0) {
+            await sleep(100);
+        }
+    }
+
+    private async waitForWelcomeString(bufferedReader: SerialBufferedReader) {
+        console.log("Waiting for welcome string");
+        const currentTime = Date.now();
+
+        while (currentTime + 10000 > Date.now()) {
+            try {
+                const response = (await bufferedReader.readLine());
+                if (this.isWelcomeString(response.toString())) {
+                    console.log("Found welcome message: " + response);
+                    return true;
+                }
+                await sleep(100);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        console.log("Could not detect welcome string");
+        return false;
+    }
+
+
+    async _detectController(): Promise<void> {
         // Attemt to establish a connection
         let answered = false;
         let pingCount = 0;
@@ -107,7 +176,7 @@ export class ControllerService {
         }
     }
 
-    ping = async (): Promise<void> => {
+    async ping(): Promise<void> {
         const pingCommand = new PingCommand();
         try {
             await this.send(pingCommand, 1000);
@@ -118,8 +187,9 @@ export class ControllerService {
         }
     }
 
-    disconnect = (): Promise<void> => {
+    disconnect(): Promise<void> {
         this.serialPort.removeReader(this.onData);
+        this._notifyStatus(ControllerStatus.DISCONNECTED);
         return this.serialPort.close();
     };
 
@@ -209,10 +279,35 @@ export class ControllerService {
     };
 
     hardReset = async () => {
-        const nativePort = this.serialPort.getNativeSerialPort();
-        await nativePort.setSignals({ dataTerminalReady: false, requestToSend: true });
-        await new Promise(r => setTimeout(r, 100));
-        await nativePort.setSignals({ dataTerminalReady: true });
-        await new Promise(r => setTimeout(r, 50));
+        await this.serialPort.hardReset();
+        const bufferedReader = new SerialBufferedReader();
+
+        try {
+            this.serialPort.addReader(bufferedReader.getReader());
+            await this._initializeController(bufferedReader);
+        } finally {
+            this.serialPort.removeReader(bufferedReader.getReader());
+        }
+        return Promise.resolve();
+    }
+
+    private isWelcomeString(response: string | undefined) {
+        if (response) {
+            console.log(response);
+        }
+        return response && (response.startsWith("GrblHAL ") || response.startsWith("Grbl ") || response.indexOf(" [FluidNC v") > 0);
+    }
+
+    addListener(listener: ControllerStatusListener) {
+        this.statusListeners.push(listener);
+    }
+
+
+    removeListener(listener: ControllerStatusListener) {
+        this.statusListeners = this.statusListeners.filter(l => l !== listener);
+    }
+
+    private _notifyStatus(status: ControllerStatus) {
+        this.statusListeners.forEach(l => l(status));
     }
 }

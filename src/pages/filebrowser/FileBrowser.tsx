@@ -161,7 +161,7 @@ const FileBrowser = () => {
         input.click();
     };
 
-    const onSave = async (file: File, fileData: Buffer) => {
+    const onSave = async (file: ControllerFile, fileData: Buffer) => {
         return await controllerService
             ?.uploadFile("/littlefs/" + file.name, fileData)
             .then(async () => await refreshFileList())

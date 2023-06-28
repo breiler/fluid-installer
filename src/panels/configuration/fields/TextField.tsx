@@ -14,7 +14,7 @@ type TextFieldProps = {
 const TextField = ({
     label,
     value,
-    setValue = (value) => {},
+    setValue = (value) => { },
     placeholder = "",
     unit,
     maxLength = 80,
@@ -31,7 +31,7 @@ const TextField = ({
                         type="text"
                         placeholder={placeholder}
                         maxLength={maxLength}
-                        value={value ?? ""}
+                        value={value === undefined ? "" : value}
                         onChange={(event) => setValue(event.target.value)}
                     />
                     {unit && <InputGroup.Text>{unit}</InputGroup.Text>}

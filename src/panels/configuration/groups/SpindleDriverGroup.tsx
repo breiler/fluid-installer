@@ -5,6 +5,7 @@ import { deepMerge } from "../../../utils/utils";
 import BescSpindle from "../spindledriver/BescSpindle";
 import PwmSpindle from "../spindledriver/PwmSpindle";
 import TenVSpindle from "../spindledriver/TenVSpindle";
+import LaserSpindle from "../spindledriver/LaserSpindle";
 
 type SpindleDriverGroupProps = {
     board: Board;
@@ -36,6 +37,13 @@ const SpindleDriverGroup = ({
                 updateSpindleDriverValue={updateSpindleDriverValue}
             />
             <PwmSpindle
+                board={board}
+                config={config}
+                setValue={setValue}
+                updateSpindleDriverValue={updateSpindleDriverValue}
+            />
+
+            <LaserSpindle
                 board={board}
                 config={config}
                 setValue={setValue}

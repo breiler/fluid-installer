@@ -45,7 +45,9 @@ const Configuration = ({
     const appendConfig = (conf) => {
         const newConfig = { ...config, ...conf };
         setConfig(newConfig);
-        onChange(jsYaml.dump(newConfig), false);
+        
+        // No compat mode will not try to quote 'y'
+        onChange(jsYaml.dump(newConfig, { noCompatMode: true }), false);
     };
 
     const updateValue = (value) => {

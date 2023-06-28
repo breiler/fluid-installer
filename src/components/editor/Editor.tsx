@@ -37,7 +37,7 @@ const Editor = ({ value,  onChange }) => {
             <ReactCodeMirror
                 value={value}
                 onChange={onChange}
-                extensions={[lintGutter(), yamlLinter, basicSetup]} //StreamLanguage.define(yaml)]}
+                extensions={[lintGutter(), yamlLinter, basicSetup]} //, StreamLanguage.define(yaml)]}
             />
         </>
     );

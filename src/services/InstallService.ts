@@ -91,6 +91,7 @@ export const InstallService = {
                 choice.erase || false,
                 onProgress
             ).then(() => onState(InstallerState.FLASH_DONE));
+            onState(InstallerState.FLASH_DONE);
         } catch (error) {
             console.error(error);
             onState(InstallerState.ERROR);

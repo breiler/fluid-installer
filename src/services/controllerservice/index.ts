@@ -1,9 +1,9 @@
 import { ControllerService } from "./ControllerService";
-import { Command } from "./Command";
-import { DeleteFileCommand } from "./DeleteFileCommand";
-import { GetConfigFilenameCommand } from "./GetConfigFilenameCommand";
-import { ListFilesCommand } from "./ListFilesCommand";
-import { SetConfigFilenameCommand } from "./SetConfigFilenameCommand";
+import { Command } from "./commands/Command";
+import { DeleteFileCommand } from "./commands/DeleteFileCommand";
+import { GetConfigFilenameCommand } from "./commands/GetConfigFilenameCommand";
+import { ListFilesCommand } from "./commands/ListFilesCommand";
+import { SetConfigFilenameCommand } from "./commands/SetConfigFilenameCommand";
 import type { ControllerFile } from "./types";
 import { ControllerStatus } from "./ControllerService"
 

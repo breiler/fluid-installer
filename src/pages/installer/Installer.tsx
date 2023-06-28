@@ -35,7 +35,7 @@ const Installer = ({ onClose }: InstallerProps) => {
         choice: FirmwareChoice
     ) => {
         try {
-            await controllerService?.disconnect();
+            await controllerService?.disconnect(false);
         } catch (error) {
             // never mind
         }

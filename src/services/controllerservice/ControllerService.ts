@@ -2,9 +2,9 @@ import { SerialBufferedReader, SerialPort } from "../../utils/serialport/SerialP
 import { NativeSerialPortEvent } from "../../utils/serialport/typings";
 import { sleep } from "../../utils/utils";
 import { XModem, XModemSocket } from "../../utils/xmodem/xmodem";
-import { Command, CommandState } from "./Command";
-import { GetStatsCommand, Stats } from "./GetStatsCommand";
-import { PingCommand } from "./PingCommand";
+import { Command, CommandState } from "./commands/Command";
+import { GetStatsCommand, Stats } from "./commands/GetStatsCommand";
+import { PingCommand } from "./commands/PingCommand";
 
 class XModemSocketAdapter implements XModemSocket {
     private serialPort: SerialPort;
@@ -187,9 +187,11 @@ export class ControllerService {
         }
     }
 
-    disconnect(): Promise<void> {
+    disconnect(notify = true): Promise<void> {
         this.serialPort.removeReader(this.onData);
-        this._notifyStatus(ControllerStatus.DISCONNECTED);
+        if (notify) {
+            this._notifyStatus(ControllerStatus.DISCONNECTED);
+        }
         return this.serialPort.close();
     };
 

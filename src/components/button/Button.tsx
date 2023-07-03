@@ -6,7 +6,8 @@ import "./Button.css";
 
 export const ButtonType = {
     PRIMARY: "btn-primary",
-    DANGER: "btn-danger"
+    DANGER: "btn-danger",
+    WARNING: "btn-warning"
 };
 
 type Props = {

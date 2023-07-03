@@ -6,11 +6,13 @@ import { InstallCard } from "../../components/installcard/InstallCard";
 import { FileBrowserCard } from "../../components/filebrowsercard/FileBrowserCard";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { faPowerOff, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Button } from "../../components";
 import { ButtonType } from "../../components/button";
-import { Stats } from "../../services/controllerservice/GetStatsCommand";
+import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
+import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import { Card } from "react-bootstrap";
 
 type Props = {
     onSelect: (page: Page) => void;
@@ -19,31 +21,66 @@ type Props = {
 const SelectMode = ({ onSelect }: Props) => {
     const controllerService = useContext(ControllerServiceContext);
     const [stats, setStats] = useState<Stats>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         if (!controllerService) return;
         controllerService.getStats().then(setStats);
-    }, [controllerService])
+    }, [controllerService]);
 
+    const restart = () => {
+        setIsLoading(true);
+        controllerService?.hardReset().finally(() => setIsLoading(false));
+    };
 
-    return (<>
-        <div className="container text-center">
-            <div className="row">
-                <div className="col">
-                    <InstallCard onClick={() => onSelect(Page.INSTALLER)} />
+    return (
+        <>
+            <SpinnerModal show={isLoading} text="Restarting controller..." />
+            <div className="container text-center">
+                <div className="row">
+                    <div className="col">
+                        <InstallCard onClick={() => onSelect(Page.INSTALLER)} />
+                    </div>
+                    <div className="col">
+                        <TerminalCard onClick={() => onSelect(Page.TERMINAL)} />
+                    </div>
+                    {stats?.version && (
+                        <div className="col">
+                            <FileBrowserCard
+                                onClick={() => onSelect(Page.FILEBROWSER)}
+                            />
+                        </div>
+                    )}
                 </div>
-                <div className="col">
-                    <TerminalCard onClick={() => onSelect(Page.TERMINAL)} />
-                </div>
-                {stats?.version && <div className="col">
-                    <FileBrowserCard
-                        onClick={() => onSelect(Page.FILEBROWSER)}
-                    />
-                </div>}
             </div>
-        </div>
+            <div className="container">
+                <Card bg="light">
+                    <Card.Body>
+                        <Button
+                            buttonType={ButtonType.DANGER}
+                            onClick={() => controllerService?.disconnect()}>
+                            <>
+                                <FontAwesomeIcon
+                                    icon={faPowerOff as IconDefinition}
+                                />{" "}
+                                Disconnect
+                            </>
+                        </Button>
 
-    </>
+                        <Button
+                            buttonType={ButtonType.WARNING}
+                            onClick={restart}>
+                            <>
+                                <FontAwesomeIcon
+                                    icon={faRefresh as IconDefinition}
+                                />{" "}
+                                Restart
+                            </>
+                        </Button>
+                    </Card.Body>
+                </Card>
+            </div>
+        </>
     );
 };
 

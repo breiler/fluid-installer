@@ -82,7 +82,7 @@ const Terminal = ({ }: Props) => {
                                 xtermRef.current?.terminal.focus();
                             }
                             }
-                            variant="danger"
+                            variant="warning"
                             title="Restart"
                             disabled={isLoading}>
                             <FontAwesomeIcon

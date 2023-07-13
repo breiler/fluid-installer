@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ReactMarkdown from "react-markdown";
 
 import { Card } from "../../components";
 import {
@@ -10,6 +9,7 @@ import {
 } from "../../services/GitHubService";
 import "./Firmware.scss";
 import Choice from "../../components/choice";
+import { Markdown } from "../../components/markdown/Markdown";
 
 type Props = {
     onInstall: (
@@ -124,14 +124,14 @@ const Firmware = ({ onInstall }: Props) => {
                                                                         (
                                                                             choices
                                                                         ) => [
-                                                                            ...choices.splice(
-                                                                                0,
-                                                                                choices.indexOf(
-                                                                                    choice
-                                                                                ) +
+                                                                                ...choices.splice(
+                                                                                    0,
+                                                                                    choices.indexOf(
+                                                                                        choice
+                                                                                    ) +
                                                                                     1
-                                                                            )
-                                                                        ]
+                                                                                )
+                                                                            ]
                                                                     );
                                                                 }}>
                                                                 {choice.name}
@@ -150,10 +150,7 @@ const Firmware = ({ onInstall }: Props) => {
                         </>
                     )}
 
-                    <ReactMarkdown
-                        children={selectedRelease.body}
-                        className="card-text"
-                    />
+                    <Markdown>{selectedRelease.body}</Markdown>
                 </>
             )}
         </div>

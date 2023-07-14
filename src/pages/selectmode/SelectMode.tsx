@@ -13,12 +13,14 @@ import { ButtonType } from "../../components/button";
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import { Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     onSelect: (page: Page) => void;
 };
 
 const SelectMode = ({ onSelect }: Props) => {
+    const navigate = useNavigate();
     const controllerService = useContext(ControllerServiceContext);
     const [stats, setStats] = useState<Stats>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,15 +41,15 @@ const SelectMode = ({ onSelect }: Props) => {
             <div className="container text-center">
                 <div className="row">
                     <div className="col">
-                        <InstallCard onClick={() => onSelect(Page.INSTALLER)} />
+                        <InstallCard onClick={() => navigate("/install")} />
                     </div>
                     <div className="col">
-                        <TerminalCard onClick={() => onSelect(Page.TERMINAL)} />
+                        <TerminalCard onClick={() => navigate("/terminal")} />
                     </div>
                     {stats?.version && (
                         <div className="col">
                             <FileBrowserCard
-                                onClick={() => onSelect(Page.FILEBROWSER)}
+                                onClick={() => navigate("/filebrowser")}
                             />
                         </div>
                     )}

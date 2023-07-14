@@ -181,6 +181,7 @@ const FileBrowser = () => {
 
     return (
         <>
+            <h1>File browser</h1>
             <SpinnerModal show={isDownloading} text="Downloading..." />
             <SpinnerModal show={isUploading} text="Uploading..." />
 

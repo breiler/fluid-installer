@@ -66,10 +66,11 @@ const Terminal = ({ }: Props) => {
 
     return (
         <>
+            <h1>Terminal</h1>
             <SpinnerModal show={isLoading} text="Restarting controller..." />
             {!error && (
                 <>
-                    <div style={{ marginBottom: "16px", height: "100%" }}>
+                    <div style={{ marginBottom: "16px" }}>
                         <Button
                             onClick={() => {
                                 setIsLoading(true);

@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 import { Header } from "./components";
 import Page from "./model/Page";
@@ -9,10 +14,8 @@ import { Connection } from "./panels";
 import { isSafari } from "./utils/utils";
 import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
-import { Button, Modal } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import Navigation from "./panels/navigation/Navigation";
+
 
 const App = () => {
     const [page, setPage] = useState<Page | undefined>(undefined);
@@ -50,43 +53,30 @@ const App = () => {
 
             <ControllerServiceContext.Provider value={controllerService}>
                 <Header />
+
                 <div className="container">
+
                     {!controllerService && <Connection onConnect={setControllerService} />}
-                    {controllerService && !page && <SelectMode onSelect={setPage} />}
 
-                    {controllerService && page && (
-                        <>
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb">
-                                    <li className="breadcrumb-item">
-                                        <a
-                                            href="#"
-                                            onClick={() => setPage(undefined)}>
-                                            Home
-                                        </a>
-                                    </li>
-                                    <li
-                                        className="breadcrumb-item active"
-                                        aria-current="page">
-                                        {page}
-                                    </li>
-                                </ol>
-                            </nav>
-                            <hr />
-                        </>
-                    )}
-
-                    {controllerService && page === Page.INSTALLER && (
-                        <Installer onClose={() => setPage(undefined)} />
-                    )}
-
-                    {controllerService && page === Page.TERMINAL && (
-                        <Terminal onClose={() => setPage(undefined)}/>
-                    )}
-
-                    {controllerService && page === Page.FILEBROWSER && <FileBrowser />}
+                    {controllerService &&
+                        <BrowserRouter>
+                            <Container>
+                                <Row>
+                                    <Col xs={3}><Navigation /></Col>
+                                    <Col xs={9}>
+                                        <Routes>
+                                            <Route index element={<SelectMode onSelect={setPage} />} />
+                                            <Route path="install" element={<Installer onClose={() => setPage(undefined)} />} />
+                                            <Route path="terminal" element={<Terminal onClose={() => setPage(undefined)} />} />
+                                            <Route path="files" element={<FileBrowser />} />
+                                        </Routes>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </BrowserRouter>
+                    }
                 </div>
-            </ControllerServiceContext.Provider>
+            </ControllerServiceContext.Provider >
         </>
     );
 };

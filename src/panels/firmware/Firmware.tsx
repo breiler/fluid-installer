@@ -83,7 +83,7 @@ const Firmware = ({ onInstall }: Props) => {
             )}
             {!errorMessage && (
                 <>
-                    <h2>Select firmware</h2>
+                    <h1>Install</h1>
                     <p>
                         Select which firmware you want to install on your
                         controller.

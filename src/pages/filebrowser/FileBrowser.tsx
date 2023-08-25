@@ -26,6 +26,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import EditorModal from "../../components/editormodal/EditorModal";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import PageTitle from "../../components/pagetitle/PageTitle";
 
 type EditFile = {
     file: ControllerFile;
@@ -181,7 +182,7 @@ const FileBrowser = () => {
 
     return (
         <>
-            <h1>File browser</h1>
+            <PageTitle>File browser</PageTitle>
             <SpinnerModal show={isDownloading} text="Downloading..." />
             <SpinnerModal show={isUploading} text="Uploading..." />
 

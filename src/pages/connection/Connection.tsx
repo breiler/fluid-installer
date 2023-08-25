@@ -5,6 +5,7 @@ import ConnectionState from "../../model/ConnectionState";
 import { ControllerService } from "../../services";
 import { SerialPort } from "../../utils/serialport/SerialPort";
 import "./connection.scss";
+import PageTitle from "../../components/pagetitle/PageTitle";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
 
@@ -50,7 +51,7 @@ const Connection = ({ onConnect }: Props) => {
             {(connectionState === ConnectionState.DISCONNECTED ||
                 connectionState === ConnectionState.CONNECTING) && (
                     <>
-                        <h2>FluidNC Web Installer</h2>
+                        <PageTitle>FluidNC Web Installer</PageTitle>
                         <p>
                             This tool will make it easy to install or upgrade
                             FluidNC on your controller. Plug in your controller and

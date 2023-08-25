@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { FunctionComponent, ReactNode, createElement, useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -15,10 +15,12 @@ import { isSafari } from "./utils/utils";
 import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
+import { ReactElement } from "react-markdown/lib/react-markdown";
 
 
 const App = () => {
-    const [page, setPage] = useState<Page | undefined>(undefined);
+    const navigate = useNavigate();
+
     if (isSafari()) {
         return <h1>This tool is not supported on Safari!</h1>;
     }
@@ -59,21 +61,19 @@ const App = () => {
                     {!controllerService && <Connection onConnect={setControllerService} />}
 
                     {controllerService &&
-                        <BrowserRouter>
-                            <Container>
-                                <Row>
-                                    <Col xs={3}><Navigation /></Col>
-                                    <Col xs={9}>
-                                        <Routes>
-                                            <Route index element={<SelectMode onSelect={setPage} />} />
-                                            <Route path="install" element={<Installer onClose={() => setPage(undefined)} />} />
-                                            <Route path="terminal" element={<Terminal onClose={() => setPage(undefined)} />} />
-                                            <Route path="files" element={<FileBrowser />} />
-                                        </Routes>
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </BrowserRouter>
+                        <Container>
+                            <Row>
+                                <Col xs={3}><Navigation /></Col>
+                                <Col xs={9}>
+                                    <Routes>
+                                        <Route index element={<SelectMode />} />
+                                        <Route path="install" element={<Installer onClose={() => navigate(Page.HOME)} />} />
+                                        <Route path="terminal" element={<Terminal onClose={() => navigate(Page.HOME)} />} />
+                                        <Route path="files" element={<FileBrowser />} />
+                                    </Routes>
+                                </Col>
+                            </Row>
+                        </Container>
                     }
                 </div>
             </ControllerServiceContext.Provider >

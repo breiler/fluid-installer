@@ -14,6 +14,7 @@ import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import PageTitle from "../../components/pagetitle/PageTitle";
 
 type Props = {
     onClose: () => void;
@@ -66,10 +67,11 @@ const Terminal = ({ }: Props) => {
 
     return (
         <>
+            <PageTitle>Terminal</PageTitle>
             <SpinnerModal show={isLoading} text="Restarting controller..." />
             {!error && (
                 <>
-                    <div style={{ marginBottom: "16px", height: "100%" }}>
+                    <div style={{ marginBottom: "16px" }}>
                         <Button
                             onClick={() => {
                                 setIsLoading(true);

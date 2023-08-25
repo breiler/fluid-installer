@@ -3,6 +3,7 @@ import { Spinner } from "../../components";
 import ProgressBar from "../../components/progressbar/ProgressBar";
 import { InstallerState } from "../../services/InstallService";
 import { FlashProgress } from "../../services/FlashService";
+import PageTitle from "../../components/pagetitle/PageTitle";
 
 type Props = {
     progress: FlashProgress;
@@ -14,7 +15,7 @@ const Progress = ({ progress, status }: Props) => {
 
     return (
         <>
-            <h2>Installing</h2>
+            <PageTitle>Installing</PageTitle>
             <p>
                 {status === InstallerState.DOWNLOADING && (
                     <>

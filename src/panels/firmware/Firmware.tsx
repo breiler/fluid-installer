@@ -10,6 +10,7 @@ import {
 import "./Firmware.scss";
 import Choice from "../../components/choice";
 import { Markdown } from "../../components/markdown/Markdown";
+import PageTitle from "../../components/pagetitle/PageTitle";
 
 type Props = {
     onInstall: (
@@ -83,7 +84,7 @@ const Firmware = ({ onInstall }: Props) => {
             )}
             {!errorMessage && (
                 <>
-                    <h2>Select firmware</h2>
+                    <PageTitle>Install</PageTitle>
                     <p>
                         Select which firmware you want to install on your
                         controller.

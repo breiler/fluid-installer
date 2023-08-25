@@ -1,5 +1,6 @@
 import React, { MouseEventHandler } from "react";
 import { Button, Spinner } from "../../components";
+import PageTitle from "../../components/pagetitle/PageTitle";
 
 type Props = {
     onContinue: MouseEventHandler;
@@ -7,7 +8,7 @@ type Props = {
 const Done = ({ onContinue }: Props) => {
     return (
         <>
-            <h2>Done</h2>
+            <PageTitle>Done</PageTitle>
             <p>
                 The controller has been successfully installed and is ready to
                 be used.

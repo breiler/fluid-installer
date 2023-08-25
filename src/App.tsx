@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 import { Header } from "./components";
 import Page from "./model/Page";
@@ -6,19 +11,15 @@ import { Installer, Terminal } from "./pages";
 import FileBrowser from "./pages/filebrowser";
 import SelectMode from "./pages/selectmode";
 import { Connection } from "./panels";
-import { isSafari } from "./utils/utils";
+import { isSafari, isFirefox } from "./utils/utils";
 import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
-import { Button, Modal } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import Navigation from "./panels/navigation/Navigation";
+import PageTitle from "./components/pagetitle/PageTitle";
+
 
 const App = () => {
-    const [page, setPage] = useState<Page | undefined>(undefined);
-    if (isSafari()) {
-        return <h1>This tool is not supported on Safari!</h1>;
-    }
+    const navigate = useNavigate();
     const [controllerService, setControllerService] = useState<ControllerService>();
     const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(ControllerStatus.DISCONNECTED);
 
@@ -50,43 +51,27 @@ const App = () => {
 
             <ControllerServiceContext.Provider value={controllerService}>
                 <Header />
+
                 <div className="container">
-                    {!controllerService && <Connection onConnect={setControllerService} />}
-                    {controllerService && !page && <SelectMode onSelect={setPage} />}
-
-                    {controllerService && page && (
-                        <>
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb">
-                                    <li className="breadcrumb-item">
-                                        <a
-                                            href="#"
-                                            onClick={() => setPage(undefined)}>
-                                            Home
-                                        </a>
-                                    </li>
-                                    <li
-                                        className="breadcrumb-item active"
-                                        aria-current="page">
-                                        {page}
-                                    </li>
-                                </ol>
-                            </nav>
-                            <hr />
-                        </>
-                    )}
-
-                    {controllerService && page === Page.INSTALLER && (
-                        <Installer onClose={() => setPage(undefined)} />
-                    )}
-
-                    {controllerService && page === Page.TERMINAL && (
-                        <Terminal onClose={() => setPage(undefined)}/>
-                    )}
-
-                    {controllerService && page === Page.FILEBROWSER && <FileBrowser />}
+                    {isSafari() || isFirefox() && <><PageTitle>Browser not supported</PageTitle><p>Please use Chrome, Edge or Opera instead</p></>}
+                    {!isSafari() && !isFirefox() && !controllerService && <Connection onConnect={setControllerService} />}
+                    {!isSafari() && !isFirefox() && controllerService &&
+                        <Container>
+                            <Row>
+                                <Col xs={3}><Navigation /></Col>
+                                <Col xs={9}>
+                                    <Routes>
+                                        <Route index element={<SelectMode />} />
+                                        <Route path="install" element={<Installer onClose={() => navigate(Page.HOME)} />} />
+                                        <Route path="terminal" element={<Terminal onClose={() => navigate(Page.HOME)} />} />
+                                        <Route path="files" element={<FileBrowser />} />
+                                    </Routes>
+                                </Col>
+                            </Row>
+                        </Container>
+                    }
                 </div>
-            </ControllerServiceContext.Provider>
+            </ControllerServiceContext.Provider >
         </>
     );
 };

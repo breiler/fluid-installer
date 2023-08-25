@@ -1,8 +1,9 @@
 export enum Page {
-    TERMINAL = "Terminal",
-    INSTALLER = "Installer",
-    FILEBROWSER = "File browser",
-    CONFIGURATION = "Configuration"
+    HOME = "/",
+    TERMINAL = "/terminal",
+    INSTALLER = "/install",
+    FILEBROWSER = "/files",
+    CONFIGURATION = "/configuration",
 }
 
 export default Page;

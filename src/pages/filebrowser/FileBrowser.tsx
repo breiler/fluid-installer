@@ -26,11 +26,30 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import EditorModal from "../../components/editormodal/EditorModal";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import PageTitle from "../../components/pagetitle/PageTitle";
 
 type EditFile = {
     file: ControllerFile;
     fileData: Buffer;
 };
+
+
+const fileUpload = (file, onSave) => {
+    return new Promise((resolve, reject) => {
+        console.log("Uploading", file);
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+            var content = readerEvent?.target?.result as ArrayBuffer;
+            if (!content) {
+                return;
+            }
+
+            onSave(file, Buffer.from(content))
+                .finally(() => resolve(1));
+        };
+        reader.readAsArrayBuffer(file);
+    });
+}
 
 const FileBrowser = () => {
     const controllerService = useContext(ControllerServiceContext);
@@ -41,6 +60,7 @@ const FileBrowser = () => {
 
     const [isDownloading, setIsDownloading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [currentFileName, setCurrentFileName] = useState("");
 
     useEffect(() => {
         if (!controllerService) {
@@ -134,31 +154,28 @@ const FileBrowser = () => {
     };
 
     const onUpload = async () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.onchange = (e: any) => {
-            const file = e?.target?.files?.[0];
-            if (!file) {
-                setIsUploading(false);
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (readerEvent) => {
-                var content = readerEvent?.target?.result as ArrayBuffer;
-                if (!content) {
-                    setIsUploading(false);
-                    return;
+        return new Promise((resolve) => {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.multiple = true;
+            input.onchange = async (e: any) => {
+                setIsUploading(true);
+                const files = e?.target?.files ?? [];
+                if (files.length === 0) {
+                    resolve(1);
                 }
 
-                setIsUploading(true);
-                onSave(file, Buffer.from(content)).finally(() =>
-                    setIsUploading(false)
-                );
+                for (const file of files) {
+                    setCurrentFileName(file.name);
+                    await fileUpload(file, onSave);
+                }
+                resolve(1);
             };
-            reader.readAsArrayBuffer(file);
-        };
-        input.click();
+            input.click();
+        }).finally(() => {
+            setIsUploading(false);
+            setCurrentFileName("");
+        });
     };
 
     const onSave = async (file: ControllerFile, fileData: Buffer) => {
@@ -181,8 +198,9 @@ const FileBrowser = () => {
 
     return (
         <>
+            <PageTitle>File browser</PageTitle>
             <SpinnerModal show={isDownloading} text="Downloading..." />
-            <SpinnerModal show={isUploading} text="Uploading..." />
+            <SpinnerModal show={isUploading} text={"Uploading " + currentFileName + "..."} />
 
             {editFile && (
                 <EditorModal

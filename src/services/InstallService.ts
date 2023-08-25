@@ -20,6 +20,7 @@ export enum InstallerState {
     DOWNLOADING,
     CHECKING_SIGNATURES,
     FLASHING,
+    RESTARTING,
     FLASH_DONE,
     DONE,
     ERROR

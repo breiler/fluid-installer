@@ -11,6 +11,7 @@ import { ControllerStatus } from "../../services/controllerservice/ControllerSer
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import InstallerModal from "../../components/installermodal/InstallerModal";
 
 const initialProgress: FlashProgress = {
     fileIndex: 0,
@@ -26,7 +27,7 @@ type InstallerProps = {
 const Installer = ({ onClose }: InstallerProps) => {
     const controllerService = useContext(ControllerServiceContext);
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
-    const [progress, setProgress] = useState(initialProgress);
+    const [progress, setProgress] = useState<FlashProgress>(initialProgress);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
     const onInstall = async (
@@ -72,21 +73,8 @@ const Installer = ({ onClose }: InstallerProps) => {
 
     return (
         <>
-            {state === InstallerState.SELECT_PACKAGE && (
-                <Firmware onInstall={onInstall} />
-            )}
-
-            {(state === InstallerState.DOWNLOADING ||
-                state === InstallerState.CHECKING_SIGNATURES ||
-                state === InstallerState.FLASHING ||
-                state === InstallerState.FLASH_DONE) && (
-                    <Progress progress={progress} status={state} />
-                )}
-
-            {state === InstallerState.DONE && <Done onContinue={onClose} />}
-            {state === InstallerState.ERROR && (
-                <div className="alert alert-danger"><FontAwesomeIcon icon={faBan as IconDefinition}/> {errorMessage}</div>
-            )}
+            {state !== InstallerState.SELECT_PACKAGE && (<InstallerModal state={state} errorMessage={errorMessage} progress={progress} onClose={onClose} />)}
+            <Firmware onInstall={onInstall} />
         </>
     );
 };

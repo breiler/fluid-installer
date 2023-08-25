@@ -8,6 +8,13 @@ export const isSafari = () => {
     );
 };
 
+export const isFirefox = () => {
+    return (
+        navigator.userAgent &&
+        navigator.userAgent.indexOf("Firefox") > -1
+    );
+};
+
 export const checkConnection = async (serialPortDevice) => {
     return serialPortDevice
         .open({ baudRate: 115200 })

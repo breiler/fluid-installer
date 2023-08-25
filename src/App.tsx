@@ -1,5 +1,5 @@
-import React, { FunctionComponent, ReactNode, createElement, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -11,19 +11,15 @@ import { Installer, Terminal } from "./pages";
 import FileBrowser from "./pages/filebrowser";
 import SelectMode from "./pages/selectmode";
 import { Connection } from "./panels";
-import { isSafari } from "./utils/utils";
+import { isSafari, isFirefox } from "./utils/utils";
 import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
-import { ReactElement } from "react-markdown/lib/react-markdown";
+import PageTitle from "./components/pagetitle/PageTitle";
 
 
 const App = () => {
     const navigate = useNavigate();
-
-    if (isSafari()) {
-        return <h1>This tool is not supported on Safari!</h1>;
-    }
     const [controllerService, setControllerService] = useState<ControllerService>();
     const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(ControllerStatus.DISCONNECTED);
 
@@ -57,10 +53,9 @@ const App = () => {
                 <Header />
 
                 <div className="container">
-
-                    {!controllerService && <Connection onConnect={setControllerService} />}
-
-                    {controllerService &&
+                    {isSafari() || isFirefox() && <><PageTitle>Browser not supported</PageTitle><p>Please use Chrome, Edge or Opera instead</p></>}
+                    {!isSafari() && !isFirefox() && !controllerService && <Connection onConnect={setControllerService} />}
+                    {!isSafari() && !isFirefox() && controllerService &&
                         <Container>
                             <Row>
                                 <Col xs={3}><Navigation /></Col>

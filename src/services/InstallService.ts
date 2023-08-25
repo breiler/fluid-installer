@@ -97,10 +97,10 @@ export const InstallService = {
                 choice.erase || false,
                 onProgress
             );
-            onState(InstallerState.FLASH_DONE);
             if (window.gtag) {
                 window.gtag('event', 'install', { version: release.name, success: true });
             }
+            onState(InstallerState.FLASH_DONE);
         } catch (error) {
             if (window.gtag) {
                 window.gtag('event', 'install', { version: release.name, success: false });

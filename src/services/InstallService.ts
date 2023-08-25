@@ -69,6 +69,9 @@ export const InstallService = {
         try {
             files = await GithubService.getImageFiles(release, images);
         } catch (error) {
+            if (window.gtag) {
+                window.gtag('event', 'install', { version: release.name, success: false });
+            }
             console.error(error);
             onState(InstallerState.ERROR);
             throw "Could not download image files";
@@ -78,6 +81,9 @@ export const InstallService = {
             onState(InstallerState.CHECKING_SIGNATURES);
             validateImageSignatures(images, files);
         } catch (error) {
+            if (window.gtag) {
+                window.gtag('event', 'install', { version: release.name, success: false });
+            }
             onState(InstallerState.ERROR);
             throw error;
         }
@@ -90,13 +96,15 @@ export const InstallService = {
                 flashFiles,
                 choice.erase || false,
                 onProgress
-            ).then(() => onState(InstallerState.FLASH_DONE));
+            );
             onState(InstallerState.FLASH_DONE);
-
             if (window.gtag) {
-                window.gtag('event', 'install', { version: release.name });
+                window.gtag('event', 'install', { version: release.name, success: true });
             }
         } catch (error) {
+            if (window.gtag) {
+                window.gtag('event', 'install', { version: release.name, success: false });
+            }
             console.error(error);
             onState(InstallerState.ERROR);
             throw "Was not able to flash device";

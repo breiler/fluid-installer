@@ -22,16 +22,6 @@ const Navigation = () => {
         controllerService.getStats().then(setStats);
     }, [controllerService]);
 
-    useEffect(() => {
-        if (!window.gtag) {
-            return;
-        }
-
-        window.gtag('event', 'page_view', {
-            page_title: location.pathname,
-            page_location: window.location.href
-        })
-    }, [location.pathname]);
 
     const restart = () => {
         setIsLoading(true);

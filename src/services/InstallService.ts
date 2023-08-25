@@ -92,6 +92,10 @@ export const InstallService = {
                 onProgress
             ).then(() => onState(InstallerState.FLASH_DONE));
             onState(InstallerState.FLASH_DONE);
+
+            if (window.gtag) {
+                window.gtag('event', 'install', { version: release.name });
+            }
         } catch (error) {
             console.error(error);
             onState(InstallerState.ERROR);

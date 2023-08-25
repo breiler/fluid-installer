@@ -31,7 +31,7 @@ const App = () => {
                 setControllerStatus(status);
             }
         });
-    }, [controllerService])
+    }, [controllerService]);
 
     return (
         <>

@@ -7,6 +7,7 @@ import { ControllerServiceContext } from "../../context/ControllerServiceContext
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
 import { useNavigate } from "react-router-dom";
 import PageTitle from "../../components/pagetitle/PageTitle";
+import Page from "../../model/Page";
 
 const SelectMode = () => {
     const navigate = useNavigate();
@@ -25,15 +26,15 @@ const SelectMode = () => {
             <div className="container text-center select-mode">
                 <div className="row">
                     <div className="col">
-                        <InstallCard onClick={() => navigate("/install")} />
+                        <InstallCard onClick={() => navigate(Page.INSTALLER)} />
                     </div>
                     <div className="col">
-                        <TerminalCard onClick={() => navigate("/terminal")} />
+                        <TerminalCard onClick={() => navigate(Page.TERMINAL)} />
                     </div>
                     {stats?.version && (
                         <div className="col">
                             <FileBrowserCard
-                                onClick={() => navigate("/filebrowser")}
+                                onClick={() => navigate(Page.FILEBROWSER)}
                             />
                         </div>
                     )}

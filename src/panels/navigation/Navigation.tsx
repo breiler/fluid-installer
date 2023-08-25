@@ -2,7 +2,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faPowerOff, faRefresh } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useEffect, useState } from 'react';
-import { Nav, NavDropdown } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ControllerServiceContext } from '../../context/ControllerServiceContext';
 import SpinnerModal from '../../components/spinnermodal/SpinnerModal';

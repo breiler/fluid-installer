@@ -79,9 +79,14 @@ export class ControllerService {
     }
 
     async getStats() {
-        if (!this.stats) {
-            const command = await this.send(new GetStatsCommand());
-            this.stats = command.getStats();
+        if (!this.stats && this.currentVersion) {
+            console.log("Getting stats");
+            try {
+                const command = await this.send(new GetStatsCommand(), 5000);
+                this.stats = command.getStats();
+            } catch (error) {
+                console.warn("Could not retreive the controller status", error);
+            }
         }
         return this.stats;
     }
@@ -108,7 +113,7 @@ export class ControllerService {
         }
 
         await this.getStats();
-
+    
         return Promise.resolve(this.status);
     };
 
@@ -125,12 +130,13 @@ export class ControllerService {
             await this.serialPort.write(Buffer.from("$I\n"));
             let versionResponse = await bufferedReader.waitForLine(2000);
             this.currentVersion = versionResponse.toString();
+            console.log("Got version: " + this.currentVersion);
             await this.waitForSettle(bufferedReader);
         }
     }
 
-    private async waitForSettle(bufferedReader: SerialBufferedReader) {
-        while ((await bufferedReader.waitForLine(500)).length > 0) {
+    private async waitForSettle(bufferedReader: SerialBufferedReader, waitTimeMs = 500) {
+        while ((await bufferedReader.waitForLine(waitTimeMs)).length > 0) {
             await sleep(100);
         }
     }

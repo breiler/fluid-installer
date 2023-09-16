@@ -50,6 +50,8 @@ const Navigation = () => {
                     Disconnect
                 </Nav.Link>
             </Nav>
+            <hr className='d-flex d-sm-none'/>
+
         </>
     );
 }

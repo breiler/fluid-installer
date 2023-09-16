@@ -58,8 +58,8 @@ const App = () => {
                     {!isSafari() && !isFirefox() && controllerService &&
                         <Container>
                             <Row>
-                                <Col xs={3}><Navigation /></Col>
-                                <Col xs={9}>
+                                <Col sm={5} md={4} lg={3}><Navigation /></Col>
+                                <Col sm={7} md={8} lg={9}>
                                     <Routes>
                                         <Route index element={<SelectMode />} />
                                         <Route path="install" element={<Installer onClose={() => navigate(Page.HOME)} />} />

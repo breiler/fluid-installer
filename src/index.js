@@ -6,4 +6,4 @@ import App from "./App";
 
 const container = document.getElementById("app");
 const root = createRoot(container);
-root.render(<BrowserRouter basename="/fluid-installer"><App /></BrowserRouter>);
+root.render(<BrowserRouter basename="fluid-installer"><App /></BrowserRouter>);

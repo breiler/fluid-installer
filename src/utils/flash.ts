@@ -61,6 +61,7 @@ export const flashDevice = async (
         await transport.setDTR(true);
         await new Promise(r => setTimeout(r, 50));
         await transport.disconnect();
+        await new Promise(r => setTimeout(r, 1000));
     }
     return Promise.resolve();
 };

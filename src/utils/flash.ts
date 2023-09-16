@@ -1,4 +1,4 @@
-import { ESPLoader, Transport } from "esptool-js";
+import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
 import CryptoJS from "crypto-js";
 import { FlashProgress } from "../services/FlashService";
 import { NativeSerialPort } from "./serialport/typings";
@@ -26,19 +26,23 @@ export const flashDevice = async (
 ) => {
     const transport = new Transport(serialPort);
     try {
-        const loader = new ESPLoader(transport, FLASH_BAUD_RATE, terminal);
+        const loaderOptions = {
+            transport,
+            baudrate: FLASH_BAUD_RATE,
+            terminal: terminal,
+          } as LoaderOptions;
+        const loader = new ESPLoader(loaderOptions);
         await loader!.main_fn();
 
         // We need to wait after connecting...
         await new Promise((f) => setTimeout(f, 2000));
-        await loader!.write_flash(
-            files,
-            "keep",
-            undefined,
-            undefined,
-            erase,
-            true,
-            (fileIndex, written, total) => {
+
+        const flashOptions: FlashOptions = {
+            fileArray: files,
+            flashSize: "keep",
+            eraseAll: erase,
+            compress: true,
+            reportProgress: (fileIndex, written, total) => {
                 onProgress({
                     fileIndex: fileIndex,
                     fileCount: files.length,
@@ -46,15 +50,14 @@ export const flashDevice = async (
                     fileProgress: Math.round((written / total) * 100)
                 });
             },
-            (image) => {
-                return CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image));
-            }
-        );
+            calculateMD5Hash: (image) => CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image)),
+          } as FlashOptions;
+        await loader!.write_flash(flashOptions);
     } finally {
         // Reset the controller
         await transport.setDTR(false);
         await transport.setRTS(true);
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(r => setTimeout(r, 100));
         await transport.setDTR(true);
         await new Promise(r => setTimeout(r, 50));
         await transport.disconnect();

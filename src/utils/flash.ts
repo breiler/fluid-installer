@@ -2,6 +2,7 @@ import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
 import CryptoJS from "crypto-js";
 import { FlashProgress } from "../services/FlashService";
 import { NativeSerialPort } from "./serialport/typings";
+import { InstallerState } from "../services";
 
 const FLASH_BAUD_RATE = 921600;
 
@@ -22,10 +23,12 @@ export const flashDevice = async (
     files,
     erase: boolean,
     onProgress: (progress: FlashProgress) => void,
+    onState: (state: InstallerState) => void,
     terminal = espLoaderTerminal
 ) => {
     const transport = new Transport(serialPort);
     try {
+        onState(InstallerState.ENTER_FLASH_MODE);
         const loaderOptions = {
             transport,
             baudrate: FLASH_BAUD_RATE,
@@ -37,6 +40,7 @@ export const flashDevice = async (
         // We need to wait after connecting...
         await new Promise((f) => setTimeout(f, 2000));
 
+        onState(InstallerState.FLASHING);
         const flashOptions: FlashOptions = {
             fileArray: files,
             flashSize: "keep",
@@ -54,6 +58,8 @@ export const flashDevice = async (
           } as FlashOptions;
         await loader!.write_flash(flashOptions);
     } finally {
+        onState(InstallerState.RESTARTING);
+
         // Reset the controller
         await transport.setDTR(false);
         await transport.setRTS(true);

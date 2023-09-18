@@ -35,11 +35,13 @@ export type Config = {
     axes?: Axes;
 
     i2so?: I2ISO;
+    i2c0?: I2C0Config
     spi?: SPI;
     sdcard?: SDCard;
     coolant?: Coolant;
     macros?: Macros;
     probe?: Probe;
+    oled?: OLEDConfig;
 
     "10V"?: SpindleDriver10V;
     besc?: SpindleDriverBesc;
@@ -433,6 +435,19 @@ export type Uart = {
     baud?: number;
     mode?: string;
 };
+
+export type I2C0Config = {
+    sda_pin?: string,
+    scl_pin?: string
+}
+
+export type OLEDConfig = {
+    i2c_num?: number;
+    i2c_address: number;
+    width?: number;
+    height?: number
+    radio_delay_ms: number;
+}
 
 export class PinConfig {
     constructor(

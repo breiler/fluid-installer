@@ -12,6 +12,8 @@ import I2SOGroup from "./groups/I2SOGroup";
 import SDCardGroup from "./groups/SDCardGroup";
 import Editor from "../../components/editor/Editor";
 import SpindleDriverGroup from "./groups/SpindleDriverGroup";
+import I2CGroup from "./groups/I2CGroup";
+import OLEDGroup from "./groups/OLEDGroup";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -117,6 +119,12 @@ const Configuration = ({
                         setValue={(i2so) => appendConfig({ i2so })}
                     />
 
+                    <I2CGroup
+                        board={Boards[0]}
+                        i2c={config.i2c0}
+                        setValue={(i2c) => appendConfig({i2c0: i2c})}
+                    />
+
                     <SPIGroup
                         board={Boards[0]}
                         spi={config.spi}
@@ -127,6 +135,12 @@ const Configuration = ({
                         board={Boards[0]}
                         sdcard={config.sdcard}
                         setValue={(sdcard) => appendConfig({ sdcard })}
+                    />
+
+                    <OLEDGroup
+                        board={Boards[0]}
+                        oled={config.oled}
+                        setValue={(oled) => appendConfig({oled})}
                     />
                 </Container>
             )}

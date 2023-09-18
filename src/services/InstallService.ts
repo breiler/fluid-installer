@@ -19,9 +19,9 @@ export enum InstallerState {
     SELECT_PACKAGE,
     DOWNLOADING,
     CHECKING_SIGNATURES,
+    ENTER_FLASH_MODE,
     FLASHING,
     RESTARTING,
-    FLASH_DONE,
     DONE,
     ERROR
 }
@@ -91,17 +91,16 @@ export const InstallService = {
 
         try {
             const flashFiles = await convertImagesToFlashFiles(images, files);
-            onState(InstallerState.FLASHING);
             await flashDevice(
                 serialPort.getNativeSerialPort(),
                 flashFiles,
                 choice.erase || false,
-                onProgress
+                onProgress,
+                onState
             );
             if (window.gtag) {
                 window.gtag('event', 'install', { version: release.name, success: true });
             }
-            onState(InstallerState.FLASH_DONE);
         } catch (error) {
             if (window.gtag) {
                 window.gtag('event', 'install', { version: release.name, success: false });

@@ -42,6 +42,7 @@ export type Config = {
     macros?: Macros;
     probe?: Probe;
     oled?: OLEDConfig;
+    control?: ControlConfig;
 
     "10V"?: SpindleDriver10V;
     besc?: SpindleDriverBesc;
@@ -70,7 +71,7 @@ type Start = {
     /**
      *  If true this will report if any limit switches are active at startup if hard_limits is true for the axis.
      */
-    check_limit?: boolean;
+    check_limits?: boolean;
 };
 
 export type Axes = {
@@ -447,6 +448,19 @@ export type OLEDConfig = {
     width?: number;
     height?: number
     radio_delay_ms: number;
+}
+
+export type ControlConfig = {
+    safety_door_pin?: string;
+    reset_pin?: string;
+    feed_hold_pin?: string;
+    cycle_start_pin?: string;
+    macro0_pin?: string;
+    macro1_pin?: string;
+    macro2_pin?: string;
+    macro3_pin?: string;
+    fault_pin?: string;
+    estop_pin?: string;
 }
 
 export class PinConfig {

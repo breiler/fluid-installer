@@ -9,6 +9,7 @@ type SelectFieldProps = {
     value?: PinConfig;
     setValue: (value: PinConfig) => void;
     placeholder?: string;
+    helpText?: string;
 };
 
 const PinField = ({
@@ -16,7 +17,8 @@ const PinField = ({
     board,
     value,
     setValue,
-    placeholder
+    placeholder,
+    helpText
 }: SelectFieldProps) => {
     const [pin, setPin] = useState<string | undefined>(value?.pin);
     const [pull, setPull] = useState<string | undefined>(value?.pull);
@@ -94,6 +96,7 @@ const PinField = ({
                         </InputGroup.Text>
                     )}
                 </InputGroup>
+                {helpText && <Form.Text muted>{helpText}</Form.Text>}
             </Col>
         </Form.Group>
     );

@@ -57,13 +57,13 @@ const AxesGroup = ({
 
             <BooleanField
                 label="Check limits"
-                value={config?.start?.check_limit ?? false}
+                value={config?.start?.check_limits ?? false}
                 setValue={(value) =>
                     setValue({
                         ...config!,
                         start: {
                             ...config?.start,
-                            check_limit: Boolean(value)
+                            check_limits: Boolean(value)
                         }
                     })
                 }

@@ -15,6 +15,7 @@ import SpindleDriverGroup from "./groups/SpindleDriverGroup";
 import I2CGroup from "./groups/I2CGroup";
 import OLEDGroup from "./groups/OLEDGroup";
 import { deepMerge } from "../../utils/utils";
+import ControlGroup from "./groups/ControlGroup";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -142,6 +143,12 @@ const Configuration = ({
                         board={Boards[0]}
                         oled={config.oled}
                         setValue={(oled) => appendConfig({oled})}
+                    />
+
+                    <ControlGroup
+                        board={Boards[0]}
+                        control={config.control}
+                        setValue={(control) => appendConfig({control})}
                     />
                 </Container>
             )}

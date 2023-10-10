@@ -15,7 +15,7 @@ npm run build
 ```
 
 ## Developing
-Start a development server using the following commands then open your browser to http://localhost:1234/fluid-installer
+Start a development server using the following commands then open your browser to http://localhost:1234/
 
 ```
 npm install

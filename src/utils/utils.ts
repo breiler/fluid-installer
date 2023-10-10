@@ -46,7 +46,7 @@ export const deepMerge = (target: Props, ...sources: Props[]): Props => {
     }
 
     Object.entries(sources.shift() ?? []).forEach(([key, value]) => {
-        if (value !== undefined) {
+        if (value !== undefined && value !== null) {
             if (!target[key]) {
                 Object.assign(target, { [key]: {} });
             }

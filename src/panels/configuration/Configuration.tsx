@@ -14,6 +14,7 @@ import Editor from "../../components/editor/Editor";
 import SpindleDriverGroup from "./groups/SpindleDriverGroup";
 import I2CGroup from "./groups/I2CGroup";
 import OLEDGroup from "./groups/OLEDGroup";
+import { deepMerge } from "../../utils/utils";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -45,7 +46,7 @@ const Configuration = ({
     }, [value]);
 
     const appendConfig = (conf) => {
-        const newConfig = { ...config, ...conf };
+        const newConfig = deepMerge(config, conf);
         setConfig(newConfig);
         
         // No compat mode will not try to quote 'y'

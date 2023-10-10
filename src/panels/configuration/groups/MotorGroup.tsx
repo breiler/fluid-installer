@@ -19,9 +19,9 @@ type MotorProps = {
 };
 
 const DEFAULT_CONFIG : Motor = {
-    limit_all_pin: PinConfig.fromString(Pin.NO_PIN).toString(),
-    limit_neg_pin: PinConfig.fromString(Pin.NO_PIN).toString(),
-    limit_pos_pin: PinConfig.fromString(Pin.NO_PIN).toString(),
+    limit_all_pin: PinConfig.fromString(Pin.NO_PIN)!.toString(),
+    limit_neg_pin: PinConfig.fromString(Pin.NO_PIN)!.toString(),
+    limit_pos_pin: PinConfig.fromString(Pin.NO_PIN)!.toString(),
     hard_limits: false,
     pulloff_mm: 1
 }

@@ -464,9 +464,9 @@ export class PinConfig {
     public pull: string = PinPull.NONE;
     public active: string = PinActive.HIGH;
 
-    static fromString(pin: string | undefined): PinConfig {
+    static fromString(pin: string | undefined): PinConfig | undefined{
         if (!pin) {
-            return new PinConfig(Pin.NO_PIN, PinPull.NONE, PinActive.HIGH);
+            return undefined;
         }
 
         const pinParts = pin.toLocaleLowerCase().split(":");

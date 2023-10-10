@@ -18,14 +18,14 @@ const PinField = ({
     setValue,
     placeholder
 }: SelectFieldProps) => {
-    const [pin, setPin] = useState<string>(value?.pin + "" ?? Pin.NO_PIN);
-    const [pull, setPull] = useState<string>(value?.pull + "" ?? PinPull.NONE);
-    const [active, setActive] = useState<string>(
-        value?.active + "" ?? PinActive.HIGH
+    const [pin, setPin] = useState<string | undefined>(value?.pin);
+    const [pull, setPull] = useState<string | undefined>(value?.pull);
+    const [active, setActive] = useState<string | undefined>(
+        value?.active
     );
 
     useEffect(() => {
-        setValue(new PinConfig(pin, pull, active));
+        setValue(new PinConfig(pin ?? Pin.NO_PIN, pull ?? PinPull.NONE, active ?? PinActive.HIGH));
     }, [pin, pull, active]);
 
     const boardPinConfig = board.pins.find((boardPin) => boardPin.pin === pin);
@@ -40,7 +40,7 @@ const PinField = ({
                     <Form.Select
                         aria-label={placeholder}
                         onChange={(event) => setPin(event.target.value)}
-                        value={pin + ""}>
+                        value={pin ?? Pin.NO_PIN}>
                         {board.pins.map((option) => (
                             <option
                                 key={option.pin}
@@ -51,7 +51,7 @@ const PinField = ({
                                 {!option.pull &&
                                     option.pin !== Pin.NO_PIN &&
                                     "- pull unavailable"}
-                            
+
                             </option>
                         ))}
                     </Form.Select>

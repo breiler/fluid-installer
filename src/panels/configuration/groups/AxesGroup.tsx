@@ -97,10 +97,10 @@ const AxesGroup = ({
                             axes: {
                                 ...config!.axes,
                                 shared_stepper_disable_pin:
-                                    PinConfig.fromString(Pin.NO_PIN).toString(),
+                                    PinConfig.fromString(Pin.NO_PIN)!.toString(),
                                 shared_stepper_reset_pin: PinConfig.fromString(
                                     Pin.NO_PIN
-                                ).toString()
+                                )!.toString()
                             }
                         });
                     }

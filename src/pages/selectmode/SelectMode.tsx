@@ -8,8 +8,10 @@ import { Stats } from "../../services/controllerservice/commands/GetStatsCommand
 import { useNavigate } from "react-router-dom";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import Page from "../../model/Page";
+import usePageView from "../../hooks/usePageView";
 
 const SelectMode = () => {
+    usePageView("Home");
     const navigate = useNavigate();
     const controllerService = useContext(ControllerServiceContext);
     const [stats, setStats] = useState<Stats>();
@@ -22,7 +24,9 @@ const SelectMode = () => {
     return (
         <>
             <PageTitle>FluidNC Web Installer</PageTitle>
-            <p>You are now connected to a device, please choose an action below</p>
+            <p>
+                You are now connected to a device, please choose an action below
+            </p>
             <div className="container text-center select-mode">
                 <div className="row">
                     <div className="col">

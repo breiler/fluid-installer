@@ -24,6 +24,7 @@ import EditorModal from "../../components/editormodal/EditorModal";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import PageTitle from "../../components/pagetitle/PageTitle";
+import usePageView from "../../hooks/usePageView";
 
 type EditFile = {
     file: ControllerFile;
@@ -47,6 +48,7 @@ const fileUpload = (file, onSave) => {
 };
 
 const FileBrowser = () => {
+    usePageView("File browser");
     const controllerService = useContext(ControllerServiceContext);
     const [files, setFiles] = useState<ControllerFile[]>([]);
     const [configFilename, setConfigFilename] = useState<string>("");

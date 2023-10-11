@@ -15,8 +15,10 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
+import usePageView from "../../hooks/usePageView";
 
 const Terminal = () => {
+    usePageView("Terminal");
     const controllerService = useContext(ControllerServiceContext);
     const xtermRef: React.RefObject<Xterm> = createRef<Xterm>();
     const [error, setError] = useState<string | undefined>();

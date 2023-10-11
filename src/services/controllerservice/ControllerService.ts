@@ -1,4 +1,7 @@
-import { SerialBufferedReader, SerialPort } from "../../utils/serialport/SerialPort";
+import {
+    SerialBufferedReader,
+    SerialPort
+} from "../../utils/serialport/SerialPort";
 import { NativeSerialPortEvent } from "../../utils/serialport/typings";
 import { sleep } from "../../utils/utils";
 import { XModem, XModemSocket } from "../../utils/xmodem/xmodem";
@@ -47,7 +50,6 @@ class XModemSocketAdapter implements XModemSocket {
     }
 }
 
-
 export enum ControllerStatus {
     CONNECTION_LOST,
     DISCONNECTED,
@@ -61,7 +63,6 @@ const MAX_PING_COUNT = 10;
 export type ControllerStatusListener = (status: ControllerStatus) => void;
 
 export class ControllerService {
-
     serialPort: SerialPort;
     buffer: string;
     commands: Command[];
@@ -95,9 +96,11 @@ export class ControllerService {
         if (!this.serialPort.isOpen()) {
             const bufferedReader = new SerialBufferedReader();
             await this.serialPort.open(115200);
-            this.serialPort.getNativeSerialPort().addEventListener(NativeSerialPortEvent.DISCONNECT, (event) => {
-                this._notifyStatus(ControllerStatus.CONNECTION_LOST);
-            });
+            this.serialPort
+                .getNativeSerialPort()
+                .addEventListener(NativeSerialPortEvent.DISCONNECT, () => {
+                    this._notifyStatus(ControllerStatus.CONNECTION_LOST);
+                });
 
             try {
                 this.serialPort.addReader(bufferedReader.getReader());
@@ -113,12 +116,14 @@ export class ControllerService {
         }
 
         await this.getStats();
-    
+
         return Promise.resolve(this.status);
     };
 
     private async _initializeController(bufferedReader: SerialBufferedReader) {
-        const gotWelcomeString = await this.waitForWelcomeString(bufferedReader);
+        const gotWelcomeString = await this.waitForWelcomeString(
+            bufferedReader
+        );
         if (gotWelcomeString) {
             await this.waitForSettle(bufferedReader);
 
@@ -128,14 +133,17 @@ export class ControllerService {
 
             // Try and query for version
             await this.serialPort.write(Buffer.from("$I\n"));
-            let versionResponse = await bufferedReader.waitForLine(2000);
+            const versionResponse = await bufferedReader.waitForLine(2000);
             this.currentVersion = versionResponse.toString();
             console.log("Got version: " + this.currentVersion);
             await this.waitForSettle(bufferedReader);
         }
     }
 
-    private async waitForSettle(bufferedReader: SerialBufferedReader, waitTimeMs = 500) {
+    private async waitForSettle(
+        bufferedReader: SerialBufferedReader,
+        waitTimeMs = 500
+    ) {
         while ((await bufferedReader.waitForLine(waitTimeMs)).length > 0) {
             await sleep(100);
         }
@@ -147,14 +155,14 @@ export class ControllerService {
 
         while (currentTime + 10000 > Date.now()) {
             try {
-                const response = (await bufferedReader.readLine());
+                const response = await bufferedReader.readLine();
                 if (this.isWelcomeString(response.toString())) {
                     console.log("Found welcome message: " + response);
                     return true;
                 }
                 await sleep(100);
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         }
 
@@ -162,10 +170,9 @@ export class ControllerService {
         return false;
     }
 
-
     async _detectController(): Promise<void> {
         // Attemt to establish a connection
-        let answered = false;
+        const answered = false;
         let pingCount = 0;
         while (!answered) {
             pingCount++;
@@ -199,7 +206,7 @@ export class ControllerService {
             this._notifyStatus(ControllerStatus.DISCONNECTED);
         }
         return this.serialPort.close();
-    };
+    }
 
     onData = (data: Buffer) => {
         if (this.xmodemMode) {
@@ -224,7 +231,10 @@ export class ControllerService {
         }
     };
 
-    send = <T extends Command>(command: T, timeoutMs: number = 0): Promise<T> => {
+    send = <T extends Command>(
+        command: T,
+        timeoutMs: number = 0
+    ): Promise<T> => {
         this.commands.push(command);
         const result = new Promise<T>((resolve, reject) => {
             let timer;
@@ -238,7 +248,7 @@ export class ControllerService {
                 if (timer) {
                     clearTimeout(timer);
                 }
-                resolve(command)
+                resolve(command);
             };
         });
         this.serialPort.write(Buffer.from((command as Command).command + "\n"));
@@ -246,8 +256,8 @@ export class ControllerService {
     };
 
     _removeCommand = (command: Command) => {
-        this.commands = this.commands.filter(c => c !== command);
-    }
+        this.commands = this.commands.filter((c) => c !== command);
+    };
 
     downloadFile = async (file: string): Promise<Buffer> => {
         this.xmodemMode = true;
@@ -297,25 +307,31 @@ export class ControllerService {
             this.serialPort.removeReader(bufferedReader.getReader());
         }
         return Promise.resolve();
-    }
+    };
 
     private isWelcomeString(response: string | undefined) {
         if (response) {
             console.log(response);
         }
-        return response && (response.startsWith("GrblHAL ") || response.startsWith("Grbl ") || response.indexOf(" [FluidNC v") > 0);
+        return (
+            response &&
+            (response.startsWith("GrblHAL ") ||
+                response.startsWith("Grbl ") ||
+                response.indexOf(" [FluidNC v") > 0)
+        );
     }
 
     addListener(listener: ControllerStatusListener) {
         this.statusListeners.push(listener);
     }
 
-
     removeListener(listener: ControllerStatusListener) {
-        this.statusListeners = this.statusListeners.filter(l => l !== listener);
+        this.statusListeners = this.statusListeners.filter(
+            (l) => l !== listener
+        );
     }
 
     private _notifyStatus(status: ControllerStatus) {
-        this.statusListeners.forEach(l => l(status));
+        this.statusListeners.forEach((l) => l(status));
     }
 }

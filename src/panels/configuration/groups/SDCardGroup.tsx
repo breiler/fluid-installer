@@ -12,22 +12,23 @@ type SPIProps = {
 
 const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
     return (
-        <div style={{marginBottom: "48px"}}>
+        <div style={{ marginBottom: "48px" }}>
             <h4>SD Card</h4>
             <Form.Check
                 type="switch"
                 label="Include"
                 checked={!!sdcard}
                 onChange={() => {
-                    if (!!sdcard) {
+                    if (sdcard) {
                         setValue(undefined);
                     } else {
                         setValue({
                             card_detect_pin: Pin.NO_PIN,
-                            cs_pin: Pin.GPIO_5,
+                            cs_pin: Pin.GPIO_5
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {sdcard && (
                 <>

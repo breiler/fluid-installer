@@ -1,11 +1,8 @@
 import React from "react";
-import { Col, Form, Row } from "react-bootstrap";
-import { PinConfig, Homing } from "../../../model/Config";
-import PinField from "../fields/PinField";
-import { Board } from "../../../model/Boards";
+import { Form } from "react-bootstrap";
+import { Homing } from "../../../model/Config";
 import BooleanField from "../fields/BooleanField";
 import TextField from "../fields/TextField";
-import MotorDriverGroup from "./MotorDriverGroup";
 
 type HomingProps = {
     homing?: Homing;
@@ -21,14 +18,15 @@ const HomingGroup = ({ homing, setValue }: HomingProps) => {
                 label="Include"
                 checked={!!homing}
                 onChange={() => {
-                    if (!!homing) {
+                    if (homing) {
                         setValue(undefined);
                     } else {
                         setValue({
                             cycle: -1
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             <br />
             <br />
@@ -56,7 +54,7 @@ const HomingGroup = ({ homing, setValue }: HomingProps) => {
                         unit="mm"
                         helpText="Sets the machine position after homing and limit switch pull-off in millimeters. If you want the machine position to be zero at the limit switch, set this to zero. Keep in mind the homing direction when you choose this number."
                     />
-                     <BooleanField
+                    <BooleanField
                         label="Positive direction"
                         value={homing?.positive_direction ?? true}
                         setValue={(value) => {

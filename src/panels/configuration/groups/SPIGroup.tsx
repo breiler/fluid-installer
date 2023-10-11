@@ -12,14 +12,14 @@ type SPIProps = {
 
 const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
     return (
-        <div style={{marginBottom: "48px"}}>
+        <div style={{ marginBottom: "48px" }}>
             <h4>SPI</h4>
             <Form.Check
                 type="switch"
                 label="Include"
                 checked={!!spi}
                 onChange={() => {
-                    if (!!spi) {
+                    if (spi) {
                         setValue(undefined);
                     } else {
                         setValue({
@@ -28,7 +28,8 @@ const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
                             sck_pin: Pin.GPIO_18
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {spi && (
                 <>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "../card";
 import Button from "../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,7 +21,8 @@ export const FileBrowserCard = ({
                 <Button onClick={onClick} disabled={disabled}>
                     <>File browser</>
                 </Button>
-            }>
+            }
+        >
             <div className="select-icon">
                 <FontAwesomeIcon
                     icon={faFolderOpen as IconDefinition}

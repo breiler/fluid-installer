@@ -1,5 +1,5 @@
 import React, { MouseEventHandler } from "react";
-import { Button, Spinner } from "../../components";
+import { Button } from "../../components";
 import PageTitle from "../../components/pagetitle/PageTitle";
 
 type Props = {

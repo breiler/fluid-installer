@@ -9,11 +9,7 @@ type Dynamixel2Props = {
     updateMotorDriverValue: (motor: Motor) => void;
 };
 
-const Dynamixel2 = ({
-    board,
-    motor,
-    updateMotorDriverValue
-}: Dynamixel2Props) => {
+const Dynamixel2 = ({ motor, updateMotorDriverValue }: Dynamixel2Props) => {
     return (
         <>
             <TextField

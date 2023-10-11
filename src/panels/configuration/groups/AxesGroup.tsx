@@ -1,5 +1,5 @@
 import React from "react";
-import { Axes, Config, Pin, PinConfig } from "../../../model/Config";
+import { Config, Pin, PinConfig } from "../../../model/Config";
 import AxisGroup from "./AxisGroup";
 import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
@@ -19,7 +19,7 @@ type SelectFieldProps = {
 const AxesGroup = ({
     board,
     config,
-    setValue = (value: Config) => {}
+    setValue = () => {}
 }: SelectFieldProps) => {
     return (
         <>
@@ -97,14 +97,17 @@ const AxesGroup = ({
                             axes: {
                                 ...config!.axes,
                                 shared_stepper_disable_pin:
-                                    PinConfig.fromString(Pin.NO_PIN)!.toString(),
+                                    PinConfig.fromString(
+                                        Pin.NO_PIN
+                                    )!.toString(),
                                 shared_stepper_reset_pin: PinConfig.fromString(
                                     Pin.NO_PIN
                                 )!.toString()
                             }
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {!!config?.axes?.shared_stepper_disable_pin && (
                 <PinField

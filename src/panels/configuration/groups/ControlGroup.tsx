@@ -1,6 +1,6 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { ControlConfig, Pin, PinConfig } from "../../../model/Config";
+import { ControlConfig, PinConfig } from "../../../model/Config";
 import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
 
@@ -19,12 +19,13 @@ const ControlGroup = ({ board, control, setValue }: ControlProps) => {
                 label="Include"
                 checked={!!control}
                 onChange={() => {
-                    if (!!control) {
+                    if (control) {
                         setValue(undefined);
                     } else {
                         setValue({});
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {control && (
                 <>

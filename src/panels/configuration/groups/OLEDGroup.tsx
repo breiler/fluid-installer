@@ -1,7 +1,6 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { PinConfig, I2C0Config, Pin, OLEDConfig } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import { OLEDConfig } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
 import TextField from "../fields/TextField";
 
@@ -11,16 +10,16 @@ type OLEDProps = {
     setValue: (oled?: OLEDConfig) => void;
 };
 
-const OLEDGroup = ({ board, oled, setValue }: OLEDProps) => {
+const OLEDGroup = ({ oled, setValue }: OLEDProps) => {
     return (
-        <div style={{marginBottom: "48px"}}>
+        <div style={{ marginBottom: "48px" }}>
             <h4>OLED</h4>
             <Form.Check
                 type="switch"
                 label="Include"
                 checked={!!oled}
                 onChange={() => {
-                    if (!!oled) {
+                    if (oled) {
                         setValue(undefined);
                     } else {
                         setValue({
@@ -31,7 +30,8 @@ const OLEDGroup = ({ board, oled, setValue }: OLEDProps) => {
                             radio_delay_ms: 0
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {oled && (
                 <>

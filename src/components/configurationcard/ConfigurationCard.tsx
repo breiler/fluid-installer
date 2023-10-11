@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "../card";
 import Button from "../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCogs, faFolderOpen } from "@fortawesome/free-solid-svg-icons";
+import { faCogs } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 type ConfigurationCardProps = {
@@ -21,12 +21,10 @@ export const ConfigurationCard = ({
                 <Button onClick={onClick} disabled={disabled}>
                     <>Configure</>
                 </Button>
-            }>
+            }
+        >
             <div className="select-icon">
-                <FontAwesomeIcon
-                    icon={faCogs as IconDefinition}
-                    size="4x"
-                />
+                <FontAwesomeIcon icon={faCogs as IconDefinition} size="4x" />
             </div>
             <>Manage the configuration on your controller</>
         </Card>

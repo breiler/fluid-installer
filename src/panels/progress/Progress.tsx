@@ -11,7 +11,7 @@ type Props = {
 };
 
 const Progress = ({ progress, status }: Props) => {
-    const { fileIndex, fileCount, fileName, fileProgress } = progress;
+    const { fileIndex, fileCount, fileProgress } = progress;
 
     return (
         <>

@@ -27,7 +27,7 @@ const TenVSpindle = ({
                 label="Include"
                 checked={!!config?.["10V"]}
                 onChange={() => {
-                    if (!!config?.["10V"]) {
+                    if (config?.["10V"]) {
                         setValue({
                             "10V": undefined
                         });
@@ -36,7 +36,8 @@ const TenVSpindle = ({
                             "10V": {}
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {config?.["10V"] && (
                 <>

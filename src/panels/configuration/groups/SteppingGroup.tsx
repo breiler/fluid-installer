@@ -18,9 +18,8 @@ type SteppingGroupProps = {
 
 const SteppingGroup = ({
     steppingConfig,
-    setValue = (config) => {}
+    setValue = () => {}
 }: SteppingGroupProps) => {
-
     useEffect(() => {
         if (!steppingConfig) {
             setValue(DEFAULT_CONFIG);
@@ -28,7 +27,7 @@ const SteppingGroup = ({
     }, [steppingConfig]);
 
     return (
-        <div style={{marginBottom: "48px"}}>
+        <div style={{ marginBottom: "48px" }}>
             <h4>Stepping</h4>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm="3">
@@ -43,7 +42,8 @@ const SteppingGroup = ({
                                 ...steppingConfig,
                                 ...{ engine: event.target.value }
                             })
-                        }>
+                        }
+                    >
                         <option id={"RMT"} value={"RMT"}>
                             RMT
                         </option>

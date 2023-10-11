@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { SerialPort } from "../../utils/serialport/SerialPort";
-import { Command, ControllerService, VersionCommand } from "../../services/ControllerService";
 
-type VersionProps = {
-    serialPort: SerialPort;
-};
-
-export const Version = ({ serialPort }: VersionProps) => {
+export const Version = () => {
     const [version, setVersion] = useState<string>();
 
     useEffect(() => {
@@ -16,9 +10,15 @@ export const Version = ({ serialPort }: VersionProps) => {
             setVersion(versionCommand.getVersionNumber());
             controllerService.disconnect();
         });*/
-
     }, [setVersion]);
 
-    return <>
-    {version && <><h4>Currently installed:</h4> {version}</>}</>;
+    return (
+        <>
+            {version && (
+                <>
+                    <h4>Currently installed:</h4> {version}
+                </>
+            )}
+        </>
+    );
 };

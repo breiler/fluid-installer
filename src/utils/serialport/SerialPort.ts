@@ -21,7 +21,7 @@ export class SerialBufferedReader {
 
     private reader: SerialReader = (data: Buffer) => {
         this.buffer = Buffer.concat([this.buffer, data]);
-    }
+    };
 
     read(): Buffer {
         const result = this.buffer;
@@ -30,7 +30,7 @@ export class SerialBufferedReader {
     }
 
     async readLine(): Promise<Buffer> {
-        const index = this.buffer.indexOf('\n');
+        const index = this.buffer.indexOf("\n");
         if (index >= 0) {
             let line = this.buffer.subarray(0, index);
             this.buffer = this.buffer.subarray(index + 1);
@@ -52,7 +52,7 @@ export class SerialBufferedReader {
         const currentTime = Date.now();
 
         while (currentTime + timeoutMs > Date.now()) {
-            const response = (await this.readLine());
+            const response = await this.readLine();
             if (response.length > 0) {
                 return response;
             }
@@ -61,11 +61,9 @@ export class SerialBufferedReader {
 
         return Promise.resolve(Buffer.from([]));
     }
-
 }
 
 const FLASH_BAUD_RATE = 921600;
-
 
 export enum SerialPortEvent {
     DISCONNECTED,
@@ -74,11 +72,13 @@ export enum SerialPortEvent {
 
 export class SerialPort {
     dispatchEvent(eventType: SerialPortEvent) {
-        let listenersList: (() => void)[] = this.listeners.get(eventType) ?? [];
+        const listenersList: (() => void)[] =
+            this.listeners.get(eventType) ?? [];
         listenersList.forEach((listener) => listener());
     }
     on(eventType: SerialPortEvent, callback: () => void) {
-        let listenersList: (() => void)[] = this.listeners.get(eventType) ?? [];
+        const listenersList: (() => void)[] =
+            this.listeners.get(eventType) ?? [];
         listenersList.push(callback);
         this.listeners.set(eventType, listenersList);
     }
@@ -132,7 +132,6 @@ export class SerialPort {
 
             return Promise.resolve(this.deviceInfo);
         } finally {
-
             // Reset the controller
             await transport.setRTS(true);
             await transport.setDTR(false);
@@ -147,7 +146,7 @@ export class SerialPort {
 
     open = async (baudRate = 115200): Promise<void> => {
         if (this.state === SerialPortState.DISCONNECTING) {
-            await new Promise(r => setTimeout(r, 1000));
+            await new Promise((r) => setTimeout(r, 1000));
         }
 
         if (this.state === SerialPortState.CONNECTED) {
@@ -218,7 +217,10 @@ export class SerialPort {
                 writer.releaseLock();
             });
         } catch (error) {
-            console.log("Got error while trying to release lock, ignore...", error);
+            console.log(
+                "Got error while trying to release lock, ignore...",
+                error
+            );
             return Promise.resolve();
         }
     };
@@ -241,11 +243,14 @@ export class SerialPort {
     };
 
     hardReset = async () => {
-        await this.serialPort.setSignals({ dataTerminalReady: false, requestToSend: true });
-        await new Promise(r => setTimeout(r, 100));
+        await this.serialPort.setSignals({
+            dataTerminalReady: false,
+            requestToSend: true
+        });
+        await new Promise((r) => setTimeout(r, 100));
         await this.serialPort.setSignals({ dataTerminalReady: true });
-        await new Promise(r => setTimeout(r, 50));
-    }
+        await new Promise((r) => setTimeout(r, 50));
+    };
 
     private startReading = async () => {
         try {

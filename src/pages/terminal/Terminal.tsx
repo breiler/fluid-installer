@@ -16,11 +16,7 @@ import { ControllerServiceContext } from "../../context/ControllerServiceContext
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
 
-type Props = {
-    onClose: () => void;
-};
-
-const Terminal = ({ }: Props) => {
+const Terminal = () => {
     const controllerService = useContext(ControllerServiceContext);
     const xtermRef: React.RefObject<Xterm> = createRef<Xterm>();
     const [error, setError] = useState<string | undefined>();
@@ -38,14 +34,16 @@ const Terminal = ({ }: Props) => {
             console.log("initiating terminal");
             controllerService
                 .connect()
-                .then(() => controllerService
-                    .serialPort.addReader(onResponse))
-                .then(() => controllerService
-                    .serialPort.write(Buffer.from([0x18]))) // CTRL-X reset controller
-                .then(() => controllerService
-                    .serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
-                .then(() => controllerService
-                    .serialPort.write(Buffer.from([0x05]))) // CTRL-E
+                .then(() => controllerService.serialPort.addReader(onResponse))
+                .then(() =>
+                    controllerService.serialPort.write(Buffer.from([0x18]))
+                ) // CTRL-X reset controller
+                .then(() =>
+                    controllerService.serialPort.write(Buffer.from([0x14]))
+                ) // CTRL-T activate echo mode in FluidNC
+                .then(() =>
+                    controllerService.serialPort.write(Buffer.from([0x05]))
+                ) // CTRL-E
                 .catch((error) => {
                     console.log(error);
                     setError("Could not open a connection");
@@ -55,13 +53,12 @@ const Terminal = ({ }: Props) => {
         return () => {
             if (
                 controllerService &&
-                controllerService.serialPort.getState() === SerialPortState.CONNECTED
+                controllerService.serialPort.getState() ===
+                    SerialPortState.CONNECTED
             ) {
-                controllerService.serialPort
-                    .write(Buffer.from([0x0c])); // CTRL-L Resetting echo mode
+                controllerService.serialPort.write(Buffer.from([0x0c])); // CTRL-L Resetting echo mode
                 controllerService.serialPort!.removeReader(onResponse);
             }
-
         };
     }, [controllerService, onResponse, xtermRef]);
 
@@ -75,29 +72,41 @@ const Terminal = ({ }: Props) => {
                         <Button
                             onClick={() => {
                                 setIsLoading(true);
-                                controllerService?.hardReset()
-                                    .then(() => controllerService
-                                        .serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
-                                    .then(() => controllerService
-                                        .serialPort.write(Buffer.from([0x05]))) // CTRL-E
+                                controllerService
+                                    ?.hardReset()
+                                    .then(() =>
+                                        controllerService.serialPort.write(
+                                            Buffer.from([0x14])
+                                        )
+                                    ) // CTRL-T activate echo mode in FluidNC
+                                    .then(() =>
+                                        controllerService.serialPort.write(
+                                            Buffer.from([0x05])
+                                        )
+                                    ) // CTRL-E
                                     .finally(() => setIsLoading(false));
                                 xtermRef.current?.terminal.focus();
-                            }
-                            }
+                            }}
                             variant="warning"
                             title="Restart"
-                            disabled={isLoading}>
+                            disabled={isLoading}
+                        >
                             <FontAwesomeIcon
                                 icon={faArrowsRotate as IconDefinition}
-                            /> Restart
+                            />{" "}
+                            Restart
                         </Button>
                     </div>
                     <Xterm
                         ref={xtermRef}
-                        onData={(data) => controllerService?.serialPort?.write(Buffer.from(data))}
+                        onData={(data) =>
+                            controllerService?.serialPort?.write(
+                                Buffer.from(data)
+                            )
+                        }
                         options={{
                             cursorBlink: true,
-                            convertEol: true,
+                            convertEol: true
                         }}
                     />
                 </>

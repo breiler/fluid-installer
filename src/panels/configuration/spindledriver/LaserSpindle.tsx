@@ -5,7 +5,6 @@ import { Config, PinConfig } from "../../../model/Config";
 import BooleanField from "../fields/BooleanField";
 import PinField from "../fields/PinField";
 import TextField from "../fields/TextField";
-import { isNumberObject } from "util/types";
 
 type LaserSpindleProps = {
     board: Board;
@@ -20,7 +19,7 @@ const LaserSpindle = ({
     setValue,
     updateSpindleDriverValue
 }: LaserSpindleProps) => {
-    console.log("Value: " + config?.Laser?.tool_num)
+    console.log("Value: " + config?.Laser?.tool_num);
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>Laser</h4>
@@ -29,7 +28,7 @@ const LaserSpindle = ({
                 label="Include"
                 checked={!!config?.Laser}
                 onChange={() => {
-                    if (!!config?.Laser) {
+                    if (config?.Laser) {
                         setValue({
                             Laser: undefined
                         });
@@ -38,7 +37,8 @@ const LaserSpindle = ({
                             Laser: {}
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {config?.Laser && (
                 <>
@@ -109,13 +109,18 @@ const LaserSpindle = ({
 
                     <TextField
                         label="Tool number"
-                        value={Number.isNaN(config.Laser.tool_num) || !config.Laser.tool_num ? 0 : config.Laser.tool_num}
-                        setValue={(value) => 
-                                updateSpindleDriverValue({
-                                    Laser: {
-                                        tool_num: Number(value)
-                                    }
-                                })
+                        value={
+                            Number.isNaN(config.Laser.tool_num) ||
+                            !config.Laser.tool_num
+                                ? 0
+                                : config.Laser.tool_num
+                        }
+                        setValue={(value) =>
+                            updateSpindleDriverValue({
+                                Laser: {
+                                    tool_num: Number(value)
+                                }
+                            })
                         }
                     />
 

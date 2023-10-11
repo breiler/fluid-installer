@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Config } from "../../model/Config";
-import { Container, Nav, Tab } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import TextField from "./fields/TextField";
 import SelectField from "./fields/SelectField";
 import jsYaml from "js-yaml";
@@ -36,7 +36,6 @@ type ConfigurationProps = {
 
 const Configuration = ({
     currentTab = ConfigurationTab.GENERAL,
-    onClose,
     value,
     onChange
 }: ConfigurationProps) => {
@@ -49,7 +48,7 @@ const Configuration = ({
     const appendConfig = (conf) => {
         const newConfig = deepMerge(config, conf);
         setConfig(newConfig);
-        
+
         // No compat mode will not try to quote 'y'
         onChange(jsYaml.dump(newConfig, { noCompatMode: true }), false);
     };
@@ -124,7 +123,7 @@ const Configuration = ({
                     <I2CGroup
                         board={Boards[0]}
                         i2c={config.i2c0}
-                        setValue={(i2c) => appendConfig({i2c0: i2c})}
+                        setValue={(i2c) => appendConfig({ i2c0: i2c })}
                     />
 
                     <SPIGroup
@@ -142,13 +141,13 @@ const Configuration = ({
                     <OLEDGroup
                         board={Boards[0]}
                         oled={config.oled}
-                        setValue={(oled) => appendConfig({oled})}
+                        setValue={(oled) => appendConfig({ oled })}
                     />
 
                     <ControlGroup
                         board={Boards[0]}
                         control={config.control}
-                        setValue={(control) => appendConfig({control})}
+                        setValue={(control) => appendConfig({ control })}
                     />
                 </Container>
             )}

@@ -10,7 +10,10 @@ type TerminalCardProps = {
     onClick: () => void;
 };
 
-export const TerminalCard = ({ disabled = false, onClick }) => {
+export const TerminalCard = ({
+    disabled = false,
+    onClick
+}: TerminalCardProps) => {
     return (
         <Card
             className="select-card"
@@ -18,7 +21,8 @@ export const TerminalCard = ({ disabled = false, onClick }) => {
                 <Button onClick={onClick} disabled={disabled}>
                     <>Open terminal</>
                 </Button>
-            }>
+            }
+        >
             <div className="select-icon">
                 <FontAwesomeIcon
                     icon={faTerminal as IconDefinition}
@@ -29,4 +33,3 @@ export const TerminalCard = ({ disabled = false, onClick }) => {
         </Card>
     );
 };
-

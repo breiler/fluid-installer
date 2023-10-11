@@ -16,8 +16,8 @@ type Props = {
     disabled?: boolean;
     onClick?: MouseEventHandler;
     children?: ReactElement | ReactElement[];
-    buttonType?: any;
-    style?: any;
+    buttonType?: string;
+    style?: React.CSSProperties;
 };
 
 const Button = ({
@@ -40,7 +40,8 @@ const Button = ({
             }
             type="button"
             onClick={onClick}
-            disabled={disabled}>
+            disabled={disabled}
+        >
             <>
                 {loading && <Spinner />}
                 {children}

@@ -12,22 +12,23 @@ type I2C0Props = {
 
 const I2C0Group = ({ board, i2c, setValue }: I2C0Props) => {
     return (
-        <div style={{marginBottom: "48px"}}>
+        <div style={{ marginBottom: "48px" }}>
             <h4>I2C</h4>
             <Form.Check
                 type="switch"
                 label="Include"
                 checked={!!i2c}
                 onChange={() => {
-                    if (!!i2c) {
+                    if (i2c) {
                         setValue(undefined);
                     } else {
                         setValue({
                             sda_pin: Pin.GPIO_14,
-                            scl_pin: Pin.GPIO_13,
+                            scl_pin: Pin.GPIO_13
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {i2c && (
                 <>

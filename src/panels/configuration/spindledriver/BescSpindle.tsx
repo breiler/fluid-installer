@@ -27,7 +27,7 @@ const BescSpindle = ({
                 label="Include"
                 checked={!!config?.besc}
                 onChange={() => {
-                    if (!!config?.besc) {
+                    if (config?.besc) {
                         setValue({
                             besc: undefined
                         });
@@ -36,7 +36,8 @@ const BescSpindle = ({
                             besc: {}
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {config?.besc && (
                 <>

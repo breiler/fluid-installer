@@ -7,7 +7,14 @@
         "prebuild": "rm -rf dist",
         "start": "parcel",
         "build": "parcel build --public-url .",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepare": "husky install"
+    },
+    "lint-staged": {
+        "./src/**/*.{js,jsx,ts,tsx}": [
+            "npx prettier --write",
+            "npx eslint --fix"
+        ]
     },
     "repository": {
         "type": "git",
@@ -24,8 +31,15 @@
         "@parcel/transformer-yaml": "^2.9.1",
         "@types/gtag.js": "^0.0.13",
         "@types/node": "^20.2.5",
+        "@typescript-eslint/eslint-plugin": "^6.7.5",
+        "@typescript-eslint/parser": "^6.7.5",
         "buffer": "^5.5.0",
+        "eslint": "^8.51.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-plugin-react": "^7.33.2",
         "events": "^3.3.0",
+        "husky": "^8.0.0",
+        "lint-staged": "^14.0.1",
         "parcel": "^2.9.1",
         "parcel-reporter-static-files-copy": "^1.5.2",
         "prettier": "2.8.4",

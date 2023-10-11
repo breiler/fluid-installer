@@ -27,7 +27,7 @@ const PwmSpindle = ({
                 label="Include"
                 checked={!!config?.PWM}
                 onChange={() => {
-                    if (!!config?.PWM) {
+                    if (config?.PWM) {
                         setValue({
                             PWM: undefined
                         });
@@ -36,7 +36,8 @@ const PwmSpindle = ({
                             PWM: {}
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {config?.PWM && (
                 <>

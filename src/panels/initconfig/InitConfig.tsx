@@ -1,30 +1,38 @@
-import React, { MouseEventHandler, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
-import { GetConfigFilenameCommand, ListFilesCommand } from "../../services/controllerservice";
+import {
+    GetConfigFilenameCommand,
+    ListFilesCommand
+} from "../../services/controllerservice";
 
-type Props = {
-    onContinue: MouseEventHandler;
-};
-const InitConfig = ({ onContinue }: Props) => {
+const InitConfig = () => {
     const controllerService = useContext(ControllerServiceContext);
     const [configFilename, setConfigFilename] = useState<string>("");
     const [configExists, setConfigExists] = useState<boolean>(false);
 
     useEffect(() => {
-        if(!controllerService) {
+        if (!controllerService) {
             return;
         }
 
         controllerService.connect().then(async () => {
-            let command = await controllerService.send(new GetConfigFilenameCommand());
-            setConfigFilename(command.getFilename())
-            
-            let listFiles = await controllerService.send(new ListFilesCommand());
-            setConfigExists(!!listFiles.getFiles().find(file => file.name === command.getFilename()));
+            const command = await controllerService.send(
+                new GetConfigFilenameCommand()
+            );
+            setConfigFilename(command.getFilename());
+
+            const listFiles = await controllerService.send(
+                new ListFilesCommand()
+            );
+            setConfigExists(
+                !!listFiles
+                    .getFiles()
+                    .find((file) => file.name === command.getFilename())
+            );
 
             controllerService.disconnect();
         });
-    }, [controllerService])
+    }, [controllerService]);
 
     return (
         <>

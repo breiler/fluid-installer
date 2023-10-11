@@ -14,7 +14,7 @@ type TextFieldProps = {
 const TextField = ({
     label,
     value,
-    setValue = (value) => { },
+    setValue = () => {},
     placeholder = "",
     unit,
     maxLength = 80,

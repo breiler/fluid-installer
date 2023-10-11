@@ -1,17 +1,15 @@
 import React, { useContext, useState } from "react";
-
-import Progress from "../../panels/progress/Progress";
-import Done from "../../panels/done/Done";
-import Firmware from "../../panels/firmware/Firmware";
-import { FirmwareChoice, GithubRelease, GithubReleaseManifest } from "../../services/GitHubService";
-import { InstallService, InstallerState } from "../../services/InstallService";
-import { FlashProgress } from "../../services/FlashService";
-import { ControllerServiceContext } from "../../context/ControllerServiceContext";
-import { ControllerStatus } from "../../services/controllerservice/ControllerService";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan } from "@fortawesome/free-solid-svg-icons";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import InstallerModal from "../../components/installermodal/InstallerModal";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import Firmware from "../../panels/firmware/Firmware";
+import { FlashProgress } from "../../services/FlashService";
+import {
+    FirmwareChoice,
+    GithubRelease,
+    GithubReleaseManifest
+} from "../../services/GitHubService";
+import { InstallService, InstallerState } from "../../services/InstallService";
+import { ControllerStatus } from "../../services/controllerservice/ControllerService";
 
 const initialProgress: FlashProgress = {
     fileIndex: 0,
@@ -56,9 +54,11 @@ const Installer = ({ onClose }: InstallerProps) => {
         });
 
         try {
-            let status = await controllerService?.connect();
+            const status = await controllerService?.connect();
             if (status !== ControllerStatus.CONNECTED) {
-                setErrorMessage("An error occured while reconnecting, please reboot the controller");
+                setErrorMessage(
+                    "An error occured while reconnecting, please reboot the controller"
+                );
                 setState(InstallerState.ERROR);
             }
 
@@ -73,7 +73,14 @@ const Installer = ({ onClose }: InstallerProps) => {
 
     return (
         <>
-            {state !== InstallerState.SELECT_PACKAGE && (<InstallerModal state={state} errorMessage={errorMessage} progress={progress} onClose={onClose} />)}
+            {state !== InstallerState.SELECT_PACKAGE && (
+                <InstallerModal
+                    state={state}
+                    errorMessage={errorMessage}
+                    progress={progress}
+                    onClose={onClose}
+                />
+            )}
             <Firmware onInstall={onInstall} />
         </>
     );

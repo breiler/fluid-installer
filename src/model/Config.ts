@@ -35,7 +35,7 @@ export type Config = {
     axes?: Axes;
 
     i2so?: I2ISO;
-    i2c0?: I2C0Config
+    i2c0?: I2C0Config;
     spi?: SPI;
     sdcard?: SDCard;
     coolant?: Coolant;
@@ -427,7 +427,9 @@ export type SpindleDriverRelay = {
     off_on_alarm?: boolean;
 };
 
-export type SpindleDriverNoSpindle = {};
+export type SpindleDriverNoSpindle = {
+    description?: string;
+};
 
 export type Uart = {
     txd_pin?: string;
@@ -438,17 +440,17 @@ export type Uart = {
 };
 
 export type I2C0Config = {
-    sda_pin?: string,
-    scl_pin?: string
-}
+    sda_pin?: string;
+    scl_pin?: string;
+};
 
 export type OLEDConfig = {
     i2c_num?: number;
     i2c_address: number;
     width?: number;
-    height?: number
+    height?: number;
     radio_delay_ms: number;
-}
+};
 
 export type ControlConfig = {
     safety_door_pin?: string;
@@ -461,7 +463,7 @@ export type ControlConfig = {
     macro3_pin?: string;
     fault_pin?: string;
     estop_pin?: string;
-}
+};
 
 export class PinConfig {
     constructor(
@@ -478,7 +480,7 @@ export class PinConfig {
     public pull: string = PinPull.NONE;
     public active: string = PinActive.HIGH;
 
-    static fromString(pin: string | undefined): PinConfig | undefined{
+    static fromString(pin: string | undefined): PinConfig | undefined {
         if (!pin) {
             return undefined;
         }

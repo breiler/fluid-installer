@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Button from "../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation, faDownload, faExclamation, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
@@ -22,8 +22,7 @@ export const InstallCard = ({
     useEffect(() => {
         if (!controllerService) return;
         controllerService.getStats().then(setStats);
-    }, [controllerService])
-
+    }, [controllerService]);
 
     return (
         <Card className="select-card">
@@ -35,13 +34,13 @@ export const InstallCard = ({
                     />
                 </div>
 
-                {stats?.version && <p>
-                    Upgrade FluidNC on your controller
-                </p>}
-                {!stats?.version && <p>
-                    The controller doesn't seem to have FluidNC installed, do you wish to install it?
-                </p>}
-
+                {stats?.version && <p>Upgrade FluidNC on your controller</p>}
+                {!stats?.version && (
+                    <p>
+                        The controller does not seem to have FluidNC installed,
+                        do you wish to install it?
+                    </p>
+                )}
             </Card.Body>
 
             <Card.Footer>

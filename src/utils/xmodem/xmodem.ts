@@ -22,7 +22,7 @@ const ERROR_CHECKSUM = "Checksum error";
 const ERROR_COULD_NOT_DOWNLOAD = "Could not download!";
 const ERROR_COULD_NOT_UPLOAD = "Could not upload!";
 
-var crcTable = [
+const crcTable = [
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7, 0x8108,
     0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef, 0x1231, 0x0210,
     0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6, 0x9339, 0x8318, 0xb37b,
@@ -55,7 +55,7 @@ var crcTable = [
 ];
 
 const crc16 = (buffer: Buffer) => {
-    var crc = 0x0000;
+    let crc = 0x0000;
 
     buffer.forEach((value) => {
         crc = ((crc << 8) ^ crcTable[(crc >> 8) ^ (0xff & value)]) & 0xffff;
@@ -92,10 +92,11 @@ export class XModem {
         let transmissionStartErrors = 0;
         while (transmissionStartErrors < this.maxTransmissionRestarts) {
             startByte = (await this.socket.read()).at(0);
-            if (startByte === NAK || startByte === EOT) throw ERROR_COULD_NOT_UPLOAD;
+            if (startByte === NAK || startByte === EOT)
+                throw ERROR_COULD_NOT_UPLOAD;
             else if (startByte === CRC_MODE) {
                 break;
-            } 
+            }
             transmissionStartErrors++;
             await new Promise((r) => setTimeout(r, 100));
         }
@@ -114,7 +115,7 @@ export class XModem {
                 ]);
             }
 
-            let crcHexString = crc16Hex(blockData);
+            const crcHexString = crc16Hex(blockData);
 
             let errorCount = 0;
             let blockDone = false;
@@ -161,13 +162,12 @@ export class XModem {
             this.socket.write(Buffer.from([EOT]));
             await new Promise((r) => setTimeout(r, 100));
 
-            let readByte = (await this.socket.read()).at(0);
+            const readByte = (await this.socket.read()).at(0);
             if (readByte == ACK) {
                 break;
             } else if (readByte == CAN) {
                 throw ERROR_COULD_NOT_UPLOAD;
             }
-
         }
     }
 
@@ -324,5 +324,5 @@ const trimBuffer = (result: Buffer): Buffer => {
         i--;
     }
 
-    return result.subarray(0, i+1);
+    return result.subarray(0, i + 1);
 };

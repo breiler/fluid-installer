@@ -12,14 +12,14 @@ type SPIProps = {
 
 const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
     return (
-        <div style={{marginBottom: "48px"}}>
+        <div style={{ marginBottom: "48px" }}>
             <h4>I2SO</h4>
             <Form.Check
                 type="switch"
                 label="Include"
                 checked={!!i2so}
                 onChange={() => {
-                    if (!!i2so) {
+                    if (i2so) {
                         setValue(undefined);
                     } else {
                         setValue({
@@ -28,7 +28,8 @@ const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
                             ws_pin: Pin.GPIO_17
                         });
                     }
-                }}></Form.Check>
+                }}
+            ></Form.Check>
 
             {i2so && (
                 <>

@@ -18,7 +18,7 @@ type SelectFieldProps = {
 const SelectField = ({
     label,
     value,
-    setValue = (value: string) => {},
+    setValue = () => {},
     options = [],
     placeholder = "",
     helpText
@@ -32,7 +32,8 @@ const SelectField = ({
                 <Form.Select
                     aria-label={placeholder}
                     onChange={(event) => setValue(event.target.value)}
-                    value={value}>
+                    value={value}
+                >
                     {value &&
                         !options.find((option) => option.value === value) && (
                             <option key={value} id={value} value={value}>
@@ -43,7 +44,8 @@ const SelectField = ({
                         <option
                             key={option.value}
                             id={option.value}
-                            value={option.value}>
+                            value={option.value}
+                        >
                             {option.name}
                         </option>
                     ))}

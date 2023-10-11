@@ -9,10 +9,7 @@ export const isSafari = () => {
 };
 
 export const isFirefox = () => {
-    return (
-        navigator.userAgent &&
-        navigator.userAgent.indexOf("Firefox") > -1
-    );
+    return navigator.userAgent && navigator.userAgent.indexOf("Firefox") > -1;
 };
 
 export const checkConnection = async (serialPortDevice) => {
@@ -29,9 +26,9 @@ export const checkConnection = async (serialPortDevice) => {
 export const convertUint8ArrayToBinaryString = (
     u8Array: Uint8Array
 ): string => {
-    var i,
-        len = u8Array.length,
-        b_str = "";
+    let i;
+    const len = u8Array.length;
+    let b_str = "";
     for (i = 0; i < len; i++) {
         b_str += String.fromCharCode(u8Array[i]);
     }
@@ -75,5 +72,5 @@ export const deepMerge = (target: Props, ...sources: Props[]): Props => {
 };
 
 export const sleep = (milliseconds: number) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};

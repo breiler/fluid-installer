@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import { Axis } from "../../../model/Config";
 import TextField from "../fields/TextField";
 import MotorGroup from "./MotorGroup";
@@ -18,12 +18,12 @@ const DEFAULT_CONFIG: Axis = {
     max_rate_mm_per_min: 1000,
     acceleration_mm_per_sec2: 25,
     max_travel_mm: 1000
-}
+};
 
 const AxisGroup = ({
     axisLabel,
     axis,
-    setValue = (axis?: Axis) => {}
+    setValue = () => {}
 }: SelectFieldProps) => (
     <>
         <h4>{axisLabel}-axis</h4>
@@ -33,12 +33,13 @@ const AxisGroup = ({
             label="Include"
             checked={!!axis}
             onChange={() => {
-                if (!!axis) {
+                if (axis) {
                     setValue(undefined);
                 } else {
                     setValue(DEFAULT_CONFIG);
                 }
-            }}></Form.Check>
+            }}
+        ></Form.Check>
         <br />
         <br />
 

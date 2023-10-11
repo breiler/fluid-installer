@@ -53,18 +53,22 @@ const Configuration = ({
         onChange(jsYaml.dump(newConfig, { noCompatMode: true }), false);
     };
 
-    const updateValue = (value) => {
+    const updateValue = (value: string) => {
+        // Workaround for values beginning with # (should not be treated as comments)
+        const regexp = /^(.*:\s*)(#\S.*)$/gm;
+        const transformedValue = value.replace(regexp, '$1"$2"');
+
         try {
-            const data = jsYaml.load(value);
+            const data = jsYaml.load(transformedValue);
             setConfig((config) => {
                 return {
                     ...config,
                     ...data
                 };
             });
-            onChange(value, false);
+            onChange(transformedValue, false);
         } catch (error) {
-            onChange(value, true);
+            onChange(transformedValue, true);
         }
     };
 

@@ -71,7 +71,10 @@ export const InstallService = {
             files = await GithubService.getImageFiles(release, images);
         } catch (error) {
             if (window.gtag) {
-                window.gtag('event', 'install', { version: release.name, success: false });
+                window.gtag("event", "install", {
+                    version: release.name,
+                    success: false
+                });
             }
             console.error(error);
             onState(InstallerState.ERROR);
@@ -83,7 +86,10 @@ export const InstallService = {
             validateImageSignatures(images, files);
         } catch (error) {
             if (window.gtag) {
-                window.gtag('event', 'install', { version: release.name, success: false });
+                window.gtag("event", "install", {
+                    version: release.name,
+                    success: false
+                });
             }
             onState(InstallerState.ERROR);
             throw error;
@@ -99,11 +105,21 @@ export const InstallService = {
                 onState
             );
             if (window.gtag) {
-                window.gtag('event', 'install', { version: release.name, success: true });
+                window.gtag("event", "install", {
+                    version: release.name,
+                    success: true
+                });
+            } else {
+                console.log(
+                    "Google analytics not available, can not report install success"
+                );
             }
         } catch (error) {
             if (window.gtag) {
-                window.gtag('event', 'install', { version: release.name, success: false });
+                window.gtag("event", "install", {
+                    version: release.name,
+                    success: false
+                });
             }
             console.error(error);
             onState(InstallerState.ERROR);
@@ -120,11 +136,11 @@ function validateImageSignatures(images: FirmwareImage[], files: string[]) {
             if (image.signature.value !== signature) {
                 console.error(
                     "The image " +
-                    image.path +
-                    " is possible corrupt. Signature was " +
-                    signature +
-                    " but manifest says " +
-                    image.signature.value
+                        image.path +
+                        " is possible corrupt. Signature was " +
+                        signature +
+                        " but manifest says " +
+                        image.signature.value
                 );
                 throw (
                     "The image " +
@@ -136,9 +152,9 @@ function validateImageSignatures(images: FirmwareImage[], files: string[]) {
             throw (
                 "The image " +
                 image.path +
-                " has an unknown signature algorithm: " + image.signature.algorithm
+                " has an unknown signature algorithm: " +
+                image.signature.algorithm
             );
         }
     });
 }
-

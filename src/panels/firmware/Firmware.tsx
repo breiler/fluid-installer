@@ -11,6 +11,7 @@ import "./Firmware.scss";
 import Choice from "../../components/choice";
 import { Markdown } from "../../components/markdown/Markdown";
 import PageTitle from "../../components/pagetitle/PageTitle";
+import FirmwareBreadCrumbList from "./FirmwareBreadcrumbList";
 
 type Props = {
     onInstall: (
@@ -40,12 +41,16 @@ const Firmware = ({ onInstall }: Props) => {
         setSelectedRelease(release);
 
         if (release) {
-            GithubService.getReleaseManifest(release).then((manifest) => {
-                setReleaseManifest(manifest);
-                setSelectedChoices([manifest.installable]);
-            }).catch(error => {
-                setErrorMessage("Could not download the release asset " + error);
-            });
+            GithubService.getReleaseManifest(release)
+                .then((manifest) => {
+                    setReleaseManifest(manifest);
+                    setSelectedChoices([manifest.installable]);
+                })
+                .catch((error) => {
+                    setErrorMessage(
+                        "Could not download the release asset " + error
+                    );
+                });
         }
     };
 
@@ -91,9 +96,8 @@ const Firmware = ({ onInstall }: Props) => {
                     </p>
                     <select
                         className="form-select form-select-lg mb-3"
-                        onChange={(event) =>
-                            chooseFirmware(event.target.value)
-                        }>
+                        onChange={(event) => chooseFirmware(event.target.value)}
+                    >
                         {!releases?.length && <option>Loading...</option>}
                         {releases.map((release) => (
                             <option key={release.id} value={release.id}>
@@ -109,43 +113,10 @@ const Firmware = ({ onInstall }: Props) => {
                     {choice && releaseManifest && !choice.images && (
                         <>
                             <Card className="text-bg-light card">
-                                {selectedChoices.length > 1 && (
-                                    <>
-                                        <nav aria-label="breadcrumb">
-                                            <ol className="breadcrumb">
-                                                {selectedChoices.map(
-                                                    (choice) => (
-                                                        <li
-                                                            className="breadcrumb-item"
-                                                            key={choice.name}>
-                                                            <a
-                                                                href="#"
-                                                                onClick={() => {
-                                                                    setSelectedChoices(
-                                                                        (
-                                                                            choices
-                                                                        ) => [
-                                                                                ...choices.splice(
-                                                                                    0,
-                                                                                    choices.indexOf(
-                                                                                        choice
-                                                                                    ) +
-                                                                                    1
-                                                                                )
-                                                                            ]
-                                                                    );
-                                                                }}>
-                                                                {choice.name}
-                                                            </a>
-                                                        </li>
-                                                    )
-                                                )}
-                                            </ol>
-                                        </nav>
-                                        <hr />
-                                    </>
-                                )}
-
+                                <FirmwareBreadCrumbList
+                                    selectedChoices={selectedChoices}
+                                    setSelectedChoices={setSelectedChoices}
+                                />
                                 <Choice choice={choice} onSelect={onSelect} />
                             </Card>
                         </>

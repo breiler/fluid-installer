@@ -73,7 +73,8 @@ export const InstallService = {
         } catch (error) {
             gtag("event", "install", {
                 version: release.name,
-                success: false
+                success: false,
+                error: error
             });
 
             console.error(error);
@@ -87,7 +88,8 @@ export const InstallService = {
         } catch (error) {
             gtag("event", "install", {
                 version: release.name,
-                success: false
+                success: false,
+                error: error
             });
 
             onState(InstallerState.ERROR);
@@ -111,7 +113,8 @@ export const InstallService = {
         } catch (error) {
             gtag("event", "install", {
                 version: release.name,
-                success: false
+                success: false,
+                error: error
             });
 
             console.error(error);

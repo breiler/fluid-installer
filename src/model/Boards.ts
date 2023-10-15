@@ -5,7 +5,7 @@ export type Board = {
     pins: PinDefinition[];
 };
 
-export const Boards : Board[]= [
+export const Boards: Board[] = [
     {
         name: "6 Pack",
         pins: [
@@ -14,7 +14,7 @@ export const Boards : Board[]= [
                 input: true,
                 pull: false,
                 output: true,
-                restricted: false,
+                restricted: false
             },
             {
                 pin: Pin.GPIO_0,
@@ -115,7 +115,7 @@ export const Boards : Board[]= [
                 input: true,
                 pull: false,
                 output: true,
-                restricted: true,
+                restricted: false,
                 comment: "It is a strapping pin."
             },
             {

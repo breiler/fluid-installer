@@ -22,5 +22,10 @@
         "no-constant-condition": "off",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-unnecessary-type-constraint": "off"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }

@@ -15,7 +15,7 @@ export type FlashProgress = {
     fileName: string;
 
     /**
-     * 
+     *
      */
     fileProgress: number;
 };

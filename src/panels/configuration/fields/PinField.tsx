@@ -22,12 +22,16 @@ const PinField = ({
 }: SelectFieldProps) => {
     const [pin, setPin] = useState<string | undefined>(value?.pin);
     const [pull, setPull] = useState<string | undefined>(value?.pull);
-    const [active, setActive] = useState<string | undefined>(
-        value?.active
-    );
+    const [active, setActive] = useState<string | undefined>(value?.active);
 
     useEffect(() => {
-        setValue(new PinConfig(pin ?? Pin.NO_PIN, pull ?? PinPull.NONE, active ?? PinActive.HIGH));
+        setValue(
+            new PinConfig(
+                pin ?? Pin.NO_PIN,
+                pull ?? PinPull.NONE,
+                active ?? PinActive.HIGH
+            )
+        );
     }, [pin, pull, active]);
 
     const boardPinConfig = board.pins.find((boardPin) => boardPin.pin === pin);
@@ -42,18 +46,19 @@ const PinField = ({
                     <Form.Select
                         aria-label={placeholder}
                         onChange={(event) => setPin(event.target.value)}
-                        value={pin ?? Pin.NO_PIN}>
+                        value={pin ?? Pin.NO_PIN}
+                    >
                         {board.pins.map((option) => (
                             <option
                                 key={option.pin}
                                 id={option.pin}
                                 value={option.pin}
-                                disabled={option.restricted}>
+                                disabled={option.restricted}
+                            >
                                 {option.pin}{" "}
                                 {!option.pull &&
                                     option.pin !== Pin.NO_PIN &&
                                     "- pull unavailable"}
-
                             </option>
                         ))}
                     </Form.Select>
@@ -61,20 +66,23 @@ const PinField = ({
                         <Form.Select
                             aria-label="Pulling resistor"
                             value={pull + ""}
-                            onChange={(event) => setPull(event.target.value)}>
+                            onChange={(event) => setPull(event.target.value)}
+                        >
                             <option key={"none"} id={"none"} value="">
                                 No pull
                             </option>
                             <option
                                 key={PinPull.UP}
                                 id={PinPull.UP}
-                                value={PinPull.UP}>
+                                value={PinPull.UP}
+                            >
                                 Pull up
                             </option>
                             <option
                                 key={PinPull.DOWN}
                                 id={PinPull.DOWN}
-                                value={PinPull.DOWN}>
+                                value={PinPull.DOWN}
+                            >
                                 Pull down
                             </option>
                         </Form.Select>

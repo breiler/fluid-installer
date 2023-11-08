@@ -63,7 +63,11 @@ export const GithubService = {
                 return (
                     releases
                         //.filter((release) => !release.draft && !release.prerelease)
-                        .filter((release) => new Date(release.created_at) > new Date("2023-06-08T21:23:04Z"))
+                        .filter(
+                            (release) =>
+                                new Date(release.created_at) >
+                                new Date("2023-06-08T21:23:04Z")
+                        )
                         .filter((release) =>
                             release.assets.filter(
                                 (asset) =>
@@ -78,7 +82,7 @@ export const GithubService = {
     getReleaseManifest: (
         release: GithubRelease
     ): Promise<GithubReleaseManifest> => {
-        const manifestBaseUrl =  RESOURCES_BASE_URL + "/" + release.name;
+        const manifestBaseUrl = RESOURCES_BASE_URL + "/" + release.name;
         const manifestUrl = manifestBaseUrl + "/manifest.json";
 
         return fetch(manifestUrl, {

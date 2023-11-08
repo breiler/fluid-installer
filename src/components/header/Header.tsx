@@ -16,7 +16,8 @@ const Header = () => (
             <div className="navbar-nav">
                 <a
                     className="nav-link active"
-                    href="https://github.com/breiler/fluid-installer">
+                    href="https://github.com/breiler/fluid-installer"
+                >
                     Github <FontAwesomeIcon icon={faGithub as IconDefinition} />
                 </a>
             </div>

@@ -6,7 +6,6 @@ import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Alert } from "react-bootstrap";
 
-
 const BOOLOADER_WARNING_TIMEOUT = 8000;
 
 const BootloaderInfo = () => {
@@ -22,18 +21,22 @@ const BootloaderInfo = () => {
     return (
         <>
             <PageTitle>Installing</PageTitle>
-            {!showBootloaderWarning && <p>Waiting for controller to enter bootloader... <Spinner /></p>}
-            {showBootloaderWarning &&
+            {!showBootloaderWarning && (
+                <p>
+                    Waiting for controller to enter bootloader... <Spinner />
+                </p>
+            )}
+            {showBootloaderWarning && (
                 <Alert variant="warning">
-                    <FontAwesomeIcon icon={faWarning as IconDefinition} size="lg" /> Bootloader not active - Try holding down the BOOT switch
+                    <FontAwesomeIcon
+                        icon={faWarning as IconDefinition}
+                        size="lg"
+                    />{" "}
+                    Bootloader not active - Try holding down the BOOT switch
                 </Alert>
-            }
-
+            )}
         </>
     );
 };
 
 export default BootloaderInfo;
-
-
-

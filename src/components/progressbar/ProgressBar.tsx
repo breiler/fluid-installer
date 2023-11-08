@@ -13,7 +13,8 @@ const ProgressBar = ({ maxValue, currentValue }: Props) => {
             <div
                 className="progress-bar"
                 role="progressbar"
-                style={{ width: percentage + "%" }}>
+                style={{ width: percentage + "%" }}
+            >
                 {percentage + "%"}
             </div>
         </div>

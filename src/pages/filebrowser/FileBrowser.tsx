@@ -156,6 +156,8 @@ const FileBrowser = () => {
             const input = document.createElement("input");
             input.type = "file";
             input.multiple = true;
+
+            // eslint-disable-next-line
             input.onchange = async (e: any) => {
                 setIsUploading(true);
                 const files = e?.target?.files ?? [];

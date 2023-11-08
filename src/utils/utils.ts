@@ -35,7 +35,7 @@ export const convertUint8ArrayToBinaryString = (
     return b_str;
 };
 
-type Props = Record<string, any>;
+type Props = Record<string, any>; // eslint-disable-line
 
 export const deepMerge = (target: Props, ...sources: Props[]): Props => {
     if (!sources.length) {

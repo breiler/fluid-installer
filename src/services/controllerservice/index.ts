@@ -5,6 +5,15 @@ import { GetConfigFilenameCommand } from "./commands/GetConfigFilenameCommand";
 import { ListFilesCommand } from "./commands/ListFilesCommand";
 import { SetConfigFilenameCommand } from "./commands/SetConfigFilenameCommand";
 import type { ControllerFile } from "./types";
-import { ControllerStatus } from "./ControllerService"
+import { ControllerStatus } from "./ControllerService";
 
-export { ControllerService, Command, DeleteFileCommand, GetConfigFilenameCommand, ListFilesCommand, ControllerFile, SetConfigFilenameCommand, ControllerStatus };
+export {
+    ControllerService,
+    Command,
+    DeleteFileCommand,
+    GetConfigFilenameCommand,
+    ListFilesCommand,
+    ControllerFile,
+    SetConfigFilenameCommand,
+    ControllerStatus
+};

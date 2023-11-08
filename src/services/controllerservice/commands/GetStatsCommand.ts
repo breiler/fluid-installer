@@ -13,7 +13,7 @@ export type Stats = {
     ssid?: string;
     wifiMode?: string;
     wifiSignal?: string;
-}
+};
 
 export class GetStatsCommand extends Command {
     constructor() {
@@ -33,12 +33,13 @@ export class GetStatsCommand extends Command {
             signal: this.getParam("Signal: "),
             ssid: this.getParam("Connected to: "),
             wifiMode: this.getParam("Current WiFi Mode: "),
-            wifiSignal: this.getParam("Signal: "),
-        }
+            wifiSignal: this.getParam("Signal: ")
+        };
     }
 
     getParam(param: string): string | undefined {
-        return this.response.find((line) => line.indexOf(param) === 0)?.substring(param.length);
+        return this.response
+            .find((line) => line.indexOf(param) === 0)
+            ?.substring(param.length);
     }
-
 }

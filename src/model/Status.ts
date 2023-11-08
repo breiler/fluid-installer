@@ -6,7 +6,7 @@ export enum Status {
     EXTRACTING = "extracting",
     FLASHING = "flashing",
     DONE = "done",
-    ERROR = "error",
+    ERROR = "error"
 }
 
 export default Status;

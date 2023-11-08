@@ -33,7 +33,8 @@ const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
                     paddingLeft: "0px",
                     paddingRight: "0px",
                     borderBottomStyle: "none"
-                }}>
+                }}
+            >
                 <ConfigurationTabs
                     currentTab={tab}
                     onChange={setTab}
@@ -72,7 +73,8 @@ const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
                             .finally(() => {
                                 setIsSaving(false);
                             });
-                    }}>
+                    }}
+                >
                     <>
                         {!isSaving && (
                             <FontAwesomeIcon

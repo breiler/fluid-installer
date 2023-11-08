@@ -1,4 +1,5 @@
-const config = "board: 6 Pack\r\
+const config =
+    "board: 6 Pack\r\
 name: 6 Pack External XYZ HBridgeSpindle\r\
 meta:\r\
 \r\

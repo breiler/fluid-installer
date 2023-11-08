@@ -19,7 +19,7 @@ export const espLoaderTerminal = {
 };
 
 export const flashDevice = async (
-    serialPort : NativeSerialPort,
+    serialPort: NativeSerialPort,
     files,
     erase: boolean,
     onProgress: (progress: FlashProgress) => void,
@@ -32,8 +32,8 @@ export const flashDevice = async (
         const loaderOptions = {
             transport,
             baudrate: FLASH_BAUD_RATE,
-            terminal: terminal,
-          } as LoaderOptions;
+            terminal: terminal
+        } as LoaderOptions;
         const loader = new ESPLoader(loaderOptions);
         await loader!.main_fn();
 
@@ -54,8 +54,9 @@ export const flashDevice = async (
                     fileProgress: Math.round((written / total) * 100)
                 });
             },
-            calculateMD5Hash: (image) => CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image)),
-          } as FlashOptions;
+            calculateMD5Hash: (image) =>
+                CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image))
+        } as FlashOptions;
         await loader!.write_flash(flashOptions);
     } finally {
         onState(InstallerState.RESTARTING);
@@ -63,11 +64,11 @@ export const flashDevice = async (
         // Reset the controller
         await transport.setDTR(false);
         await transport.setRTS(true);
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 100));
         await transport.setDTR(true);
-        await new Promise(r => setTimeout(r, 50));
+        await new Promise((r) => setTimeout(r, 50));
         await transport.disconnect();
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 1000));
     }
     return Promise.resolve();
 };

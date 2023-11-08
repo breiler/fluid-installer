@@ -8,12 +8,14 @@
         "start": "parcel",
         "build": "parcel build --public-url .",
         "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint ./src --fix --max-warnings=0",
+        "format": "prettier ./src --write",
         "prepare": "husky install"
     },
     "lint-staged": {
         "**/*.{js,jsx,ts,tsx}": [
-            "npx prettier --write",
-            "npx eslint --fix"
+            "npm run format",
+            "npm run lint"
         ]
     },
     "repository": {

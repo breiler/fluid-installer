@@ -17,11 +17,13 @@ import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
 import PageTitle from "./components/pagetitle/PageTitle";
 
-
 const App = () => {
     const navigate = useNavigate();
-    const [controllerService, setControllerService] = useState<ControllerService>();
-    const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(ControllerStatus.DISCONNECTED);
+    const [controllerService, setControllerService] =
+        useState<ControllerService>();
+    const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(
+        ControllerStatus.DISCONNECTED
+    );
 
     useEffect(() => {
         controllerService?.addListener((status) => {
@@ -35,12 +37,20 @@ const App = () => {
 
     return (
         <>
-            <Modal show={controllerStatus === ControllerStatus.CONNECTION_LOST} size="sm" scrollable={true} centered={false}>
-                <Modal.Body>
-                    Lost the connection to the controller
-                </Modal.Body>
+            <Modal
+                show={controllerStatus === ControllerStatus.CONNECTION_LOST}
+                size="sm"
+                scrollable={true}
+                centered={false}
+            >
+                <Modal.Body>Lost the connection to the controller</Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={() => { setControllerService(undefined); setControllerStatus(ControllerStatus.DISCONNECTED); }}>
+                    <Button
+                        onClick={() => {
+                            setControllerService(undefined);
+                            setControllerStatus(ControllerStatus.DISCONNECTED);
+                        }}
+                    >
                         <>
                             <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}
                             Close
@@ -53,25 +63,50 @@ const App = () => {
                 <Header />
 
                 <div className="container">
-                    {isSafari() || isFirefox() && <><PageTitle>Browser not supported</PageTitle><p>Please use Chrome, Edge or Opera instead</p></>}
-                    {!isSafari() && !isFirefox() && !controllerService && <Connection onConnect={setControllerService} />}
-                    {!isSafari() && !isFirefox() && controllerService &&
+                    {isSafari() ||
+                        (isFirefox() && (
+                            <>
+                                <PageTitle>Browser not supported</PageTitle>
+                                <p>Please use Chrome, Edge or Opera instead</p>
+                            </>
+                        ))}
+                    {!isSafari() && !isFirefox() && !controllerService && (
+                        <Connection onConnect={setControllerService} />
+                    )}
+                    {!isSafari() && !isFirefox() && controllerService && (
                         <Container>
                             <Row>
-                                <Col sm={5} md={4} lg={3}><Navigation /></Col>
+                                <Col sm={5} md={4} lg={3}>
+                                    <Navigation />
+                                </Col>
                                 <Col sm={7} md={8} lg={9}>
                                     <Routes>
                                         <Route index element={<SelectMode />} />
-                                        <Route path="install" element={<Installer onClose={() => navigate(Page.HOME)} />} />
-                                        <Route path="terminal" element={<Terminal onClose={() => navigate(Page.HOME)} />} />
-                                        <Route path="files" element={<FileBrowser />} />
+                                        <Route
+                                            path="install"
+                                            element={
+                                                <Installer
+                                                    onClose={() =>
+                                                        navigate(Page.HOME)
+                                                    }
+                                                />
+                                            }
+                                        />
+                                        <Route
+                                            path="terminal"
+                                            element={<Terminal />}
+                                        />
+                                        <Route
+                                            path="files"
+                                            element={<FileBrowser />}
+                                        />
                                     </Routes>
                                 </Col>
                             </Row>
                         </Container>
-                    }
+                    )}
                 </div>
-            </ControllerServiceContext.Provider >
+            </ControllerServiceContext.Provider>
         </>
     );
 };

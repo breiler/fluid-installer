@@ -25,7 +25,7 @@ const Connection = ({ onConnect }: Props) => {
         try {
             setErrorMessage(undefined);
             setConnectionState(ConnectionState.CONNECTING);
-            const serialPortDevice = await (navigator as any).serial
+            const serialPortDevice: SerialPort = await (navigator as any).serial
                 .requestPort()
                 .then((port) => new SerialPort(port))
                 .catch((error) => {

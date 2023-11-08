@@ -96,6 +96,12 @@ export class ControllerService {
         if (!this.serialPort.isOpen()) {
             const bufferedReader = new SerialBufferedReader();
             await this.serialPort.open(115200);
+
+            // Some controllers requires a hard reset
+            await this.serialPort.setDTR(false);
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            await this.serialPort.setDTR(true);
+
             this.serialPort
                 .getNativeSerialPort()
                 .addEventListener(NativeSerialPortEvent.DISCONNECT, () => {
@@ -153,7 +159,7 @@ export class ControllerService {
         console.log("Waiting for welcome string");
         const currentTime = Date.now();
 
-        while (currentTime + 10000 > Date.now()) {
+        while (currentTime + 15000 > Date.now()) {
             try {
                 const response = await bufferedReader.readLine();
                 if (this.isWelcomeString(response.toString())) {

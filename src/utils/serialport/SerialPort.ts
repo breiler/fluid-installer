@@ -144,6 +144,10 @@ export class SerialPort {
         return Promise.reject();
     };
 
+    async setDTR(enabled: boolean) {
+        await this.serialPort.setSignals({ dataTerminalReady: enabled });
+    }
+
     open = async (baudRate = 115200): Promise<void> => {
         if (this.state === SerialPortState.DISCONNECTING) {
             await new Promise((r) => setTimeout(r, 1000));

@@ -97,11 +97,6 @@ export class ControllerService {
             const bufferedReader = new SerialBufferedReader();
             await this.serialPort.open(115200);
 
-            // Some controllers requires a hard reset
-            await this.serialPort.setDTR(false);
-            await new Promise((resolve) => setTimeout(resolve, 100));
-            await this.serialPort.setDTR(true);
-
             this.serialPort
                 .getNativeSerialPort()
                 .addEventListener(NativeSerialPortEvent.DISCONNECT, () => {

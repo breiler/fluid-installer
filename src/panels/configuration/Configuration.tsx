@@ -55,7 +55,7 @@ const Configuration = ({
 
     const updateValue = (value: string) => {
         // Workaround for values beginning with # (should not be treated as comments)
-        const regexp = /^(.*:\s*)(#\S.*)$/gm;
+        const regexp = /^(\s*.*:[ \t]*)(#\S.*)$/gm;
         const transformedValue = value.replace(regexp, '$1"$2"');
 
         try {

@@ -71,10 +71,9 @@ export enum SerialPortEvent {
 }
 
 const espLoaderTerminal = {
-    clean() {
-        //term.clear();
-    },
-    writeLine() {},
+    clean() {},
+    // eslint-disable-next-line
+    writeLine(data) {},
     write(data) {
         console.log(data);
     }

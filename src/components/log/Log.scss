@@ -1,0 +1,12 @@
+.log-container {
+    margin-top: 20px;
+    text-align: left;
+
+    .log {
+        font-family: "Courier New", Courier, monospace;
+        background-color: black;
+        color: white;
+        height: 200px;
+        overflow: scroll;
+    }
+}

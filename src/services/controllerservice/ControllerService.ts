@@ -7,7 +7,6 @@ import { sleep } from "../../utils/utils";
 import { XModem, XModemSocket } from "../../utils/xmodem/xmodem";
 import { Command, CommandState } from "./commands/Command";
 import { GetStatsCommand, Stats } from "./commands/GetStatsCommand";
-import { PingCommand } from "./commands/PingCommand";
 
 class XModemSocketAdapter implements XModemSocket {
     private serialPort: SerialPort;
@@ -58,8 +57,6 @@ export enum ControllerStatus {
     UNKNOWN_DEVICE
 }
 
-const MAX_PING_COUNT = 10;
-
 export type ControllerStatusListener = (status: ControllerStatus) => void;
 
 export class ControllerService {
@@ -67,7 +64,7 @@ export class ControllerService {
     buffer: string;
     commands: Command[];
     xmodemMode: boolean = false;
-    status: ControllerStatus = ControllerStatus.DISCONNECTED;
+    _status: ControllerStatus = ControllerStatus.DISCONNECTED;
     currentVersion: string | undefined;
     statusListeners: ControllerStatusListener[];
     stats: Stats;
@@ -99,9 +96,10 @@ export class ControllerService {
 
             this.serialPort
                 .getNativeSerialPort()
-                .addEventListener(NativeSerialPortEvent.DISCONNECT, () => {
-                    this._notifyStatus(ControllerStatus.CONNECTION_LOST);
-                });
+                .addEventListener(
+                    NativeSerialPortEvent.DISCONNECT,
+                    () => (this.status = ControllerStatus.CONNECTION_LOST)
+                );
 
             try {
                 this.serialPort.addReader(bufferedReader.getReader());
@@ -171,40 +169,10 @@ export class ControllerService {
         return false;
     }
 
-    async _detectController(): Promise<void> {
-        // Attemt to establish a connection
-        const answered = false;
-        let pingCount = 0;
-        while (!answered) {
-            pingCount++;
-            try {
-                await this.ping();
-                return Promise.resolve();
-            } catch (error) {
-                console.debug("Waiting for response... " + pingCount);
-            }
-            if (pingCount >= MAX_PING_COUNT) {
-                this.status = ControllerStatus.UNKNOWN_DEVICE;
-                return Promise.reject("Could not detect controller...");
-            }
-        }
-    }
-
-    async ping(): Promise<void> {
-        const pingCommand = new PingCommand();
-        try {
-            await this.send(pingCommand, 1000);
-            this.status = ControllerStatus.CONNECTED;
-            return Promise.resolve();
-        } catch (error) {
-            return Promise.reject();
-        }
-    }
-
     disconnect(notify = true): Promise<void> {
         this.serialPort.removeReader(this.onData);
         if (notify) {
-            this._notifyStatus(ControllerStatus.DISCONNECTED);
+            this.status = ControllerStatus.DISCONNECTED;
         }
         return this.serialPort.close();
     }
@@ -298,12 +266,14 @@ export class ControllerService {
     };
 
     hardReset = async () => {
+        this.status = ControllerStatus.CONNECTING;
         await this.serialPort.hardReset();
         const bufferedReader = new SerialBufferedReader();
 
         try {
             this.serialPort.addReader(bufferedReader.getReader());
             await this._initializeController(bufferedReader);
+            this.status = ControllerStatus.CONNECTED;
         } finally {
             this.serialPort.removeReader(bufferedReader.getReader());
         }
@@ -332,7 +302,12 @@ export class ControllerService {
         );
     }
 
-    private _notifyStatus(status: ControllerStatus) {
+    set status(status: ControllerStatus) {
+        this._status = status;
         this.statusListeners.forEach((l) => l(status));
+    }
+
+    get status(): ControllerStatus {
+        return this._status;
     }
 }

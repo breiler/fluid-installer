@@ -59,7 +59,8 @@ export const InstallService = {
         choice: FirmwareChoice,
         onProgress: (FlashProgress) => void,
         onState: (state: InstallerState) => void,
-        gtag: Gtag.Gtag
+        gtag: Gtag.Gtag,
+        onLogData: (data: string) => void
     ): Promise<void> => {
         onState(InstallerState.DOWNLOADING);
 
@@ -103,7 +104,8 @@ export const InstallService = {
                 flashFiles,
                 choice.erase || false,
                 onProgress,
-                onState
+                onState,
+                onLogData
             );
 
             gtag("event", "install", {
@@ -119,7 +121,7 @@ export const InstallService = {
 
             console.error(error);
             onState(InstallerState.ERROR);
-            throw "Was not able to flash device";
+            throw "Was not able to flash device: " + error;
         }
 
         return Promise.resolve();

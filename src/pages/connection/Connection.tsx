@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useState } from "react";
 import { Button } from "../../components";
 import ConnectionState from "../../model/ConnectionState";
@@ -7,6 +7,7 @@ import { SerialPort } from "../../utils/serialport/SerialPort";
 import "./connection.scss";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
+import ControllerLog from "../../components/controllerlog/ControllerLog";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
 
@@ -16,12 +17,15 @@ type Props = {
 
 const Connection = ({ onConnect }: Props) => {
     usePageView("Connection");
+    const [showLog, setShowLog] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [connectionState, setConnectionState] = useState<ConnectionState>(
         ConnectionState.DISCONNECTED
     );
+    const [controllerService, setControllerService] =
+        useState<ControllerService>();
 
-    const connect = async () => {
+    const connect = useCallback(async () => {
         try {
             setErrorMessage(undefined);
             setConnectionState(ConnectionState.CONNECTING);
@@ -34,6 +38,8 @@ const Connection = ({ onConnect }: Props) => {
                 });
 
             const controllerService = new ControllerService(serialPortDevice);
+            setControllerService(controllerService);
+
             await controllerService.connect().catch((error) => {
                 console.error(error);
                 setErrorMessage(
@@ -43,12 +49,13 @@ const Connection = ({ onConnect }: Props) => {
                 throw error;
             });
 
+            await new Promise((r) => setTimeout(r, 3000));
             setConnectionState(ConnectionState.CONNECTED);
             onConnect(controllerService);
         } catch (error) {
             //Never mind
         }
-    };
+    }, [onConnect]);
 
     return (
         <div className="component-connection">
@@ -92,6 +99,14 @@ const Connection = ({ onConnect }: Props) => {
                         </>
                     </Button>
                 </div>
+            )}
+
+            {connectionState === ConnectionState.CONNECTING && (
+                <ControllerLog
+                    show={showLog}
+                    onShow={setShowLog}
+                    controllerService={controllerService}
+                />
             )}
         </div>
     );

@@ -1,6 +1,5 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { MouseEventHandler } from "react";
-import { ReactElement } from "react";
 import Spinner from "../spinner";
 import "./Button.css";
 
@@ -15,7 +14,7 @@ type Props = {
     loading?: boolean;
     disabled?: boolean;
     onClick?: MouseEventHandler;
-    children?: ReactElement | ReactElement[];
+    children?: ReactNode;
     buttonType?: string;
     style?: React.CSSProperties;
 };

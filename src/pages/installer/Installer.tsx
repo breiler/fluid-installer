@@ -31,6 +31,12 @@ const Installer = ({ onClose }: InstallerProps) => {
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
     const [progress, setProgress] = useState<FlashProgress>(initialProgress);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
+    const [log, setLog] = useState("");
+
+    const onLogData = (data: string) => {
+        setLog((l) => l + data);
+        console.log(data);
+    };
 
     const onInstall = async (
         release: GithubRelease,
@@ -51,7 +57,8 @@ const Installer = ({ onClose }: InstallerProps) => {
             choice,
             setProgress,
             setState,
-            gtag
+            gtag,
+            onLogData
         ).catch((error) => {
             setErrorMessage(error);
             setState(InstallerState.ERROR);
@@ -80,6 +87,7 @@ const Installer = ({ onClose }: InstallerProps) => {
         <>
             {state !== InstallerState.SELECT_PACKAGE && (
                 <InstallerModal
+                    log={log}
                     state={state}
                     errorMessage={errorMessage}
                     progress={progress}

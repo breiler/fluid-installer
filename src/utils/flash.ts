@@ -6,26 +6,23 @@ import { InstallerState } from "../services";
 
 const FLASH_BAUD_RATE = 921600;
 
-export const espLoaderTerminal = {
-    clean() {
-        //term.clear();
-    },
-    writeLine(data) {
-        console.log(data);
-    },
-    write(data) {
-        console.log(data);
-    }
-};
-
 export const flashDevice = async (
     serialPort: NativeSerialPort,
     files,
     erase: boolean,
     onProgress: (progress: FlashProgress) => void,
     onState: (state: InstallerState) => void,
-    terminal = espLoaderTerminal
+    onLogData: (data: string) => void
 ) => {
+    const terminal = {
+        clean() {},
+        writeLine(data) {
+            onLogData(data + "\n");
+        },
+        // eslint-disable-next-line
+        write(data) {}
+    };
+
     const transport = new Transport(serialPort);
     try {
         onState(InstallerState.ENTER_FLASH_MODE);

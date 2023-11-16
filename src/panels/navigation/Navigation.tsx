@@ -5,9 +5,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
-import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import "./Navigation.scss";
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
+import RestartModal from "../../components/restartmodal/RestartModal";
 
 const Navigation = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Navigation = () => {
 
     return (
         <>
-            <SpinnerModal show={isLoading} text="Restarting controller..." />
+            <RestartModal show={isLoading} />
             <Nav
                 variant="pills"
                 activeKey={location.pathname}

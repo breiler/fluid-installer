@@ -33,7 +33,10 @@ const SelectMode = () => {
                         <InstallCard onClick={() => navigate(Page.INSTALLER)} />
                     </div>
                     <div className="col">
-                        <TerminalCard onClick={() => navigate(Page.TERMINAL)} />
+                        <TerminalCard
+                            disabled={false}
+                            onClick={() => navigate(Page.TERMINAL)}
+                        />
                     </div>
                     {stats?.version && (
                         <div className="col">

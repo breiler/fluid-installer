@@ -1,5 +1,5 @@
-import { ESPLoader, Transport } from "esptool-js";
-import { DeviceInfo, espLoaderTerminal } from "../flash";
+import { ESPLoader, LoaderOptions, Transport } from "esptool-js";
+import { DeviceInfo } from "../flash";
 import { NativeSerialPort } from "./typings";
 import { Buffer } from "buffer";
 import { sleep } from "../utils";
@@ -70,6 +70,16 @@ export enum SerialPortEvent {
     CONNECTION_ERROR
 }
 
+const espLoaderTerminal = {
+    clean() {
+        //term.clear();
+    },
+    writeLine() {},
+    write(data) {
+        console.log(data);
+    }
+};
+
 export class SerialPort {
     dispatchEvent(eventType: SerialPortEvent) {
         const listenersList: (() => void)[] =
@@ -105,11 +115,12 @@ export class SerialPort {
 
         const transport = new Transport(this.serialPort);
         try {
-            const loader = new ESPLoader(
+            const loaderOptions = {
                 transport,
-                FLASH_BAUD_RATE,
-                espLoaderTerminal
-            );
+                baudrate: FLASH_BAUD_RATE,
+                terminal: espLoaderTerminal
+            } as LoaderOptions;
+            const loader = new ESPLoader(loaderOptions);
             await loader.main_fn();
 
             // We need to wait after connecting...

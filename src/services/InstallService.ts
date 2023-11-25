@@ -9,6 +9,7 @@ import { SerialPort } from "../utils/serialport/SerialPort";
 import { flashDevice } from "../utils/flash";
 import sha256 from "crypto-js/sha256";
 import { enc } from "crypto-js/core";
+import { analytics, logEvent } from "./FirebaseService";
 
 export enum FirmwareType {
     WIFI = "wifi",
@@ -59,7 +60,6 @@ export const InstallService = {
         choice: FirmwareChoice,
         onProgress: (FlashProgress) => void,
         onState: (state: InstallerState) => void,
-        gtag: Gtag.Gtag,
         onLogData: (data: string) => void
     ): Promise<void> => {
         onState(InstallerState.DOWNLOADING);
@@ -72,7 +72,7 @@ export const InstallService = {
         try {
             files = await GithubService.getImageFiles(release, images);
         } catch (error) {
-            gtag("event", "install", {
+            logEvent(analytics, "install", {
                 version: release.name,
                 success: false,
                 error: error
@@ -87,7 +87,7 @@ export const InstallService = {
             onState(InstallerState.CHECKING_SIGNATURES);
             validateImageSignatures(images, files);
         } catch (error) {
-            gtag("event", "install", {
+            logEvent(analytics, "install", {
                 version: release.name,
                 success: false,
                 error: error
@@ -108,12 +108,12 @@ export const InstallService = {
                 onLogData
             );
 
-            gtag("event", "install", {
+            logEvent(analytics, "install", {
                 version: release.name,
                 success: true
             });
         } catch (error) {
-            gtag("event", "install", {
+            logEvent(analytics, "install", {
                 version: release.name,
                 success: false,
                 error: error

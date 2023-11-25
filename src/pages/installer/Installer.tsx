@@ -11,7 +11,6 @@ import {
 import { InstallService, InstallerState } from "../../services/InstallService";
 import { ControllerStatus } from "../../services/controllerservice/ControllerService";
 import usePageView from "../../hooks/usePageView";
-import useGtag from "../../hooks/useGtag";
 
 const initialProgress: FlashProgress = {
     fileIndex: 0,
@@ -26,7 +25,6 @@ type InstallerProps = {
 
 const Installer = ({ onClose }: InstallerProps) => {
     usePageView("Installer");
-    const gtag = useGtag();
     const controllerService = useContext(ControllerServiceContext);
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
     const [progress, setProgress] = useState<FlashProgress>(initialProgress);
@@ -57,7 +55,6 @@ const Installer = ({ onClose }: InstallerProps) => {
             choice,
             setProgress,
             setState,
-            gtag,
             onLogData
         ).catch((error) => {
             setErrorMessage(error);

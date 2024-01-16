@@ -1,3 +1,5 @@
+@import "../../styles.scss";
+
 /* common */
 .ribbon {
     width: 100px;
@@ -11,15 +13,14 @@
     z-index: -1;
     content: "";
     display: block;
-    /*border: 2px solid #2980b9;*/
 }
 .ribbon span {
     position: absolute;
     display: block;
     width: 225px;
     padding: 4px 0;
-    background-color: red;
-    /*box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);*/
+
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     color: #fff;
     font-weight: 700;
     font-size: 14px;
@@ -27,6 +28,14 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
+
+.ribbon.danger span {
+    background-color: $danger;
+} 
+
+.ribbon.success span {
+    background-color: $warning;
+} 
 
 /* top left*/
 .ribbon-top-left {

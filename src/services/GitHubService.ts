@@ -20,6 +20,7 @@ export type GithubRelease = {
     draft: boolean;
     prerelease: boolean;
     assets: GithubReleaseAsset[];
+    published_at: string;
 };
 
 export type FirmwareImageSignature = {

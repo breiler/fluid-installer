@@ -1,4 +1,16 @@
+
+.latestVersionCard {
+    margin-top: 50px;
+}
+
+/* Medium devices such as tablets (768px and up) */
+@media only screen and (min-width: 768px) {
+    .latestVersionCard {
+        margin-top: 25px;
+    }
+}
+
 .shortBody {
-    max-height: 400px;
+    max-height: 390px;
     overflow: hidden;
 }

@@ -26,7 +26,7 @@ const LatestVersionCard = () => {
     }, []);
 
     return (
-        <div style={{ marginTop: "50px" }}>
+        <div className="latestVersionCard">
             {latestRelease && (
                 <Card bg="light" text="dark">
                     <Card.Body>

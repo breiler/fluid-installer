@@ -48,7 +48,7 @@ const HomingGroup = ({ homing, setValue }: HomingProps) => {
                         setValue={(value) => {
                             setValue({
                                 ...homing,
-                                ...{ cycle: Number(value) }
+                                ...{ mpos_mm: Number(value) }
                             });
                         }}
                         unit="mm"

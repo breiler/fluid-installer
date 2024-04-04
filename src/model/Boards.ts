@@ -38,7 +38,6 @@ export const Boards: Board[] = [
                 input: true,
                 pull: true,
                 output: true,
-                restricted: true,
                 comment:
                     "Some dev boards have an LED on this. It does not work well as an input if this is the case because the LED affects the voltage on the pin."
             },

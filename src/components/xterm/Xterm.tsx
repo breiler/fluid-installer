@@ -1,7 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 // We are using these as types.
 // eslint-disable-next-line no-unused-vars
@@ -10,8 +10,8 @@ import {
     ITerminalOptions,
     ITerminalAddon,
     ITerminalInitOnlyOptions
-} from "xterm";
-import { FitAddon } from "xterm-addon-fit";
+} from "@xterm/xterm";
+import { FitAddon } from "@xterm/addon-fit";
 
 interface IProps {
     /**

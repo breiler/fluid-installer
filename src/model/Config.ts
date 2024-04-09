@@ -129,6 +129,7 @@ export type SDCard = {
 
 export type Probe = {
     pin?: string;
+    toolsetter_pin?: string;
     check_mode_start?: boolean;
 };
 

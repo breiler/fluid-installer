@@ -16,6 +16,7 @@ import I2CGroup from "./groups/I2CGroup";
 import OLEDGroup from "./groups/OLEDGroup";
 import { deepMerge } from "../../utils/utils";
 import ControlGroup from "./groups/ControlGroup";
+import ProbeGroup from "./groups/ProbeGroup";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -134,6 +135,12 @@ const Configuration = ({
                         board={Boards[0]}
                         spi={config.spi}
                         setValue={(spi) => appendConfig({ spi })}
+                    />
+
+                    <ProbeGroup
+                        board={Boards[0]}
+                        probe={config.probe}
+                        setValue={(probe) => appendConfig({ probe })}
                     />
 
                     <SDCardGroup

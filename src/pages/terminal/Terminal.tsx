@@ -5,7 +5,7 @@ import React, {
     useEffect,
     useState
 } from "react";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 import Xterm from "../../components/xterm/Xterm";
 import { SerialPortState } from "../../utils/serialport/SerialPort";
 import { Button } from "react-bootstrap";

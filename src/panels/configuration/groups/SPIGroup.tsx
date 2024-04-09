@@ -8,9 +8,10 @@ type SPIProps = {
     board: Board;
     spi?: SPIConfig;
     setValue: (spiConfig?: SPIConfig) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
+const SPIGroup = ({ board, spi, setValue, usedPins }: SPIProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>SPI</h4>
@@ -43,6 +44,7 @@ const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
                                 ...{ miso_pin: misoPin.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="MOSI Pin"
@@ -54,6 +56,7 @@ const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
                                 ...{ mosi_pin: mosiPin.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="SCK Pin"
@@ -65,6 +68,7 @@ const SPIGroup = ({ board, spi, setValue }: SPIProps) => {
                                 ...{ sck_pin: sckPin.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                 </>
             )}

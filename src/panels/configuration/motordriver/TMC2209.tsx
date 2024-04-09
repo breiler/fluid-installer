@@ -10,9 +10,15 @@ type TMC2209Props = {
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const TMC2209 = ({ board, motor, updateMotorDriverValue }: TMC2209Props) => {
+const TMC2209 = ({
+    board,
+    motor,
+    updateMotorDriverValue,
+    usedPins
+}: TMC2209Props) => {
     return (
         <>
             <PinField
@@ -26,6 +32,7 @@ const TMC2209 = ({ board, motor, updateMotorDriverValue }: TMC2209Props) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -39,6 +46,7 @@ const TMC2209 = ({ board, motor, updateMotorDriverValue }: TMC2209Props) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -52,6 +60,7 @@ const TMC2209 = ({ board, motor, updateMotorDriverValue }: TMC2209Props) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <TextField

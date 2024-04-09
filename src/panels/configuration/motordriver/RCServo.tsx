@@ -8,9 +8,15 @@ type RCServoProps = {
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const RCServo = ({ board, motor, updateMotorDriverValue }: RCServoProps) => {
+const RCServo = ({
+    board,
+    motor,
+    updateMotorDriverValue,
+    usedPins
+}: RCServoProps) => {
     return (
         <>
             <PinField
@@ -24,6 +30,7 @@ const RCServo = ({ board, motor, updateMotorDriverValue }: RCServoProps) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <TextField

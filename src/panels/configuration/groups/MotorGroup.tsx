@@ -12,6 +12,7 @@ type MotorProps = {
     board: Board;
     motor?: Motor;
     setValue: (motor?: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const DEFAULT_CONFIG: Motor = {
@@ -22,7 +23,13 @@ const DEFAULT_CONFIG: Motor = {
     pulloff_mm: 1
 };
 
-const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
+const MotorGroup = ({
+    label,
+    board,
+    motor,
+    setValue,
+    usedPins
+}: MotorProps) => {
     return (
         <>
             <h5>{label}</h5>
@@ -53,6 +60,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                                 ...{ limit_neg_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="Limit positive pin"
@@ -64,6 +72,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                                 ...{ limit_pos_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="Limit all pin"
@@ -75,6 +84,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                                 ...{ limit_all_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <TextField
                         label="Pull off"
@@ -103,6 +113,7 @@ const MotorGroup = ({ label, board, motor, setValue }: MotorProps) => {
                         board={board}
                         motor={motor}
                         setValue={(value) => setValue(value)}
+                        usedPins={usedPins}
                     />
                 </>
             )}

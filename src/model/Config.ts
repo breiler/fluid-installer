@@ -1,3 +1,213 @@
+const addPin = (
+    name: string,
+    pin: string | undefined,
+    usedPins: Map<string, PinConfig>
+) => {
+    const resolvedPin = PinConfig.fromString(pin);
+    if (resolvedPin) {
+        usedPins.set(name, resolvedPin);
+    }
+};
+
+const addMotorPins = (
+    path: string,
+    motor: Motor | undefined,
+    usedPins: Map<string, PinConfig>
+) => {
+    if (!motor) {
+        return;
+    }
+
+    addPin(path + ".limit_all_pin", motor?.limit_all_pin, usedPins);
+    addPin(path + ".limit_neg_pin", motor?.limit_neg_pin, usedPins);
+    addPin(path + ".limit_pos_pin", motor?.limit_pos_pin, usedPins);
+    addPin(
+        path + ".rc_servo.output_pin",
+        motor?.rc_servo?.output_pin,
+        usedPins
+    );
+    addPin(
+        path + ".solenoid.output_pin",
+        motor?.solenoid?.output_pin,
+        usedPins
+    );
+    addPin(
+        path + ".standard_stepper.direction_pin",
+        motor?.standard_stepper?.direction_pin,
+        usedPins
+    );
+    addPin(
+        path + ".standard_stepper.disable_pin",
+        motor?.standard_stepper?.disable_pin,
+        usedPins
+    );
+    addPin(
+        path + ".standard_stepper.step_pin",
+        motor?.standard_stepper?.step_pin,
+        usedPins
+    );
+    addPin(
+        path + ".stepstick.direction_pin",
+        motor?.stepstick?.direction_pin,
+        usedPins
+    );
+    addPin(
+        path + ".stepstick.disable_pin",
+        motor?.stepstick?.disable_pin,
+        usedPins
+    );
+    addPin(path + ".stepstick.ms1_pin", motor?.stepstick?.ms1_pin, usedPins);
+    addPin(path + ".stepstick.ms2_pin", motor?.stepstick?.ms2_pin, usedPins);
+    addPin(path + ".stepstick.ms3_pin", motor?.stepstick?.ms3_pin, usedPins);
+    addPin(
+        path + ".stepstick.reset_pin",
+        motor?.stepstick?.reset_pin,
+        usedPins
+    );
+    addPin(path + ".stepstick.step_pin", motor?.stepstick?.step_pin, usedPins);
+    addPin(path + ".tmc_2130.cs_pin", motor?.tmc_2130?.cs_pin, usedPins);
+    addPin(
+        path + ".tmc_2130.direction_pin",
+        motor?.tmc_2130?.direction_pin,
+        usedPins
+    );
+    addPin(
+        path + ".tmc_2130.disable_pin",
+        motor?.tmc_2130?.disable_pin,
+        usedPins
+    );
+    addPin(path + ".tmc_2130.step_pin", motor?.tmc_2130?.step_pin, usedPins);
+
+    addPin(
+        path + ".tmc_2208.direction_pin",
+        motor?.tmc_2208?.direction_pin,
+        usedPins
+    );
+    addPin(
+        path + ".tmc_2208.disable_pin",
+        motor?.tmc_2208?.disable_pin,
+        usedPins
+    );
+    addPin(path + ".tmc_2208.step_pin", motor?.tmc_2208?.step_pin, usedPins);
+
+    addPin(
+        path + ".tmc_2209.direction_pin",
+        motor?.tmc_2209?.direction_pin,
+        usedPins
+    );
+    addPin(
+        path + ".tmc_2209.disable_pin",
+        motor?.tmc_2209?.disable_pin,
+        usedPins
+    );
+    addPin(path + ".tmc_2209.step_pin", motor?.tmc_2209?.step_pin, usedPins);
+
+    addPin(path + ".tmc_5160.cs_pin", motor?.tmc_5160?.cs_pin, usedPins);
+    addPin(
+        path + ".tmc_5160.direction_pin",
+        motor?.tmc_5160?.direction_pin,
+        usedPins
+    );
+    addPin(
+        path + ".tmc_5160.disable_pin",
+        motor?.tmc_5160?.disable_pin,
+        usedPins
+    );
+    addPin(path + ".tmc_5160.step_pin", motor?.tmc_5160?.step_pin, usedPins);
+};
+
+export const getUsedPins = (config: Config) => {
+    const usedPins = new Map();
+    addPin(
+        "axes.shared_stepper_disable_pin",
+        config.axes?.shared_stepper_disable_pin,
+        usedPins
+    );
+    addPin(
+        "axes.shared_stepper_reset_pin",
+        config.axes?.shared_stepper_reset_pin,
+        usedPins
+    );
+    addMotorPins("axes.x.motor0", config.axes?.x?.motor0, usedPins);
+    addMotorPins("axes.x.motor1", config.axes?.x?.motor1, usedPins);
+    addMotorPins("axes.y.motor0", config.axes?.y?.motor0, usedPins);
+    addMotorPins("axes.y.motor1", config.axes?.y?.motor1, usedPins);
+    addMotorPins("axes.z.motor0", config.axes?.z?.motor0, usedPins);
+    addMotorPins("axes.z.motor1", config.axes?.z?.motor1, usedPins);
+    addMotorPins("axes.a.motor0", config.axes?.a?.motor0, usedPins);
+    addMotorPins("axes.a.motor1", config.axes?.a?.motor1, usedPins);
+    addMotorPins("axes.b.motor0", config.axes?.b?.motor0, usedPins);
+    addMotorPins("axes.b.motor1", config.axes?.b?.motor1, usedPins);
+    addMotorPins("axes.c.motor0", config.axes?.c?.motor0, usedPins);
+    addMotorPins("axes.c.motor1", config.axes?.c?.motor1, usedPins);
+
+    addPin("10V.direction_pin", config["10V"]?.direction_pin, usedPins);
+    addPin("10V.enable_pin", config["10V"]?.enable_pin, usedPins);
+    addPin("10V.forward_pin", config["10V"]?.forward_pin, usedPins);
+    addPin("10V.output_pin", config["10V"]?.output_pin, usedPins);
+    addPin("10V.reverse_pin", config["10V"]?.reverse_pin, usedPins);
+
+    addPin("DAC.direction_pin", config.DAC?.direction_pin, usedPins);
+    addPin("DAC.enable_pin", config.DAC?.enable_pin, usedPins);
+    addPin("DAC.output_pin", config.DAC?.output_pin, usedPins);
+
+    addPin("HBridge.enable_pin", config.HBridge?.enable_pin, usedPins);
+    addPin("HBridge.output_ccw_pin", config.HBridge?.output_ccw_pin, usedPins);
+    addPin("HBridge.output_cw_pin", config.HBridge?.output_cw_pin, usedPins);
+
+    addPin("Laser.enable_pin", config.Laser?.enable_pin, usedPins);
+    addPin("Laser.output_pin", config.Laser?.output_pin, usedPins);
+
+    addPin("PWM.direction_pin", config.PWM?.direction_pin, usedPins);
+    addPin("PWM.direction_pin", config.PWM?.enable_pin, usedPins);
+    addPin("PWM.output_pin", config.PWM?.output_pin, usedPins);
+
+    addPin("besc.direction_pin", config.besc?.direction_pin, usedPins);
+    addPin("besc.enable_pin", config.besc?.enable_pin, usedPins);
+    addPin("besc.output_pin", config.besc?.output_pin, usedPins);
+
+    addPin(
+        "control.cycle_start_pin",
+        config.control?.cycle_start_pin,
+        usedPins
+    );
+    addPin("control.estop_pin", config.control?.estop_pin, usedPins);
+    addPin("control.fault_pin", config.control?.fault_pin, usedPins);
+    addPin("control.feed_hold_pin", config.control?.feed_hold_pin, usedPins);
+    addPin("control.macro0_pin", config.control?.macro0_pin, usedPins);
+    addPin("control.macro1_pin", config.control?.macro1_pin, usedPins);
+    addPin("control.macro2_pin", config.control?.macro2_pin, usedPins);
+    addPin("control.macro3_pin", config.control?.macro3_pin, usedPins);
+    addPin("control.reset_pin", config.control?.reset_pin, usedPins);
+    addPin(
+        "control.safety_door_pin",
+        config.control?.safety_door_pin,
+        usedPins
+    );
+
+    addPin("coolant.flood_pin", config.coolant?.flood_pin, usedPins);
+    addPin("coolant.mist_pin", config.coolant?.mist_pin, usedPins);
+
+    addPin("probe.pin", config.probe?.pin, usedPins);
+    addPin("probe.toolsetter_pin", config.probe?.toolsetter_pin, usedPins);
+
+    addPin("sdcard.card_detect_pin", config.sdcard?.card_detect_pin, usedPins);
+    addPin("sdcard.cs_pin", config.sdcard?.cs_pin, usedPins);
+
+    addPin("spi.miso_pin", config.spi?.miso_pin, usedPins);
+    addPin("spi.mosi_pin", config.spi?.mosi_pin, usedPins);
+    addPin("spi.sck_pin", config.spi?.sck_pin, usedPins);
+
+    addPin("i2c0.scl_pin", config.i2c0?.scl_pin, usedPins);
+    addPin("i2c0.sda_pin", config.i2c0?.sda_pin, usedPins);
+
+    addPin("i2so.bck_pin", config.i2so?.bck_pin, usedPins);
+    addPin("i2so.data_pin", config.i2so?.data_pin, usedPins);
+    addPin("i2so.ws_pin", config.i2so?.ws_pin, usedPins);
+
+    return usedPins;
+};
+
 export type Config = {
     /**
      * Descriptive text such as "ESP32 Dev Controller V4".

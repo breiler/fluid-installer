@@ -8,9 +8,15 @@ type SolenoidProps = {
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const Solenoid = ({ board, motor, updateMotorDriverValue }: SolenoidProps) => {
+const Solenoid = ({
+    board,
+    motor,
+    updateMotorDriverValue,
+    usedPins
+}: SolenoidProps) => {
     return (
         <>
             <PinField
@@ -24,6 +30,7 @@ const Solenoid = ({ board, motor, updateMotorDriverValue }: SolenoidProps) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <TextField

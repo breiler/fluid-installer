@@ -10,9 +10,15 @@ type TMC5160Props = {
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const TMC5160 = ({ board, motor, updateMotorDriverValue }: TMC5160Props) => {
+const TMC5160 = ({
+    board,
+    motor,
+    updateMotorDriverValue,
+    usedPins
+}: TMC5160Props) => {
     return (
         <>
             <PinField
@@ -26,6 +32,7 @@ const TMC5160 = ({ board, motor, updateMotorDriverValue }: TMC5160Props) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -39,6 +46,7 @@ const TMC5160 = ({ board, motor, updateMotorDriverValue }: TMC5160Props) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -52,6 +60,7 @@ const TMC5160 = ({ board, motor, updateMotorDriverValue }: TMC5160Props) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -65,6 +74,7 @@ const TMC5160 = ({ board, motor, updateMotorDriverValue }: TMC5160Props) => {
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <TextField

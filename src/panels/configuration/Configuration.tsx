@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Config } from "../../model/Config";
+import { Config, PinConfig, getUsedPins } from "../../model/Config";
 import { Container } from "react-bootstrap";
 import TextField from "./fields/TextField";
 import SelectField from "./fields/SelectField";
@@ -41,10 +41,15 @@ const Configuration = ({
     onChange
 }: ConfigurationProps) => {
     const [config, setConfig] = useState<Config>(DEFAULT_CONFIG);
+    const [usedPins, setUsedPins] = useState<Map<string, PinConfig>>(new Map());
 
     useEffect(() => {
         updateValue(value);
     }, [value]);
+
+    useEffect(() => {
+        setUsedPins(getUsedPins(config));
+    }, [config]);
 
     const appendConfig = (conf) => {
         const newConfig = deepMerge(config, conf);
@@ -108,6 +113,7 @@ const Configuration = ({
                         board={Boards[0]}
                         config={config}
                         setValue={(value) => appendConfig(value)}
+                        usedPins={usedPins}
                     />
                 </Container>
             )}
@@ -123,30 +129,35 @@ const Configuration = ({
                         board={Boards[0]}
                         i2so={config.i2so}
                         setValue={(i2so) => appendConfig({ i2so })}
+                        usedPins={usedPins}
                     />
 
                     <I2CGroup
                         board={Boards[0]}
                         i2c={config.i2c0}
                         setValue={(i2c) => appendConfig({ i2c0: i2c })}
+                        usedPins={usedPins}
                     />
 
                     <SPIGroup
                         board={Boards[0]}
                         spi={config.spi}
                         setValue={(spi) => appendConfig({ spi })}
+                        usedPins={usedPins}
                     />
 
                     <ProbeGroup
                         board={Boards[0]}
                         probe={config.probe}
                         setValue={(probe) => appendConfig({ probe })}
+                        usedPins={usedPins}
                     />
 
                     <SDCardGroup
                         board={Boards[0]}
                         sdcard={config.sdcard}
                         setValue={(sdcard) => appendConfig({ sdcard })}
+                        usedPins={usedPins}
                     />
 
                     <OLEDGroup
@@ -159,6 +170,7 @@ const Configuration = ({
                         board={Boards[0]}
                         control={config.control}
                         setValue={(control) => appendConfig({ control })}
+                        usedPins={usedPins}
                     />
                 </Container>
             )}
@@ -169,6 +181,7 @@ const Configuration = ({
                         board={Boards[0]}
                         config={config}
                         setValue={(config) => appendConfig(config)}
+                        usedPins={usedPins}
                     />
                 </Container>
             )}

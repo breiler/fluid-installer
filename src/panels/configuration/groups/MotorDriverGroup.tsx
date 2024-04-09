@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Motor } from "../../../model/Config";
+import { Motor, PinConfig } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
 import SelectField from "../fields/SelectField";
 import StandardStepper from "../motordriver/StandardStepper";
@@ -17,6 +17,7 @@ type MotorDriverProps = {
     board: Board;
     motor?: Motor;
     setValue: (motor?: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 enum DriverType {
@@ -33,7 +34,12 @@ enum DriverType {
     DYNAMIXEL2 = "dynamixel2"
 }
 
-const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
+const MotorDriverGroup = ({
+    board,
+    motor,
+    setValue,
+    usedPins
+}: MotorDriverProps) => {
     const [driverType, setDriverType] = useState<string>();
 
     useEffect(() => {
@@ -162,6 +168,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 
@@ -170,6 +177,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 
@@ -178,6 +186,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 
@@ -186,6 +195,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 
@@ -194,6 +204,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 
@@ -202,6 +213,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 
@@ -210,6 +222,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 
@@ -218,6 +231,7 @@ const MotorDriverGroup = ({ board, motor, setValue }: MotorDriverProps) => {
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
+                    usedPins={usedPins}
                 />
             )}
 

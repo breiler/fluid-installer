@@ -9,9 +9,10 @@ type ProbeProps = {
     board: Board;
     probe?: Probe;
     setValue: (probe?: Probe) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const ProbeGroup = ({ probe, setValue, board }: ProbeProps) => {
+const ProbeGroup = ({ probe, setValue, board, usedPins }: ProbeProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>Probe</h4>
@@ -44,6 +45,7 @@ const ProbeGroup = ({ probe, setValue, board }: ProbeProps) => {
                                 ...{ pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         board={board}
@@ -56,6 +58,7 @@ const ProbeGroup = ({ probe, setValue, board }: ProbeProps) => {
                             });
                         }}
                         helpText="This is an optional second probe"
+                        usedPins={usedPins}
                     />
                     <BooleanField
                         label="Check mode start"

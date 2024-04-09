@@ -14,12 +14,14 @@ type SelectFieldProps = {
     board: Board;
     config?: Config;
     setValue?: (value: Config) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const AxesGroup = ({
     board,
     config,
-    setValue = () => {}
+    setValue = () => {},
+    usedPins
 }: SelectFieldProps) => {
     return (
         <>
@@ -125,6 +127,7 @@ const AxesGroup = ({
                             }
                         })
                     }
+                    usedPins={usedPins}
                 />
             )}
             {!!config?.axes?.shared_stepper_reset_pin && (
@@ -143,6 +146,7 @@ const AxesGroup = ({
                             }
                         })
                     }
+                    usedPins={usedPins}
                 />
             )}
 
@@ -225,6 +229,7 @@ const AxesGroup = ({
                                     axes: { ...config?.axes, x: value }
                                 })
                             }
+                            usedPins={usedPins}
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisy">
@@ -237,6 +242,7 @@ const AxesGroup = ({
                                     axes: { ...config?.axes, y: value }
                                 })
                             }
+                            usedPins={usedPins}
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisz">
@@ -250,6 +256,7 @@ const AxesGroup = ({
                                     })
                                 )
                             }
+                            usedPins={usedPins}
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisa">
@@ -262,6 +269,7 @@ const AxesGroup = ({
                                     axes: { ...config?.axes, a: value }
                                 })
                             }
+                            usedPins={usedPins}
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisb">
@@ -274,6 +282,7 @@ const AxesGroup = ({
                                     axes: { ...config?.axes, b: value }
                                 })
                             }
+                            usedPins={usedPins}
                         />
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisc">
@@ -286,6 +295,7 @@ const AxesGroup = ({
                                     axes: { ...config?.axes, c: value }
                                 })
                             }
+                            usedPins={usedPins}
                         />
                     </Tab.Pane>
                 </Tab.Content>

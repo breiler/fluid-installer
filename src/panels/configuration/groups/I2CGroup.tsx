@@ -8,9 +8,10 @@ type I2C0Props = {
     board: Board;
     i2c?: I2C0Config;
     setValue: (i2c?: I2C0Config) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const I2C0Group = ({ board, i2c, setValue }: I2C0Props) => {
+const I2C0Group = ({ board, i2c, setValue, usedPins }: I2C0Props) => {
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>I2C</h4>
@@ -43,6 +44,7 @@ const I2C0Group = ({ board, i2c, setValue }: I2C0Props) => {
                                 ...{ sda_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="SCL Pin"
@@ -54,6 +56,7 @@ const I2C0Group = ({ board, i2c, setValue }: I2C0Props) => {
                                 ...{ scl_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                 </>
             )}

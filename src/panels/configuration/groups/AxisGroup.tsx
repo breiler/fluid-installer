@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { Axis } from "../../../model/Config";
+import { Axis, PinConfig } from "../../../model/Config";
 import TextField from "../fields/TextField";
 import MotorGroup from "./MotorGroup";
 import { Boards } from "../../../model/Boards";
@@ -11,6 +11,7 @@ type SelectFieldProps = {
     axisLabel: string;
     axis?: Axis;
     setValue?: (axis?: Axis) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const DEFAULT_CONFIG: Axis = {
@@ -23,7 +24,8 @@ const DEFAULT_CONFIG: Axis = {
 const AxisGroup = ({
     axisLabel,
     axis,
-    setValue = () => {}
+    setValue = () => {},
+    usedPins
 }: SelectFieldProps) => (
     <>
         <h4>{axisLabel}-axis</h4>
@@ -124,6 +126,7 @@ const AxisGroup = ({
                     setValue={(value) => {
                         setValue({ ...axis, ...{ motor0: value } });
                     }}
+                    usedPins={usedPins}
                 />
                 <br />
                 <br />
@@ -135,6 +138,7 @@ const AxisGroup = ({
                     setValue={(value) => {
                         setValue({ ...axis, ...{ motor1: value } });
                     }}
+                    usedPins={usedPins}
                 />
             </Container>
         )}

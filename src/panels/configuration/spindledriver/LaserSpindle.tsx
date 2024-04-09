@@ -11,13 +11,15 @@ type LaserSpindleProps = {
     config?: Config;
     setValue: (config: Config) => void;
     updateSpindleDriverValue: (config: Config) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const LaserSpindle = ({
     board,
     config,
     setValue,
-    updateSpindleDriverValue
+    updateSpindleDriverValue,
+    usedPins
 }: LaserSpindleProps) => {
     console.log("Value: " + config?.Laser?.tool_num);
     return (
@@ -53,6 +55,7 @@ const LaserSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <PinField
@@ -66,6 +69,7 @@ const LaserSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <BooleanField

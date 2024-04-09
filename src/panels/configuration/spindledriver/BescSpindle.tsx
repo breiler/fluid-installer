@@ -11,13 +11,15 @@ type BescSpindleProps = {
     config?: Config;
     setValue: (config: Config) => void;
     updateSpindleDriverValue: (config: Config) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const BescSpindle = ({
     board,
     config,
     setValue,
-    updateSpindleDriverValue
+    updateSpindleDriverValue,
+    usedPins
 }: BescSpindleProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
@@ -52,6 +54,7 @@ const BescSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <PinField
@@ -65,6 +68,7 @@ const BescSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <PinField
@@ -78,6 +82,7 @@ const BescSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <BooleanField

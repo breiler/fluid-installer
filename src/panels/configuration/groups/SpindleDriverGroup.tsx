@@ -1,6 +1,6 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
-import { Config } from "../../../model/Config";
+import { Config, PinConfig } from "../../../model/Config";
 import { deepMerge } from "../../../utils/utils";
 import BescSpindle from "../spindledriver/BescSpindle";
 import PwmSpindle from "../spindledriver/PwmSpindle";
@@ -11,12 +11,14 @@ type SpindleDriverGroupProps = {
     board: Board;
     config?: Config;
     setValue: (value?: Config) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const SpindleDriverGroup = ({
     board,
     config,
-    setValue
+    setValue,
+    usedPins
 }: SpindleDriverGroupProps) => {
     const updateSpindleDriverValue = (newConfig: Config) => {
         setValue(deepMerge(config ?? {}, newConfig));
@@ -29,18 +31,21 @@ const SpindleDriverGroup = ({
                 config={config}
                 setValue={setValue}
                 updateSpindleDriverValue={updateSpindleDriverValue}
+                usedPins={usedPins}
             />
             <BescSpindle
                 board={board}
                 config={config}
                 setValue={setValue}
                 updateSpindleDriverValue={updateSpindleDriverValue}
+                usedPins={usedPins}
             />
             <PwmSpindle
                 board={board}
                 config={config}
                 setValue={setValue}
                 updateSpindleDriverValue={updateSpindleDriverValue}
+                usedPins={usedPins}
             />
 
             <LaserSpindle
@@ -48,6 +53,7 @@ const SpindleDriverGroup = ({
                 config={config}
                 setValue={setValue}
                 updateSpindleDriverValue={updateSpindleDriverValue}
+                usedPins={usedPins}
             />
         </>
     );

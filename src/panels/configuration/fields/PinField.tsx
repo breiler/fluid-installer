@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Alert, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { Pin, PinActive, PinConfig, PinPull } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWarning } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 type SelectFieldProps = {
     label?: string;
@@ -10,6 +13,7 @@ type SelectFieldProps = {
     setValue: (value: PinConfig) => void;
     placeholder?: string;
     helpText?: string;
+    usedPins: Map<string, PinConfig>;
 };
 
 const PinField = ({
@@ -18,11 +22,25 @@ const PinField = ({
     value,
     setValue,
     placeholder,
-    helpText
+    helpText,
+    usedPins
 }: SelectFieldProps) => {
     const [pin, setPin] = useState<string | undefined>(value?.pin);
     const [pull, setPull] = useState<string | undefined>(value?.pull);
     const [active, setActive] = useState<string | undefined>(value?.active);
+    const [hasConflict, setConflict] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (usedPins) {
+            setConflict(
+                Array.from(usedPins.entries())
+                    .filter((p) => p[1].pin !== Pin.NO_PIN)
+                    .filter((p) => p[1].pin === pin).length > 1
+            );
+        } else {
+            setConflict(false);
+        }
+    }, [usedPins]);
 
     useEffect(() => {
         setValue(
@@ -105,6 +123,27 @@ const PinField = ({
                     )}
                 </InputGroup>
                 {helpText && <Form.Text muted>{helpText}</Form.Text>}
+                {hasConflict && (
+                    <Form.Text muted>
+                        <Alert variant="warning">
+                            <FontAwesomeIcon
+                                color="warning"
+                                icon={faWarning as IconDefinition}
+                            />{" "}
+                            The pin is already used
+                            <br />
+                            <i>
+                                (See these{" "}
+                                {usedPins &&
+                                    Array.from(usedPins.entries())
+                                        .filter((p) => p[1].pin === pin)
+                                        .map((p) => p[0])
+                                        .join(", ")}
+                                )
+                            </i>
+                        </Alert>
+                    </Form.Text>
+                )}
             </Col>
         </Form.Group>
     );

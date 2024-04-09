@@ -7,12 +7,14 @@ type StandardStepperProps = {
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const StandardStepper = ({
     board,
     motor,
-    updateMotorDriverValue
+    updateMotorDriverValue,
+    usedPins
 }: StandardStepperProps) => {
     return (
         <>
@@ -27,6 +29,7 @@ const StandardStepper = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
             <PinField
                 label="Direction pin"
@@ -41,6 +44,7 @@ const StandardStepper = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
             <PinField
                 label="Disable pin"
@@ -55,6 +59,7 @@ const StandardStepper = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
         </>
     );

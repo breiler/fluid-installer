@@ -11,13 +11,15 @@ type TenVSpindleProps = {
     config?: Config;
     setValue: (config: Config) => void;
     updateSpindleDriverValue: (config: Config) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const TenVSpindle = ({
     board,
     config,
     setValue,
-    updateSpindleDriverValue
+    updateSpindleDriverValue,
+    usedPins
 }: TenVSpindleProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
@@ -52,6 +54,7 @@ const TenVSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <PinField
@@ -65,6 +68,7 @@ const TenVSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <PinField
@@ -78,6 +82,7 @@ const TenVSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <PinField
@@ -91,6 +96,7 @@ const TenVSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <PinField
@@ -106,6 +112,7 @@ const TenVSpindle = ({
                                 }
                             })
                         }
+                        usedPins={usedPins}
                     />
 
                     <BooleanField

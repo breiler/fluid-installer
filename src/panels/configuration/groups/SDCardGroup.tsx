@@ -8,9 +8,10 @@ type SPIProps = {
     board: Board;
     sdcard?: SDCard;
     setValue: (sdcard?: SDCard) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
+const SDCardGroup = ({ board, sdcard, setValue, usedPins }: SPIProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>SD Card</h4>
@@ -42,6 +43,7 @@ const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
                                 ...{ card_detect_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="CS Pin"
@@ -53,6 +55,7 @@ const SDCardGroup = ({ board, sdcard, setValue }: SPIProps) => {
                                 ...{ cs_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                 </>
             )}

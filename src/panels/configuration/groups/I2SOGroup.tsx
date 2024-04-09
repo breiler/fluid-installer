@@ -8,9 +8,10 @@ type SPIProps = {
     board: Board;
     i2so?: I2ISOConfig;
     setValue: (i2so?: I2ISOConfig) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
-const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
+const I2SOGroup = ({ board, i2so, setValue, usedPins }: SPIProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>I2SO</h4>
@@ -44,6 +45,7 @@ const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
                                 ...{ bck_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="Data Pin"
@@ -55,6 +57,7 @@ const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
                                 ...{ data_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                     <PinField
                         label="WS Pin"
@@ -66,6 +69,7 @@ const I2SOGroup = ({ board, i2so, setValue }: SPIProps) => {
                                 ...{ ws_pin: value.toString() }
                             });
                         }}
+                        usedPins={usedPins}
                     />
                 </>
             )}

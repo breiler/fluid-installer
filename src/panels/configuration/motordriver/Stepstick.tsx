@@ -7,12 +7,14 @@ type StepstickProps = {
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
+    usedPins: Map<string, PinConfig>;
 };
 
 const Stepstick = ({
     board,
     motor,
-    updateMotorDriverValue
+    updateMotorDriverValue,
+    usedPins
 }: StepstickProps) => {
     return (
         <>
@@ -27,6 +29,7 @@ const Stepstick = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -40,6 +43,7 @@ const Stepstick = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -53,6 +57,7 @@ const Stepstick = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -66,6 +71,7 @@ const Stepstick = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -79,6 +85,7 @@ const Stepstick = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
 
             <PinField
@@ -92,6 +99,7 @@ const Stepstick = ({
                         }
                     })
                 }
+                usedPins={usedPins}
             />
         </>
     );

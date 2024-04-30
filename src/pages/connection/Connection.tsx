@@ -9,7 +9,7 @@ import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
 import ControllerLog from "../../components/controllerlog/ControllerLog";
 import { Col, Container, Row } from "react-bootstrap";
-import LatestVersionCard from "../../components/latestversioncard/LatestVersionCard";
+import LatestVersionCard from "../../components/cards/latestversioncard/LatestVersionCard";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
 

@@ -287,6 +287,7 @@ type Start = {
 export type Axes = {
     shared_stepper_disable_pin?: string;
     shared_stepper_reset_pin?: string;
+    homing_runs?: number;
     x?: Axis;
     y?: Axis;
     z?: Axis;
@@ -341,6 +342,7 @@ export type Probe = {
     pin?: string;
     toolsetter_pin?: string;
     check_mode_start?: boolean;
+    hard_stop?: boolean;
 };
 
 export type Coolant = {

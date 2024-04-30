@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import { GithubRelease, GithubService } from "../../services";
-import { Markdown } from "../markdown/Markdown";
-import Ribbon from "../ribbon/Ribbon";
+import { GithubRelease, GithubService } from "../../../services";
+import { Markdown } from "../../markdown/Markdown";
+import Ribbon from "../../ribbon/Ribbon";
 import "./LatestVersionCard.scss";
 
 const LatestVersionCard = () => {

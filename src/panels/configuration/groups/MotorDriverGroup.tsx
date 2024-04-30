@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Motor, PinConfig } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
-import SelectField from "../fields/SelectField";
+import SelectField from "../../../components/fields/SelectField";
 import StandardStepper from "../motordriver/StandardStepper";
 import Stepstick from "../motordriver/Stepstick";
 import TMC2130 from "../motordriver/TMC2130";

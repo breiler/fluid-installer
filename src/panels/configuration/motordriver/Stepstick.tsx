@@ -1,7 +1,7 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
 import { Motor, PinConfig } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import PinField from "../../../components/fields/PinField";
 
 type StepstickProps = {
     board: Board;

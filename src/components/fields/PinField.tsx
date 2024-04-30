@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { Pin, PinActive, PinConfig, PinPull } from "../../../model/Config";
-import { Board } from "../../../model/Boards";
+import { Pin, PinActive, PinConfig, PinPull } from "../../model/Config";
+import { Board } from "../../model/Boards";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";

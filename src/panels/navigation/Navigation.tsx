@@ -1,5 +1,13 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faPowerOff, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import {
+    faDownload,
+    faFolderOpen,
+    faHome,
+    faPowerOff,
+    faRefresh,
+    faTerminal,
+    faWifi
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
@@ -8,6 +16,7 @@ import { ControllerServiceContext } from "../../context/ControllerServiceContext
 import "./Navigation.scss";
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
 import RestartModal from "../../components/restartmodal/RestartModal";
+import Page from "../../model/Page";
 
 const Navigation = () => {
     const navigate = useNavigate();
@@ -41,11 +50,29 @@ const Navigation = () => {
                 className="flex-column navigation-container"
                 onSelect={handleSelect}
             >
-                <Nav.Link eventKey="/">Home</Nav.Link>
-                <Nav.Link eventKey="/install">Install</Nav.Link>
-                <Nav.Link eventKey="/terminal">Terminal</Nav.Link>
+                <Nav.Link eventKey="/">
+                    <FontAwesomeIcon icon={faHome as IconDefinition} /> Home
+                </Nav.Link>
+                <Nav.Link eventKey={Page.INSTALLER}>
+                    <FontAwesomeIcon icon={faDownload as IconDefinition} />{" "}
+                    Install
+                </Nav.Link>
+                <Nav.Link eventKey={Page.TERMINAL}>
+                    <FontAwesomeIcon icon={faTerminal as IconDefinition} />{" "}
+                    Terminal
+                </Nav.Link>
                 {stats?.version && (
-                    <Nav.Link eventKey="/files">File browser</Nav.Link>
+                    <Nav.Link eventKey={Page.FILEBROWSER}>
+                        <FontAwesomeIcon
+                            icon={faFolderOpen as IconDefinition}
+                        />{" "}
+                        File browser
+                    </Nav.Link>
+                )}
+                {stats?.version && (
+                    <Nav.Link eventKey={Page.WIFI}>
+                        <FontAwesomeIcon icon={faWifi as IconDefinition} /> WiFi
+                    </Nav.Link>
                 )}
                 <hr />
                 <Nav.Link onClick={restart}>

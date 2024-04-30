@@ -7,7 +7,6 @@ import { FlashProgress } from "../../services/FlashService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
-import PageTitle from "../pagetitle/PageTitle";
 import BootloaderInfo from "../../panels/bootloaderinfo/BootloaderInfo";
 import Log from "../log/Log";
 
@@ -34,7 +33,7 @@ const InstallerModal = ({
                 {(state === InstallerState.DOWNLOADING ||
                     state === InstallerState.CHECKING_SIGNATURES) && (
                     <>
-                        <PageTitle>Downloading</PageTitle>
+                        <h3>Downloading</h3>
                         <p>
                             Downloading package... <Spinner />
                         </p>
@@ -48,7 +47,7 @@ const InstallerModal = ({
                 )}
                 {state === InstallerState.RESTARTING && (
                     <>
-                        <PageTitle>Restarting</PageTitle>
+                        <h3>Restarting</h3>
                         <p>
                             Waiting for controller restart... <Spinner />
                         </p>
@@ -56,7 +55,7 @@ const InstallerModal = ({
                 )}
                 {state === InstallerState.DONE && (
                     <>
-                        <PageTitle>Done</PageTitle>
+                        <h3>Done</h3>
                         <p>
                             The controller has been successfully installed and
                             is ready to be used.
@@ -65,7 +64,7 @@ const InstallerModal = ({
                 )}
                 {state === InstallerState.ERROR && (
                     <>
-                        <PageTitle>Error!</PageTitle>
+                        <h3>Error!</h3>
                         <div className="alert alert-danger">
                             <FontAwesomeIcon icon={faBan as IconDefinition} />{" "}
                             {errorMessage}

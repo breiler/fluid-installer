@@ -1,8 +1,8 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
 import { Motor, PinConfig } from "../../../model/Config";
-import PinField from "../fields/PinField";
-import TextField from "../fields/TextField";
+import PinField from "../../../components/fields/PinField";
+import TextField from "../../../components/fields/TextField";
 
 type SolenoidProps = {
     board: Board;

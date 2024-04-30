@@ -3,7 +3,8 @@ export enum Page {
     TERMINAL = "/terminal",
     INSTALLER = "/install",
     FILEBROWSER = "/files",
-    CONFIGURATION = "/configuration"
+    CONFIGURATION = "/configuration",
+    WIFI = "/wifi"
 }
 
 export default Page;

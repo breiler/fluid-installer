@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { Stepping } from "../../../model/Config";
-import TextField from "../fields/TextField";
+import TextField from "../../../components/fields/TextField";
 
 const DEFAULT_CONFIG: Stepping = {
     engine: "RMT",

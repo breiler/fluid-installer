@@ -16,6 +16,7 @@ import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
 import PageTitle from "./components/pagetitle/PageTitle";
+import WiFiSettings from "./pages/wifisettings/WiFiSettings";
 
 const App = () => {
     const navigate = useNavigate();
@@ -79,7 +80,12 @@ const App = () => {
                                 <Col sm={5} md={4} lg={3}>
                                     <Navigation />
                                 </Col>
-                                <Col sm={7} md={8} lg={9}>
+                                <Col
+                                    sm={7}
+                                    md={8}
+                                    lg={9}
+                                    style={{ marginTop: "32px" }}
+                                >
                                     <Routes>
                                         <Route index element={<SelectMode />} />
                                         <Route
@@ -99,6 +105,10 @@ const App = () => {
                                         <Route
                                             path="files"
                                             element={<FileBrowser />}
+                                        />
+                                        <Route
+                                            path="wifi"
+                                            element={<WiFiSettings />}
                                         />
                                     </Routes>
                                 </Col>

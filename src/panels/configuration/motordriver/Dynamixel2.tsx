@@ -1,7 +1,7 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
 import { Motor } from "../../../model/Config";
-import TextField from "../fields/TextField";
+import TextField from "../../../components/fields/TextField";
 
 type Dynamixel2Props = {
     board: Board;

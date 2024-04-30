@@ -2,7 +2,7 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import { OLEDConfig } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
-import TextField from "../fields/TextField";
+import TextField from "../../../components/fields/TextField";
 
 type OLEDProps = {
     board: Board;

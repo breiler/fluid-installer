@@ -1,14 +1,15 @@
 import React from "react";
 import { Config, Pin, PinConfig } from "../../../model/Config";
-import AxisGroup from "./AxisGroup";
-import PinField from "../fields/PinField";
 import { Board } from "../../../model/Boards";
 import { Form, Nav, Tab } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
 import { deepMerge } from "../../../utils/utils";
-import BooleanField from "../fields/BooleanField";
+import AxisGroup from "./AxisGroup";
+import PinField from "../../../components/fields/PinField";
+import BooleanField from "../../../components/fields/BooleanField";
+import TextField from "../../../components/fields/TextField";
 
 type SelectFieldProps = {
     board: Board;
@@ -26,8 +27,6 @@ const AxesGroup = ({
     return (
         <>
             <h4>Axes</h4>
-            <br />
-
             <BooleanField
                 label="Require homing on startup"
                 value={config?.start?.must_home ?? true}
@@ -41,6 +40,21 @@ const AxesGroup = ({
                     })
                 }
                 helpText="This controls whether you are required to home at startup or not. You will get an homing alarm at startup if this value is true. This prevents motion until you home the machine or clear the alarm."
+            />
+
+            <TextField
+                label="Homing runs"
+                value={config?.axes?.homing_runs ?? 2}
+                setValue={(value) =>
+                    setValue({
+                        ...config!,
+                        axes: {
+                            ...config?.axes,
+                            homing_runs: Number(value)
+                        }
+                    })
+                }
+                helpText="This sets the number of touches during the homing sequence. The default is 2 to match the Grbl style."
             />
 
             <BooleanField

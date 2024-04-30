@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { PinConfig, I2C0Config, Pin } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import PinField from "../../../components/fields/PinField";
 import { Board } from "../../../model/Boards";
 
 type I2C0Props = {

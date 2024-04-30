@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { Pin, PinConfig, SPI as SPIConfig } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import PinField from "../../../components/fields/PinField";
 import { Board } from "../../../model/Boards";
 
 type SPIProps = {

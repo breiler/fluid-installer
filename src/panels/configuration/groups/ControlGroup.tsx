@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { ControlConfig, PinConfig } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import PinField from "../../../components/fields/PinField";
 import { Board } from "../../../model/Boards";
 
 type ControlProps = {

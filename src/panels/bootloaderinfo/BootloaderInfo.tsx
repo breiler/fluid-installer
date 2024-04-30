@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "../../components";
-import PageTitle from "../../components/pagetitle/PageTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -20,7 +19,7 @@ const BootloaderInfo = () => {
 
     return (
         <>
-            <PageTitle>Installing</PageTitle>
+            <h3>Installing</h3>
             {!showBootloaderWarning && (
                 <p>
                     Waiting for controller to enter bootloader... <Spinner />

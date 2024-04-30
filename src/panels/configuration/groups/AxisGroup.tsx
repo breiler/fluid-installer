@@ -1,10 +1,10 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
 import { Axis, PinConfig } from "../../../model/Config";
-import TextField from "../fields/TextField";
+import TextField from "../../../components/fields/TextField";
 import MotorGroup from "./MotorGroup";
 import { Boards } from "../../../model/Boards";
-import BooleanField from "../fields/BooleanField";
+import BooleanField from "../../../components/fields/BooleanField";
 import HomingGroup from "./HomingGroup";
 
 type SelectFieldProps = {

@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./SelectMode.scss";
-import { TerminalCard } from "../../components/terminalcard/TerminalCard";
-import { InstallCard } from "../../components/installcard/InstallCard";
-import { FileBrowserCard } from "../../components/filebrowsercard/FileBrowserCard";
+import { TerminalCard } from "../../components/cards/terminalcard/TerminalCard";
+import { InstallCard } from "../../components/cards/installcard/InstallCard";
+import { FileBrowserCard } from "../../components/cards/filebrowsercard/FileBrowserCard";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
 import { useNavigate } from "react-router-dom";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import Page from "../../model/Page";
 import usePageView from "../../hooks/usePageView";
+import { WiFiCard } from "../../components/cards/wificard/WiFiCard";
+import { Col } from "react-bootstrap";
 
 const SelectMode = () => {
     usePageView("Home");
@@ -29,21 +31,26 @@ const SelectMode = () => {
             </p>
             <div className="container text-center select-mode">
                 <div className="row">
-                    <div className="col">
+                    <Col xs={12} md={6} lg={4}>
                         <InstallCard onClick={() => navigate(Page.INSTALLER)} />
-                    </div>
-                    <div className="col">
+                    </Col>
+                    <Col xs={12} md={6} lg={4}>
                         <TerminalCard
                             disabled={false}
                             onClick={() => navigate(Page.TERMINAL)}
                         />
-                    </div>
+                    </Col>
                     {stats?.version && (
-                        <div className="col">
+                        <Col xs={12} md={6} lg={4}>
                             <FileBrowserCard
                                 onClick={() => navigate(Page.FILEBROWSER)}
                             />
-                        </div>
+                        </Col>
+                    )}
+                    {stats?.version && (
+                        <Col xs={12} md={6} lg={4}>
+                            <WiFiCard onClick={() => navigate(Page.WIFI)} />
+                        </Col>
                     )}
                 </div>
             </div>

@@ -1,8 +1,8 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { Homing } from "../../../model/Config";
-import BooleanField from "../fields/BooleanField";
-import TextField from "../fields/TextField";
+import BooleanField from "../../../components/fields/BooleanField";
+import TextField from "../../../components/fields/TextField";
 
 type HomingProps = {
     homing?: Homing;

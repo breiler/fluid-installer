@@ -1,10 +1,10 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
 import { Motor, PinConfig } from "../../../model/Config";
-import BooleanField from "../fields/BooleanField";
-import PinField from "../fields/PinField";
-import SelectField from "../fields/SelectField";
-import TextField from "../fields/TextField";
+import BooleanField from "../../../components/fields/BooleanField";
+import PinField from "../../../components/fields/PinField";
+import SelectField from "../../../components/fields/SelectField";
+import TextField from "../../../components/fields/TextField";
 
 type TMC2130Props = {
     board: Board;

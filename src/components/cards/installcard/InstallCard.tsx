@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import Button from "../button";
+import Button from "../../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { ControllerServiceContext } from "../../context/ControllerServiceContext";
-import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
+import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
+import { Stats } from "../../../services/controllerservice/commands/GetStatsCommand";
 import { Card } from "react-bootstrap";
 
 type InstallCardProps = {

@@ -204,6 +204,7 @@ export class ControllerService {
         command: T,
         timeoutMs: number = 0
     ): Promise<T> => {
+        console.log("sending " + command.command);
         this.commands.push(command);
         const result = new Promise<T>((resolve, reject) => {
             let timer;

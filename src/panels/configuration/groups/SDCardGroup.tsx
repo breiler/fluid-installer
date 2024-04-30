@@ -1,6 +1,6 @@
 import React from "react";
 import { Pin, PinConfig, SDCard } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import PinField from "../../../components/fields/PinField";
 import { Board } from "../../../model/Boards";
 import { Form } from "react-bootstrap";
 

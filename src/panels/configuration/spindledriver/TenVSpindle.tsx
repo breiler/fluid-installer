@@ -2,9 +2,9 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import { Board } from "../../../model/Boards";
 import { Config, PinConfig } from "../../../model/Config";
-import BooleanField from "../fields/BooleanField";
-import PinField from "../fields/PinField";
-import TextField from "../fields/TextField";
+import BooleanField from "../../../components/fields/BooleanField";
+import PinField from "../../../components/fields/PinField";
+import TextField from "../../../components/fields/TextField";
 
 type TenVSpindleProps = {
     board: Board;

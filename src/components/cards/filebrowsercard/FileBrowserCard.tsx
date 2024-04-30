@@ -1,35 +1,35 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Button from "../button";
 import Card from "../card";
-import { faTerminal } from "@fortawesome/free-solid-svg-icons";
+import Button from "../../button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFolderOpen } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-type TerminalCardProps = {
-    disabled: boolean;
+type FileBrowserCardProps = {
+    disabled?: boolean;
     onClick: () => void;
 };
 
-export const TerminalCard = ({
-    disabled = false,
-    onClick
-}: TerminalCardProps) => {
+export const FileBrowserCard = ({
+    onClick,
+    disabled = false
+}: FileBrowserCardProps) => {
     return (
         <Card
             className="select-card"
             footer={
                 <Button onClick={onClick} disabled={disabled}>
-                    <>Open terminal</>
+                    <>File browser</>
                 </Button>
             }
         >
             <div className="select-icon">
                 <FontAwesomeIcon
-                    icon={faTerminal as IconDefinition}
+                    icon={faFolderOpen as IconDefinition}
                     size="4x"
                 />
             </div>
-            <>Open a serial terminal to your controller</>
+            <>Manage files on the controller</>
         </Card>
     );
 };

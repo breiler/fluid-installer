@@ -10,9 +10,13 @@ export type Stats = {
     dns?: string;
     channel?: string;
     signal?: string;
-    ssid?: string;
+    apSSID?: string;
     wifiMode?: string;
     wifiSignal?: string;
+    flashSize?: string;
+    cpuTemperature?: string;
+    currentWifiMode?: string;
+    connectedTo?: string;
 };
 
 export class GetStatsCommand extends Command {
@@ -31,9 +35,13 @@ export class GetStatsCommand extends Command {
             dns: this.getParam("DNS: "),
             channel: this.getParam("Channel: "),
             signal: this.getParam("Signal: "),
-            ssid: this.getParam("Connected to: "),
             wifiMode: this.getParam("Current WiFi Mode: "),
-            wifiSignal: this.getParam("Signal: ")
+            wifiSignal: this.getParam("Signal: "),
+            flashSize: this.getParam("Flash Size: "),
+            cpuTemperature: this.getParam("CPU Temperature: "),
+            currentWifiMode: this.getParam("Current WiFi Mode: "),
+            apSSID: this.getParam("SSID: "),
+            connectedTo: this.getParam("Connected to: ")
         };
     }
 

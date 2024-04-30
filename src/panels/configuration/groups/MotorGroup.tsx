@@ -1,10 +1,10 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { PinConfig, Motor, Pin } from "../../../model/Config";
-import PinField from "../fields/PinField";
+import PinField from "../../../components/fields/PinField";
 import { Board } from "../../../model/Boards";
-import BooleanField from "../fields/BooleanField";
-import TextField from "../fields/TextField";
+import BooleanField from "../../../components/fields/BooleanField";
+import TextField from "../../../components/fields/TextField";
 import MotorDriverGroup from "./MotorDriverGroup";
 
 type MotorProps = {

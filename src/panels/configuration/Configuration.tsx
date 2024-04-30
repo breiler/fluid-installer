@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Config, PinConfig, getUsedPins } from "../../model/Config";
 import { Container } from "react-bootstrap";
-import TextField from "./fields/TextField";
-import SelectField from "./fields/SelectField";
+import TextField from "../../components/fields/TextField";
+import SelectField from "../../components/fields/SelectField";
 import jsYaml from "js-yaml";
 import AxesGroup from "./groups/AxesGroup";
 import { Boards } from "../../model/Boards";
@@ -17,6 +17,7 @@ import OLEDGroup from "./groups/OLEDGroup";
 import { deepMerge } from "../../utils/utils";
 import ControlGroup from "./groups/ControlGroup";
 import ProbeGroup from "./groups/ProbeGroup";
+import "./Configuration.scss";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -79,9 +80,9 @@ const Configuration = ({
     };
 
     return (
-        <>
+        <div className="configuration-panel">
             {currentTab === ConfigurationTab.GENERAL && (
-                <Container style={{ paddingTop: "32px" }}>
+                <Container>
                     <h4>Board information</h4>
                     <TextField
                         label="Name"
@@ -108,7 +109,7 @@ const Configuration = ({
                 </Container>
             )}
             {currentTab === ConfigurationTab.AXES && (
-                <Container style={{ paddingTop: "32px" }}>
+                <Container>
                     <AxesGroup
                         board={Boards[0]}
                         config={config}
@@ -119,7 +120,7 @@ const Configuration = ({
             )}
 
             {currentTab === ConfigurationTab.IO && (
-                <Container style={{ paddingTop: "32px" }}>
+                <Container>
                     <SteppingGroup
                         steppingConfig={config.stepping}
                         setValue={(stepping) => appendConfig({ stepping })}
@@ -176,7 +177,7 @@ const Configuration = ({
             )}
 
             {currentTab === ConfigurationTab.SPINDLE && (
-                <Container style={{ paddingTop: "32px" }}>
+                <Container>
                     <SpindleDriverGroup
                         board={Boards[0]}
                         config={config}
@@ -191,7 +192,7 @@ const Configuration = ({
                     <Editor value={value} onChange={updateValue} />
                 </>
             )}
-        </>
+        </div>
     );
 };
 

@@ -16,6 +16,53 @@ import { ControllerServiceContext } from "../../context/ControllerServiceContext
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
+import { Terminal as XTerminal } from "@xterm/xterm";
+const decoder = new TextDecoder();
+let buffer = "";
+let timer: ReturnType<typeof setTimeout> | undefined = undefined;
+
+const COLOR_RED = "\x1b[91m";
+const COLOR_GREEN = "\x1b[92m";
+const COLOR_GRAY = "\x1b[37m";
+
+/**
+ * A function for writing the data to the terminal.
+ * It will buffer the data for 100ms and style the input with colors.
+ *
+ * @param data
+ * @param terminal
+ */
+const handleTerminalInput = (data: ArrayBuffer, terminal: XTerminal) => {
+    buffer = buffer + decoder.decode(data);
+    if (timer) {
+        clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+        console.log("Term " + buffer);
+        buffer = buffer.replace(/MSG:ERR/g, COLOR_RED + "$&" + COLOR_GRAY);
+        buffer = buffer.replace(/MSG:INFO/g, COLOR_GREEN + "$&" + COLOR_GRAY);
+        buffer = buffer.replace(
+            /<Alarm/g,
+            "<" + COLOR_RED + "Alarm" + COLOR_GRAY
+        );
+        buffer = buffer.replace(
+            /<Run/g,
+            "<" + COLOR_GREEN + "Run" + COLOR_GRAY
+        );
+        buffer = buffer.replace(
+            /<Idle/g,
+            "<" + COLOR_GREEN + "Idle" + COLOR_GRAY
+        );
+        buffer = buffer.replace(
+            /error:/g,
+            "<" + COLOR_GREEN + "error:" + COLOR_GRAY
+        );
+        terminal.write(buffer);
+        buffer = "";
+        timer = undefined;
+    }, 100);
+};
 
 const Terminal = () => {
     usePageView("Terminal");
@@ -26,7 +73,8 @@ const Terminal = () => {
 
     const onResponse = useCallback(
         (data) => {
-            xtermRef.current?.terminal.write(data);
+            xtermRef.current?.terminal &&
+                handleTerminalInput(data, xtermRef.current?.terminal);
         },
         [xtermRef]
     );

@@ -24,6 +24,7 @@ let timer: ReturnType<typeof setTimeout> | undefined = undefined;
 const COLOR_RED = "\x1b[91m";
 const COLOR_GREEN = "\x1b[92m";
 const COLOR_GRAY = "\x1b[37m";
+const COLOR_YELLOW = "\x1b[93m";
 
 /**
  * A function for writing the data to the terminal.
@@ -42,6 +43,8 @@ const handleTerminalInput = (data: ArrayBuffer, terminal: XTerminal) => {
         console.log("Term " + buffer);
         buffer = buffer.replace(/MSG:ERR/g, COLOR_RED + "$&" + COLOR_GRAY);
         buffer = buffer.replace(/MSG:INFO/g, COLOR_GREEN + "$&" + COLOR_GRAY);
+        buffer = buffer.replace(/MSG:WARN/g, COLOR_YELLOW + "$&" + COLOR_GRAY);
+        buffer = buffer.replace(/MSG:DBG/g, COLOR_YELLOW + "$&" + COLOR_GRAY);
         buffer = buffer.replace(
             /<Alarm/g,
             "<" + COLOR_RED + "Alarm" + COLOR_GRAY

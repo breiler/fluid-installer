@@ -20,8 +20,13 @@ import {
     GetAccessPointListCommand
 } from "../../services/controllerservice/commands/GetAccessPointListCommand";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock, faSearch, faWifi } from "@fortawesome/free-solid-svg-icons";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+    faLock,
+    faSave,
+    faSearch,
+    faWifi
+} from "@fortawesome/free-solid-svg-icons";
+import { Icon, IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import TextField from "../../components/fields/TextField";
 import SelectField from "../../components/fields/SelectField";
 import {
@@ -31,6 +36,7 @@ import {
 import { Command } from "../../services";
 import { Spinner } from "../../components";
 import WiFiStats from "./WifiStats";
+import { sleep } from "../../utils/utils";
 
 const getSignalColor = (signal: number) => {
     if (signal < 67) {
@@ -57,6 +63,7 @@ const WiFiSettings = () => {
     const [settings, setSettings] = useState<Settings>();
     const [accessPoints, setAccessPoints] = useState<AccessPoint[]>();
 
+    const [isSaving, setIsSaving] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [hostname, setHostname] = useState<string>();
@@ -195,17 +202,30 @@ const WiFiSettings = () => {
         }
 
         try {
-            setIsLoading(true);
+            setIsSaving(true);
             await controllerService?.hardReset();
             await refresh();
         } finally {
-            setIsLoading(false);
+            setIsSaving(false);
         }
     };
 
     useEffect(() => {
-        refresh().then(() => refreshAccessPoints());
+        setIsLoading(true);
+        sleep(1000)
+            .then(() => refresh())
+            .then(() => refreshAccessPoints())
+            .finally(() => setIsLoading(false));
     }, [controllerService]);
+
+    if (isLoading) {
+        return (
+            <Form>
+                <PageTitle>Configure WiFi</PageTitle>
+                Loading configuration <Spinner />
+            </Form>
+        );
+    }
 
     return (
         <Form>
@@ -242,7 +262,7 @@ const WiFiSettings = () => {
             <>
                 <Row>
                     <Col sm={3}></Col>
-                    {!isLoading && (
+                    {!isSaving && (
                         <Col>
                             <WiFiStats
                                 stats={stats ?? {}}
@@ -250,7 +270,7 @@ const WiFiSettings = () => {
                             />
                         </Col>
                     )}
-                    {isLoading && (
+                    {isSaving && (
                         <Col>
                             <Spinner />
                         </Col>
@@ -450,28 +470,35 @@ const WiFiSettings = () => {
                 </>
             )}
 
-            <Button
-                onClick={() => saveSettings()}
-                disabled={
-                    isLoading ||
-                    (hostname === settings?.hostname &&
-                        wifiMode === settings?.wifiMode &&
-                        stationSSID === settings?.stationSSID &&
-                        stationIpMode === settings?.stationIpMode &&
-                        stationPassword === settings?.stationPassword &&
-                        stationMinSecurity === settings?.stationMinSecurity &&
-                        stationIP === settings?.stationIP &&
-                        stationGateway === settings?.stationGateway &&
-                        stationNetmask === settings?.stationNetmask &&
-                        apSSID === settings?.apSSID &&
-                        apPassword === settings?.apPassword &&
-                        apChannel === settings?.apChannel &&
-                        apIP === settings?.apIP &&
-                        apCountry === settings?.apCountry)
-                }
+            <div
+                className="d-flex justify-content-end"
+                style={{ marginTop: "16px" }}
             >
-                Save {isLoading && <Spinner />}
-            </Button>
+                <Button
+                    onClick={() => saveSettings()}
+                    disabled={
+                        isSaving ||
+                        (hostname === settings?.hostname &&
+                            wifiMode === settings?.wifiMode &&
+                            stationSSID === settings?.stationSSID &&
+                            stationIpMode === settings?.stationIpMode &&
+                            stationPassword === settings?.stationPassword &&
+                            stationMinSecurity ===
+                                settings?.stationMinSecurity &&
+                            stationIP === settings?.stationIP &&
+                            stationGateway === settings?.stationGateway &&
+                            stationNetmask === settings?.stationNetmask &&
+                            apSSID === settings?.apSSID &&
+                            apPassword === settings?.apPassword &&
+                            apChannel === settings?.apChannel &&
+                            apIP === settings?.apIP &&
+                            apCountry === settings?.apCountry)
+                    }
+                >
+                    <FontAwesomeIcon icon={faSave as Icon} /> Save{" "}
+                    {isSaving && <Spinner />}
+                </Button>
+            </div>
         </Form>
     );
 };

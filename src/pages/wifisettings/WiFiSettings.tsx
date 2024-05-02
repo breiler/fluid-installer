@@ -447,20 +447,65 @@ const WiFiSettings = () => {
                         }
                     />
 
+                    <SelectField
+                        label="Country"
+                        placeholder="Country"
+                        value={apCountry}
+                        setValue={(value) => setApCountry("" + value)}
+                        options={[
+                            { name: "01", value: "01" },
+                            { name: "AT", value: "AT" },
+                            { name: "AU", value: "AU" },
+                            { name: "BE", value: "BE" },
+                            { name: "BG", value: "BG" },
+                            { name: "BR", value: "BR" },
+                            { name: "CA", value: "CA" },
+                            { name: "CH", value: "CH" },
+                            { name: "CN", value: "CN" },
+                            { name: "CY", value: "CY" },
+                            { name: "CZ", value: "CZ" },
+                            { name: "DE", value: "DE" },
+                            { name: "DK", value: "DK" },
+                            { name: "EE", value: "EE" },
+                            { name: "ES", value: "ES" },
+                            { name: "FI", value: "FI" },
+                            { name: "FR", value: "FR" },
+                            { name: "GB", value: "GB" },
+                            { name: "GR", value: "GR" },
+                            { name: "HK", value: "HK" },
+                            { name: "HR", value: "HR" },
+                            { name: "HU", value: "HU" },
+                            { name: "IE", value: "IE" },
+                            { name: "IN", value: "IN" },
+                            { name: "IS", value: "IS" },
+                            { name: "IT", value: "IT" },
+                            { name: "JP", value: "JP" },
+                            { name: "KR", value: "KR" },
+                            { name: "LI", value: "LI" },
+                            { name: "LT", value: "LT" },
+                            { name: "LU", value: "LU" },
+                            { name: "LV", value: "LV" },
+                            { name: "MT", value: "MT" },
+                            { name: "MX", value: "MX" },
+                            { name: "NL", value: "NL" },
+                            { name: "NO", value: "NO" },
+                            { name: "NZ", value: "NZ" },
+                            { name: "PL", value: "PL" },
+                            { name: "PT", value: "PT" },
+                            { name: "RO", value: "RO" },
+                            { name: "SE", value: "SE" },
+                            { name: "SI", value: "SI" },
+                            { name: "SK", value: "SK" },
+                            { name: "TW", value: "TW" },
+                            { name: "US", value: "US" }
+                        ]}
+                    />
                     <TextField
                         label="Channel"
                         value={apChannel}
                         placeholder="Channel"
                         setValue={(value) => setApChannel("" + value)}
                     />
-
-                    <TextField
-                        label="Country"
-                        value={apCountry}
-                        placeholder="Country"
-                        setValue={(value) => setApCountry("" + value)}
-                    />
-
                     <TextField
                         label="IP"
                         value={apIP}

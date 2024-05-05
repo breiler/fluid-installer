@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Card from "../card";
 import Button from "../../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,28 +12,15 @@ type WiFiCardProps = {
     onClick: () => void;
 };
 
-async function fetchWithTimeout(
-    resource,
-    options: RequestInit = {},
-    timeout = 8000
-) {
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
-
-    const response = await fetch(resource, {
-        ...options,
-        signal: controller.signal
-    });
-    clearTimeout(id);
-
-    return response;
-}
-
 const WebUiLink = ({ stats }: { stats: Stats }) => {
     return (
         <>
             <br />
-            <a href={"http://" + stats.ip + "/"} target="_blank" rel="noreferrer">
+            <a
+                href={"http://" + stats.ip + "/"}
+                target="_blank"
+                rel="noreferrer"
+            >
                 http://{stats.ip}/
             </a>
         </>
@@ -45,33 +32,6 @@ export const WiFiCard = ({
     disabled = false,
     stats
 }: WiFiCardProps) => {
-    const [accessWebUI, setAccessWebUI] = useState(false);
-
-    useEffect(() => {
-        if (!stats) {
-            return;
-        }
-
-        const timer = setInterval(() => {
-            const url = "http://" + stats.ip + "/";
-            fetchWithTimeout(
-                url,
-                {
-                    mode: "no-cors"
-                },
-                2000
-            )
-                .then(() => setAccessWebUI(true))
-                .catch(() => setAccessWebUI(false));
-        }, 5000);
-
-        return () => {
-            if (!timer) return;
-
-            clearInterval(timer);
-        };
-    }, [stats]);
-
     return (
         <Card
             className="select-card"
@@ -98,7 +58,7 @@ export const WiFiCard = ({
                             <span className="text-nowrap">
                                 {stats?.apSSID} {stats.signal}
                             </span>
-                            {accessWebUI && <WebUiLink stats={stats} />}
+                            <WebUiLink stats={stats} />
                         </>
                     )}
             </>
@@ -109,7 +69,7 @@ export const WiFiCard = ({
                         <span className="text-nowrap">
                             {stats?.connectedTo} ({stats?.signal})
                         </span>
-                        {accessWebUI && <WebUiLink stats={stats} />}
+                        <WebUiLink stats={stats} />
                     </>
                 )}
             </>

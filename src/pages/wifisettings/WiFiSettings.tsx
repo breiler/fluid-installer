@@ -233,6 +233,7 @@ const WiFiSettings = () => {
 
             <TextField
                 label="Hostname"
+                disabled={isSaving || isLoading}
                 value={hostname}
                 placeholder="Hostname"
                 setValue={(value) => setHostname("" + value)}
@@ -240,6 +241,7 @@ const WiFiSettings = () => {
 
             <SelectField
                 label="WiFi mode"
+                disabled={isSaving || isLoading}
                 options={[
                     { name: "Off", value: "Off" },
                     {
@@ -290,6 +292,7 @@ const WiFiSettings = () => {
                         <Col>
                             <InputGroup>
                                 <Form.Control
+                                    disabled={isSaving || isLoading}
                                     aria-label={"SSID"}
                                     value={stationSSID}
                                     type="text"
@@ -300,7 +303,9 @@ const WiFiSettings = () => {
                                 <Dropdown
                                     onToggle={() => refreshAccessPoints()}
                                 >
-                                    <Dropdown.Toggle>
+                                    <Dropdown.Toggle
+                                        disabled={isSaving || isLoading}
+                                    >
                                         <FontAwesomeIcon
                                             icon={faSearch as IconDefinition}
                                         />
@@ -351,6 +356,7 @@ const WiFiSettings = () => {
 
                     <TextField
                         label="Password"
+                        disabled={isSaving || isLoading}
                         value={stationPassword}
                         placeholder="Password"
                         setValue={(value) => setStationPassword("" + value)}
@@ -364,6 +370,7 @@ const WiFiSettings = () => {
 
                     <SelectField
                         label="Min security"
+                        disabled={isSaving || isLoading}
                         options={[
                             { name: "OPEN", value: "OPEN" },
                             { name: "WEP", value: "WEP" },
@@ -384,6 +391,7 @@ const WiFiSettings = () => {
 
                     <SelectField
                         label="IP mode"
+                        disabled={isSaving || isLoading}
                         options={[
                             { name: "Static", value: "Static" },
                             {
@@ -399,12 +407,14 @@ const WiFiSettings = () => {
                         <>
                             <TextField
                                 label="IP"
+                                disabled={isSaving || isLoading}
                                 value={stationIP}
                                 placeholder="Password"
                                 setValue={(value) => setStationIP("" + value)}
                             />
                             <TextField
                                 label="Gateway"
+                                disabled={isSaving || isLoading}
                                 value={stationGateway}
                                 placeholder="Gateway"
                                 setValue={(value) =>
@@ -413,6 +423,7 @@ const WiFiSettings = () => {
                             />
                             <TextField
                                 label="Netmask"
+                                disabled={isSaving || isLoading}
                                 value={stationNetmask}
                                 placeholder="Netmask"
                                 setValue={(value) =>
@@ -429,6 +440,7 @@ const WiFiSettings = () => {
                     <h4 style={{ marginTop: "24px" }}>Access point settings</h4>
                     <TextField
                         label="SSID"
+                        disabled={isSaving || isLoading}
                         value={apSSID}
                         placeholder="AP SSID"
                         setValue={(value) => setApSSID("" + value)}
@@ -436,6 +448,7 @@ const WiFiSettings = () => {
 
                     <TextField
                         label="Password"
+                        disabled={isSaving || isLoading}
                         value={apPassword}
                         placeholder="Password"
                         setValue={(value) => setApPassword("" + value)}
@@ -449,6 +462,7 @@ const WiFiSettings = () => {
 
                     <SelectField
                         label="Country"
+                        disabled={isSaving || isLoading}
                         placeholder="Country"
                         value={apCountry}
                         setValue={(value) => setApCountry("" + value)}
@@ -502,12 +516,14 @@ const WiFiSettings = () => {
                     />
                     <TextField
                         label="Channel"
+                        disabled={isSaving || isLoading}
                         value={apChannel}
                         placeholder="Channel"
                         setValue={(value) => setApChannel("" + value)}
                     />
                     <TextField
                         label="IP"
+                        disabled={isSaving || isLoading}
                         value={apIP}
                         placeholder="IP"
                         setValue={(value) => setApIP("" + value)}

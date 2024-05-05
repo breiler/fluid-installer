@@ -12,7 +12,6 @@ export type Stats = {
     signal?: string;
     apSSID?: string;
     wifiMode?: string;
-    wifiSignal?: string;
     flashSize?: string;
     cpuTemperature?: string;
     currentWifiMode?: string;
@@ -36,7 +35,6 @@ export class GetStatsCommand extends Command {
             channel: this.getParam("Channel: "),
             signal: this.getParam("Signal: "),
             wifiMode: this.getParam("Current WiFi Mode: "),
-            wifiSignal: this.getParam("Signal: "),
             flashSize: this.getParam("Flash Size: "),
             cpuTemperature: this.getParam("CPU Temperature: "),
             currentWifiMode: this.getParam("Current WiFi Mode: "),

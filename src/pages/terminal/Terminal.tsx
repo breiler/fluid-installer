@@ -57,10 +57,7 @@ const handleTerminalInput = (data: ArrayBuffer, terminal: XTerminal) => {
             /<Idle/g,
             "<" + COLOR_GREEN + "Idle" + COLOR_GRAY
         );
-        buffer = buffer.replace(
-            /error:/g,
-            "<" + COLOR_GREEN + "error:" + COLOR_GRAY
-        );
+        buffer = buffer.replace(/error:/g, COLOR_RED + "error:" + COLOR_GRAY);
         terminal.write(buffer);
         buffer = "";
         timer = undefined;

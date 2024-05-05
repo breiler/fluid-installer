@@ -14,6 +14,7 @@ type SelectFieldProps = {
     placeholder?: string;
     helpText?: string;
     groupedControls?: ReactElement;
+    disabled?: boolean;
 };
 
 const SelectField = ({
@@ -23,7 +24,8 @@ const SelectField = ({
     options = [],
     placeholder = "",
     helpText,
-    groupedControls
+    groupedControls,
+    disabled
 }: SelectFieldProps) => {
     return (
         <Form.Group as={Row} className="mb-3">
@@ -33,6 +35,7 @@ const SelectField = ({
             <Col sm="9">
                 <InputGroup>
                     <Form.Select
+                        disabled={disabled}
                         aria-label={placeholder}
                         onChange={(event) => setValue(event.target.value)}
                         value={value}

@@ -13,6 +13,7 @@ type TextFieldProps = {
     groupedControls?: ReactElement;
     type?: string;
     validationMessage?: string;
+    disabled?: boolean;
 };
 
 const TextField = ({
@@ -25,7 +26,8 @@ const TextField = ({
     helpText,
     groupedControls,
     type,
-    validationMessage
+    validationMessage,
+    disabled
 }: TextFieldProps) => {
     return (
         <Form.Group as={Row} className="mb-3">
@@ -35,6 +37,7 @@ const TextField = ({
             <Col>
                 <InputGroup hasValidation>
                     <Form.Control
+                        disabled={disabled}
                         type={type ?? "text"}
                         placeholder={placeholder}
                         maxLength={maxLength}

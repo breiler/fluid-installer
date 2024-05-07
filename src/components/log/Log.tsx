@@ -6,11 +6,17 @@ import "./Log.scss";
 
 type LogProps = {
     show: boolean;
+    showExpand: boolean;
     onShow: (show: boolean) => void;
-    children: ReactNode;
+    children?: ReactNode;
 };
 
-const Log = ({ show = false, onShow, children }: LogProps) => {
+const Log = ({
+    show = false,
+    showExpand = true,
+    onShow,
+    children
+}: LogProps) => {
     const bottom = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -25,19 +31,26 @@ const Log = ({ show = false, onShow, children }: LogProps) => {
                     <div ref={bottom} />
                 </div>
             )}
+            {showExpand && (
+                <>
+                    {show && (
+                        <a href="#" onClick={() => onShow(false)}>
+                            Hide details{" "}
+                            <FontAwesomeIcon
+                                icon={faChevronUp as IconDefinition}
+                            />
+                        </a>
+                    )}
 
-            {show && (
-                <a href="#" onClick={() => onShow(false)}>
-                    Hide details{" "}
-                    <FontAwesomeIcon icon={faChevronUp as IconDefinition} />
-                </a>
-            )}
-
-            {!show && (
-                <a href="#" onClick={() => onShow(true)}>
-                    Show details{" "}
-                    <FontAwesomeIcon icon={faChevronDown as IconDefinition} />
-                </a>
+                    {!show && (
+                        <a href="#" onClick={() => onShow(true)}>
+                            Show details{" "}
+                            <FontAwesomeIcon
+                                icon={faChevronDown as IconDefinition}
+                            />
+                        </a>
+                    )}
+                </>
             )}
         </div>
     );

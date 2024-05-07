@@ -43,7 +43,7 @@ const RestartModal = ({ show }: RestartModalProps) => {
                     </div>
                 )}
 
-                {isConnected && (
+                {isConnected && !showLog && (
                     <div className="title">
                         Connected to the controller{" "}
                         <span className="success">

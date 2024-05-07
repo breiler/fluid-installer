@@ -13,9 +13,12 @@ import PageTitle from "../../components/pagetitle/PageTitle";
 import Page from "../../model/Page";
 import usePageView from "../../hooks/usePageView";
 import { WiFiCard } from "../../components/cards/wificard/WiFiCard";
-import { Col } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { sleep } from "../../utils/utils";
 import { Spinner } from "../../components";
+import { GetStartupShowCommand } from "../../services/controllerservice/commands/GetStartupShowCommand";
+import AlertMessage from "../../components/alertmessage/AlertMessage";
+import LogModal from "../../components/logmodal/LogModal";
 
 const SelectMode = () => {
     usePageView("Home");
@@ -23,6 +26,9 @@ const SelectMode = () => {
     const [isLoading, setIsLoading] = useState(false);
     const controllerService = useContext(ControllerServiceContext);
     const [stats, setStats] = useState<Stats>();
+    const [isBootError, setBootError] = useState<boolean>(false);
+    const [showLogModal, setShowLogModal] = useState<boolean>(false);
+    const [startupLogRows, setStartupLogRows] = useState<string[]>([]);
 
     useEffect(() => {
         if (!controllerService) return;
@@ -30,6 +36,15 @@ const SelectMode = () => {
         sleep(1000)
             .then(() => controllerService.send(new GetStatsCommand(), 5000))
             .then((command) => setStats(command.getStats()))
+            .then(() => controllerService.send(new GetStartupShowCommand()))
+            .then((command) => {
+                setBootError(
+                    !!command.response.find(
+                        (line) => line.indexOf("[MSG:ERR:") > -1
+                    )
+                );
+                setStartupLogRows(command.response);
+            })
             .finally(() => setIsLoading(false));
     }, [controllerService]);
 
@@ -46,12 +61,35 @@ const SelectMode = () => {
 
     return (
         <>
+            <LogModal
+                show={showLogModal}
+                setShow={setShowLogModal}
+                rows={startupLogRows}
+            />
             <PageTitle>FluidNC Web Installer</PageTitle>
             <p>
                 You are now connected to a device, please choose an action below
             </p>
             <div className="container text-center select-mode">
-                <div className="row">
+                <Row>
+                    <Col xs={12}>
+                        {isBootError && (
+                            <AlertMessage>
+                                {" "}
+                                There was an error during boot, likely due to an
+                                unvalid configuration.
+                                <br />
+                                <a
+                                    href="#"
+                                    onClick={() => setShowLogModal(true)}
+                                >
+                                    Click here to see details
+                                </a>
+                            </AlertMessage>
+                        )}
+                    </Col>
+                </Row>
+                <Row>
                     <Col xs={12} md={6} lg={4}>
                         <InstallCard onClick={() => navigate(Page.INSTALLER)} />
                     </Col>
@@ -76,7 +114,7 @@ const SelectMode = () => {
                             />
                         </Col>
                     )}
-                </div>
+                </Row>
             </div>
         </>
     );

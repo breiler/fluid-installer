@@ -4,7 +4,8 @@ export enum Page {
     INSTALLER = "/install",
     FILEBROWSER = "/files",
     CONFIGURATION = "/configuration",
-    WIFI = "/wifi"
+    WIFI = "/wifi",
+    CALIBRATE = "/calibrate"
 }
 
 export default Page;

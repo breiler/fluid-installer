@@ -17,37 +17,37 @@ const WiFiStats = ({ stats, onRefresh }: Props) => {
                 <Row>
                     <Col>
                         <Row>
-                            <Col sm={3} className="text-end">
+                            <Col sm={5} lg={3} className="text-end">
                                 <b>WiFi mode:</b>
                             </Col>
                             <Col> {stats?.currentWifiMode} </Col>
                         </Row>
                         <Row>
-                            <Col sm={3} className="text-end">
+                            <Col sm={5} lg={3} className="text-end">
                                 <b>Signal:</b>
                             </Col>
                             <Col>{stats?.signal}</Col>
                         </Row>
                         <Row>
-                            <Col sm={3} className="text-end">
+                            <Col sm={5} lg={3} className="text-end">
                                 <b>SSID:</b>
                             </Col>
                             <Col>{stats?.connectedTo ?? stats?.apSSID}</Col>
                         </Row>
                         <Row>
-                            <Col sm={3} className="text-end">
+                            <Col sm={5} lg={3} className="text-end">
                                 <b>IP:</b>
                             </Col>
                             <Col> {stats?.ip}</Col>
                         </Row>
                         <Row>
-                            <Col sm={3} className="text-end">
+                            <Col sm={5} lg={3} className="text-end">
                                 <b>Netmask:</b>
                             </Col>
                             <Col> {stats?.netmask}</Col>
                         </Row>
                         <Row>
-                            <Col sm={3} className="text-end">
+                            <Col sm={5} lg={3} className="text-end">
                                 <b>Gateway:</b>
                             </Col>
                             <Col>{stats?.gateway} </Col>

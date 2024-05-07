@@ -54,18 +54,19 @@
         "@fortawesome/react-fontawesome": "^0.2.0",
         "@uiw/codemirror-extensions-langs": "^4.21.9",
         "@uiw/react-codemirror": "^4.21.9",
+        "@xterm/addon-fit": "^0.10.0",
+        "@xterm/xterm": "^5.5.0",
         "bootstrap": "^5.3.0",
         "crypto-js": "^4.2.0",
         "esptool-js": "^0.3.2",
         "firebase": "^10.6.0",
+        "html-react-parser": "^5.1.10",
         "js-yaml": "^4.1.0",
         "react": "^18.2.0",
         "react-bootstrap": "^2.10.2",
         "react-dom": "^18.2.0",
         "react-error-boundary": "^4.0.10",
         "react-markdown": "^8.0.7",
-        "remark-gfm": "^3.0.1",
-        "@xterm/xterm": "^5.5.0",
-        "@xterm/addon-fit": "^0.10.0"
+        "remark-gfm": "^3.0.1"
     }
 }

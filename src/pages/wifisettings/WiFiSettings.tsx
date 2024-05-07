@@ -263,7 +263,7 @@ const WiFiSettings = () => {
 
             <>
                 <Row>
-                    <Col sm={3}></Col>
+                    <Col lg={3} className="d-none d-lg-block"></Col>
                     {!isSaving && (
                         <Col>
                             <WiFiStats

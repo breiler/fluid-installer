@@ -16,7 +16,7 @@ import { ControllerServiceContext } from "../../context/ControllerServiceContext
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
-import { Terminal as XTerminal } from "@xterm/xterm";
+
 const decoder = new TextDecoder();
 let buffer = "";
 let timer: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -33,7 +33,10 @@ const COLOR_YELLOW = "\x1b[93m";
  * @param data
  * @param terminal
  */
-const handleTerminalInput = (data: ArrayBuffer, terminal: XTerminal) => {
+const handleTerminalInput = (
+    data: ArrayBuffer,
+    write: (data: string) => void
+) => {
     buffer = buffer + decoder.decode(data);
     if (timer) {
         clearTimeout(timer);
@@ -58,7 +61,7 @@ const handleTerminalInput = (data: ArrayBuffer, terminal: XTerminal) => {
             "<" + COLOR_GREEN + "Idle" + COLOR_GRAY
         );
         buffer = buffer.replace(/error:/g, COLOR_RED + "error:" + COLOR_GRAY);
-        terminal.write(buffer);
+        write(buffer);
         buffer = "";
         timer = undefined;
     }, 100);
@@ -74,7 +77,9 @@ const Terminal = () => {
     const onResponse = useCallback(
         (data) => {
             xtermRef.current?.terminal &&
-                handleTerminalInput(data, xtermRef.current?.terminal);
+                handleTerminalInput(data, (data) =>
+                    xtermRef.current?.terminal.write(data)
+                );
         },
         [xtermRef]
     );

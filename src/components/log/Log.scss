@@ -4,9 +4,24 @@
 
     .log {
         font-family: "Courier New", Courier, monospace;
+        font-size: 15px;
         background-color: black;
-        color: white;
-        height: 200px;
+        color: #d3d7cf;
+        height: calc(100vh - 20em);
         overflow: scroll;
+    }
+
+    .red {
+        color: #ef2929
+    }
+
+
+    .green {
+        color: #8ae234
+    }
+
+
+    .yellow {
+        color: yellow
     }
 }

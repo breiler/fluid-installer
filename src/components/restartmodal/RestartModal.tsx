@@ -55,6 +55,7 @@ const RestartModal = ({ show }: RestartModalProps) => {
                 <ControllerLog
                     show={showLog}
                     onShow={setShowLog}
+                    onError={() => setShowLog(true)}
                     controllerService={controllerService}
                 />
             </Modal.Body>

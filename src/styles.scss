@@ -8,8 +8,11 @@ body {
     padding-bottom: 80px;
 }
 
-@include media-breakpoint-between(sm, lg) { 
-    .container-lg, .container-md, .container-sm, .container {
+@include media-breakpoint-between(sm, lg) {
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container {
         max-width: 100%;
     }
 }

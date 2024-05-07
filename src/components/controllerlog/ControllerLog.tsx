@@ -1,7 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { ControllerService } from "../../services";
 import Log from "../log/Log";
-//import parse from "html-react-parser";
 
 type ControllerLogProps = {
     show: boolean;
@@ -23,7 +22,7 @@ const createLine = (line: string) => {
     line = line.replace(/&lt;Idle/g, "&lt;<span class='green'>Idle</span>");
     line = line.replace(/error:/g, "<span class='red'>error:</span>");
 
-    return <div>{line}</div>;
+    return <div dangerouslySetInnerHTML={{ __html: line }} />;
 };
 
 const ControllerLog = ({

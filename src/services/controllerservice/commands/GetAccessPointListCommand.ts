@@ -37,7 +37,11 @@ export class GetAccessPointListCommand extends Command {
                 isProtected: a.IS_PROTECTED === "1"
             })).sort((a, b) => a.signal - b.signal);
         } catch (error) {
-            console.error(error);
+            console.error(
+                "An error occured while trying to parse accesspoint data",
+                this.response,
+                error
+            );
         }
 
         return [];

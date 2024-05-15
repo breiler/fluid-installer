@@ -5,6 +5,7 @@ import {
     faHome,
     faPowerOff,
     faRefresh,
+    faSliders,
     faTerminal,
     faWifi
 } from "@fortawesome/free-solid-svg-icons";
@@ -72,6 +73,12 @@ const Navigation = () => {
                 {stats?.version && (
                     <Nav.Link eventKey={Page.WIFI}>
                         <FontAwesomeIcon icon={faWifi as IconDefinition} /> WiFi
+                    </Nav.Link>
+                )}
+                {stats?.version && (
+                    <Nav.Link eventKey={Page.CALIBRATE}>
+                        <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
+                        Calibrate
                     </Nav.Link>
                 )}
                 <hr />

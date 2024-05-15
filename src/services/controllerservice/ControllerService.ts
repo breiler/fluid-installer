@@ -188,23 +188,30 @@ export class ControllerService {
         while (endLineIndex >= 0) {
             const line = this.buffer.substring(0, endLineIndex);
             this.buffer = this.buffer.substring(endLineIndex + 1);
-            console.log("<<< " + line);
 
             if (this.commands.length) {
+                if (this.commands[0].debugReceive) {
+                    console.log("<<< " + line);
+                }
                 this.commands[0].appendLine(line);
                 if (this.commands[0].state == CommandState.DONE) {
                     this.commands = this.commands.slice(1);
                 }
+            } else {
+                console.log("<<< " + line);
             }
             endLineIndex = this.buffer.indexOf("\n");
         }
     };
 
-    send = <T extends Command>(
+    send = async <T extends Command>(
         command: T,
         timeoutMs: number = 0
     ): Promise<T> => {
-        console.log("sending " + command.command);
+        if (command.debugSend) {
+            console.log("sending " + command.command);
+        }
+
         this.commands.push(command);
         const result = new Promise<T>((resolve, reject) => {
             let timer;
@@ -221,6 +228,7 @@ export class ControllerService {
                 resolve(command);
             };
         });
+
         this.serialPort.write(Buffer.from((command as Command).command + "\n"));
         return result;
     };

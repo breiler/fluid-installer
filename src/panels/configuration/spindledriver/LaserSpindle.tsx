@@ -21,7 +21,6 @@ const LaserSpindle = ({
     updateSpindleDriverValue,
     usedPins
 }: LaserSpindleProps) => {
-    console.log("Value: " + config?.Laser?.tool_num);
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>Laser</h4>

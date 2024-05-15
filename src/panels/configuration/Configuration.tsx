@@ -14,7 +14,7 @@ import Editor from "../../components/editor/Editor";
 import SpindleDriverGroup from "./groups/SpindleDriverGroup";
 import I2CGroup from "./groups/I2CGroup";
 import OLEDGroup from "./groups/OLEDGroup";
-import { deepMerge } from "../../utils/utils";
+import { deepMerge, fileDataToConfig } from "../../utils/utils";
 import ControlGroup from "./groups/ControlGroup";
 import ProbeGroup from "./groups/ProbeGroup";
 import "./Configuration.scss";
@@ -61,21 +61,17 @@ const Configuration = ({
     };
 
     const updateValue = (value: string) => {
-        // Workaround for values beginning with # (should not be treated as comments)
-        const regexp = /^(\s*.*:[ \t]*)(#\S.*)$/gm;
-        const transformedValue = value.replace(regexp, '$1"$2"');
-
         try {
-            const data = jsYaml.load(transformedValue);
+            const data = fileDataToConfig(value);
             setConfig((config) => {
                 return {
                     ...config,
                     ...data
                 };
             });
-            onChange(transformedValue, false);
+            onChange(value, false);
         } catch (error) {
-            onChange(transformedValue, true);
+            onChange(value, true);
         }
     };
 

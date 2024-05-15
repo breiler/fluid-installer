@@ -1,5 +1,5 @@
 import { Command } from "./Command";
-import { ControllerFile } from "./types";
+import { ControllerFile } from "../types";
 
 export class ListFilesCommand extends Command {
     constructor() {

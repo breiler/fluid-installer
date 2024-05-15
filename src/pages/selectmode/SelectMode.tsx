@@ -19,6 +19,7 @@ import { Spinner } from "../../components";
 import { GetStartupShowCommand } from "../../services/controllerservice/commands/GetStartupShowCommand";
 import AlertMessage from "../../components/alertmessage/AlertMessage";
 import LogModal from "../../components/logmodal/LogModal";
+import { CalibrateCard } from "../../components/cards/calibratecard/CalibrateCard";
 
 const SelectMode = () => {
     usePageView("Home");
@@ -74,8 +75,7 @@ const SelectMode = () => {
                 <Row>
                     <Col xs={12}>
                         {isBootError && (
-                            <AlertMessage>
-                                {" "}
+                            <AlertMessage variant="danger">
                                 There was an error during boot, likely due to an
                                 unvalid configuration.
                                 <br />
@@ -111,6 +111,13 @@ const SelectMode = () => {
                             <WiFiCard
                                 onClick={() => navigate(Page.WIFI)}
                                 stats={stats}
+                            />
+                        </Col>
+                    )}
+                    {stats?.version && (
+                        <Col xs={12} md={6} lg={4}>
+                            <CalibrateCard
+                                onClick={() => navigate(Page.CALIBRATE)}
                             />
                         </Col>
                     )}

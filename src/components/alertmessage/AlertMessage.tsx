@@ -7,10 +7,11 @@ import { Alert, Col, Row } from "react-bootstrap";
 
 type AlertMessageProps = {
     children: ReactNode;
+    variant?: "danger" | "warning" | "info";
 };
-const AlertMessage = ({ children }: AlertMessageProps) => {
+const AlertMessage = ({ children, variant }: AlertMessageProps) => {
     return (
-        <Alert variant="danger">
+        <Alert variant={variant}>
             <Row>
                 <Col
                     xs={1}

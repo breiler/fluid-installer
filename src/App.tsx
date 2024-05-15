@@ -17,6 +17,7 @@ import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
 import PageTitle from "./components/pagetitle/PageTitle";
 import WiFiSettings from "./pages/wifisettings/WiFiSettings";
+import Calibrate from "./pages/calibrate/Calibrate";
 
 const App = () => {
     const navigate = useNavigate();
@@ -109,6 +110,10 @@ const App = () => {
                                         <Route
                                             path="wifi"
                                             element={<WiFiSettings />}
+                                        />
+                                        <Route
+                                            path="calibrate"
+                                            element={<Calibrate />}
                                         />
                                     </Routes>
                                 </Col>

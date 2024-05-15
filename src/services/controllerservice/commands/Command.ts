@@ -9,6 +9,17 @@ export class Command {
     command: string;
     response: string[];
     state: CommandState;
+
+    /**
+     * Set to true to debug log when the command is being sent
+     */
+    debugSend: boolean;
+
+    /**
+     * Set to true to debug log when the response data is received
+     */
+    debugReceive: boolean;
+
     onDone: () => Promise<void>;
 
     constructor(command: string) {

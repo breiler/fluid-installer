@@ -1,3 +1,6 @@
+import jsYaml from "js-yaml";
+import { Config } from "../model/Config";
+
 export const isSafari = () => {
     return (
         navigator.vendor &&
@@ -73,4 +76,11 @@ export const deepMerge = (target: Props, ...sources: Props[]): Props => {
 
 export const sleep = (milliseconds: number) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
+export const fileDataToConfig = (data): Config => {
+    // Workaround for values beginning with # (should not be treated as comments)
+    const regexp = /^(\s*.*:[ \t]*)(#\S.*)$/gm;
+    const transformedValue = data.replace(regexp, '$1"$2"');
+    return jsYaml.load(transformedValue);
 };

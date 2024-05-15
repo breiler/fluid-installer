@@ -43,7 +43,6 @@ const handleTerminalInput = (
     }
 
     timer = setTimeout(() => {
-        console.log("Term " + buffer);
         buffer = buffer.replace(/MSG:ERR/g, COLOR_RED + "$&" + COLOR_GRAY);
         buffer = buffer.replace(/MSG:INFO/g, COLOR_GREEN + "$&" + COLOR_GRAY);
         buffer = buffer.replace(/MSG:WARN/g, COLOR_YELLOW + "$&" + COLOR_GRAY);

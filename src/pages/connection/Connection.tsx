@@ -129,6 +129,7 @@ const Connection = ({ onConnect }: Props) => {
                                 show={showLog}
                                 onShow={setShowLog}
                                 controllerService={controllerService}
+                                onError={() => {}}
                             />
                         )}
                     </div>

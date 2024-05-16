@@ -18,7 +18,8 @@ const Header = () => (
                 <a
                     className="nav-link active"
                     href="http://wiki.fluidnc.com/"
-                    target="_blank" rel="noreferrer"
+                    target="_blank"
+                    rel="noreferrer"
                 >
                     <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
                     Documentation
@@ -27,7 +28,8 @@ const Header = () => (
                 <a
                     className="nav-link active"
                     href="https://github.com/bdring/FluidNC"
-                    target="_blank" rel="noreferrer"
+                    target="_blank"
+                    rel="noreferrer"
                 >
                     <FontAwesomeIcon icon={faGithub as IconDefinition} /> Github
                 </a>

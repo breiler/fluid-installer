@@ -1,23 +1,22 @@
-
 .calibratePin {
-   .badge {
-      font-size: 14px;
-      font-weight: bold;
-      padding: 12px;
-      border-radius: var(--bs-border-radius);
-      height: 100%;
-      width: 100px;
-      background-color: rgb(var(--bs-secondary-rgb));
-      color: white;
-   }
+    .badge {
+        font-size: 14px;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: var(--bs-border-radius);
+        height: 100%;
+        width: 100px;
+        background-color: rgb(var(--bs-secondary-rgb));
+        color: white;
+    }
 
-   .badgeTriggered {
-      background-color: rgb(var(--bs-danger-rgb));
-      color: white;
-   }
+    .badgeTriggered {
+        background-color: rgb(var(--bs-danger-rgb));
+        color: white;
+    }
 
-   .badgeInactive {
-      background-color: rgb(var(--bs-success-rgb));
-      color: white;
-   }
+    .badgeInactive {
+        background-color: rgb(var(--bs-success-rgb));
+        color: white;
+    }
 }

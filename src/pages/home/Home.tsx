@@ -1,27 +1,27 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./SelectMode.scss";
-import { TerminalCard } from "../../components/cards/terminalcard/TerminalCard";
-import { InstallCard } from "../../components/cards/installcard/InstallCard";
+import { Col, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Spinner } from "../../components";
+import AlertMessage from "../../components/alertmessage/AlertMessage";
+import { CalibrateCard } from "../../components/cards/calibratecard/CalibrateCard";
 import { FileBrowserCard } from "../../components/cards/filebrowsercard/FileBrowserCard";
+import { InstallCard } from "../../components/cards/installcard/InstallCard";
+import { TerminalCard } from "../../components/cards/terminalcard/TerminalCard";
+import { WiFiCard } from "../../components/cards/wificard/WiFiCard";
+import LogModal from "../../components/logmodal/LogModal";
+import PageTitle from "../../components/pagetitle/PageTitle";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import usePageView from "../../hooks/usePageView";
+import Page from "../../model/Page";
+import { GetStartupShowCommand } from "../../services/controllerservice/commands/GetStartupShowCommand";
 import {
     GetStatsCommand,
     Stats
 } from "../../services/controllerservice/commands/GetStatsCommand";
-import { useNavigate } from "react-router-dom";
-import PageTitle from "../../components/pagetitle/PageTitle";
-import Page from "../../model/Page";
-import usePageView from "../../hooks/usePageView";
-import { WiFiCard } from "../../components/cards/wificard/WiFiCard";
-import { Col, Row } from "react-bootstrap";
 import { sleep } from "../../utils/utils";
-import { Spinner } from "../../components";
-import { GetStartupShowCommand } from "../../services/controllerservice/commands/GetStartupShowCommand";
-import AlertMessage from "../../components/alertmessage/AlertMessage";
-import LogModal from "../../components/logmodal/LogModal";
-import { CalibrateCard } from "../../components/cards/calibratecard/CalibrateCard";
+import "./Home.scss";
 
-const SelectMode = () => {
+const Home = () => {
     usePageView("Home");
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
@@ -127,4 +127,4 @@ const SelectMode = () => {
     );
 };
 
-export default SelectMode;
+export default Home;

@@ -9,7 +9,7 @@ import { Header } from "./components";
 import Page from "./model/Page";
 import { Installer, Terminal } from "./pages";
 import FileBrowser from "./pages/filebrowser";
-import SelectMode from "./pages/selectmode";
+import Home from "./pages/home";
 import { Connection } from "./panels";
 import { isSafari, isFirefox } from "./utils/utils";
 import { ControllerService, ControllerStatus } from "./services";
@@ -18,6 +18,7 @@ import Navigation from "./panels/navigation/Navigation";
 import PageTitle from "./components/pagetitle/PageTitle";
 import WiFiSettings from "./pages/wifisettings/WiFiSettings";
 import Calibrate from "./pages/calibrate/Calibrate";
+import Footer from "./components/footer/Footer";
 
 const App = () => {
     const navigate = useNavigate();
@@ -88,7 +89,7 @@ const App = () => {
                                     style={{ marginTop: "32px" }}
                                 >
                                     <Routes>
-                                        <Route index element={<SelectMode />} />
+                                        <Route index element={<Home />} />
                                         <Route
                                             path="install"
                                             element={
@@ -121,6 +122,7 @@ const App = () => {
                         </Container>
                     )}
                 </div>
+                <Footer />
             </ControllerServiceContext.Provider>
         </>
     );

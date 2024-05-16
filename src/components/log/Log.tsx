@@ -6,17 +6,12 @@ import "./Log.scss";
 
 type LogProps = {
     show: boolean;
-    showExpand: boolean;
+    showExpand?: boolean;
     onShow: (show: boolean) => void;
     children?: ReactNode;
 };
 
-const Log = ({
-    show = false,
-    showExpand = true,
-    onShow,
-    children
-}: LogProps) => {
+const Log = ({ show = false, showExpand, onShow, children }: LogProps) => {
     const bottom = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -31,7 +26,7 @@ const Log = ({
                     <div ref={bottom} />
                 </div>
             )}
-            {showExpand && (
+            {(showExpand || showExpand === undefined) && (
                 <>
                     {show && (
                         <a href="#" onClick={() => onShow(false)}>

@@ -208,6 +208,10 @@ export class ControllerService {
         command: T,
         timeoutMs: number = 0
     ): Promise<T> => {
+        if (this.status !== ControllerStatus.CONNECTED) {
+            return command;
+        }
+
         if (command.debugSend) {
             console.log("sending " + command.command);
         }

@@ -14,14 +14,21 @@ import {
 } from "../../services/controllerservice/commands/GetGpioDumpCommand";
 import AlertMessage from "../../components/alertmessage/AlertMessage";
 import { Link } from "react-router-dom";
+import jsYaml from "js-yaml";
 
 type AxisPinsProps = {
     axis: string;
     gpioStatusList: GpioStatus[];
     axisConfig: Axis;
+    onUpdate: (axisConfig: Axis) => void;
 };
 
-const AxisPins = ({ axis, gpioStatusList, axisConfig }: AxisPinsProps) => {
+const AxisPins = ({
+    axis,
+    gpioStatusList,
+    axisConfig,
+    onUpdate
+}: AxisPinsProps) => {
     return (
         <>
             <CalibratePin
@@ -30,6 +37,10 @@ const AxisPins = ({ axis, gpioStatusList, axisConfig }: AxisPinsProps) => {
                 pinConfig={PinConfig.fromString(
                     axisConfig.motor0?.limit_all_pin
                 )}
+                onUpdateConfig={(pin) => {
+                    axisConfig!.motor0!.limit_all_pin = pin.toString();
+                    onUpdate(axisConfig);
+                }}
             />
             <CalibratePin
                 label={axis + " - Motor 0 - Limit negative pin"}
@@ -37,6 +48,10 @@ const AxisPins = ({ axis, gpioStatusList, axisConfig }: AxisPinsProps) => {
                 pinConfig={PinConfig.fromString(
                     axisConfig.motor0?.limit_neg_pin
                 )}
+                onUpdateConfig={(pin) => {
+                    axisConfig!.motor0!.limit_neg_pin = pin.toString();
+                    onUpdate(axisConfig);
+                }}
             />
             <CalibratePin
                 label={axis + " - Motor 0 - Limit positive pin"}
@@ -44,6 +59,10 @@ const AxisPins = ({ axis, gpioStatusList, axisConfig }: AxisPinsProps) => {
                 pinConfig={PinConfig.fromString(
                     axisConfig.motor0?.limit_pos_pin
                 )}
+                onUpdateConfig={(pin) => {
+                    axisConfig!.motor0!.limit_pos_pin = pin.toString();
+                    onUpdate(axisConfig);
+                }}
             />
             <CalibratePin
                 label={axis + " - Motor 1 - Limit all pin"}
@@ -51,6 +70,10 @@ const AxisPins = ({ axis, gpioStatusList, axisConfig }: AxisPinsProps) => {
                 pinConfig={PinConfig.fromString(
                     axisConfig.motor1?.limit_all_pin
                 )}
+                onUpdateConfig={(pin) => {
+                    axisConfig!.motor1!.limit_all_pin = pin.toString();
+                    onUpdate(axisConfig);
+                }}
             />
             <CalibratePin
                 label={axis + " - Motor 1 - Limit negative pin"}
@@ -58,6 +81,10 @@ const AxisPins = ({ axis, gpioStatusList, axisConfig }: AxisPinsProps) => {
                 pinConfig={PinConfig.fromString(
                     axisConfig.motor1?.limit_neg_pin
                 )}
+                onUpdateConfig={(pin) => {
+                    axisConfig!.motor1!.limit_neg_pin = pin.toString();
+                    onUpdate(axisConfig);
+                }}
             />
             <CalibratePin
                 label={axis + " - Motor 1 - Limit positive pin"}
@@ -65,6 +92,10 @@ const AxisPins = ({ axis, gpioStatusList, axisConfig }: AxisPinsProps) => {
                 pinConfig={PinConfig.fromString(
                     axisConfig.motor1?.limit_pos_pin
                 )}
+                onUpdateConfig={(pin) => {
+                    axisConfig!.motor1!.limit_pos_pin = pin.toString();
+                    onUpdate(axisConfig);
+                }}
             />
         </>
     );
@@ -77,13 +108,34 @@ const Calibrate = () => {
     const [config, setConfig] = useState<Config | undefined>();
     const [configFile, setConfigFile] = useState<string>();
     const [gpioStatusList, setGpioStatusList] = useState<GpioStatus[]>([]);
+    const [pollForStatus, setPollForStatus] = useState<boolean>(false);
+
+    useEffect(() => {
+        let timer;
+
+        if (pollForStatus) {
+            timer = setInterval(() => {
+                controllerService!
+                    .send(new GetGpioDumpCommand())
+                    .then((command) => {
+                        setGpioStatusList(command.getStatusList());
+                    })
+                    .catch((error) => console.error(error));
+            }, 500);
+        }
+
+        return () => {
+            if (timer) {
+                clearInterval(timer);
+            }
+        };
+    }, [pollForStatus, controllerService, setGpioStatusList]);
 
     useEffect(() => {
         if (!controllerService) {
             return;
         }
 
-        let timer;
         setIsLoading(true);
         controllerService
             .connect()
@@ -93,48 +145,60 @@ const Calibrate = () => {
                     new GetConfigFilenameCommand()
                 );
                 setConfigFile(configFilenameCommand.getFilename());
+                console.log(
+                    "Configured config file",
+                    configFilenameCommand.getFilename()
+                );
+
                 const listCommand = await controllerService.send(
                     new ListFilesCommand()
                 );
 
-                if (
+                const configFileExists =
                     listCommand
                         .getFiles()
                         .map((f) => f.name)
-                        .indexOf(configFilenameCommand.getFilename()) > -1
-                ) {
+                        .indexOf(configFilenameCommand.getFilename()) > -1;
+
+                console.log("Config file exists", configFileExists);
+                if (configFileExists) {
                     const fileData = await controllerService.downloadFile(
                         configFilenameCommand.getFilename()
                     );
                     setConfig(fileDataToConfig(fileData.toString()));
 
+                    console.log("Fetched config file");
+
                     await sleep(2000);
-                    timer = setInterval(() => {
-                        controllerService
-                            .send(new GetGpioDumpCommand())
-                            .then((command) => {
-                                setGpioStatusList(command.getStatusList());
-                            })
-                            .catch((error) => console.error(error));
-                    }, 500);
+                    setPollForStatus(true);
                 }
             })
             .finally(() => {
                 setIsLoading(false);
             });
-
-        return () => {
-            if (timer) {
-                clearInterval(timer);
-            }
-        };
     }, [
         controllerService,
         setIsLoading,
         setConfig,
-        setGpioStatusList,
-        setConfigFile
+        setConfigFile,
+        setPollForStatus
     ]);
+
+    const save = async (config: Config) => {
+        setIsLoading(true);
+        setPollForStatus(false);
+        await sleep(1000);
+
+        const configData = jsYaml.dump(config, { noCompatMode: true });
+        await controllerService!.uploadFile(
+            "/littlefs/" + configFile,
+            Buffer.from(configData)
+        );
+
+        await controllerService?.hardReset();
+        setIsLoading(false);
+        setPollForStatus(true);
+    };
 
     return (
         <>
@@ -172,6 +236,10 @@ const Calibrate = () => {
                             axis={"X"}
                             gpioStatusList={gpioStatusList}
                             axisConfig={config?.axes?.x}
+                            onUpdate={(axis) => {
+                                config!.axes!.x = axis;
+                                save(config);
+                            }}
                         />
                     )}
                     {config?.axes?.y && (
@@ -179,6 +247,10 @@ const Calibrate = () => {
                             axis={"Y"}
                             gpioStatusList={gpioStatusList}
                             axisConfig={config?.axes?.y}
+                            onUpdate={(axis) => {
+                                config!.axes!.y = axis;
+                                save(config);
+                            }}
                         />
                     )}
                     {config?.axes?.z && (
@@ -186,6 +258,10 @@ const Calibrate = () => {
                             axis={"Z"}
                             gpioStatusList={gpioStatusList}
                             axisConfig={config?.axes?.z}
+                            onUpdate={(axis) => {
+                                config!.axes!.z = axis;
+                                save(config);
+                            }}
                         />
                     )}
                     {config?.axes?.a && (
@@ -193,6 +269,10 @@ const Calibrate = () => {
                             axis={"A"}
                             gpioStatusList={gpioStatusList}
                             axisConfig={config?.axes?.a}
+                            onUpdate={(axis) => {
+                                config!.axes!.a = axis;
+                                save(config);
+                            }}
                         />
                     )}
                     {config?.axes?.b && (
@@ -200,6 +280,10 @@ const Calibrate = () => {
                             axis={"B"}
                             gpioStatusList={gpioStatusList}
                             axisConfig={config?.axes?.b}
+                            onUpdate={(axis) => {
+                                config!.axes!.b = axis;
+                                save(config);
+                            }}
                         />
                     )}
                     {config?.axes?.c && (
@@ -207,12 +291,20 @@ const Calibrate = () => {
                             axis={"C"}
                             gpioStatusList={gpioStatusList}
                             axisConfig={config?.axes?.c}
+                            onUpdate={(axis) => {
+                                config!.axes!.c = axis;
+                                save(config);
+                            }}
                         />
                     )}
                     <CalibratePin
                         label="Probe pin"
                         gpioStatusList={gpioStatusList}
                         pinConfig={PinConfig.fromString(config.probe?.pin)}
+                        onUpdateConfig={(pin) => {
+                            config!.probe!.pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Probe tool setter pin"
@@ -220,6 +312,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.probe?.toolsetter_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.probe!.toolsetter_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Cycle start pin"
@@ -227,6 +323,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.cycle_start_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.cycle_start_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="E-stop pin"
@@ -234,6 +334,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.estop_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.estop_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Fault pin"
@@ -241,6 +345,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.fault_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.fault_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Feed hold pin"
@@ -248,6 +356,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.feed_hold_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.fault_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Macro0 pin"
@@ -255,6 +367,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.macro0_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.macro0_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Macro1 pin"
@@ -262,6 +378,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.macro1_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.macro1_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Macro2 pin"
@@ -269,6 +389,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.macro2_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.macro2_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Macro3 pin"
@@ -276,6 +400,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.macro3_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.macro3_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Reset pin"
@@ -283,6 +411,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.reset_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.reset_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                     <CalibratePin
                         label="Safety door pin"
@@ -290,6 +422,10 @@ const Calibrate = () => {
                         pinConfig={PinConfig.fromString(
                             config.control?.safety_door_pin
                         )}
+                        onUpdateConfig={(pin) => {
+                            config!.control!.safety_door_pin = pin.toString();
+                            save(config);
+                        }}
                     />
                 </>
             )}

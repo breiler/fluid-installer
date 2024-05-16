@@ -19,7 +19,7 @@ const Footer = () => {
                 <li>
                     <a href="https://github.com/bdring/FluidNC">
                         <FontAwesomeIcon icon={faGithub as IconDefinition} />{" "}
-                        Github
+                        FluidNC
                     </a>
                 </li>
                 <li>

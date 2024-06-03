@@ -39,9 +39,9 @@ import WiFiStats from "./WifiStats";
 import { sleep } from "../../utils/utils";
 
 const getSignalColor = (signal: number) => {
-    if (signal < 67) {
+    if (signal > 60) {
         return "success";
-    } else if (signal < 80) {
+    } else if (signal > 30) {
         return "warning";
     } else {
         return "danger";
@@ -334,7 +334,10 @@ const WiFiSettings = () => {
                                                                 }
                                                             />
                                                         </Badge>{" "}
-                                                        {accessPoint.ssid}{" "}
+                                                        {accessPoint.ssid}
+                                                        {" (" +
+                                                            accessPoint.signal +
+                                                            "%) "}
                                                         {accessPoint.isProtected && (
                                                             <FontAwesomeIcon
                                                                 icon={

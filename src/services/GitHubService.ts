@@ -57,26 +57,30 @@ export const GithubService = {
      *
      * @returns a promise with all available github releases
      */
-    getReleases: (): Promise<GithubRelease[]> => {
+    getReleases: (
+        includePrerelease: boolean = false
+    ): Promise<GithubRelease[]> => {
         return fetch("https://api.github.com/repos/bdring/FluidNC/releases")
             .then((res) => res.json())
             .then((releases) => {
-                return (
-                    releases
-                        //.filter((release) => !release.draft && !release.prerelease)
-                        .filter(
-                            (release) =>
-                                new Date(release.created_at) >
-                                new Date("2023-06-08T21:23:04Z")
+                return releases
+                    .filter(
+                        (release) =>
+                            includePrerelease ||
+                            (!release.draft && !release.prerelease)
+                    )
+                    .filter(
+                        (release) =>
+                            new Date(release.created_at) >
+                            new Date("2023-06-08T21:23:04Z")
+                    )
+                    .filter((release) =>
+                        release.assets.filter(
+                            (asset) =>
+                                asset.name.endsWith("-posix.zip").length > 0
                         )
-                        .filter((release) =>
-                            release.assets.filter(
-                                (asset) =>
-                                    asset.name.endsWith("-posix.zip").length > 0
-                            )
-                        )
-                        .sort((release1, release2) => release1.id > release2.id)
-                );
+                    )
+                    .sort((release1, release2) => release2?.id - release1?.id);
             });
     },
 

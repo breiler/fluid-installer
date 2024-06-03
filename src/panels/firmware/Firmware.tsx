@@ -12,6 +12,8 @@ import Choice from "../../components/choice";
 import { Markdown } from "../../components/markdown/Markdown";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import FirmwareBreadCrumbList from "./FirmwareBreadcrumbList";
+import { FormCheck } from "react-bootstrap";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 type Props = {
     onInstall: (
@@ -31,6 +33,10 @@ const Firmware = ({ onInstall }: Props) => {
     const [releaseManifest, setReleaseManifest] = useState<
         GithubReleaseManifest | undefined
     >();
+    const [showPrerelease, setShowPrerelease] = useLocalStorage(
+        "showPrerelease",
+        false
+    );
 
     const choice = useMemo(
         () => selectedChoices[selectedChoices.length - 1],
@@ -55,7 +61,7 @@ const Firmware = ({ onInstall }: Props) => {
     };
 
     const fetchReleases = () => {
-        GithubService.getReleases()
+        GithubService.getReleases(showPrerelease)
             .then((releases) => {
                 setReleases(releases);
             })
@@ -80,7 +86,7 @@ const Firmware = ({ onInstall }: Props) => {
         }
     }, [releases]);
 
-    useEffect(() => fetchReleases(), []);
+    useEffect(() => fetchReleases(), [showPrerelease]);
 
     return (
         <div className="firmware-component">
@@ -94,6 +100,7 @@ const Firmware = ({ onInstall }: Props) => {
                         Select which firmware you want to install on your
                         controller.
                     </p>
+
                     <select
                         className="form-select form-select-lg mb-3"
                         onChange={(event) => chooseFirmware(event.target.value)}
@@ -105,6 +112,12 @@ const Firmware = ({ onInstall }: Props) => {
                             </option>
                         ))}
                     </select>
+                    <FormCheck
+                        type="switch"
+                        label="Show pre-releases"
+                        checked={showPrerelease}
+                        onChange={() => setShowPrerelease((value) => !value)}
+                    />
                 </>
             )}
 

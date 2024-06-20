@@ -3,8 +3,8 @@ import ReactCodeMirror from "@uiw/react-codemirror";
 import jsYaml from "js-yaml";
 import { linter, lintGutter } from "@codemirror/lint";
 import { basicSetup } from "codemirror";
-//import { StreamLanguage } from "@codemirror/language"
-//import { yaml } from "@codemirror/legacy-modes/mode/yaml"
+import { StreamLanguage } from "@codemirror/language";
+import { yaml } from "@codemirror/legacy-modes/mode/yaml";
 
 enum Severity {
     ERROR = "error",
@@ -52,7 +52,12 @@ const Editor = ({ value, onChange }: Props) => {
             <ReactCodeMirror
                 value={value}
                 onChange={onChange}
-                extensions={[lintGutter(), yamlLinter, basicSetup]} //, StreamLanguage.define(yaml)]}
+                extensions={[
+                    lintGutter(),
+                    yamlLinter,
+                    basicSetup,
+                    StreamLanguage.define(yaml)
+                ]}
             />
         </>
     );

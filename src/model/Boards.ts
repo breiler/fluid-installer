@@ -416,6 +416,18 @@ export const Boards: Board[] = [
                 input: false,
                 pull: false,
                 output: false
+            },
+            {
+                pin: Pin.I2SO_20,
+                input: false,
+                pull: false,
+                output: false
+            },
+            {
+                pin: Pin.I2SO_21,
+                input: false,
+                pull: false,
+                output: false
             }
         ]
     }

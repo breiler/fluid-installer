@@ -805,6 +805,8 @@ export enum Pin {
     I2SO_17 = "i2so.17",
     I2SO_18 = "i2so.18",
     I2SO_19 = "i2so.19",
+    I2SO_20 = "i2so.20",
+    I2SO_21 = "i2so.21",
     NO_PIN = "no_pin"
 }
 

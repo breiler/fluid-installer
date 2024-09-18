@@ -22,7 +22,7 @@ const Log = ({ show = false, showExpand, onShow, children }: LogProps) => {
         <div className="log-container">
             {show && (
                 <div className="log">
-                    {children}
+                    <pre>{children}</pre>
                     <div ref={bottom} />
                 </div>
             )}

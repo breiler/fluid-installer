@@ -32,7 +32,7 @@ export const flashDevice = async (
             terminal: terminal
         } as LoaderOptions;
         const loader = new ESPLoader(loaderOptions);
-        await loader!.main_fn();
+        await loader!.main();
 
         // We need to wait after connecting...
         await new Promise((f) => setTimeout(f, 2000));
@@ -54,7 +54,7 @@ export const flashDevice = async (
             calculateMD5Hash: (image) =>
                 CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image))
         } as FlashOptions;
-        await loader!.write_flash(flashOptions);
+        await loader!.writeFlash(flashOptions);
     } finally {
         onState(InstallerState.RESTARTING);
 

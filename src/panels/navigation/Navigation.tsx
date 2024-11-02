@@ -18,6 +18,7 @@ import "./Navigation.scss";
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
 import RestartModal from "../../components/restartmodal/RestartModal";
 import Page from "../../model/Page";
+import { VersionCommand } from "../../services/controllerservice/commands/VersionCommand";
 
 const Navigation = () => {
     const navigate = useNavigate();
@@ -26,10 +27,14 @@ const Navigation = () => {
     const controllerService = useContext(ControllerServiceContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [stats, setStats] = useState<Stats>();
+    const [version, setVersion] = useState<string>();
 
     useEffect(() => {
         if (!controllerService) return;
         controllerService.getStats().then(setStats);
+        controllerService
+            .send(new VersionCommand(), 5000)
+            .then((command) => setVersion(command.getVersionNumber()));
     }, [controllerService]);
 
     const restart = () => {
@@ -62,7 +67,7 @@ const Navigation = () => {
                     <FontAwesomeIcon icon={faTerminal as IconDefinition} />{" "}
                     Terminal
                 </Nav.Link>
-                {stats?.version && (
+                {version && (
                     <Nav.Link eventKey={Page.FILEBROWSER}>
                         <FontAwesomeIcon
                             icon={faFolderOpen as IconDefinition}
@@ -75,7 +80,7 @@ const Navigation = () => {
                         <FontAwesomeIcon icon={faWifi as IconDefinition} /> WiFi
                     </Nav.Link>
                 )}
-                {stats?.version && (
+                {version && (
                     <Nav.Link eventKey={Page.CALIBRATE}>
                         <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
                         Calibrate

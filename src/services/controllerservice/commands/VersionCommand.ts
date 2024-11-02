@@ -2,7 +2,7 @@ import { Command } from "./Command";
 
 export class VersionCommand extends Command {
     constructor() {
-        super("$I");
+        super("$Build/Info");
     }
 
     getVersionNumber = () => {
@@ -14,12 +14,6 @@ export class VersionCommand extends Command {
         }
 
         const versionRegex = new RegExp("^\\[VER:([0-9\\.]+).*$", "g");
-        console.log(
-            versionRegex.source,
-            versionLine,
-            versionRegex.exec(versionLine)
-        );
-
-        return versionRegex.exec(versionLine);
+        return versionRegex.exec(versionLine)?.at(1) ?? "?";
     };
 }

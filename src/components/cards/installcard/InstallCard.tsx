@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
-import { Stats } from "../../../services/controllerservice/commands/GetStatsCommand";
 import { Card } from "react-bootstrap";
+import { VersionCommand } from "../../../services/controllerservice/commands/VersionCommand";
+import Spinner from "../../spinner";
 
 type InstallCardProps = {
     disabled?: boolean;
@@ -17,12 +18,18 @@ export const InstallCard = ({
     disabled = false
 }: InstallCardProps) => {
     const controllerService = useContext(ControllerServiceContext);
-    const [stats, setStats] = useState<Stats>();
-
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [version, setVersion] = useState<string>();
     useEffect(() => {
+        setIsLoading(false);
         if (!controllerService) return;
-        controllerService.getStats().then(setStats);
-    }, [controllerService]);
+        setIsLoading(true);
+
+        controllerService
+            .send(new VersionCommand(), 5000)
+            .then((command) => setVersion(command.getVersionNumber()))
+            .finally(() => setIsLoading(false));
+    }, [controllerService, setIsLoading]);
 
     return (
         <Card className="select-card">
@@ -33,9 +40,11 @@ export const InstallCard = ({
                         size="4x"
                     />
                 </div>
-
-                {stats?.version && <p>Upgrade FluidNC on your controller</p>}
-                {!stats?.version && (
+                {isLoading && <Spinner />}
+                {!isLoading && version && (
+                    <p>Upgrade FluidNC on your controller</p>
+                )}
+                {!isLoading && !version && (
                     <p>
                         The controller does not seem to have FluidNC installed,
                         do you wish to install it?
@@ -45,7 +54,7 @@ export const InstallCard = ({
 
             <Card.Footer>
                 <Button onClick={onClick} disabled={disabled}>
-                    <>{stats?.version ? "Upgrade" : "Install"} FluidNC</>
+                    <>{version ? "Upgrade" : "Install"} FluidNC</>
                 </Button>
             </Card.Footer>
         </Card>

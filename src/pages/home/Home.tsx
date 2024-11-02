@@ -20,6 +20,7 @@ import {
 } from "../../services/controllerservice/commands/GetStatsCommand";
 import { sleep } from "../../utils/utils";
 import "./Home.scss";
+import { VersionCommand } from "../../services/controllerservice/commands/VersionCommand";
 
 const Home = () => {
     usePageView("Home");
@@ -27,6 +28,7 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(false);
     const controllerService = useContext(ControllerServiceContext);
     const [stats, setStats] = useState<Stats>();
+    const [version, setVersion] = useState<string>();
     const [isBootError, setBootError] = useState<boolean>(false);
     const [showLogModal, setShowLogModal] = useState<boolean>(false);
     const [startupLogRows, setStartupLogRows] = useState<string[]>([]);
@@ -35,17 +37,43 @@ const Home = () => {
         if (!controllerService) return;
         setIsLoading(true);
         sleep(1000)
-            .then(() => controllerService.send(new GetStatsCommand(), 5000))
-            .then((command) => setStats(command.getStats()))
-            .then(() => controllerService.send(new GetStartupShowCommand()))
-            .then((command) => {
-                setBootError(
-                    !!command.response.find(
-                        (line) => line.indexOf("[MSG:ERR:") > -1
+            .then(() =>
+                controllerService
+                    .send(new GetStatsCommand(), 5000)
+                    .then((command) => setStats(command.getStats()))
+                    .catch((error) =>
+                        console.error(
+                            "Got an error while fetching stats",
+                            error
+                        )
                     )
-                );
-                setStartupLogRows(command.response);
-            })
+            )
+            .then(() =>
+                controllerService
+                    .send(new VersionCommand(), 5000)
+                    .then((command) => setVersion(command.getVersionNumber()))
+                    .catch((error) =>
+                        console.error(
+                            "Got an error while fetching version",
+                            error
+                        )
+                    )
+            )
+            .then(() =>
+                controllerService
+                    .send(new GetStartupShowCommand())
+                    .then((command) => {
+                        setBootError(
+                            !!command.response.find(
+                                (line) => line.indexOf("[MSG:ERR:") > -1
+                            )
+                        );
+                        setStartupLogRows(command.response);
+                    })
+                    .catch((error) =>
+                        console.error("Got an error while initializing", error)
+                    )
+            )
             .finally(() => setIsLoading(false));
     }, [controllerService]);
 
@@ -99,7 +127,7 @@ const Home = () => {
                             onClick={() => navigate(Page.TERMINAL)}
                         />
                     </Col>
-                    {stats?.version && (
+                    {version && (
                         <Col xs={12} md={6} lg={4}>
                             <FileBrowserCard
                                 onClick={() => navigate(Page.FILEBROWSER)}
@@ -114,7 +142,7 @@ const Home = () => {
                             />
                         </Col>
                     )}
-                    {stats?.version && (
+                    {version && (
                         <Col xs={12} md={6} lg={4}>
                             <CalibrateCard
                                 onClick={() => navigate(Page.CALIBRATE)}

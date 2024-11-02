@@ -35,9 +35,9 @@ const LatestVersionCard = () => {
                             {releaseDate}
                         </Card.Subtitle>
                         <Card.Text>
-                            <div className={showMore ? "" : "shortBody"}>
+                            <span className={showMore ? "" : "shortBody"}>
                                 <Markdown>{latestRelease.body}</Markdown>
-                            </div>
+                            </span>
                             <Button
                                 variant="link"
                                 onClick={() => setShowMore((value) => !value)}

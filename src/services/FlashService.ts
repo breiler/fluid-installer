@@ -19,5 +19,3 @@ export type FlashProgress = {
      */
     fileProgress: number;
 };
-
-export const FlashService = {};

@@ -1,8 +1,7 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import "./Ribbon.scss";
-import { ReactElement } from "react-markdown/lib/react-markdown";
 
-type Props = { children: ReactElement; variant: string };
+type Props = { children: ReactNode; variant?: string };
 
 const Ribbon = ({ children, variant = "danger" }: Props) => {
     return (

@@ -23,6 +23,7 @@ const BooleanField = ({
             </Form.Label>
             <Col sm="9">
                 <Form.Check
+                    type="switch"
                     aria-label={placeholder}
                     onChange={(event) =>
                         setValue(Boolean(event.target.checked))

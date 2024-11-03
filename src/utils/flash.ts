@@ -4,12 +4,11 @@ import { FlashProgress } from "../services/FlashService";
 import { NativeSerialPort } from "./serialport/typings";
 import { InstallerState } from "../services";
 
-const FLASH_BAUD_RATE = 921600;
-
 export const flashDevice = async (
     serialPort: NativeSerialPort,
     files,
     erase: boolean,
+    baud: number,
     onProgress: (progress: FlashProgress) => void,
     onState: (state: InstallerState) => void,
     onLogData: (data: string) => void
@@ -28,7 +27,7 @@ export const flashDevice = async (
         onState(InstallerState.ENTER_FLASH_MODE);
         const loaderOptions = {
             transport,
-            baudrate: FLASH_BAUD_RATE,
+            baudrate: baud,
             terminal: terminal
         } as LoaderOptions;
         const loader = new ESPLoader(loaderOptions);

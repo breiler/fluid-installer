@@ -61,7 +61,7 @@ const Firmware = ({ onInstall }: Props) => {
     };
 
     const fetchReleases = () => {
-        GithubService.getReleases(showPrerelease)
+        GithubService.getReleases(Boolean(showPrerelease))
             .then((releases) => {
                 setReleases(releases);
             })
@@ -74,9 +74,10 @@ const Firmware = ({ onInstall }: Props) => {
     };
 
     const onSelect = (choice: FirmwareChoice) => {
-        setSelectedChoices((choices) => [...choices, choice]);
         if (choice.images) {
             onInstall(selectedRelease!, releaseManifest!, choice);
+        } else {
+            setSelectedChoices((choices) => [...choices, choice]);
         }
     };
 
@@ -115,7 +116,7 @@ const Firmware = ({ onInstall }: Props) => {
                     <FormCheck
                         type="switch"
                         label="Show pre-releases"
-                        checked={showPrerelease}
+                        checked={Boolean(showPrerelease)}
                         onChange={() => setShowPrerelease((value) => !value)}
                     />
                 </>

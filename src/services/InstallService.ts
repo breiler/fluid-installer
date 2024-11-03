@@ -60,7 +60,8 @@ export const InstallService = {
         choice: FirmwareChoice,
         onProgress: (FlashProgress) => void,
         onState: (state: InstallerState) => void,
-        onLogData: (data: string) => void
+        onLogData: (data: string) => void,
+        baud: number
     ): Promise<void> => {
         onState(InstallerState.DOWNLOADING);
 
@@ -103,6 +104,7 @@ export const InstallService = {
                 serialPort.getNativeSerialPort(),
                 flashFiles,
                 choice.erase || false,
+                baud,
                 onProgress,
                 onState,
                 onLogData

@@ -131,7 +131,7 @@ export class ControllerService {
             await bufferedReader.waitForLine(2000);
 
             // Try and query for version
-            await this.serialPort.write(Buffer.from("$I\n"));
+            await this.serialPort.write(Buffer.from("$Build/Info\n"));
             const versionResponse = await bufferedReader.waitForLine(2000);
             this.currentVersion = versionResponse.toString();
             console.log("Got version: " + this.currentVersion);

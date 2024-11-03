@@ -44,10 +44,18 @@ export type FirmwareChoice = {
     choices: FirmwareChoice[];
 };
 
+export type FirmwareFile = {
+    size: number;
+    "controller-path": string;
+    path: string;
+    signature: FirmwareImageSignature;
+};
+
 export type GithubReleaseManifest = {
     name: string;
     version: string;
     images: Map<string, FirmwareImage>;
+    files?: Map<string, FirmwareFile>;
     installable: FirmwareChoice;
 };
 

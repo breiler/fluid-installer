@@ -1,5 +1,3 @@
-import { convertUint8ArrayToBinaryString } from "../utils/utils";
-
 export type GithubReleaseAsset = {
     id: number;
     name: string;
@@ -114,7 +112,7 @@ export const GithubService = {
     getImageFiles: (
         release: GithubRelease,
         images: FirmwareImage[]
-    ): Promise<string[]> => {
+    ): Promise<Uint8Array[]> => {
         const baseUrl = RESOURCES_BASE_URL + "/" + release.name + "/";
 
         return Promise.all(
@@ -133,9 +131,29 @@ export const GithubService = {
                             );
                         }
                     })
-                    .then((buffer) => new Uint8Array(buffer))
-                    .then((buffer) => convertUint8ArrayToBinaryString(buffer));
+                    .then((buffer) => new Uint8Array(buffer));
             })
         );
+    },
+
+    getExtraFile: (
+        release: GithubRelease,
+        file: FirmwareFile
+    ): Promise<Uint8Array> => {
+        const baseUrl = RESOURCES_BASE_URL + "/" + release.name + "/";
+
+        return fetch(baseUrl + file.path, {
+            headers: {
+                Accept: "application/octet-stream"
+            }
+        })
+            .then((response) => {
+                if (response.status === 200 || response.status === 0) {
+                    return response.arrayBuffer();
+                } else {
+                    return Promise.reject(new Error(response.statusText));
+                }
+            })
+            .then((buffer) => new Uint8Array(buffer));
     }
 };

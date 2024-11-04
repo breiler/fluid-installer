@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useState } from "react";
-import { Button } from "../../components";
+import { Button, Spinner } from "../../components";
 import ConnectionState from "../../model/ConnectionState";
 import { ControllerService } from "../../services";
 import { SerialPort } from "../../utils/serialport/SerialPort";
@@ -8,7 +8,7 @@ import "./connection.scss";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
 import ControllerLog from "../../components/controllerlog/ControllerLog";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Modal, Row } from "react-bootstrap";
 import LatestVersionCard from "../../components/cards/latestversioncard/LatestVersionCard";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
@@ -109,7 +109,8 @@ const Connection = ({ onConnect }: Props) => {
                                     }
                                     loading={
                                         connectionState ===
-                                        ConnectionState.CONNECTING
+                                            ConnectionState.CONNECTING &&
+                                        !!controllerService
                                     }
                                 >
                                     <>
@@ -124,14 +125,28 @@ const Connection = ({ onConnect }: Props) => {
                             </div>
                         )}
 
-                        {connectionState === ConnectionState.CONNECTING && (
-                            <ControllerLog
-                                show={showLog}
-                                onShow={setShowLog}
-                                controllerService={controllerService}
-                                onError={() => {}}
-                            />
-                        )}
+                        {connectionState === ConnectionState.CONNECTING &&
+                            controllerService && (
+                                <>
+                                    <Modal show={true} size="lg" centered>
+                                        <Modal.Body>
+                                            <h3>Connecting</h3>
+                                            <p>
+                                                Establishing connection to
+                                                controller <Spinner />
+                                            </p>
+                                            <ControllerLog
+                                                show={showLog}
+                                                onShow={setShowLog}
+                                                controllerService={
+                                                    controllerService
+                                                }
+                                                onError={() => {}}
+                                            />
+                                        </Modal.Body>
+                                    </Modal>
+                                </>
+                            )}
                     </div>
                 </Col>
                 <Col md={5} lg={4}>

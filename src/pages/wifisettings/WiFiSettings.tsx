@@ -263,7 +263,7 @@ const WiFiSettings = () => {
 
             <>
                 <Row>
-                    <Col lg={3} className="d-none d-lg-block"></Col>
+                    <Col lg={4} className="d-none d-lg-block"></Col>
                     {!isSaving && (
                         <Col>
                             <WiFiStats
@@ -286,7 +286,7 @@ const WiFiSettings = () => {
                         Client station settings
                     </h4>
                     <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="3">
+                        <Form.Label column sm="4">
                             SSID
                         </Form.Label>
                         <Col>

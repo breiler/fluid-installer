@@ -36,10 +36,10 @@ const UnknownField = <T extends unknown>({
     return (
         <Form.Group as={Row} className="mb-3">
             <h4>{label}</h4>
-            <Form.Label column sm="3">
+            <Form.Label column sm="4">
                 {label}
             </Form.Label>
-            <Col sm="9">
+            <Col sm="8">
                 <Form.Control
                     as="textarea"
                     rows={6}

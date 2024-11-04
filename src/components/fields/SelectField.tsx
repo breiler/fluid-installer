@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
+import ToolTip from "../tooltip/ToolTip";
 
 type Option = {
     name: string;
@@ -29,10 +30,10 @@ const SelectField = ({
 }: SelectFieldProps) => {
     return (
         <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm="3">
-                {label}
+            <Form.Label column sm="4">
+                {label} <ToolTip>{helpText}</ToolTip>
             </Form.Label>
-            <Col sm="9">
+            <Col sm="8">
                 <InputGroup>
                     <Form.Select
                         disabled={disabled}
@@ -60,8 +61,6 @@ const SelectField = ({
                     </Form.Select>
                     {groupedControls && groupedControls}
                 </InputGroup>
-
-                {helpText && <Form.Text muted>{helpText}</Form.Text>}
             </Col>
         </Form.Group>
     );

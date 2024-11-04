@@ -1,6 +1,7 @@
 import React from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { ReactElement } from "react-markdown/lib/react-markdown";
+import ToolTip from "../tooltip/ToolTip";
 
 type TextFieldProps = {
     label?: string;
@@ -31,8 +32,8 @@ const TextField = ({
 }: TextFieldProps) => {
     return (
         <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm="3">
-                {label}
+            <Form.Label column sm="4">
+                {label} <ToolTip>{helpText}</ToolTip>
             </Form.Label>
             <Col>
                 <InputGroup hasValidation>
@@ -53,7 +54,6 @@ const TextField = ({
                     {unit && <InputGroup.Text>{unit}</InputGroup.Text>}
                     {groupedControls && groupedControls}
                 </InputGroup>
-                {helpText && <Form.Text muted>{helpText}</Form.Text>}
             </Col>
         </Form.Group>
     );

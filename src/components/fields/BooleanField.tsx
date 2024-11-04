@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Form, Row } from "react-bootstrap";
+import { Col, Form, InputGroup, Row } from "react-bootstrap";
+import ToolTip from "../tooltip/ToolTip";
 
 type BooleanFieldProps = {
     label?: string;
@@ -18,19 +19,21 @@ const BooleanField = ({
 }: BooleanFieldProps) => {
     return (
         <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm="3">
-                {label}
+            <Form.Label column sm="4">
+                {label} <ToolTip>{helpText}</ToolTip>
             </Form.Label>
-            <Col sm="9">
-                <Form.Check
-                    type="switch"
-                    aria-label={placeholder}
-                    onChange={(event) =>
-                        setValue(Boolean(event.target.checked))
-                    }
-                    checked={Boolean(value)}
-                />
-                {helpText && <Form.Text muted>{helpText}</Form.Text>}
+            <Col sm="8">
+                <InputGroup>
+                    <Form.Check
+                        style={{ paddingTop: "8px" }}
+                        type="switch"
+                        aria-label={placeholder}
+                        onChange={(event) =>
+                            setValue(Boolean(event.target.checked))
+                        }
+                        checked={Boolean(value)}
+                    />
+                </InputGroup>
             </Col>
         </Form.Group>
     );

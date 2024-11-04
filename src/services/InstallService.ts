@@ -1,6 +1,7 @@
 import {
     FirmwareChoice,
     FirmwareImage,
+    FirmwareImageSignature,
     GithubRelease,
     GithubReleaseManifest,
     GithubService
@@ -10,6 +11,7 @@ import { flashDevice } from "../utils/flash";
 import sha256 from "crypto-js/sha256";
 import { enc } from "crypto-js/core";
 import { analytics, logEvent } from "./FirebaseService";
+import { convertUint8ArrayToBinaryString } from "../utils/utils";
 
 export enum FirmwareType {
     WIFI = "wifi",
@@ -23,14 +25,15 @@ export enum InstallerState {
     ENTER_FLASH_MODE,
     FLASHING,
     RESTARTING,
+    UPLOADING_FILES,
     DONE,
     ERROR
 }
 
 const convertImagesToFlashFiles = (
     images: FirmwareImage[],
-    files: string[]
-) => {
+    files: Uint8Array[]
+): FlashFile[] => {
     if (images.length != files.length) {
         throw new Error("Could not extract files from package");
     }
@@ -69,9 +72,9 @@ export const InstallService = {
             (imageName) => manifest.images[imageName]
         ) as FirmwareImage[];
 
-        let files: string[] = [];
+        let imageFiles: Uint8Array[] = [];
         try {
-            files = await GithubService.getImageFiles(release, images);
+            imageFiles = await GithubService.getImageFiles(release, images);
         } catch (error) {
             logEvent(analytics, "install", {
                 version: release.name,
@@ -86,7 +89,7 @@ export const InstallService = {
 
         try {
             onState(InstallerState.CHECKING_SIGNATURES);
-            validateImageSignatures(images, files);
+            validateImageSignatures(images, imageFiles);
         } catch (error) {
             logEvent(analytics, "install", {
                 version: release.name,
@@ -99,7 +102,10 @@ export const InstallService = {
         }
 
         try {
-            const flashFiles = await convertImagesToFlashFiles(images, files);
+            const flashFiles = await convertImagesToFlashFiles(
+                images,
+                imageFiles
+            );
             await flashDevice(
                 serialPort.getNativeSerialPort(),
                 flashFiles,
@@ -129,32 +135,36 @@ export const InstallService = {
         return Promise.resolve();
     }
 };
-function validateImageSignatures(images: FirmwareImage[], files: string[]) {
+export const validateImageSignatures = (
+    images: FirmwareImage[],
+    files: Uint8Array[]
+) => {
     images.forEach((image, index) => {
-        if (image.signature.algorithm === "SHA2-256") {
-            const signature = sha256(enc.Latin1.parse(files[index])).toString();
-            if (image.signature.value !== signature) {
-                console.error(
-                    "The image " +
-                        image.path +
-                        " is possible corrupt. Signature was " +
-                        signature +
-                        " but manifest says " +
-                        image.signature.value
-                );
-                throw (
-                    "The image " +
-                    image.path +
-                    " might be corrupt as its signature does not match the manifest."
-                );
-            }
-        } else {
-            throw (
-                "The image " +
-                image.path +
-                " has an unknown signature algorithm: " +
-                image.signature.algorithm
-            );
-        }
+        validateSignature(image.signature, files[index]);
     });
-}
+};
+
+export const validateSignature = (
+    signature: FirmwareImageSignature,
+    data: Uint8Array
+) => {
+    if (signature.algorithm === "SHA2-256") {
+        const sign = sha256(
+            enc.Latin1.parse(convertUint8ArrayToBinaryString(data))
+        ).toString();
+        if (signature.value !== sign) {
+            console.error(
+                "The files is possible corrupt. Signature was " +
+                    sign +
+                    ", expected " +
+                    signature.value
+            );
+            throw "The file might be corrupt as its signature does not match the manifest.";
+        }
+    } else {
+        throw (
+            "The file has an unknown signature algorithm: " +
+            signature.algorithm
+        );
+    }
+};

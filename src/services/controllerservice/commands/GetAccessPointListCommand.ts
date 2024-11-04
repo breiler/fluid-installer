@@ -26,7 +26,9 @@ export class GetAccessPointListCommand extends Command {
             const r = this.response
                 .filter(
                     (line) =>
-                        !line.startsWith("[MSG") && !line.startsWith("[OPT")
+                        !line.startsWith("[MSG") &&
+                        !line.startsWith("[OPT") &&
+                        !line.startsWith("$Wifi")
                 )
                 .slice(0, -1)
                 .join("");

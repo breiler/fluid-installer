@@ -4,10 +4,13 @@ import { Modal } from "react-bootstrap";
 import {
     ControllerStatus,
     FirmwareChoice,
+    FirmwareFile,
     GithubRelease,
     GithubReleaseManifest,
+    GithubService,
     InstallService,
-    InstallerState
+    InstallerState,
+    validateSignature
 } from "../../services";
 import { Progress } from "../../panels";
 import { FlashProgress } from "../../services/FlashService";
@@ -53,7 +56,7 @@ const InstallerModal = ({
         console.log(data);
     };
 
-    const onInstall = async (baud: number) => {
+    const onInstall = async (baud: number, files: string[]) => {
         try {
             await controllerService?.disconnect(false);
         } catch (error) {
@@ -84,6 +87,33 @@ const InstallerModal = ({
                 );
                 setState(InstallerState.ERROR);
             }
+
+            if (!hasErrors) {
+                setState(InstallerState.UPLOADING_FILES);
+            }
+
+            await Promise.all(
+                files.map((file) => {
+                    const extraFile = manifest.files?.[file] as FirmwareFile;
+
+                    if (!extraFile) {
+                        return;
+                    }
+
+                    console.log("Uploading: ", extraFile);
+                    return GithubService.getExtraFile(release, extraFile)
+                        .then((data) => {
+                            validateSignature(extraFile.signature, data);
+                            return data;
+                        })
+                        .then((data) =>
+                            controllerService?.uploadFile(
+                                extraFile["controller-path"],
+                                Buffer.from(data)
+                            )
+                        );
+                })
+            );
 
             if (!hasErrors) {
                 setState(InstallerState.DONE);
@@ -140,6 +170,17 @@ const InstallerModal = ({
                     <h3>Restarting</h3>
                     <p>
                         Waiting for controller restart... <Spinner />
+                    </p>
+                    <Log show={showLog} onShow={setShowLog}>
+                        {log}
+                    </Log>
+                </Modal.Body>
+            )}
+            {state === InstallerState.UPLOADING_FILES && (
+                <Modal.Body>
+                    <h3>Uploading files</h3>
+                    <p>
+                        Uploading files... <Spinner />
                     </p>
                     <Log show={showLog} onShow={setShowLog}>
                         {log}

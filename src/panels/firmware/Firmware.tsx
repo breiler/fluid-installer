@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { Card } from "../../components";
+import { Card, Spinner } from "../../components";
 import {
     FirmwareChoice,
     GithubRelease,
@@ -12,7 +12,7 @@ import Choice from "../../components/choice";
 import { Markdown } from "../../components/markdown/Markdown";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import FirmwareBreadCrumbList from "./FirmwareBreadcrumbList";
-import { FormCheck } from "react-bootstrap";
+import { Col, FormCheck } from "react-bootstrap";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 type Props = {
@@ -37,6 +37,7 @@ const Firmware = ({ onInstall }: Props) => {
         "showPrerelease",
         false
     );
+    const [isLoading, setLoading] = useState<boolean>(false);
 
     const choice = useMemo(
         () => selectedChoices[selectedChoices.length - 1],
@@ -47,6 +48,7 @@ const Firmware = ({ onInstall }: Props) => {
         setSelectedRelease(release);
 
         if (release) {
+            setLoading(true);
             GithubService.getReleaseManifest(release)
                 .then((manifest) => {
                     setReleaseManifest(manifest);
@@ -56,7 +58,8 @@ const Firmware = ({ onInstall }: Props) => {
                     setErrorMessage(
                         "Could not download the release asset " + error
                     );
-                });
+                })
+                .finally(() => setLoading(false));
         }
     };
 
@@ -122,7 +125,12 @@ const Firmware = ({ onInstall }: Props) => {
                 </>
             )}
 
-            {selectedRelease && (
+            {isLoading && (
+                <Col>
+                    Fetching <Spinner />
+                </Col>
+            )}
+            {!isLoading && selectedRelease && (
                 <>
                     {choice && releaseManifest && !choice.images && (
                         <>

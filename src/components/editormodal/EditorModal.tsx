@@ -26,7 +26,7 @@ const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
     const [tab, setTab] = useState<ConfigurationTab>(ConfigurationTab.GENERAL);
 
     return (
-        <Modal show={!!file} size="lg" scrollable={true} centered={false}>
+        <Modal show={!!file} size="xl" scrollable={true} centered={false}>
             <Modal.Header
                 style={{
                     paddingBottom: "0px",

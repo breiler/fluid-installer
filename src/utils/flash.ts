@@ -3,10 +3,17 @@ import CryptoJS from "crypto-js";
 import { FlashProgress } from "../services/FlashService";
 import { NativeSerialPort } from "./serialport/typings";
 import { InstallerState } from "../services";
+import { convertUint8ArrayToBinaryString } from "./utils";
+
+type FlashFile = {
+    fileName: string;
+    data: Uint8Array;
+    address: number;
+};
 
 export const flashDevice = async (
     serialPort: NativeSerialPort,
-    files,
+    files: FlashFile[],
     erase: boolean,
     baud: number,
     onProgress: (progress: FlashProgress) => void,
@@ -38,7 +45,10 @@ export const flashDevice = async (
 
         onState(InstallerState.FLASHING);
         const flashOptions: FlashOptions = {
-            fileArray: files,
+            fileArray: files.map((f) => ({
+                address: f.address,
+                data: convertUint8ArrayToBinaryString(f.data)
+            })),
             flashSize: "keep",
             eraseAll: erase,
             compress: true,

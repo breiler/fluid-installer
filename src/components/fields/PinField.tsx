@@ -5,6 +5,7 @@ import { Board } from "../../model/Boards";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import ToolTip from "../tooltip/ToolTip";
 
 type SelectFieldProps = {
     label?: string;
@@ -56,10 +57,10 @@ const PinField = ({
 
     return (
         <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm="3">
-                {label}
+            <Form.Label column sm="4">
+                {label} <ToolTip>{helpText}</ToolTip>
             </Form.Label>
-            <Col sm="9">
+            <Col sm="8">
                 <InputGroup>
                     <Form.Select
                         aria-label={placeholder}
@@ -122,7 +123,6 @@ const PinField = ({
                         </InputGroup.Text>
                     )}
                 </InputGroup>
-                {helpText && <Form.Text muted>{helpText}</Form.Text>}
                 {hasConflict && (
                     <Form.Text muted>
                         <Alert variant="warning">

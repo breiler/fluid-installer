@@ -6,6 +6,7 @@ import MotorGroup from "./MotorGroup";
 import { Boards } from "../../../model/Boards";
 import BooleanField from "../../../components/fields/BooleanField";
 import HomingGroup from "./HomingGroup";
+import CollapseSection from "../../../components/collapsesection/CollapseSection";
 
 type SelectFieldProps = {
     axisLabel: string;
@@ -27,84 +28,85 @@ const AxisGroup = ({
     setValue = () => {},
     usedPins
 }: SelectFieldProps) => (
-    <>
-        <h4>{axisLabel}-axis</h4>
-
-        <Form.Check
-            type="switch"
-            label="Include"
-            checked={!!axis}
-            onChange={() => {
-                if (axis) {
-                    setValue(undefined);
-                } else {
-                    setValue(DEFAULT_CONFIG);
-                }
-            }}
-        ></Form.Check>
-        <br />
-        <br />
+    <Container>
+        <h4>
+            {axisLabel}-axis
+            <Form.Check
+                style={{ display: "inline", marginLeft: "16px" }}
+                type="switch"
+                checked={!!axis}
+                onChange={() => {
+                    if (axis) {
+                        setValue(undefined);
+                    } else {
+                        setValue(DEFAULT_CONFIG);
+                    }
+                }}
+            ></Form.Check>
+        </h4>
 
         {axis && (
-            <Container>
-                <TextField
-                    label="Steps/mm"
-                    value={axis.steps_per_mm ?? 80}
-                    placeholder="Steps per mm"
-                    setValue={(value) =>
-                        setValue({
-                            ...axis,
-                            ...{ steps_per_mm: Number(value) }
-                        })
-                    }
-                />
-                <TextField
-                    label="Max rate"
-                    value={axis.max_rate_mm_per_min ?? 1000}
-                    placeholder="Max rate"
-                    unit="mm/min"
-                    setValue={(value) =>
-                        setValue({
-                            ...axis,
-                            ...{ max_rate_mm_per_min: Number(value) }
-                        })
-                    }
-                />
-                <TextField
-                    label="Acceleration"
-                    value={axis.acceleration_mm_per_sec2 ?? 25}
-                    placeholder="Acceleration"
-                    unit="mm/sec²"
-                    setValue={(value) =>
-                        setValue({
-                            ...axis,
-                            ...{ acceleration_mm_per_sec2: Number(value) }
-                        })
-                    }
-                />
-                <TextField
-                    label="Max travel"
-                    value={axis.max_travel_mm ?? 1000.0}
-                    placeholder="Max travel"
-                    unit="mm"
-                    setValue={(value) =>
-                        setValue({
-                            ...axis,
-                            ...{ max_travel_mm: Number(value) }
-                        })
-                    }
-                />
-                <BooleanField
-                    label="Soft limits"
-                    value={axis?.soft_limits ?? false}
-                    setValue={(value) =>
-                        setValue({
-                            ...axis,
-                            ...{ soft_limits: Boolean(value) }
-                        })
-                    }
-                    helpText="If enabled, commands that would cause the machine to exceed 'Max travel' will be aborted. Soft limits relies on an accurate machine position. This typically requires homing first. If you use soft limits always home the axis before moving the axis via jogs or gcode."
-                />
+            <>
+                <CollapseSection show={!!axis}>
+                    <TextField
+                        label="Steps/mm"
+                        value={axis.steps_per_mm ?? 80}
+                        placeholder="Steps per mm"
+                        setValue={(value) =>
+                            setValue({
+                                ...axis,
+                                ...{ steps_per_mm: Number(value) }
+                            })
+                        }
+                    />
+                    <TextField
+                        label="Max rate"
+                        value={axis.max_rate_mm_per_min ?? 1000}
+                        placeholder="Max rate"
+                        unit="mm/min"
+                        setValue={(value) =>
+                            setValue({
+                                ...axis,
+                                ...{ max_rate_mm_per_min: Number(value) }
+                            })
+                        }
+                    />
+                    <TextField
+                        label="Acceleration"
+                        value={axis.acceleration_mm_per_sec2 ?? 25}
+                        placeholder="Acceleration"
+                        unit="mm/sec²"
+                        setValue={(value) =>
+                            setValue({
+                                ...axis,
+                                ...{ acceleration_mm_per_sec2: Number(value) }
+                            })
+                        }
+                    />
+                    <TextField
+                        label="Max travel"
+                        value={axis.max_travel_mm ?? 1000.0}
+                        placeholder="Max travel"
+                        unit="mm"
+                        setValue={(value) =>
+                            setValue({
+                                ...axis,
+                                ...{ max_travel_mm: Number(value) }
+                            })
+                        }
+                    />
+                    <BooleanField
+                        label="Soft limits"
+                        value={axis?.soft_limits ?? false}
+                        setValue={(value) =>
+                            setValue({
+                                ...axis,
+                                ...{ soft_limits: Boolean(value) }
+                            })
+                        }
+                        helpText="If enabled, commands that would cause the machine to exceed 'Max travel' will be aborted. Soft limits relies on an accurate machine position. This typically requires homing first. If you use soft limits always home the axis before moving the axis via jogs or gcode."
+                    />
+                </CollapseSection>
                 <br />
                 <br />
                 <HomingGroup
@@ -140,11 +142,11 @@ const AxisGroup = ({
                     }}
                     usedPins={usedPins}
                 />
-            </Container>
+            </>
         )}
 
         <br />
-    </>
+    </Container>
 );
 
 export default AxisGroup;

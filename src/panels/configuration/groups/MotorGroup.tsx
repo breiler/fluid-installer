@@ -6,6 +6,7 @@ import { Board } from "../../../model/Boards";
 import BooleanField from "../../../components/fields/BooleanField";
 import TextField from "../../../components/fields/TextField";
 import MotorDriverGroup from "./MotorDriverGroup";
+import CollapseSection from "../../../components/collapsesection/CollapseSection";
 
 type MotorProps = {
     label: string;
@@ -32,91 +33,89 @@ const MotorGroup = ({
 }: MotorProps) => {
     return (
         <>
-            <h5>{label}</h5>
-            <Form.Check
-                type="switch"
-                label="Include"
-                checked={!!motor}
-                onChange={() => {
-                    if (motor) {
-                        setValue(undefined);
-                    } else {
-                        setValue(DEFAULT_CONFIG);
-                    }
-                }}
-            ></Form.Check>
+            <h5>
+                {label}
+                <Form.Check
+                    style={{ display: "inline", marginLeft: "16px" }}
+                    type="switch"
+                    checked={!!motor}
+                    onChange={() => {
+                        if (motor) {
+                            setValue(undefined);
+                        } else {
+                            setValue(DEFAULT_CONFIG);
+                        }
+                    }}
+                ></Form.Check>
+            </h5>
 
-            <br />
-            <br />
-            {motor && (
-                <>
-                    <PinField
-                        label="Limit negative pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.limit_neg_pin)}
-                        setValue={(value) => {
-                            setValue({
-                                ...motor,
-                                ...{ limit_neg_pin: value.toString() }
-                            });
-                        }}
-                        usedPins={usedPins}
-                    />
-                    <PinField
-                        label="Limit positive pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.limit_pos_pin)}
-                        setValue={(value) => {
-                            setValue({
-                                ...motor,
-                                ...{ limit_pos_pin: value.toString() }
-                            });
-                        }}
-                        usedPins={usedPins}
-                    />
-                    <PinField
-                        label="Limit all pin"
-                        board={board}
-                        value={PinConfig.fromString(motor?.limit_all_pin)}
-                        setValue={(value) => {
-                            setValue({
-                                ...motor,
-                                ...{ limit_all_pin: value.toString() }
-                            });
-                        }}
-                        usedPins={usedPins}
-                    />
-                    <TextField
-                        label="Pull off"
-                        value={motor?.pulloff_mm ?? 1}
-                        unit="mm"
-                        setValue={(value) => {
-                            setValue({
-                                ...motor,
-                                ...{ pulloff_mm: Number(value) }
-                            });
-                        }}
-                    />
-                    <BooleanField
-                        label="Hard limits"
-                        value={motor?.hard_limits ?? false}
-                        setValue={(value) => {
-                            setValue({
-                                ...motor,
-                                ...{ hard_limits: value }
-                            });
-                        }}
-                        helpText="Enable this when you want to use the switches defined above as hard limits. Hard limits immediately stops all motion when the switch is activated. Position is considered lost and rehoming is required."
-                    />
-                    <br />
-                    <MotorDriverGroup
-                        board={board}
-                        motor={motor}
-                        setValue={(value) => setValue(value)}
-                        usedPins={usedPins}
-                    />
-                </>
-            )}
+            <CollapseSection show={!!motor}>
+                <PinField
+                    label="Limit negative pin"
+                    board={board}
+                    value={PinConfig.fromString(motor?.limit_neg_pin)}
+                    setValue={(value) => {
+                        setValue({
+                            ...motor,
+                            ...{ limit_neg_pin: value.toString() }
+                        });
+                    }}
+                    usedPins={usedPins}
+                />
+                <PinField
+                    label="Limit positive pin"
+                    board={board}
+                    value={PinConfig.fromString(motor?.limit_pos_pin)}
+                    setValue={(value) => {
+                        setValue({
+                            ...motor,
+                            ...{ limit_pos_pin: value.toString() }
+                        });
+                    }}
+                    usedPins={usedPins}
+                />
+                <PinField
+                    label="Limit all pin"
+                    board={board}
+                    value={PinConfig.fromString(motor?.limit_all_pin)}
+                    setValue={(value) => {
+                        setValue({
+                            ...motor,
+                            ...{ limit_all_pin: value.toString() }
+                        });
+                    }}
+                    usedPins={usedPins}
+                />
+                <TextField
+                    label="Pull off"
+                    value={motor?.pulloff_mm ?? 1}
+                    unit="mm"
+                    setValue={(value) => {
+                        setValue({
+                            ...motor,
+                            ...{ pulloff_mm: Number(value) }
+                        });
+                    }}
+                />
+                <BooleanField
+                    label="Hard limits"
+                    value={motor?.hard_limits ?? false}
+                    setValue={(value) => {
+                        setValue({
+                            ...motor,
+                            ...{ hard_limits: value }
+                        });
+                    }}
+                    helpText="Enable this when you want to use the switches defined above as hard limits. Hard limits immediately stops all motion when the switch is activated. Position is considered lost and rehoming is required."
+                />
+                <br />
+                <MotorDriverGroup
+                    board={board}
+                    motor={motor}
+                    setValue={(value) => setValue(value)}
+                    usedPins={usedPins}
+                />
+            </CollapseSection>
         </>
     );
 };

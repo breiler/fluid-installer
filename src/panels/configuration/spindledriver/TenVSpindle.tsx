@@ -5,6 +5,7 @@ import { Config, PinConfig } from "../../../model/Config";
 import BooleanField from "../../../components/fields/BooleanField";
 import PinField from "../../../components/fields/PinField";
 import TextField from "../../../components/fields/TextField";
+import CollapseSection from "../../../components/collapsesection/CollapseSection";
 
 type TenVSpindleProps = {
     board: Board;
@@ -23,30 +24,34 @@ const TenVSpindle = ({
 }: TenVSpindleProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
-            <h4>10V</h4>
-            <Form.Check
-                type="switch"
-                label="Include"
-                checked={!!config?.["10V"]}
-                onChange={() => {
-                    if (config?.["10V"]) {
-                        setValue({
-                            "10V": undefined
-                        });
-                    } else {
-                        setValue({
-                            "10V": {}
-                        });
-                    }
-                }}
-            ></Form.Check>
+            <h4>
+                10V
+                <Form.Check
+                    style={{ display: "inline", marginLeft: "16px" }}
+                    type="switch"
+                    checked={!!config?.["10V"]}
+                    onChange={() => {
+                        if (config?.["10V"]) {
+                            setValue({
+                                "10V": undefined
+                            });
+                        } else {
+                            setValue({
+                                "10V": {}
+                            });
+                        }
+                    }}
+                ></Form.Check>
+            </h4>
 
-            {config?.["10V"] && (
+            <CollapseSection show={!!config?.["10V"]}>
                 <>
                     <PinField
                         label="Forward Pin"
                         board={board}
-                        value={PinConfig.fromString(config["10V"].forward_pin)}
+                        value={PinConfig.fromString(
+                            config?.["10V"]?.forward_pin
+                        )}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -60,7 +65,9 @@ const TenVSpindle = ({
                     <PinField
                         label="Reverse Pin"
                         board={board}
-                        value={PinConfig.fromString(config["10V"].reverse_pin)}
+                        value={PinConfig.fromString(
+                            config?.["10V"]?.reverse_pin
+                        )}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -74,7 +81,9 @@ const TenVSpindle = ({
                     <PinField
                         label="Output Pin"
                         board={board}
-                        value={PinConfig.fromString(config["10V"].output_pin)}
+                        value={PinConfig.fromString(
+                            config?.["10V"]?.output_pin
+                        )}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -88,7 +97,9 @@ const TenVSpindle = ({
                     <PinField
                         label="Enable Pin"
                         board={board}
-                        value={PinConfig.fromString(config["10V"].enable_pin)}
+                        value={PinConfig.fromString(
+                            config?.["10V"]?.enable_pin
+                        )}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -103,7 +114,7 @@ const TenVSpindle = ({
                         label="Direction Pin"
                         board={board}
                         value={PinConfig.fromString(
-                            config["10V"].direction_pin
+                            config?.["10V"]?.direction_pin
                         )}
                         setValue={(value) =>
                             updateSpindleDriverValue({
@@ -117,7 +128,7 @@ const TenVSpindle = ({
 
                     <BooleanField
                         label="Disable with S0"
-                        value={config["10V"].disable_with_s0 ?? false}
+                        value={config?.["10V"]?.disable_with_s0 ?? false}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -130,7 +141,7 @@ const TenVSpindle = ({
 
                     <BooleanField
                         label="S0 with disable"
-                        value={config["10V"].s0_with_disable ?? false}
+                        value={config?.["10V"]?.s0_with_disable ?? false}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -143,7 +154,7 @@ const TenVSpindle = ({
 
                     <TextField
                         label="PWM"
-                        value={config["10V"].pwm_hz ?? 5000}
+                        value={config?.["10V"]?.pwm_hz ?? 5000}
                         unit={"Hz"}
                         setValue={(value) =>
                             updateSpindleDriverValue({
@@ -156,7 +167,7 @@ const TenVSpindle = ({
 
                     <TextField
                         label="Spin up time"
-                        value={config["10V"].spinup_ms ?? 0}
+                        value={config?.["10V"]?.spinup_ms ?? 0}
                         unit={"ms"}
                         setValue={(value) =>
                             updateSpindleDriverValue({
@@ -169,7 +180,7 @@ const TenVSpindle = ({
 
                     <TextField
                         label="Spin down time"
-                        value={config["10V"].spindown_ms ?? 0}
+                        value={config?.["10V"]?.spindown_ms ?? 0}
                         unit={"ms"}
                         setValue={(value) =>
                             updateSpindleDriverValue({
@@ -182,7 +193,7 @@ const TenVSpindle = ({
 
                     <TextField
                         label="Tool number"
-                        value={config["10V"].tool_num ?? 0}
+                        value={config?.["10V"]?.tool_num ?? 0}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -194,7 +205,7 @@ const TenVSpindle = ({
 
                     <BooleanField
                         label="Off on alarm"
-                        value={config["10V"].off_on_alarm ?? false}
+                        value={config?.["10V"]?.off_on_alarm ?? false}
                         setValue={(value) =>
                             updateSpindleDriverValue({
                                 "10V": {
@@ -208,7 +219,7 @@ const TenVSpindle = ({
                     <TextField
                         label="Speed map"
                         value={
-                            config["10V"].speed_map ??
+                            config?.["10V"]?.speed_map ??
                             "0=0.000% 1000=0.000% 24000=100.000%"
                         }
                         setValue={(value) =>
@@ -220,7 +231,7 @@ const TenVSpindle = ({
                         }
                     />
                 </>
-            )}
+            </CollapseSection>
         </div>
     );
 };

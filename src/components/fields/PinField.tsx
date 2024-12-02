@@ -136,7 +136,8 @@ const PinField = ({
                             Refer to the{" "}
                             <a
                                 href="http://wiki.fluidnc.com/en/hardware/esp32_pin_reference"
-                                target="_blank" rel="noreferrer"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 documentation
                             </a>{" "}

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import { Spinner } from "../../components";
 import { GetConfigFilenameCommand, ListFilesCommand } from "../../services";
 import usePageView from "../../hooks/usePageView";
 import { fileDataToConfig, sleep } from "../../utils/utils";
@@ -15,6 +14,7 @@ import {
 import AlertMessage from "../../components/alertmessage/AlertMessage";
 import { Link } from "react-router-dom";
 import jsYaml from "js-yaml";
+import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 
 type AxisPinsProps = {
     axis: string;
@@ -203,11 +203,7 @@ const Calibrate = () => {
     return (
         <>
             <PageTitle>Calibrate</PageTitle>
-            {isLoading && (
-                <>
-                    Loading configuration <Spinner />
-                </>
-            )}
+            <SpinnerModal show={isLoading} text="Loading..." />
 
             {!isLoading && !config && (
                 <AlertMessage variant="warning">

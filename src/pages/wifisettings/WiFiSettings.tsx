@@ -37,6 +37,7 @@ import { Command } from "../../services";
 import { Spinner } from "../../components";
 import WiFiStats from "./WifiStats";
 import { sleep } from "../../utils/utils";
+import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 
 const getSignalColor = (signal: number) => {
     if (signal > 60) {
@@ -218,17 +219,10 @@ const WiFiSettings = () => {
             .finally(() => setIsLoading(false));
     }, [controllerService]);
 
-    if (isLoading) {
-        return (
-            <Form>
-                <PageTitle>Configure WiFi</PageTitle>
-                Loading configuration <Spinner />
-            </Form>
-        );
-    }
-
     return (
         <Form>
+            <SpinnerModal show={isLoading} text="Loading..." />
+
             <PageTitle>Configure WiFi</PageTitle>
 
             <TextField

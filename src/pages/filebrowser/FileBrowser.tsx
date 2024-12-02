@@ -55,6 +55,7 @@ const FileBrowser = () => {
     const [editFile, setEditFile] = useState<EditFile | undefined>();
     const [uploadError, setUploadError] = useState<string | undefined>();
 
+    const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [currentFileName, setCurrentFileName] = useState("");
@@ -66,16 +67,15 @@ const FileBrowser = () => {
 
         controllerService.connect().then(async () => {
             await controllerService.serialPort.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
-            const listCommand = await controllerService.send(
-                new ListFilesCommand()
-            );
-            setFiles(listCommand.getFiles());
+            setIsLoading(true);
+            await refreshFileList();
 
             setConfigFilename(
                 await (
                     await controllerService.send(new GetConfigFilenameCommand())
                 ).getFilename()
             );
+            setIsLoading(false);
         });
     }, [controllerService]);
 
@@ -199,6 +199,7 @@ const FileBrowser = () => {
     return (
         <>
             <PageTitle>File browser</PageTitle>
+            <SpinnerModal show={isLoading} text="Loading..." />
             <SpinnerModal show={isDownloading} text="Downloading..." />
             <SpinnerModal
                 show={isUploading}

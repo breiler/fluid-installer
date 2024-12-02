@@ -10,12 +10,19 @@ import Xterm from "../../components/xterm/Xterm";
 import { SerialPortState } from "../../utils/serialport/SerialPort";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowsRotate,
+    faCodeBranch,
+    faLockOpen,
+    faQuestion,
+    faSquarePollHorizontal
+} from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
+import { Command } from "../../services";
 
 const decoder = new TextDecoder();
 let buffer = "";
@@ -116,6 +123,32 @@ const Terminal = () => {
         };
     }, [controllerService, onResponse, xtermRef]);
 
+    const onRestart = () => {
+        setIsLoading(true);
+        controllerService
+            ?.hardReset()
+            .then(() => controllerService.serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
+            .then(() => controllerService.serialPort.write(Buffer.from([0x05]))) // CTRL-E
+            .finally(() => setIsLoading(false));
+        xtermRef.current?.terminal.focus();
+    };
+
+    const onUnlock = () => {
+        controllerService?.send(new Command("$X"));
+    };
+
+    const onGetStatus = () => {
+        controllerService?.send(new Command("?"));
+    };
+
+    const onGetStartupMessages = () => {
+        controllerService?.send(new Command("$Startup/Show"));
+    };
+
+    const onGetVersion = () => {
+        controllerService?.send(new Command("$Build/Info"));
+    };
+
     return (
         <>
             <PageTitle>Terminal</PageTitle>
@@ -124,23 +157,7 @@ const Terminal = () => {
                 <>
                     <div style={{ marginBottom: "16px" }}>
                         <Button
-                            onClick={() => {
-                                setIsLoading(true);
-                                controllerService
-                                    ?.hardReset()
-                                    .then(() =>
-                                        controllerService.serialPort.write(
-                                            Buffer.from([0x14])
-                                        )
-                                    ) // CTRL-T activate echo mode in FluidNC
-                                    .then(() =>
-                                        controllerService.serialPort.write(
-                                            Buffer.from([0x05])
-                                        )
-                                    ) // CTRL-E
-                                    .finally(() => setIsLoading(false));
-                                xtermRef.current?.terminal.focus();
-                            }}
+                            onClick={onRestart}
                             variant="warning"
                             title="Restart"
                             disabled={isLoading}
@@ -149,6 +166,56 @@ const Terminal = () => {
                                 icon={faArrowsRotate as IconDefinition}
                             />{" "}
                             Restart
+                        </Button>
+                        <Button
+                            onClick={onUnlock}
+                            variant="secondary"
+                            title="Unlock"
+                            disabled={isLoading}
+                            style={{ marginLeft: "10px" }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faLockOpen as IconDefinition}
+                            />{" "}
+                            Unlock
+                        </Button>
+                        <Button
+                            onClick={onGetStatus}
+                            variant="secondary"
+                            title="Get status"
+                            disabled={isLoading}
+                            style={{ marginLeft: "10px" }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faQuestion as IconDefinition}
+                            />{" "}
+                            Get status
+                        </Button>
+
+                        <Button
+                            onClick={onGetStartupMessages}
+                            variant="secondary"
+                            title="Get startup messages"
+                            disabled={isLoading}
+                            style={{ marginLeft: "10px" }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faSquarePollHorizontal as IconDefinition}
+                            />{" "}
+                            Get startup messages
+                        </Button>
+
+                        <Button
+                            onClick={onGetVersion}
+                            variant="secondary"
+                            title="Get version"
+                            disabled={isLoading}
+                            style={{ marginLeft: "10px" }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faCodeBranch as IconDefinition}
+                            />{" "}
+                            Get version
                         </Button>
                     </div>
                     <Xterm

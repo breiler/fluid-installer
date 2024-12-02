@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Spinner } from "../../components";
 import AlertMessage from "../../components/alertmessage/AlertMessage";
 import { CalibrateCard } from "../../components/cards/calibratecard/CalibrateCard";
 import { FileBrowserCard } from "../../components/cards/filebrowsercard/FileBrowserCard";
@@ -21,6 +20,7 @@ import {
 import { sleep } from "../../utils/utils";
 import "./Home.scss";
 import { VersionCommand } from "../../services/controllerservice/commands/VersionCommand";
+import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 
 const Home = () => {
     usePageView("Home");
@@ -77,19 +77,9 @@ const Home = () => {
             .finally(() => setIsLoading(false));
     }, [controllerService]);
 
-    if (isLoading) {
-        return (
-            <>
-                <PageTitle>FluidNC Web Installer</PageTitle>
-                <p>
-                    Loading configuration <Spinner />
-                </p>
-            </>
-        );
-    }
-
     return (
         <>
+            <SpinnerModal show={isLoading} text="Loading..." />
             <LogModal
                 show={showLogModal}
                 setShow={setShowLogModal}

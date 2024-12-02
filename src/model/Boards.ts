@@ -21,7 +21,6 @@ export const Boards: Board[] = [
                 input: true,
                 pull: true,
                 output: true,
-                restricted: true,
                 comment:
                     "This is used for the bootloader (Usable, but for experts only)"
             },

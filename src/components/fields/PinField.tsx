@@ -3,7 +3,7 @@ import { Alert, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { Pin, PinActive, PinConfig, PinPull } from "../../model/Config";
 import { Board } from "../../model/Boards";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWarning } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import ToolTip from "../tooltip/ToolTip";
 
@@ -123,11 +123,33 @@ const PinField = ({
                         </InputGroup.Text>
                     )}
                 </InputGroup>
+
+                {boardPinConfig?.comment && (
+                    <Form.Text muted>
+                        <Alert variant="info" style={{ marginTop: "16px" }}>
+                            <FontAwesomeIcon
+                                color="info"
+                                icon={faInfoCircle as IconDefinition}
+                            />{" "}
+                            {boardPinConfig?.comment}
+                            <br />
+                            Refer to the{" "}
+                            <a
+                                href="http://wiki.fluidnc.com/en/hardware/esp32_pin_reference"
+                                target="_blank" rel="noreferrer"
+                            >
+                                documentation
+                            </a>{" "}
+                            for more information
+                        </Alert>
+                    </Form.Text>
+                )}
+
                 {hasConflict && (
                     <Form.Text muted>
-                        <Alert variant="warning">
+                        <Alert variant="danger" style={{ marginTop: "16px" }}>
                             <FontAwesomeIcon
-                                color="warning"
+                                color="danger"
                                 icon={faWarning as IconDefinition}
                             />{" "}
                             The pin is already used

@@ -73,6 +73,8 @@ const handleTerminalInput = (
     }, 100);
 };
 
+const buttonStyle = { marginBottom: "16px", marginRight: "16px" };
+
 const Terminal = () => {
     usePageView("Terminal");
     const controllerService = useContext(ControllerServiceContext);
@@ -155,12 +157,13 @@ const Terminal = () => {
             <SpinnerModal show={isLoading} text="Restarting controller..." />
             {!error && (
                 <>
-                    <div style={{ marginBottom: "16px" }}>
+                    <div>
                         <Button
                             onClick={onRestart}
                             variant="warning"
                             title="Restart"
                             disabled={isLoading}
+                            style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faArrowsRotate as IconDefinition}
@@ -172,7 +175,7 @@ const Terminal = () => {
                             variant="secondary"
                             title="Unlock"
                             disabled={isLoading}
-                            style={{ marginLeft: "10px" }}
+                            style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faLockOpen as IconDefinition}
@@ -182,40 +185,40 @@ const Terminal = () => {
                         <Button
                             onClick={onGetStatus}
                             variant="secondary"
-                            title="Get status"
+                            title="Get the controller status"
                             disabled={isLoading}
-                            style={{ marginLeft: "10px" }}
+                            style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faQuestion as IconDefinition}
                             />{" "}
-                            Get status
+                            Status
                         </Button>
 
                         <Button
                             onClick={onGetStartupMessages}
                             variant="secondary"
-                            title="Get startup messages"
+                            title="Get startup log messages"
                             disabled={isLoading}
-                            style={{ marginLeft: "10px" }}
+                            style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faSquarePollHorizontal as IconDefinition}
                             />{" "}
-                            Get startup messages
+                            Startup messages
                         </Button>
 
                         <Button
                             onClick={onGetVersion}
                             variant="secondary"
-                            title="Get version"
+                            title="Get the firmware version"
                             disabled={isLoading}
-                            style={{ marginLeft: "10px" }}
+                            style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faCodeBranch as IconDefinition}
                             />{" "}
-                            Get version
+                            Version
                         </Button>
                     </div>
                     <Xterm

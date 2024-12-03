@@ -151,13 +151,21 @@ export class ControllerService {
     private async waitForWelcomeString(bufferedReader: SerialBufferedReader) {
         console.log("Waiting for welcome string");
         const currentTime = Date.now();
-
+        let fastFlashResponses = 0;
         while (currentTime + 15000 > Date.now()) {
             try {
                 const response = await bufferedReader.readLine();
                 if (this.isWelcomeString(response.toString())) {
                     console.log("Found welcome message: " + response);
                     return true;
+                }
+
+                if (this.isFastFlashBootString(response.toString())) {
+                    fastFlashResponses++;
+                    if (fastFlashResponses >= 3) {
+                        console.log("Controller is resetting");
+                        return false;
+                    }
                 }
                 await sleep(100);
             } catch (error) {
@@ -167,6 +175,10 @@ export class ControllerService {
 
         console.log("Could not detect welcome string");
         return false;
+    }
+
+    private isFastFlashBootString(response: string) {
+        return response.indexOf("SPI_FAST_FLASH_BOOT") > 0;
     }
 
     disconnect(notify = true): Promise<void> {

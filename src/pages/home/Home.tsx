@@ -33,48 +33,50 @@ const Home = () => {
     const [showLogModal, setShowLogModal] = useState<boolean>(false);
     const [startupLogRows, setStartupLogRows] = useState<string[]>([]);
 
+    const init = async () => {
+        if (!controllerService) return;
+        await sleep(1000);
+        await controllerService
+            .send(new GetStatsCommand(), 5000)
+            .then((command) => setStats(command.getStats()))
+            .catch((error) => {
+                console.error("Got an error while fetching stats", error);
+                throw "Got an error while fetching stats";
+            });
+
+        await controllerService
+            .send(new VersionCommand(), 5000)
+            .then((command) => setVersion(command.getVersionNumber()))
+            .catch((error) => {
+                console.error("Got an error while fetching version", error);
+                throw "Got an error while fetching version";
+            });
+
+        await controllerService
+            .send(new GetStartupShowCommand())
+            .then((command) => {
+                setBootError(
+                    !!command.response.find(
+                        (line) => line.indexOf("[MSG:ERR:") > -1
+                    )
+                );
+                setStartupLogRows(command.response);
+            })
+            .catch((error) => {
+                console.error(
+                    "Got an error while checking startup messages",
+                    error
+                );
+                throw "Got an error while checking startup messages";
+            });
+
+        return Promise.resolve();
+    };
+
     useEffect(() => {
         if (!controllerService) return;
         setIsLoading(true);
-        sleep(1000)
-            .then(() =>
-                controllerService
-                    .send(new GetStatsCommand(), 5000)
-                    .then((command) => setStats(command.getStats()))
-                    .catch((error) =>
-                        console.error(
-                            "Got an error while fetching stats",
-                            error
-                        )
-                    )
-            )
-            .then(() =>
-                controllerService
-                    .send(new VersionCommand(), 5000)
-                    .then((command) => setVersion(command.getVersionNumber()))
-                    .catch((error) =>
-                        console.error(
-                            "Got an error while fetching version",
-                            error
-                        )
-                    )
-            )
-            .then(() =>
-                controllerService
-                    .send(new GetStartupShowCommand())
-                    .then((command) => {
-                        setBootError(
-                            !!command.response.find(
-                                (line) => line.indexOf("[MSG:ERR:") > -1
-                            )
-                        );
-                        setStartupLogRows(command.response);
-                    })
-                    .catch((error) =>
-                        console.error("Got an error while initializing", error)
-                    )
-            )
-            .finally(() => setIsLoading(false));
+        init().finally(() => setIsLoading(false));
     }, [controllerService]);
 
     return (

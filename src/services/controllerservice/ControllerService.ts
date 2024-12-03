@@ -228,6 +228,11 @@ export class ControllerService {
             console.log("sending " + command.command);
         }
 
+        // Waiting for other commands to finish
+        while (this.commands.length > 0) {
+            await sleep(100);
+        }
+
         this.commands.push(command);
         const result = new Promise<T>((resolve, reject) => {
             let timer;

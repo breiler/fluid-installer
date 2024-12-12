@@ -406,7 +406,7 @@ const FileBrowser = () => {
                 >
                     <Button
                         onClick={() => setShowNewConfigDialog(true)}
-                        buttonType="btn-secondary"
+                        buttonType="btn-warning"
                     >
                         <>
                             <FontAwesomeIcon

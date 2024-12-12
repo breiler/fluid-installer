@@ -13,6 +13,7 @@ import ConfigurationTabs from "../../panels/configuration/ConfigurationTabs";
 import { ControllerFile } from "../../services/controllerservice";
 import CreateFileModal from "../createfilemodal/CreateFileModal";
 import { generateNewFileName } from "../../utils/utils";
+import { ButtonType } from "../button";
 
 type EditorModalProps = {
     file?: ControllerFile;
@@ -97,7 +98,7 @@ const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
                     </Button>
                     <Button
                         disabled={isSaving}
-                        buttonType="btn-secondary"
+                        buttonType={ButtonType.WARNING}
                         onClick={() => setShowSaveAs(true)}
                     >
                         <>
@@ -105,7 +106,7 @@ const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
                                 icon={faSave as IconDefinition}
                                 style={{ marginRight: "8px" }}
                             />{" "}
-                            Save as
+                            Save as...
                         </>
                     </Button>
                     <Button

@@ -402,7 +402,7 @@ const FileBrowser = () => {
 
                 <div
                     className="d-flex justify-content-end"
-                    style={{ marginTop: "16px" }}
+                    style={{ marginTop: "16px", paddingBottom: "100px" }}
                 >
                     <Button
                         onClick={() => setShowNewConfigDialog(true)}

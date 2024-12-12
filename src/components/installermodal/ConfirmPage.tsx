@@ -6,6 +6,7 @@ import { Button, Col, Modal } from "react-bootstrap";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import {
     FirmwareChoice,
+    FirmwareFile,
     GithubRelease,
     GithubReleaseManifest
 } from "../../services";
@@ -49,9 +50,32 @@ const ConfirmPage = ({
                                 <BooleanField
                                     key={key}
                                     setValue={(value: boolean) => {
+                                        // Attempt to get the already selected files with the same path
+                                        const selectedFile =
+                                            manifest.files?.[key];
+                                        const previouslySelectedFile =
+                                            Array.from(manifest.files ?? [])
+                                                .filter(
+                                                    ([, file]) =>
+                                                        (
+                                                            file as FirmwareFile
+                                                        )?.[
+                                                            "controller-path"
+                                                        ] ===
+                                                        selectedFile?.[
+                                                            "controller-path"
+                                                        ]
+                                                )
+                                                .map((object) => object[0]);
+
                                         if (value) {
                                             setFiles((files) => [
-                                                ...files,
+                                                ...files.filter(
+                                                    (fileKey) =>
+                                                        previouslySelectedFile.indexOf(
+                                                            fileKey
+                                                        ) !== -1
+                                                ), // Untoggles the files with the same destination path
                                                 key
                                             ]);
                                         } else {

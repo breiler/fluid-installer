@@ -1,5 +1,6 @@
 import jsYaml from "js-yaml";
 import { Config } from "../model/Config";
+import { ControllerFile } from "../services";
 
 export const isSafari = () => {
     return (
@@ -83,4 +84,29 @@ export const fileDataToConfig = (data): Config => {
     const regexp = /^(\s*.*:[ \t]*)(#\S.*)$/gm;
     const transformedValue = data.replace(regexp, '$1"$2"');
     return jsYaml.load(transformedValue);
+};
+
+/**
+ * Generates a unique filename based on an config filename.
+ *
+ * @param files a list of all files
+ * @param configFilename the filename that should be created
+ * @returns the new file name
+ */
+export const generateNewFileName = (
+    files: ControllerFile[],
+    configFilename: string
+): string => {
+    if (!configFilename.endsWith(".yaml")) {
+        configFilename = configFilename + ".yaml";
+    }
+
+    let index = 0;
+    let newFileName = configFilename;
+    while (files.find((file) => file.name === newFileName)) {
+        index++;
+        newFileName = configFilename.split(".yaml")[0] + index + ".yaml";
+    }
+
+    return newFileName;
 };

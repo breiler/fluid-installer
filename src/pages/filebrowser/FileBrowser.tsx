@@ -16,7 +16,8 @@ import {
     faFileImage,
     faFileZipper,
     faPen,
-    faUpload
+    faUpload,
+    faEdit
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -25,6 +26,8 @@ import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
+import CreateFileModal from "../../components/createfilemodal/CreateFileModal";
+import { generateNewFileName } from "../../utils/utils";
 
 type EditFile = {
     file: ControllerFile;
@@ -58,6 +61,7 @@ const FileBrowser = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [showNewConfigDialog, setShowNewConfigDialog] = useState(false);
     const [currentFileName, setCurrentFileName] = useState("");
 
     useEffect(() => {
@@ -140,13 +144,13 @@ const FileBrowser = () => {
             });
     };
 
-    const onCreateConfig = async () => {
+    const onCreateConfig = async (filename: string) => {
         if (!controllerService) {
             return;
         }
 
         setEditFile({
-            file: { id: configFilename, name: configFilename, size: 0 },
+            file: { id: filename, name: filename, size: 0 },
             fileData: Buffer.from("name: New configuration")
         });
     };
@@ -206,6 +210,20 @@ const FileBrowser = () => {
                 text={"Uploading " + currentFileName + "..."}
             />
 
+            {showNewConfigDialog && (
+                <CreateFileModal
+                    show={
+                        true
+                    } /* we need to create a new modal in order to get the default file name */
+                    defaultFilename={generateNewFileName(files, configFilename)}
+                    onCancel={() => setShowNewConfigDialog(false)}
+                    onCreate={(filename) => {
+                        setShowNewConfigDialog(false);
+                        onCreateConfig(filename);
+                    }}
+                />
+            )}
+
             {editFile && (
                 <EditorModal
                     file={editFile?.file}
@@ -224,7 +242,9 @@ const FileBrowser = () => {
                             want to create it?
                             <br />
                             <br />
-                            <Button onClick={onCreateConfig}>
+                            <Button
+                                onClick={() => onCreateConfig(configFilename)}
+                            >
                                 <>Create config</>
                             </Button>
                         </Alert>
@@ -384,6 +404,18 @@ const FileBrowser = () => {
                     className="d-flex justify-content-end"
                     style={{ marginTop: "16px" }}
                 >
+                    <Button
+                        onClick={() => setShowNewConfigDialog(true)}
+                        buttonType="btn-secondary"
+                    >
+                        <>
+                            <FontAwesomeIcon
+                                icon={faEdit as IconDefinition}
+                                size="xs"
+                            />{" "}
+                            Create new config
+                        </>
+                    </Button>
                     <Button
                         onClick={() => onUpload()}
                         style={{ marginRight: "0px" }}

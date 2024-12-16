@@ -20,32 +20,44 @@ export type Stats = {
 
 export class GetStatsCommand extends Command {
     constructor() {
-        super("$System/Stats");
+        super("[System/Stats]json=yes");
     }
 
     getStats(): Stats {
-        return {
-            version: this.getParam("FW version: "),
-            ip: this.getParam("IP: "),
-            hostname: this.getParam("Hostname: "),
-            ipMode: this.getParam("IP Mode: "),
-            gateway: this.getParam("Gateway: "),
-            netmask: this.getParam("Mask: "),
-            dns: this.getParam("DNS: "),
-            channel: this.getParam("Channel: "),
-            signal: this.getParam("Signal: "),
-            wifiMode: this.getParam("Current WiFi Mode: "),
-            flashSize: this.getParam("Flash Size: "),
-            cpuTemperature: this.getParam("CPU Temperature: "),
-            currentWifiMode: this.getParam("Current WiFi Mode: "),
-            apSSID: this.getParam("SSID: "),
-            connectedTo: this.getParam("Connected to: ")
-        };
+        try {
+            return {
+                version: this.getParam("FW version"),
+                ip: this.getParam("IP"),
+                hostname: this.getParam("Hostname"),
+                ipMode: this.getParam("IP Mode"),
+                gateway: this.getParam("Gateway"),
+                netmask: this.getParam("Mask"),
+                dns: this.getParam("DNS"),
+                channel: this.getParam("Channel"),
+                signal: this.getParam("Signal"),
+                wifiMode: this.getParam("Current WiFi Mode"),
+                flashSize: this.getParam("Flash Size"),
+                cpuTemperature: this.getParam("CPU Temperature"),
+                currentWifiMode: this.getParam("Current WiFi Mode"),
+                apSSID: this.getParam("SSID"),
+                connectedTo: this.getParam("Connected to")
+            };
+        } catch (error) {
+            console.error("Could not parse ", this.response);
+            throw error;
+        }
     }
 
     getParam(param: string): string | undefined {
-        return this.response
-            .find((line) => line.indexOf(param) === 0)
-            ?.substring(param.length);
+        const data = this.response
+            .filter((line) => !line.startsWith("<"))
+            .join("\n")
+            .replaceAll("[JSON:", "")
+            .replaceAll("]\n", "")
+            .replaceAll(/ok$/g, "");
+
+        return JSON.parse(data)?.data?.find(
+            (field) => field.id.replace(": ", "") === param
+        )?.value;
     }
 }

@@ -120,18 +120,18 @@ export class SerialPort {
                 terminal: espLoaderTerminal
             } as LoaderOptions;
             const loader = new ESPLoader(loaderOptions);
-            await loader.main_fn();
+            await loader.main();
 
             // We need to wait after connecting...
             await new Promise((f) => setTimeout(f, 2000));
-            const flashId = await loader.read_flash_id();
+            const flashId = await loader.readFlashId();
             const flashIdLowbyte = (flashId >> 16) & 0xff;
 
             this.deviceInfo = {
-                description: await loader.chip.get_chip_description(loader),
-                features: await loader.chip.get_chip_features(loader),
-                frequency: await loader.chip.get_crystal_freq(loader),
-                mac: await loader.chip.read_mac(loader),
+                description: await loader.chip.getChipDescription(loader),
+                features: await loader.chip.getChipFeatures(loader),
+                frequency: await loader.chip.getCrystalFreq(loader),
+                mac: await loader.chip.readMac(loader),
                 manufacturer: (flashId & 0xff).toString(16),
                 flashId: flashId,
                 device:
@@ -197,7 +197,7 @@ export class SerialPort {
             try {
                 this.reader.cancel();
                 this.reader.releaseLock();
-            } catch (error) {
+            } catch (_error) {
                 // never mind
             }
         }
@@ -287,7 +287,7 @@ export class SerialPort {
                     }
                 }
             }
-        } catch (error) {
+        } catch (_error) {
             this.dispatchEvent(SerialPortEvent.CONNECTION_ERROR);
         }
     };

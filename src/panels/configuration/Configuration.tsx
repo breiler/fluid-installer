@@ -70,7 +70,7 @@ const Configuration = ({
                 };
             });
             onChange(value, false);
-        } catch (error) {
+        } catch (_error) {
             onChange(value, true);
         }
     };

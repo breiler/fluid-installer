@@ -66,6 +66,7 @@ const WiFiSettings = () => {
 
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingType, setLoadingType] = useState<string>("");
 
     const [hostname, setHostname] = useState<string>();
     const [wifiMode, setWifiMode] = useState<string>();
@@ -83,10 +84,7 @@ const WiFiSettings = () => {
     const [apCountry, setApCountry] = useState<string>();
 
     const refreshAccessPoints = async () => {
-        await controllerService
-            ?.send(new GetStatsCommand())
-            .then((command) => setStats(command.getStats()));
-
+        setLoadingType("access points");
         const result =
             (
                 await controllerService?.send(new GetAccessPointListCommand())
@@ -98,7 +96,21 @@ const WiFiSettings = () => {
         setAccessPoints(result);
     };
 
+    const refreshStats = async () => {
+        setLoadingType("network statistics");
+        const result = (
+            await controllerService?.send(new GetStatsCommand())
+        )?.getStats();
+
+        if (!result) {
+            return;
+        }
+        setStats(result);
+    };
+
     const refresh = async () => {
+        setLoadingType("settings");
+        console.log("refreshing...");
         await controllerService
             ?.send(new GetSettingsCommand())
             .then((command) => {
@@ -119,8 +131,6 @@ const WiFiSettings = () => {
                 setApIP(settings.apIP);
                 setApCountry(settings.apCountry);
             });
-
-        await refreshAccessPoints();
     };
 
     const saveSettings = async () => {
@@ -216,12 +226,14 @@ const WiFiSettings = () => {
         sleep(1000)
             .then(() => refresh())
             .then(() => refreshAccessPoints())
+            .then(() => refreshStats())
             .finally(() => setIsLoading(false));
     }, [controllerService]);
 
     return (
         <Form>
-            <SpinnerModal show={isLoading} text="Loading..." />
+            <SpinnerModal show={isLoading} text={`Loading ${loadingType}...`} />
+            <SpinnerModal show={isSaving} text={`Saving network settings...`} />
 
             <PageTitle>Configure WiFi</PageTitle>
 
@@ -262,13 +274,8 @@ const WiFiSettings = () => {
                         <Col>
                             <WiFiStats
                                 stats={stats ?? {}}
-                                onRefresh={() => refreshAccessPoints()}
+                                onRefresh={() => refreshStats()}
                             />
-                        </Col>
-                    )}
-                    {isSaving && (
-                        <Col>
-                            <Spinner />
                         </Col>
                     )}
                 </Row>

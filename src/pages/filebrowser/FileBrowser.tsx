@@ -64,23 +64,25 @@ const FileBrowser = () => {
     const [showNewConfigDialog, setShowNewConfigDialog] = useState(false);
     const [currentFileName, setCurrentFileName] = useState("");
 
-    useEffect(() => {
+    const init = async () => {
         if (!controllerService) {
             return;
         }
 
-        controllerService.connect().then(async () => {
-            await controllerService.serialPort.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
-            setIsLoading(true);
-            await refreshFileList();
+        await controllerService.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
+        setIsLoading(true);
+        await refreshFileList();
 
-            setConfigFilename(
-                await (
-                    await controllerService.send(new GetConfigFilenameCommand())
-                ).getFilename()
-            );
-            setIsLoading(false);
-        });
+        setConfigFilename(
+            await (
+                await controllerService.send(new GetConfigFilenameCommand())
+            ).getFilename()
+        );
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        init();
     }, [controllerService]);
 
     const refreshFileList = async (): Promise<void> => {

@@ -77,8 +77,7 @@ export class ControllerService {
     }
 
     async getStats() {
-        if (!this.stats && this.currentVersion) {
-            console.log("Getting stats");
+        if (this.currentVersion) {
             try {
                 const command = await this.send(new GetStatsCommand(), 5000);
                 this.stats = command.getStats();
@@ -214,6 +213,15 @@ export class ControllerService {
             }
             endLineIndex = this.buffer.indexOf("\n");
         }
+    };
+
+    write = async (data: Buffer) => {
+        // Waiting for other commands to finish
+        while (this.commands.length > 0) {
+            await sleep(100);
+        }
+        await this.serialPort.write(data);
+        await sleep(100);
     };
 
     send = async <T extends Command>(

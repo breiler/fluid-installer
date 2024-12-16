@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * A unique global id for each row in the log
+ */
+let id = 0;
+
 export const createLogLine = (line: string) => {
     line.replace("<", "&lt;");
     line = line.replace(/MSG:ERR/g, "<span class='red'>$&</span>");
@@ -10,5 +15,5 @@ export const createLogLine = (line: string) => {
     line = line.replace(/&lt;Run/g, "&lt;<span class='green'>Run</span>");
     line = line.replace(/&lt;Idle/g, "&lt;<span class='green'>Idle</span>");
     line = line.replace(/error:/g, "<span class='red'>error:</span>");
-    return <div dangerouslySetInnerHTML={{ __html: line }} />;
+    return <div key={id++} dangerouslySetInnerHTML={{ __html: line }} />;
 };

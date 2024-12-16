@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "lib": ["es2023", "dom"],
+        "esModuleInterop": true
+    }
+}

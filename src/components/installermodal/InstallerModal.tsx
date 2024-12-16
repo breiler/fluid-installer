@@ -59,7 +59,7 @@ const InstallerModal = ({
     const onInstall = async (baud: number, files: string[]) => {
         try {
             await controllerService?.disconnect(false);
-        } catch (error) {
+        } catch (_error) {
             // never mind
         }
 

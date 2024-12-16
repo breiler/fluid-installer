@@ -54,7 +54,7 @@ const Connection = ({ onConnect }: Props) => {
             await new Promise((r) => setTimeout(r, 3000));
             setConnectionState(ConnectionState.CONNECTED);
             onConnect(controllerService);
-        } catch (error) {
+        } catch (_error) {
             //Never mind
         }
     }, [onConnect]);

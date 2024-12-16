@@ -183,7 +183,7 @@ export class XModem {
             try {
                 block = await this.readBlock(blockNumber);
                 errorCount = 0;
-            } catch (error) {
+            } catch (_error) {
                 if (++errorCount >= this.maxUploadErrors) {
                     throw ERROR_COULD_NOT_DOWNLOAD;
                 }

@@ -250,7 +250,7 @@ const FileBrowser = () => {
                             <br />
                             <br />
                             <Button
-                                onClick={() => onCreateConfig(configFilename)}
+                                onClick={() => setShowNewConfigDialog(true)}
                             >
                                 <>Create config</>
                             </Button>

@@ -18,11 +18,18 @@ import { ButtonType } from "../button";
 type EditorModalProps = {
     file?: ControllerFile;
     fileData?: Buffer;
+    createNew: boolean;
     onClose: () => void;
     onSave: (file: ControllerFile, fileData: Buffer) => Promise<void>;
 };
 
-const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
+const EditorModal = ({
+    file,
+    fileData,
+    createNew,
+    onClose,
+    onSave
+}: EditorModalProps) => {
     const [value, setValue] = useState<string>(fileData?.toString() || "");
     const [hasErrors, setHasErrors] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -57,6 +64,7 @@ const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
                     )}
                     onCreate={(filename) => onSaveAs(filename)}
                     onCancel={() => setShowSaveAs(false)}
+                    createNew={false}
                 />
             )}
             <Modal show={!!file} size="xl" scrollable={true} centered={false}>
@@ -96,19 +104,21 @@ const EditorModal = ({ file, fileData, onClose, onSave }: EditorModalProps) => {
                             Close
                         </>
                     </Button>
-                    <Button
-                        disabled={isSaving}
-                        buttonType={ButtonType.WARNING}
-                        onClick={() => setShowSaveAs(true)}
-                    >
-                        <>
-                            <FontAwesomeIcon
-                                icon={faSave as IconDefinition}
-                                style={{ marginRight: "8px" }}
-                            />{" "}
-                            Save as...
-                        </>
-                    </Button>
+                    {!createNew && (
+                        <Button
+                            disabled={isSaving}
+                            buttonType={ButtonType.WARNING}
+                            onClick={() => setShowSaveAs(true)}
+                        >
+                            <>
+                                <FontAwesomeIcon
+                                    icon={faSave as IconDefinition}
+                                    style={{ marginRight: "8px" }}
+                                />{" "}
+                                Save as...
+                            </>
+                        </Button>
+                    )}
                     <Button
                         disabled={isSaving || hasErrors}
                         buttonType={"btn-success"}

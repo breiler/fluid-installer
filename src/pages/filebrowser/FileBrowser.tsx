@@ -32,6 +32,7 @@ import { generateNewFileName } from "../../utils/utils";
 type EditFile = {
     file: ControllerFile;
     fileData: Buffer;
+    createNew: boolean;
 };
 
 const fileUpload = (file, onSave) => {
@@ -139,21 +140,23 @@ const FileBrowser = () => {
         controllerService
             .downloadFile("/littlefs/" + file.name)
             .then((fileData) => {
-                setEditFile({ file, fileData });
+                setEditFile({ file, fileData, createNew: false });
             })
             .finally(() => {
                 setIsDownloading(false);
             });
     };
 
-    const onCreateConfig = async (filename: string) => {
+    const onCreateConfig = async (filename: string, content?: string) => {
         if (!controllerService) {
             return;
         }
-
         setEditFile({
             file: { id: filename, name: filename, size: 0 },
-            fileData: Buffer.from("name: New configuration")
+            fileData: content
+                ? Buffer.from(content)
+                : Buffer.from("name: New configuration"),
+            createNew: true
         });
     };
 
@@ -219,15 +222,17 @@ const FileBrowser = () => {
                     } /* we need to create a new modal in order to get the default file name */
                     defaultFilename={generateNewFileName(files, configFilename)}
                     onCancel={() => setShowNewConfigDialog(false)}
-                    onCreate={(filename) => {
+                    onCreate={(filename, content) => {
                         setShowNewConfigDialog(false);
-                        onCreateConfig(filename);
+                        onCreateConfig(filename, content);
                     }}
+                    createNew={true}
                 />
             )}
 
             {editFile && (
                 <EditorModal
+                    createNew={editFile.createNew}
                     file={editFile?.file}
                     fileData={editFile?.fileData}
                     onSave={onSave}

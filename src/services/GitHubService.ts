@@ -21,6 +21,20 @@ export type GithubRelease = {
     published_at: string;
 };
 
+export type GithubTree = {
+    sha: string;
+    url: string;
+    tree: GithubTreeFile[];
+};
+
+export type GithubTreeFile = {
+    path: string;
+    type: "blob" | "tree";
+    sha: string;
+    size: number;
+    url: string;
+};
+
 export type FirmwareImageSignature = {
     algorithm: string;
     value: string;
@@ -57,6 +71,8 @@ export type GithubReleaseManifest = {
     installable: FirmwareChoice;
 };
 
+let configTree: GithubTree;
+
 export const GithubService = {
     /**
      * Fetches all available releases from github
@@ -88,6 +104,31 @@ export const GithubService = {
                     )
                     .sort((release1, release2) => release2?.id - release1?.id);
             });
+    },
+
+    getConfigTree: (): Promise<GithubTree> => {
+        // If the file has been retreived, return a cached variant
+        if (configTree) {
+            return Promise.resolve(configTree);
+        }
+
+        return fetch(
+            "https://api.github.com/repos/bdring/fluidnc-config-files/git/trees/main?recursive=true",
+            {
+                headers: {
+                    Accept: "application/json"
+                }
+            }
+        ).then((response) => {
+            if (response.status === 200 || response.status === 0) {
+                return response.json().then((data) => {
+                    configTree = data;
+                    return data;
+                });
+            } else {
+                return Promise.reject(new Error(response.statusText));
+            }
+        });
     },
 
     getReleaseManifest: (

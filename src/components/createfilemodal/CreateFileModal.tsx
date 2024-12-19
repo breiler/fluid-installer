@@ -61,14 +61,8 @@ const CreateFileModal = ({
         fetch(selectedConfig.url).then((response) => {
             setConfigError(false);
             response
-                .json()
-                .then((data) => {
-                    const content = Buffer.from(
-                        data.content,
-                        "base64"
-                    ).toString();
-                    setContent(content);
-                })
+                .text()
+                .then(setContent)
                 .catch((error) => {
                     setConfigError(true);
                     console.error("Could not load config", error);

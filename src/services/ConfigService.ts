@@ -95,16 +95,22 @@ const ConfigService = {
             })
             .filter((node) => node.path.endsWith(".yaml"))
             .map((node) => {
-                const fileName = node.path
+                const name = node.path
                     .substring(node.path.lastIndexOf("/") + 1)
                     .replace(".yaml", "")
                     .replaceAll("_", " ");
+
+                const fileName = node.path.substring(
+                    node.path.lastIndexOf("/") + 1
+                );
+
+                const configUrl = CONFIG_BASE_URL + "/" + path + "/" + fileName;
                 return {
-                    name: fileName,
+                    name: name,
                     path: node.path,
                     size: node.size,
                     sha: node.sha,
-                    url: node.url
+                    url: configUrl
                 };
             });
     }

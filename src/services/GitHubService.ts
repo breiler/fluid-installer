@@ -6,6 +6,9 @@ export type GithubReleaseAsset = {
 const RESOURCES_BASE_URL =
     "https://raw.githubusercontent.com/bdring/fluidnc-releases/main/releases";
 
+export const CONFIG_BASE_URL =
+    "https://raw.githubusercontent.com/breiler/fluidnc-config-files/refs/heads/fluid-installer";
+
 /**
  * Contract for a github release
  * (https://api.github.com/repos/bdring/FluidNC/releases)
@@ -113,7 +116,7 @@ export const GithubService = {
         }
 
         return fetch(
-            "https://api.github.com/repos/bdring/fluidnc-config-files/git/trees/main?recursive=true",
+            "https://api.github.com/repos/breiler/fluidnc-config-files/git/trees/fluid-installer?recursive=true",
             {
                 headers: {
                     Accept: "application/json"

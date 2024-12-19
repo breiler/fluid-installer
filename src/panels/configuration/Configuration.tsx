@@ -18,6 +18,7 @@ import { deepMerge, fileDataToConfig } from "../../utils/utils";
 import ControlGroup from "./groups/ControlGroup";
 import ProbeGroup from "./groups/ProbeGroup";
 import "./Configuration.scss";
+import TextAreaField from "../../components/fields/TextAreaField";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -96,11 +97,11 @@ const Configuration = ({
                         ]}
                         setValue={(value) => appendConfig({ board: value })}
                     />
-                    <TextField
+                    <TextAreaField
                         label="Meta"
                         value={config.meta}
                         setValue={(value) => appendConfig({ meta: value })}
-                        maxLength={80}
+                        maxLength={1000}
                     />
                 </Container>
             )}

@@ -86,32 +86,63 @@ const CreateFileModal = ({
         <Modal show={show} size="xl" scrollable={true} centered={false}>
             <ModalHeader>Create new config file</ModalHeader>
             <ModalBody>
-                <Form.Label>Filename</Form.Label>
-                <InputGroup hasValidation>
-                    <Form.Control
-                        type={"text"}
-                        placeholder={"Filename"}
-                        value={filename}
-                        onChange={(event) => setFileName(event.target.value)}
-                    />
-                </InputGroup>
-
-                {createNew && (
-                    <>
-                        <InputGroup style={{ marginTop: "20px" }}>
-                            <Form.Check
-                                type="switch"
-                                label="Create from template"
+                <Row>
+                    <Col sm="6">
+                        <Form.Label>Filename</Form.Label>
+                        <InputGroup hasValidation>
+                            <Form.Control
+                                type={"text"}
+                                placeholder={"Filename"}
+                                value={filename}
                                 onChange={(event) =>
-                                    setCreateFromTemplate(event.target.checked)
+                                    setFileName(event.target.value)
                                 }
                             />
                         </InputGroup>
+                    </Col>
+                </Row>
 
+                {createNew && (
+                    <>
+                        <Row>
+                            <Col sm="12" xl="6">
+                                <InputGroup style={{ marginTop: "20px" }}>
+                                    <Form.Check
+                                        type="switch"
+                                        label="Create from template"
+                                        onChange={(event) =>
+                                            setCreateFromTemplate(
+                                                event.target.checked
+                                            )
+                                        }
+                                    />
+                                </InputGroup>
+
+                                {createFromTemplate && (
+                                    <AlertMessage
+                                        variant="info"
+                                        style={{ marginTop: "20px" }}
+                                    >
+                                        These configuration files are
+                                        contributed by users and might not be up
+                                        to date. Please recheck the
+                                        configuration before To modify or adding
+                                        new templates, visit this{" "}
+                                        <a
+                                            href="https://github.com/bdring/fluidnc-config-files"
+                                            target="_blank" rel="noreferrer"
+                                        >
+                                            github page
+                                        </a>
+                                        .
+                                    </AlertMessage>
+                                )}
+                            </Col>
+                        </Row>
                         {createFromTemplate && (
                             <>
                                 <Row>
-                                    <Col>
+                                    <Col sm="6">
                                         <Form.Label
                                             style={{ marginTop: "20px" }}
                                         >

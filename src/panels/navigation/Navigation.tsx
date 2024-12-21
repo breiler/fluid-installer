@@ -4,7 +4,7 @@ import {
     faFolderOpen,
     faHome,
     faPowerOff,
-    faRefresh,
+    faRightFromBracket,
     faSliders,
     faTerminal,
     faWifi
@@ -88,11 +88,13 @@ const Navigation = () => {
                 )}
                 <hr />
                 <Nav.Link onClick={restart}>
-                    <FontAwesomeIcon icon={faRefresh as IconDefinition} />{" "}
+                    <FontAwesomeIcon icon={faPowerOff as IconDefinition} />{" "}
                     Restart
                 </Nav.Link>
                 <Nav.Link onClick={() => controllerService?.disconnect()}>
-                    <FontAwesomeIcon icon={faPowerOff as IconDefinition} />{" "}
+                    <FontAwesomeIcon
+                        icon={faRightFromBracket as IconDefinition}
+                    />{" "}
                     Disconnect
                 </Nav.Link>
             </Nav>

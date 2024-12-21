@@ -5,7 +5,7 @@ import { NativeSerialPort } from "./serialport/typings";
 import { InstallerState } from "../services";
 import { convertUint8ArrayToBinaryString } from "./utils";
 
-type FlashFile = {
+export type FlashFile = {
     fileName: string;
     data: Uint8Array;
     address: number;

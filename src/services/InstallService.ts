@@ -7,7 +7,7 @@ import {
     GithubService
 } from "./GitHubService";
 import { SerialPort } from "../utils/serialport/SerialPort";
-import { flashDevice } from "../utils/flash";
+import { FlashFile, flashDevice } from "../utils/flash";
 import sha256 from "crypto-js/sha256";
 import { enc } from "crypto-js/core";
 import { analytics, logEvent } from "./FirebaseService";

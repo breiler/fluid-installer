@@ -14,6 +14,7 @@ import {
     faArrowsRotate,
     faCodeBranch,
     faLockOpen,
+    faPowerOff,
     faQuestion,
     faSquarePollHorizontal
 } from "@fortawesome/free-solid-svg-icons";
@@ -135,6 +136,10 @@ const Terminal = () => {
         xtermRef.current?.terminal.focus();
     };
 
+    const onReset = () => {
+        controllerService.serialPort.write(Buffer.from([0x18]));
+    };
+
     const onUnlock = () => {
         controllerService?.send(new Command("$X"));
     };
@@ -160,20 +165,32 @@ const Terminal = () => {
                     <div>
                         <Button
                             onClick={onRestart}
+                            variant="danger"
+                            title="Does a hard reset on the controller by setting DTR/RTS"
+                            disabled={isLoading}
+                            style={buttonStyle}
+                        >
+                            <FontAwesomeIcon
+                                icon={faPowerOff as IconDefinition}
+                            />{" "}
+                            Restart
+                        </Button>
+                        <Button
+                            onClick={onReset}
                             variant="warning"
-                            title="Restart"
+                            title="Resets the controller with a 0x18 command"
                             disabled={isLoading}
                             style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faArrowsRotate as IconDefinition}
                             />{" "}
-                            Restart
+                            Reset
                         </Button>
                         <Button
                             onClick={onUnlock}
                             variant="secondary"
-                            title="Unlock"
+                            title="Unlocks the controller with $X"
                             disabled={isLoading}
                             style={buttonStyle}
                         >

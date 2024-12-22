@@ -134,86 +134,94 @@ const WiFiSettings = () => {
     };
 
     const saveSettings = async () => {
-        if (hostname !== settings?.hostname) {
-            await controllerService?.send(new Command("$Hostname=" + hostname));
-        }
-
-        if (wifiMode !== settings?.wifiMode) {
-            await controllerService?.send(
-                new Command("$WiFi/Mode=" + wifiMode)
-            );
-        }
-
-        if (stationSSID !== settings?.stationSSID) {
-            await controllerService?.send(
-                new Command("$Sta/SSID=" + stationSSID)
-            );
-        }
-
-        if (stationIpMode !== settings?.stationIpMode) {
-            await controllerService?.send(
-                new Command("$Sta/IPMode=" + stationIpMode)
-            );
-        }
-
-        if (stationPassword !== settings?.stationPassword) {
-            await controllerService?.send(
-                new Command(
-                    "$Sta/Password=" + encodePassword(stationPassword ?? "")
-                )
-            );
-        }
-
-        if (stationMinSecurity !== settings?.stationMinSecurity) {
-            await controllerService?.send(
-                new Command("$Sta/MinSecurity=" + stationMinSecurity)
-            );
-        }
-
-        if (stationIP !== settings?.stationIP) {
-            await controllerService?.send(new Command("$Sta/IP=" + stationIP));
-        }
-
-        if (stationGateway !== settings?.stationGateway) {
-            await controllerService?.send(
-                new Command("$Sta/Gateway=" + stationGateway)
-            );
-        }
-
-        if (stationNetmask !== settings?.stationNetmask) {
-            await controllerService?.send(
-                new Command("$Sta/Netmask=" + stationNetmask)
-            );
-        }
-
-        if (apSSID !== settings?.apSSID) {
-            await controllerService?.send(new Command("$AP/SSID=" + apSSID));
-        }
-
-        if (apPassword !== settings?.apPassword) {
-            await controllerService?.send(
-                new Command("$AP/Password=" + encodePassword(apPassword ?? ""))
-            );
-        }
-
-        if (apChannel !== settings?.apChannel) {
-            await controllerService?.send(
-                new Command("$AP/Channel=" + apChannel)
-            );
-        }
-
-        if (apIP !== settings?.apIP) {
-            await controllerService?.send(new Command("$AP/IP=" + apIP));
-        }
-
-        if (apCountry !== settings?.apCountry) {
-            await controllerService?.send(
-                new Command("$AP/Country=" + apCountry)
-            );
-        }
-
+        setIsSaving(true);
         try {
-            setIsSaving(true);
+            if (hostname !== settings?.hostname) {
+                await controllerService?.send(
+                    new Command("$Hostname=" + hostname)
+                );
+            }
+
+            if (wifiMode !== settings?.wifiMode) {
+                await controllerService?.send(
+                    new Command("$WiFi/Mode=" + wifiMode)
+                );
+            }
+
+            if (stationSSID !== settings?.stationSSID) {
+                await controllerService?.send(
+                    new Command("$Sta/SSID=" + stationSSID)
+                );
+            }
+
+            if (stationIpMode !== settings?.stationIpMode) {
+                await controllerService?.send(
+                    new Command("$Sta/IPMode=" + stationIpMode)
+                );
+            }
+
+            if (stationPassword !== settings?.stationPassword) {
+                await controllerService?.send(
+                    new Command(
+                        "$Sta/Password=" + encodePassword(stationPassword ?? "")
+                    )
+                );
+            }
+
+            if (stationMinSecurity !== settings?.stationMinSecurity) {
+                await controllerService?.send(
+                    new Command("$Sta/MinSecurity=" + stationMinSecurity)
+                );
+            }
+
+            if (stationIP !== settings?.stationIP) {
+                await controllerService?.send(
+                    new Command("$Sta/IP=" + stationIP)
+                );
+            }
+
+            if (stationGateway !== settings?.stationGateway) {
+                await controllerService?.send(
+                    new Command("$Sta/Gateway=" + stationGateway)
+                );
+            }
+
+            if (stationNetmask !== settings?.stationNetmask) {
+                await controllerService?.send(
+                    new Command("$Sta/Netmask=" + stationNetmask)
+                );
+            }
+
+            if (apSSID !== settings?.apSSID) {
+                await controllerService?.send(
+                    new Command("$AP/SSID=" + apSSID)
+                );
+            }
+
+            if (apPassword !== settings?.apPassword) {
+                await controllerService?.send(
+                    new Command(
+                        "$AP/Password=" + encodePassword(apPassword ?? "")
+                    )
+                );
+            }
+
+            if (apChannel !== settings?.apChannel) {
+                await controllerService?.send(
+                    new Command("$AP/Channel=" + apChannel)
+                );
+            }
+
+            if (apIP !== settings?.apIP) {
+                await controllerService?.send(new Command("$AP/IP=" + apIP));
+            }
+
+            if (apCountry !== settings?.apCountry) {
+                await controllerService?.send(
+                    new Command("$AP/Country=" + apCountry)
+                );
+            }
+
             await controllerService?.hardReset();
             await refresh();
         } finally {

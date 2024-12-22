@@ -70,8 +70,8 @@ const FileBrowser = () => {
             return;
         }
 
-        await controllerService.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
         setIsLoading(true);
+        await controllerService.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
         await refreshFileList();
 
         setConfigFilename(

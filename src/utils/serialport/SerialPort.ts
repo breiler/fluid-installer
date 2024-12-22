@@ -98,6 +98,7 @@ export class SerialPort {
     private readers: SerialReader[] = [];
     private reader: ReadableStreamDefaultReader<Uint8Array>;
     private deviceInfo: DeviceInfo;
+    private dtrState: boolean = false;
 
     constructor(serialPort: NativeSerialPort) {
         this.serialPort = serialPort;
@@ -155,7 +156,13 @@ export class SerialPort {
     };
 
     async setDTR(enabled: boolean) {
+        this.dtrState = enabled;
         await this.serialPort.setSignals({ dataTerminalReady: enabled });
+    }
+
+    async setRTS(enabled: boolean) {
+        await this.serialPort.setSignals({ requestToSend: enabled });
+        this.setDTR(this.dtrState);
     }
 
     open = async (baudRate = 115200): Promise<void> => {
@@ -226,6 +233,10 @@ export class SerialPort {
         }
 
         try {
+            while (this.serialPort.writable.locked) {
+                await sleep(100);
+            }
+
             const writer = this.serialPort.writable!.getWriter();
             return writer.write(data).finally(() => {
                 writer.releaseLock();

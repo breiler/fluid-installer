@@ -130,7 +130,8 @@ const CreateFileModal = ({
                                         new templates, visit this{" "}
                                         <a
                                             href="https://github.com/bdring/fluidnc-config-files"
-                                            target="_blank" rel="noreferrer"
+                                            target="_blank"
+                                            rel="noreferrer"
                                         >
                                             github page
                                         </a>

@@ -125,58 +125,73 @@ const Firmware = ({ onInstall }: Props) => {
                     </p>
 
                     <Row>
-                        <Col>
-                            <Form.Select
-                                size="lg"
-                                onChange={(event) =>
-                                    chooseFirmware(event.target.value)
-                                }
-                            >
-                                {!releases?.length && (
-                                    <option>Loading...</option>
-                                )}
-                                {releases.map((release) => (
-                                    <option key={release.id} value={release.id}>
-                                        {release.name}
-                                    </option>
-                                ))}
-                            </Form.Select>
-                        </Col>
-                        <Col sm="4" md="3" lg="2">
-                            <DropdownButton
-                                className={"d-grid"}
-                                size="lg"
-                                title={
-                                    <FontAwesomeIcon
-                                        icon={faSliders as IconDefinition}
-                                    />
-                                }
-                            >
-                                <Dropdown.Item>
-                                    {" "}
-                                    <FormCheck
-                                        type="switch"
-                                        label="Show pre-releases"
-                                        checked={showPrerelease === "true"}
-                                        onChange={(event) => {
-                                            setShowPrerelease(
-                                                Boolean(
-                                                    event.target.checked
-                                                ).toString()
-                                            );
-                                        }}
-                                    />
-                                </Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item
-                                    onClick={() => setUploadCustomImage(true)}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faFileArrowUp as IconDefinition}
-                                    />
-                                    Upload custom image...
-                                </Dropdown.Item>
-                            </DropdownButton>
+                        <Col sm="12" md="12" lg="9" xl="8">
+                            <Row>
+                                <Col>
+                                    <Form.Select
+                                        size="lg"
+                                        onChange={(event) =>
+                                            chooseFirmware(event.target.value)
+                                        }
+                                    >
+                                        {!releases?.length && (
+                                            <option>Loading...</option>
+                                        )}
+                                        {releases.map((release) => (
+                                            <option
+                                                key={release.id}
+                                                value={release.id}
+                                            >
+                                                {release.name}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Col>
+                                <Col sm="4" md="3" lg="3">
+                                    <DropdownButton
+                                        className={"d-grid"}
+                                        size="lg"
+                                        title={
+                                            <FontAwesomeIcon
+                                                icon={
+                                                    faSliders as IconDefinition
+                                                }
+                                            />
+                                        }
+                                    >
+                                        <Dropdown.Item>
+                                            {" "}
+                                            <FormCheck
+                                                type="switch"
+                                                label="Show pre-releases"
+                                                checked={
+                                                    showPrerelease === "true"
+                                                }
+                                                onChange={(event) => {
+                                                    setShowPrerelease(
+                                                        Boolean(
+                                                            event.target.checked
+                                                        ).toString()
+                                                    );
+                                                }}
+                                            />
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item
+                                            onClick={() =>
+                                                setUploadCustomImage(true)
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={
+                                                    faFileArrowUp as IconDefinition
+                                                }
+                                            />
+                                            Upload custom image...
+                                        </Dropdown.Item>
+                                    </DropdownButton>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </>
@@ -184,7 +199,7 @@ const Firmware = ({ onInstall }: Props) => {
 
             {isLoading && (
                 <Row style={{ marginTop: "40px" }}>
-                    <Col sm="12" md="12" lg="6">
+                    <Col sm="12" md="12" lg="9" xl="8">
                         Fetching <Spinner />
                     </Col>
                 </Row>
@@ -195,7 +210,8 @@ const Firmware = ({ onInstall }: Props) => {
                         <Col
                             sm="12"
                             md="12"
-                            lg="6"
+                            lg="9"
+                            xl="8"
                             style={{ marginTop: "40px" }}
                         >
                             <FirmwareBreadCrumbList
@@ -213,8 +229,9 @@ const Firmware = ({ onInstall }: Props) => {
                                 </div>
                             )}
                         </Col>
-
-                        <Col sm="12" md="12" lg="6">
+                    </Row>
+                    <Row>
+                        <Col sm="12" md="12" lg="9" xl="8">
                             <VersionCard
                                 release={selectedRelease}
                                 isLatest={false}

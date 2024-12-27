@@ -1,0 +1,14 @@
+.showMore {
+    .shortBody {
+        overflow: hidden;
+        display: block;
+
+        mask-image: linear-gradient(
+            to bottom,
+            white,
+            white,
+            white,
+            transparent
+        );
+    }
+}

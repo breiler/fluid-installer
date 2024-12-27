@@ -119,9 +119,8 @@ export class ControllerService {
     };
 
     private async _initializeController(bufferedReader: SerialBufferedReader) {
-        const gotWelcomeString = await this.waitForWelcomeString(
-            bufferedReader
-        );
+        const gotWelcomeString =
+            await this.waitForWelcomeString(bufferedReader);
         if (gotWelcomeString) {
             await this.waitForSettle(bufferedReader);
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { Card, Spinner } from "../../components";
+import { Spinner } from "../../components";
 import {
     FirmwareChoice,
     GithubRelease,
@@ -9,7 +9,6 @@ import {
 } from "../../services/GitHubService";
 import "./Firmware.scss";
 import Choice from "../../components/choice";
-import { Markdown } from "../../components/markdown/Markdown";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import FirmwareBreadCrumbList from "./FirmwareBreadcrumbList";
 import {
@@ -25,6 +24,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faFileArrowUp, faSliders } from "@fortawesome/free-solid-svg-icons";
 import UploadCustomImageModal from "../../components/installermodal/UploadCustomImageModal";
+import VersionCard from "../../components/cards/versioncard/VersionCard";
 
 type Props = {
     onInstall: (
@@ -183,35 +183,45 @@ const Firmware = ({ onInstall }: Props) => {
             )}
 
             {isLoading && (
-                <Col>
-                    Fetching <Spinner />
-                </Col>
+                <Row style={{ marginTop: "40px" }}>
+                    <Col sm="12" md="12" lg="6">
+                        Fetching <Spinner />
+                    </Col>
+                </Row>
             )}
             {!isLoading && selectedRelease && (
-                <>
+                <div>
                     <Row>
-                        <Col sm="12" md="12" lg="6">
+                        <Col
+                            sm="12"
+                            md="12"
+                            lg="6"
+                            style={{ marginTop: "40px" }}
+                        >
+                            <FirmwareBreadCrumbList
+                                release={selectedRelease}
+                                selectedChoices={selectedChoices}
+                                setSelectedChoices={setSelectedChoices}
+                            />
+                            <hr />
                             {choice && releaseManifest && !choice.images && (
-                                <Card>
-                                    <FirmwareBreadCrumbList
-                                        selectedChoices={selectedChoices}
-                                        setSelectedChoices={setSelectedChoices}
-                                    />
+                                <div>
                                     <Choice
                                         choice={choice}
                                         onSelect={onSelect}
                                     />
-                                </Card>
+                                </div>
                             )}
                         </Col>
 
                         <Col sm="12" md="12" lg="6">
-                            <Card>
-                                <Markdown>{selectedRelease.body}</Markdown>
-                            </Card>
+                            <VersionCard
+                                release={selectedRelease}
+                                isLatest={false}
+                            />
                         </Col>
                     </Row>
-                </>
+                </div>
             )}
         </div>
     );

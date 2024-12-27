@@ -1,5 +1,6 @@
 import React from "react";
 import { FirmwareChoice } from "../../services";
+import { BreadcrumbItem } from "react-bootstrap";
 
 type FirmwareChoiceProps = {
     choice: FirmwareChoice;
@@ -8,11 +9,11 @@ type FirmwareChoiceProps = {
 
 const FirmwareBreadcrumb = ({ choice, onClick }: FirmwareChoiceProps) => {
     return (
-        <li className="breadcrumb-item" key={choice.name}>
+        <BreadcrumbItem key={choice.name}>
             <a href="#" onClick={() => onClick(choice)}>
                 {choice.name}
             </a>
-        </li>
+        </BreadcrumbItem>
     );
 };
 

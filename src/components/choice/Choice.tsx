@@ -11,11 +11,11 @@ type ChoiceProps = {
 const Choice = ({ choice, onSelect }: ChoiceProps) => {
     return (
         <>
-            <h1>{choice["choice-name"]}</h1>
+            <h3>{choice["choice-name"]}</h3>
             <div className="d-grid gap-3">
                 {choice.choices.map((subChoice) => (
                     <Button
-                        style={{ minHeight: "60px" }}
+                        style={{ minHeight: "60px", marginRight: 0 }}
                         key={subChoice.name}
                         onClick={() => onSelect(subChoice)}
                     >

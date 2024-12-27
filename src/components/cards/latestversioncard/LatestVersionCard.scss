@@ -1,15 +1,17 @@
 .latestVersionCard {
-    margin-top: 50px;
-}
+    margin-top: 25px;
 
-/* Medium devices such as tablets (768px and up) */
-@media only screen and (min-width: 768px) {
-    .latestVersionCard {
-        margin-top: 25px;
+    .shortBody {
+        max-height: 395px;
+        overflow: hidden;
+        display: block;
+
+        mask-image: linear-gradient(
+            to bottom,
+            white,
+            white,
+            white,
+            transparent
+        );
     }
-}
-
-.shortBody {
-    max-height: 390px;
-    overflow: hidden;
 }

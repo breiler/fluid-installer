@@ -50,6 +50,7 @@ const Editor = ({ value, onChange }: Props) => {
     return (
         <>
             <ReactCodeMirror
+                minHeight="300px"
                 value={value}
                 onChange={onChange}
                 extensions={[

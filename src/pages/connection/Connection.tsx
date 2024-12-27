@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useState } from "react";
-import { Button, Spinner } from "../../components";
+import { Spinner } from "../../components";
 import ConnectionState from "../../model/ConnectionState";
 import { ControllerService } from "../../services";
 import { SerialPort } from "../../utils/serialport/SerialPort";
@@ -8,7 +8,7 @@ import "./connection.scss";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
 import ControllerLog from "../../components/controllerlog/ControllerLog";
-import { Col, Container, Modal, Row } from "react-bootstrap";
+import { Col, Container, Modal, Row, Button } from "react-bootstrap";
 import LatestVersionCard from "../../components/cards/latestversioncard/LatestVersionCard";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
@@ -62,7 +62,7 @@ const Connection = ({ onConnect }: Props) => {
     return (
         <Container>
             <Row>
-                <Col xs={12} md={7} lg={8}>
+                <Col xs={12} md={7} lg={7}>
                     <div className="component-connection">
                         {(connectionState === ConnectionState.DISCONNECTED ||
                             connectionState === ConnectionState.CONNECTING) && (
@@ -107,11 +107,7 @@ const Connection = ({ onConnect }: Props) => {
                                         connectionState ===
                                         ConnectionState.CONNECTING
                                     }
-                                    loading={
-                                        connectionState ===
-                                            ConnectionState.CONNECTING &&
-                                        !!controllerService
-                                    }
+                                    size="lg"
                                 >
                                     <>
                                         {connectionState ===
@@ -149,7 +145,7 @@ const Connection = ({ onConnect }: Props) => {
                             )}
                     </div>
                 </Col>
-                <Col md={5} lg={4}>
+                <Col xs={12} md={5} lg={5}>
                     <LatestVersionCard />
                 </Col>
             </Row>

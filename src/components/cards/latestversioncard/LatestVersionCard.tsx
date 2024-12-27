@@ -34,7 +34,7 @@ const LatestVersionCard = () => {
                         <Card.Subtitle className="mb-2 text-muted light">
                             {releaseDate}
                         </Card.Subtitle>
-                        <Card.Text>
+                        <>
                             <span className={showMore ? "" : "shortBody"}>
                                 <Markdown>{latestRelease.body}</Markdown>
                             </span>
@@ -44,7 +44,7 @@ const LatestVersionCard = () => {
                             >
                                 {showMore ? "Show less" : "Show more"}
                             </Button>
-                        </Card.Text>
+                        </>
                     </Card.Body>
                     <Ribbon variant="success">
                         <>LATEST</>

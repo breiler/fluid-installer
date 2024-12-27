@@ -12,8 +12,19 @@ import Choice from "../../components/choice";
 import { Markdown } from "../../components/markdown/Markdown";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import FirmwareBreadCrumbList from "./FirmwareBreadcrumbList";
-import { Col, FormCheck } from "react-bootstrap";
+import {
+    Col,
+    FormCheck,
+    Row,
+    Form,
+    DropdownButton,
+    Dropdown
+} from "react-bootstrap";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { faFileArrowUp, faSliders } from "@fortawesome/free-solid-svg-icons";
+import UploadCustomImageModal from "../../components/installermodal/UploadCustomImageModal";
 
 type Props = {
     onInstall: (
@@ -28,6 +39,7 @@ const Firmware = ({ onInstall }: Props) => {
         []
     );
     const [releases, setReleases] = useState<GithubRelease[]>([]);
+    const [uploadCustomImage, setUploadCustomImage] = useState<boolean>(false);
     const [selectedRelease, setSelectedRelease] = useState<GithubRelease>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [releaseManifest, setReleaseManifest] = useState<
@@ -97,6 +109,13 @@ const Firmware = ({ onInstall }: Props) => {
             {errorMessage && (
                 <div className="alert alert-danger">{errorMessage}</div>
             )}
+
+            {uploadCustomImage && (
+                <UploadCustomImageModal
+                    onClose={() => setUploadCustomImage(false)}
+                />
+            )}
+
             {!errorMessage && (
                 <>
                     <PageTitle>Install</PageTitle>
@@ -105,23 +124,59 @@ const Firmware = ({ onInstall }: Props) => {
                         controller.
                     </p>
 
-                    <select
-                        className="form-select form-select-lg mb-3"
-                        onChange={(event) => chooseFirmware(event.target.value)}
-                    >
-                        {!releases?.length && <option>Loading...</option>}
-                        {releases.map((release) => (
-                            <option key={release.id} value={release.id}>
-                                {release.name}
-                            </option>
-                        ))}
-                    </select>
-                    <FormCheck
-                        type="switch"
-                        label="Show pre-releases"
-                        checked={Boolean(showPrerelease)}
-                        onChange={() => setShowPrerelease((value) => !value)}
-                    />
+                    <Row>
+                        <Col>
+                            <Form.Select
+                                size="lg"
+                                onChange={(event) =>
+                                    chooseFirmware(event.target.value)
+                                }
+                            >
+                                {!releases?.length && (
+                                    <option>Loading...</option>
+                                )}
+                                {releases.map((release) => (
+                                    <option key={release.id} value={release.id}>
+                                        {release.name}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        </Col>
+                        <Col sm="4" md="3" lg="2">
+                            <DropdownButton
+                                className={"d-grid"}
+                                size="lg"
+                                title={
+                                    <FontAwesomeIcon
+                                        icon={faSliders as IconDefinition}
+                                    />
+                                }
+                            >
+                                <Dropdown.Item>
+                                    {" "}
+                                    <FormCheck
+                                        type="switch"
+                                        label="Show pre-releases"
+                                        checked={Boolean(showPrerelease)}
+                                        onChange={() =>
+                                            setShowPrerelease(
+                                                (!showPrerelease).toString()
+                                            )
+                                        }
+                                    />
+                                </Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item
+                                    onClick={() => setUploadCustomImage(true)}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faFileArrowUp as IconDefinition}
+                                    />
+                                    Upload custom image...
+                                </Dropdown.Item>
+                            </DropdownButton>
+                        </Col>
+                    </Row>
                 </>
             )}
 
@@ -132,19 +187,28 @@ const Firmware = ({ onInstall }: Props) => {
             )}
             {!isLoading && selectedRelease && (
                 <>
-                    {choice && releaseManifest && !choice.images && (
-                        <>
-                            <Card className="text-bg-light card">
-                                <FirmwareBreadCrumbList
-                                    selectedChoices={selectedChoices}
-                                    setSelectedChoices={setSelectedChoices}
-                                />
-                                <Choice choice={choice} onSelect={onSelect} />
-                            </Card>
-                        </>
-                    )}
+                    <Row>
+                        <Col sm="12" md="12" lg="6">
+                            {choice && releaseManifest && !choice.images && (
+                                <Card>
+                                    <FirmwareBreadCrumbList
+                                        selectedChoices={selectedChoices}
+                                        setSelectedChoices={setSelectedChoices}
+                                    />
+                                    <Choice
+                                        choice={choice}
+                                        onSelect={onSelect}
+                                    />
+                                </Card>
+                            )}
+                        </Col>
 
-                    <Markdown>{selectedRelease.body}</Markdown>
+                        <Col sm="12" md="12" lg="6">
+                            <Card>
+                                <Markdown>{selectedRelease.body}</Markdown>
+                            </Card>
+                        </Col>
+                    </Row>
                 </>
             )}
         </div>

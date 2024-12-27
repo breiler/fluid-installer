@@ -3,7 +3,7 @@ export type GithubReleaseAsset = {
     name: string;
 };
 
-const RESOURCES_BASE_URL =
+export const RESOURCES_BASE_URL =
     "https://raw.githubusercontent.com/bdring/fluidnc-releases/main/releases";
 
 export const CONFIG_BASE_URL =

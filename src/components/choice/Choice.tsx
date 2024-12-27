@@ -11,8 +11,8 @@ type ChoiceProps = {
 const Choice = ({ choice, onSelect }: ChoiceProps) => {
     return (
         <>
-            <h2>{choice["choice-name"]}</h2>
-            <div className="d-grid gap-2">
+            <h1>{choice["choice-name"]}</h1>
+            <div className="d-grid gap-3">
                 {choice.choices.map((subChoice) => (
                     <Button
                         style={{ minHeight: "60px" }}
@@ -20,7 +20,7 @@ const Choice = ({ choice, onSelect }: ChoiceProps) => {
                         onClick={() => onSelect(subChoice)}
                     >
                         <>
-                            <h3>{subChoice.name}</h3>
+                            <h2>{subChoice.name}</h2>
 
                             {subChoice.description}
                             {subChoice.erase && (

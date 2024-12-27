@@ -56,6 +56,52 @@ const convertImagesToFlashFiles = (
 };
 
 export const InstallService = {
+    installImage: async (
+        serialPort: SerialPort,
+        fileData: Uint8Array,
+        onProgress: (FlashProgress) => void,
+        onState: (state: InstallerState) => void,
+        onLogData: (data: string) => void,
+        baud: number = 921600
+    ): Promise<void> => {
+        try {
+            const flashFiles: FlashFile[] = [
+                {
+                    fileName: "firmware.bin",
+                    data: fileData,
+                    address: 0x10000
+                }
+            ];
+
+            await flashDevice(
+                serialPort.getNativeSerialPort(),
+                flashFiles,
+                false,
+                baud,
+                onProgress,
+                onState,
+                onLogData
+            );
+
+            logEvent(analytics, "install", {
+                version: "custom-image",
+                success: true
+            });
+        } catch (error) {
+            logEvent(analytics, "install", {
+                version: "custom-image",
+                success: false,
+                error: error
+            });
+
+            console.error(error);
+            onState(InstallerState.ERROR);
+            throw "Was not able to flash device: " + error;
+        }
+
+        return Promise.resolve();
+    },
+
     installChoice: async (
         release: GithubRelease,
         serialPort: SerialPort,

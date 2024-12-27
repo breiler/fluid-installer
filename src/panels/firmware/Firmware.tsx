@@ -157,12 +157,14 @@ const Firmware = ({ onInstall }: Props) => {
                                     <FormCheck
                                         type="switch"
                                         label="Show pre-releases"
-                                        checked={Boolean(showPrerelease)}
-                                        onChange={() =>
+                                        checked={showPrerelease === "true"}
+                                        onChange={(event) => {
                                             setShowPrerelease(
-                                                (!showPrerelease).toString()
-                                            )
-                                        }
+                                                Boolean(
+                                                    event.target.checked
+                                                ).toString()
+                                            );
+                                        }}
                                     />
                                 </Dropdown.Item>
                                 <Dropdown.Divider />

@@ -76,7 +76,7 @@ const Firmware = ({ onInstall }: Props) => {
     };
 
     const fetchReleases = () => {
-        GithubService.getReleases(Boolean(showPrerelease))
+        GithubService.getReleases(showPrerelease === "true")
             .then((releases) => {
                 setReleases(releases);
             })
@@ -159,7 +159,16 @@ const Firmware = ({ onInstall }: Props) => {
                                             />
                                         }
                                     >
-                                        <Dropdown.Item>
+                                        <Dropdown.Item
+                                            onClick={() =>
+                                                setShowPrerelease(
+                                                    (
+                                                        showPrerelease !==
+                                                        "true"
+                                                    ).toString()
+                                                )
+                                            }
+                                        >
                                             {" "}
                                             <FormCheck
                                                 type="switch"
@@ -167,13 +176,6 @@ const Firmware = ({ onInstall }: Props) => {
                                                 checked={
                                                     showPrerelease === "true"
                                                 }
-                                                onChange={(event) => {
-                                                    setShowPrerelease(
-                                                        Boolean(
-                                                            event.target.checked
-                                                        ).toString()
-                                                    );
-                                                }}
                                             />
                                         </Dropdown.Item>
                                         <Dropdown.Divider />

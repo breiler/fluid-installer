@@ -37,7 +37,7 @@ export class GetAccessPointListCommand extends Command {
                 ssid: a.SSID,
                 signal: +a.SIGNAL,
                 isProtected: a.IS_PROTECTED === "1"
-            })).sort((a, b) => a.signal - b.signal);
+            })).sort((a, b) => b.signal - a.signal);
         } catch (error) {
             console.error(
                 "An error occured while trying to parse accesspoint data",

@@ -123,19 +123,23 @@ const CreateFileModal = ({
                                         variant="info"
                                         style={{ marginTop: "20px" }}
                                     >
-                                        These configuration files are
-                                        contributed by users and might not be up
-                                        to date. Please recheck the
-                                        configuration before To modify or adding
-                                        new templates, visit this{" "}
-                                        <a
-                                            href="https://github.com/bdring/fluidnc-config-files"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            github page
-                                        </a>
-                                        .
+                                        <p>
+                                            These configuration files are
+                                            contributed by users and might not
+                                            be up to date. Please recheck the
+                                            configuration before use.
+                                            <br />
+                                            To modify or adding new templates,
+                                            visit this{" "}
+                                            <a
+                                                href="https://github.com/bdring/fluidnc-config-files"
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                github page
+                                            </a>
+                                            .
+                                        </p>
                                     </AlertMessage>
                                 )}
                             </Col>

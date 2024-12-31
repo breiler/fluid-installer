@@ -189,7 +189,7 @@ const Firmware = ({ onInstall }: Props) => {
                                                     faFileArrowUp as IconDefinition
                                                 }
                                             />
-                                            Upload custom image...
+                                            Install a custom image...
                                         </Dropdown.Item>
                                     </DropdownButton>
                                 </Col>

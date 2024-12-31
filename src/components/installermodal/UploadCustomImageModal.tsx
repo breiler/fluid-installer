@@ -132,7 +132,11 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
                     <Modal.Body>
                         <h3>Select image</h3>
                         <p>
-                            Select a <b>firmware.bin</b> file to flash the
+                            If you have downloaded a package manually you can
+                            flash the image from here.
+                        </p>
+                        <p>
+                            Select the <b>firmware.bin</b> file to flash the
                             controller with.
                         </p>
                         {!currentFile && (

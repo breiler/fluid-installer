@@ -18,7 +18,9 @@
             "establishing-connection": "Etablerar en anslutning till din hårdvara"
         },
         "home": {
-            "description": "Du är nu ansluten till din hårdvara, välj nedan vad du vill göra"
+            "description": "Du är nu ansluten till din hårdvara, välj nedan vad du vill göra",
+            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
+            "show-details": "Click here to see details"
         }
     },
     "panel": {

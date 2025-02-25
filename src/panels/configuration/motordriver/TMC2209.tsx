@@ -1,12 +1,13 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
-import { Motor, PinConfig } from "../../../model/Config";
+import { Config, Motor, PinConfig } from "../../../model/Config";
 import BooleanField from "../../../components/fields/BooleanField";
 import PinField from "../../../components/fields/PinField";
 import SelectField from "../../../components/fields/SelectField";
 import TextField from "../../../components/fields/TextField";
 
 type TMC2209Props = {
+    config: Config;
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
@@ -14,11 +15,16 @@ type TMC2209Props = {
 };
 
 const TMC2209 = ({
+    config,
     board,
     motor,
     updateMotorDriverValue,
     usedPins
 }: TMC2209Props) => {
+    const steppingIsI2SO =
+        config?.stepping?.engine === "I2S_STATIC" ||
+        config?.stepping?.engine === "I2S_STREAM";
+
     return (
         <>
             <PinField
@@ -33,6 +39,8 @@ const TMC2209 = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <PinField
@@ -47,6 +55,8 @@ const TMC2209 = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <PinField
@@ -61,6 +71,8 @@ const TMC2209 = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <TextField

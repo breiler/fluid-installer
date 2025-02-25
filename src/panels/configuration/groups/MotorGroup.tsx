@@ -1,6 +1,6 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { PinConfig, Motor, Pin } from "../../../model/Config";
+import { PinConfig, Motor, Pin, Config } from "../../../model/Config";
 import PinField from "../../../components/fields/PinField";
 import { Board } from "../../../model/Boards";
 import BooleanField from "../../../components/fields/BooleanField";
@@ -9,6 +9,7 @@ import MotorDriverGroup from "./MotorDriverGroup";
 import CollapseSection from "../../../components/collapsesection/CollapseSection";
 
 type MotorProps = {
+    config: Config;
     label: string;
     board: Board;
     motor?: Motor;
@@ -25,6 +26,7 @@ const DEFAULT_CONFIG: Motor = {
 };
 
 const MotorGroup = ({
+    config,
     label,
     board,
     motor,
@@ -61,6 +63,7 @@ const MotorGroup = ({
                         });
                     }}
                     usedPins={usedPins}
+                    hideI2SO={true}
                 />
                 <PinField
                     label="Limit positive pin"
@@ -73,6 +76,7 @@ const MotorGroup = ({
                         });
                     }}
                     usedPins={usedPins}
+                    hideI2SO={true}
                 />
                 <PinField
                     label="Limit all pin"
@@ -85,6 +89,7 @@ const MotorGroup = ({
                         });
                     }}
                     usedPins={usedPins}
+                    hideI2SO={true}
                 />
                 <TextField
                     label="Pull off"
@@ -110,6 +115,7 @@ const MotorGroup = ({
                 />
                 <br />
                 <MotorDriverGroup
+                    config={config}
                     board={board}
                     motor={motor}
                     setValue={(value) => setValue(value)}

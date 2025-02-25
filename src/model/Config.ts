@@ -812,15 +812,34 @@ export enum Pin {
 
 export type PinDefinition = {
     pin: Pin;
+
+    /**
+     * Can the pin only be used as input
+     */
     input?: boolean;
+
     /**
      * A flag that indicates of input can use pull up or down
      */
     pull?: boolean;
+
+    /**
+     * Can the pin only be used as output
+     */
     output?: boolean;
+
     /**
      * A flag that indicates that it might be used but with caution or that the pin is used by something else
      */
     restricted?: boolean;
+
+    /**
+     * Additional comments or description of the pin
+     */
     comment?: string;
+
+    /**
+     * If it is a I2SO pin which can only be used as a stepper pin or on outputs
+     */
+    i2so?: boolean;
 };

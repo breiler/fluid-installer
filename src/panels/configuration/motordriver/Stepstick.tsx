@@ -1,9 +1,10 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
-import { Motor, PinConfig } from "../../../model/Config";
+import { Config, Motor, PinConfig } from "../../../model/Config";
 import PinField from "../../../components/fields/PinField";
 
 type StepstickProps = {
+    config: Config;
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
@@ -11,11 +12,16 @@ type StepstickProps = {
 };
 
 const Stepstick = ({
+    config,
     board,
     motor,
     updateMotorDriverValue,
     usedPins
 }: StepstickProps) => {
+    const steppingIsI2SO =
+        config?.stepping?.engine === "I2S_STATIC" ||
+        config?.stepping?.engine === "I2S_STREAM";
+
     return (
         <>
             <PinField
@@ -30,6 +36,8 @@ const Stepstick = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <PinField
@@ -44,6 +52,8 @@ const Stepstick = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <PinField
@@ -58,6 +68,8 @@ const Stepstick = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <PinField
@@ -72,6 +84,8 @@ const Stepstick = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <PinField
@@ -86,6 +100,8 @@ const Stepstick = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
 
             <PinField
@@ -100,6 +116,8 @@ const Stepstick = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
         </>
     );

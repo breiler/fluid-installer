@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Motor, PinConfig } from "../../../model/Config";
+import { Config, Motor, PinConfig } from "../../../model/Config";
 import { Board } from "../../../model/Boards";
 import SelectField from "../../../components/fields/SelectField";
 import StandardStepper from "../motordriver/StandardStepper";
@@ -14,6 +14,7 @@ import Dynamixel2 from "../motordriver/Dynamixel2";
 import { deepMerge } from "../../../utils/utils";
 
 type MotorDriverProps = {
+    config: Config;
     board: Board;
     motor?: Motor;
     setValue: (motor?: Motor) => void;
@@ -35,6 +36,7 @@ enum DriverType {
 }
 
 const MotorDriverGroup = ({
+    config,
     board,
     motor,
     setValue,
@@ -165,6 +167,7 @@ const MotorDriverGroup = ({
 
             {driverType === DriverType.STANDARD_STEPPER && (
                 <StandardStepper
+                    config={config}
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
@@ -174,6 +177,7 @@ const MotorDriverGroup = ({
 
             {driverType === DriverType.STEPSTICK && (
                 <Stepstick
+                    config={config}
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
@@ -183,6 +187,7 @@ const MotorDriverGroup = ({
 
             {driverType === DriverType.TMC_2130 && (
                 <TMC2130
+                    config={config}
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
@@ -192,6 +197,7 @@ const MotorDriverGroup = ({
 
             {driverType === DriverType.TMC_2208 && (
                 <TMC2208
+                    config={config}
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
@@ -201,6 +207,7 @@ const MotorDriverGroup = ({
 
             {driverType === DriverType.TMC_2209 && (
                 <TMC2209
+                    config={config}
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}
@@ -210,6 +217,7 @@ const MotorDriverGroup = ({
 
             {driverType === DriverType.TMC_5160 && (
                 <TMC5160
+                    config={config}
                     board={board}
                     motor={motor ?? {}}
                     updateMotorDriverValue={updateMotorDriverValue}

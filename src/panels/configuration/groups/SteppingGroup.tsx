@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
-import { Col, Form, Row } from "react-bootstrap";
-import { Stepping } from "../../../model/Config";
+import { Alert, Col, Form, Row } from "react-bootstrap";
+import { Config, Stepping } from "../../../model/Config";
 import TextField from "../../../components/fields/TextField";
+import ToolTip from "../../../components/tooltip/ToolTip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWarning } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 const DEFAULT_CONFIG: Stepping = {
     engine: "RMT",
@@ -12,39 +16,49 @@ const DEFAULT_CONFIG: Stepping = {
 };
 
 type SteppingGroupProps = {
-    steppingConfig?: Stepping;
+    config?: Config;
     setValue?: (config: Stepping) => void;
 };
 
-const SteppingGroup = ({
-    steppingConfig,
-    setValue = () => {}
-}: SteppingGroupProps) => {
+const SteppingGroup = ({ config, setValue = () => {} }: SteppingGroupProps) => {
     useEffect(() => {
-        if (!steppingConfig) {
+        if (!config?.stepping) {
             setValue(DEFAULT_CONFIG);
         }
-    }, [steppingConfig]);
+    }, [config?.stepping]);
+
+    const showI2soWarning =
+        !config?.i2so &&
+        (config?.stepping?.engine === "I2S_STATIC" ||
+            config?.stepping?.engine === "I2S_STREAM");
 
     return (
         <div style={{ marginBottom: "48px" }}>
-            <h4>Stepping</h4>
+            <h4>Stepping engine</h4>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm="3">
-                    Engine
+                <Form.Label column sm="4">
+                    Engine{" "}
+                    <ToolTip>
+                        This determines the method used to generate the steps in
+                        firmware. Controller board hardware is designed for
+                        either RMT or I2S stepping so you must choose a method
+                        that your controller board hardware uses. It is not
+                        possible to mix and match stepping types on different
+                        motors.
+                    </ToolTip>
                 </Form.Label>
-                <Col sm="9">
+                <Col sm="8">
                     <Form.Select
                         aria-label={"Engine"}
-                        value={steppingConfig?.engine}
+                        value={config?.stepping?.engine}
                         onChange={(event) =>
                             setValue({
-                                ...steppingConfig,
+                                ...config?.stepping,
                                 ...{ engine: event.target.value }
                             })
                         }
                     >
-                        <option id={"RMT"} value={"RMT"}>
+                        <option id={"RMT"} value={"RMT (using GPIO)"}>
                             RMT
                         </option>
                         <option id={"TIMED"} value={"TIMED"}>
@@ -57,51 +71,72 @@ const SteppingGroup = ({
                             I2S_STREAM
                         </option>
                     </Form.Select>
+
+                    {showI2soWarning && (
+                        <Form.Text muted>
+                            <Alert
+                                variant="warning"
+                                style={{ marginTop: "16px" }}
+                            >
+                                <FontAwesomeIcon
+                                    color="warning"
+                                    icon={faWarning as IconDefinition}
+                                />{" "}
+                                You have selected a I2SO stepping engine without
+                                a configured IO, remember to add it.
+                            </Alert>
+                        </Form.Text>
+                    )}
                 </Col>
             </Form.Group>
+
             <TextField
                 label="Idle time"
-                value={steppingConfig?.idle_ms ?? 250}
+                value={config?.stepping?.idle_ms ?? 250}
                 unit={"ms"}
                 setValue={(value) =>
                     setValue({
-                        ...steppingConfig,
+                        ...config?.stepping,
                         ...{ idle_ms: Number(value) }
                     })
                 }
+                helpText="A value of 255 will keep the motors enabled at all times (preferred for most projects). Any value between 0-254 will cause the disabled pin to activate this many milliseconds after the last step."
             />
             <TextField
                 label="Pulse time"
-                value={steppingConfig?.pulse_us ?? 4}
+                value={config?.stepping?.pulse_us ?? 4}
                 unit={"μs"}
                 setValue={(value) =>
                     setValue({
-                        ...steppingConfig,
+                        ...config?.stepping,
                         ...{ pulse_us: Number(value) }
                     })
                 }
+                helpText="The duration of the step pulses (microseconds). This is the 'on' duration of the pulse. It typically needs an equal 'off' duration. This means the max number of steps per second will be 1,000,000/(pulse_us*2). Stepper drivers will have a minimum required time length for pulses to register them. If the manufacturer provides a datasheet for the stepper driver, this value can be found there."
             />
             <TextField
                 label="Direction delay"
-                value={steppingConfig?.dir_delay_us ?? 0}
+                value={config?.stepping?.dir_delay_us ?? 0}
                 unit={"μs"}
                 setValue={(value) =>
                     setValue({
-                        ...steppingConfig,
+                        ...config?.stepping,
                         ...{ dir_delay_us: Number(value) }
                     })
                 }
+                helpText="The delay(microseconds) needed between a direction change and a step pulse. Many drivers do not need a delay here."
             />
             <TextField
                 label="Disable delay"
-                value={steppingConfig?.disable_delay_us ?? 0}
+                value={config?.stepping?.disable_delay_us ?? 0}
                 unit={"μs"}
                 setValue={(value) =>
                     setValue({
-                        ...steppingConfig,
+                        ...config?.stepping,
                         ...{ disable_delay_us: Number(value) }
                     })
                 }
+                helpText="Some motors need a delay from when they are enabled to when they can take the first step. This value is the number of microsecond delayed."
             />
         </div>
     );

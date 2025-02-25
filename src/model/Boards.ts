@@ -300,133 +300,155 @@ export const Boards: Board[] = [
                 pin: Pin.I2SO_0,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_1,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_2,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_3,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_4,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_5,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_6,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_7,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_8,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_9,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_10,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_11,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_12,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_13,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_14,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_15,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_16,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_17,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_18,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_19,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_20,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             },
             {
                 pin: Pin.I2SO_21,
                 input: false,
                 pull: false,
-                output: false
+                output: true,
+                i2so: true
             }
         ]
     }

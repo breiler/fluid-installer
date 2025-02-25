@@ -10,11 +10,12 @@ import AxisGroup from "./AxisGroup";
 import PinField from "../../../components/fields/PinField";
 import BooleanField from "../../../components/fields/BooleanField";
 import TextField from "../../../components/fields/TextField";
+import SteppingGroup from "./SteppingGroup";
 
 type SelectFieldProps = {
     board: Board;
     config?: Config;
-    setValue?: (value: Config) => void;
+    setValue?: (config: Config) => void;
     usedPins: Map<string, PinConfig>;
 };
 
@@ -165,6 +166,17 @@ const AxesGroup = ({
             )}
 
             <br />
+
+            <SteppingGroup
+                config={config}
+                setValue={(stepping) =>
+                    setValue({
+                        ...config!,
+                        stepping: stepping
+                    })
+                }
+            />
+
             <br />
 
             <Tab.Container defaultActiveKey="axisx">
@@ -235,6 +247,7 @@ const AxesGroup = ({
                     <br />
                     <Tab.Pane eventKey="axisx">
                         <AxisGroup
+                            config={config}
                             axisLabel="X"
                             axis={config?.axes?.x}
                             setValue={(value) =>
@@ -248,6 +261,7 @@ const AxesGroup = ({
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisy">
                         <AxisGroup
+                            config={config}
                             axisLabel="Y"
                             axis={config?.axes?.y}
                             setValue={(value) =>
@@ -261,6 +275,7 @@ const AxesGroup = ({
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisz">
                         <AxisGroup
+                            config={config}
                             axisLabel="Z"
                             axis={config?.axes?.z}
                             setValue={(value) =>
@@ -275,6 +290,7 @@ const AxesGroup = ({
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisa">
                         <AxisGroup
+                            config={config}
                             axisLabel="A"
                             axis={config?.axes?.a}
                             setValue={(value) =>
@@ -288,6 +304,7 @@ const AxesGroup = ({
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisb">
                         <AxisGroup
+                            config={config}
                             axisLabel="B"
                             axis={config?.axes?.b}
                             setValue={(value) =>
@@ -301,6 +318,7 @@ const AxesGroup = ({
                     </Tab.Pane>
                     <Tab.Pane eventKey="axisc">
                         <AxisGroup
+                            config={config}
                             axisLabel="C"
                             axis={config?.axes?.c}
                             setValue={(value) =>

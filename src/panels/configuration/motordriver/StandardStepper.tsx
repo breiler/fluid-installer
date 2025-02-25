@@ -1,9 +1,10 @@
 import React from "react";
 import { Board } from "../../../model/Boards";
-import { Motor, PinConfig } from "../../../model/Config";
+import { Config, Motor, PinConfig } from "../../../model/Config";
 import PinField from "../../../components/fields/PinField";
 
 type StandardStepperProps = {
+    config: Config;
     board: Board;
     motor: Motor;
     updateMotorDriverValue: (motor: Motor) => void;
@@ -11,11 +12,15 @@ type StandardStepperProps = {
 };
 
 const StandardStepper = ({
+    config,
     board,
     motor,
     updateMotorDriverValue,
     usedPins
 }: StandardStepperProps) => {
+    const steppingIsI2SO =
+        config?.stepping?.engine === "I2S_STATIC" ||
+        config?.stepping?.engine === "I2S_STREAM";
     return (
         <>
             <PinField
@@ -30,6 +35,8 @@ const StandardStepper = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
             <PinField
                 label="Direction pin"
@@ -45,6 +52,8 @@ const StandardStepper = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
             <PinField
                 label="Disable pin"
@@ -60,6 +69,8 @@ const StandardStepper = ({
                     })
                 }
                 usedPins={usedPins}
+                hideGPIO={steppingIsI2SO}
+                hideI2SO={!steppingIsI2SO}
             />
         </>
     );

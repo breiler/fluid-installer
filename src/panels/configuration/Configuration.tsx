@@ -7,7 +7,6 @@ import jsYaml from "js-yaml";
 import AxesGroup from "./groups/AxesGroup";
 import { Boards } from "../../model/Boards";
 import SPIGroup from "./groups/SPIGroup";
-import SteppingGroup from "./groups/SteppingGroup";
 import I2SOGroup from "./groups/I2SOGroup";
 import SDCardGroup from "./groups/SDCardGroup";
 import Editor from "../../components/editor/Editor";
@@ -118,11 +117,6 @@ const Configuration = ({
 
             {currentTab === ConfigurationTab.IO && (
                 <Container>
-                    <SteppingGroup
-                        steppingConfig={config.stepping}
-                        setValue={(stepping) => appendConfig({ stepping })}
-                    />
-
                     <I2SOGroup
                         board={Boards[0]}
                         i2so={config.i2so}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { Axis, PinConfig } from "../../../model/Config";
+import { Axis, Config, PinConfig } from "../../../model/Config";
 import TextField from "../../../components/fields/TextField";
 import MotorGroup from "./MotorGroup";
 import { Boards } from "../../../model/Boards";
@@ -9,6 +9,7 @@ import HomingGroup from "./HomingGroup";
 import CollapseSection from "../../../components/collapsesection/CollapseSection";
 
 type SelectFieldProps = {
+    config: Config;
     axisLabel: string;
     axis?: Axis;
     setValue?: (axis?: Axis) => void;
@@ -23,6 +24,7 @@ const DEFAULT_CONFIG: Axis = {
 };
 
 const AxisGroup = ({
+    config,
     axisLabel,
     axis,
     setValue = () => {},
@@ -122,6 +124,7 @@ const AxisGroup = ({
                 <br />
 
                 <MotorGroup
+                    config={config}
                     label={"Motor 1"}
                     board={Boards[0]}
                     motor={axis?.motor0}
@@ -134,6 +137,7 @@ const AxisGroup = ({
                 <br />
 
                 <MotorGroup
+                    config={config}
                     label={"Motor 2"}
                     board={Boards[0]}
                     motor={axis?.motor1}

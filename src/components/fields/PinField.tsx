@@ -15,6 +15,16 @@ type SelectFieldProps = {
     placeholder?: string;
     helpText?: string;
     usedPins: Map<string, PinConfig>;
+
+    /**
+     * When set to true it will remove all GPIO pins from the list
+     */
+    hideGPIO?: boolean;
+
+    /**
+     * When set to true it will remove all I2SO pins from the list
+     */
+    hideI2SO?: boolean;
 };
 
 const PinField = ({
@@ -24,7 +34,9 @@ const PinField = ({
     setValue,
     placeholder,
     helpText,
-    usedPins
+    usedPins,
+    hideGPIO,
+    hideI2SO
 }: SelectFieldProps) => {
     const [pin, setPin] = useState<string | undefined>(value?.pin);
     const [pull, setPull] = useState<string | undefined>(value?.pull);
@@ -67,19 +79,28 @@ const PinField = ({
                         onChange={(event) => setPin(event.target.value)}
                         value={pin ?? Pin.NO_PIN}
                     >
-                        {board.pins.map((option) => (
-                            <option
-                                key={option.pin}
-                                id={option.pin}
-                                value={option.pin}
-                                disabled={option.restricted}
-                            >
-                                {option.pin}{" "}
-                                {!option.pull &&
-                                    option.pin !== Pin.NO_PIN &&
-                                    "- pull unavailable"}
-                            </option>
-                        ))}
+                        {board.pins
+                            .filter(
+                                (p) =>
+                                    p.pin === Pin.NO_PIN ||
+                                    p.pin === pin || // Always show the selected pin
+                                    (!hideI2SO && !hideGPIO) || // If none should be hidden
+                                    (hideI2SO && !p.i2so) || // If we should hide i2so pins
+                                    (hideGPIO && p.i2so) // If we should hide gpio pins
+                            )
+                            .map((option) => (
+                                <option
+                                    key={option.pin}
+                                    id={option.pin}
+                                    value={option.pin}
+                                    disabled={option.restricted}
+                                >
+                                    {option.pin}{" "}
+                                    {!option.pull &&
+                                        option.pin !== Pin.NO_PIN &&
+                                        "- pull unavailable"}
+                                </option>
+                            ))}
                     </Form.Select>
                     {boardPinConfig?.pull && (
                         <Form.Select

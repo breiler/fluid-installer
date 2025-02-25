@@ -51,7 +51,6 @@
         "terminal": {
             "open-terminal": "Open terminal",
             "open-terminal-description": "Open a serial terminal to your controller"
-
         },
         "file-browser": {
             "open-browser": "File browser",

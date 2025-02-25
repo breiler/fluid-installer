@@ -21,3 +21,6 @@ Start a development server using the following commands then open your browser t
 npm install
 npm start
 ```
+
+## Localization
+You can help translating the application by creating an account on https://crowdin.com/project/fluid-installer and start translating. If there is a language missing make a request and I will add it!

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../button";
 import Card from "../card";
@@ -14,12 +15,14 @@ export const TerminalCard = ({
     disabled = false,
     onClick
 }: TerminalCardProps) => {
+    const { t } = useTranslation();
+
     return (
         <Card
             className="select-card"
             footer={
                 <Button onClick={onClick} disabled={disabled}>
-                    <>Open terminal</>
+                    {t("card.terminal.open-terminal")}
                 </Button>
             }
         >
@@ -29,7 +32,7 @@ export const TerminalCard = ({
                     size="4x"
                 />
             </div>
-            <>Open a serial terminal to your controller</>
+            <>{t("card.terminal.open-terminal-description")}</>
         </Card>
     );
 };

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Button from "../../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +21,8 @@ export const InstallCard = ({
     const controllerService = useContext(ControllerServiceContext);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [version, setVersion] = useState<string>();
+    const { t } = useTranslation();
+
     useEffect(() => {
         setIsLoading(false);
         if (!controllerService) return;
@@ -42,19 +45,20 @@ export const InstallCard = ({
                 </div>
                 {isLoading && <Spinner />}
                 {!isLoading && version && (
-                    <p>Upgrade FluidNC on your controller</p>
+                    <p>{t("card.install.upgrade-description")}</p>
                 )}
                 {!isLoading && !version && (
-                    <p>
-                        The controller does not seem to have FluidNC installed,
-                        do you wish to install it?
-                    </p>
+                    <p>{t("card.install.install-description")}</p>
                 )}
             </Card.Body>
 
             <Card.Footer>
                 <Button onClick={onClick} disabled={disabled}>
-                    <>{version ? "Upgrade" : "Install"} FluidNC</>
+                    <>
+                        {version
+                            ? t("card.install.upgrade-button")
+                            : t("card.install.install-button")}
+                    </>
                 </Button>
             </Card.Footer>
         </Card>

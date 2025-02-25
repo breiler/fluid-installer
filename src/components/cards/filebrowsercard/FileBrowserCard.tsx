@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Card from "../card";
 import Button from "../../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,12 +15,14 @@ export const FileBrowserCard = ({
     onClick,
     disabled = false
 }: FileBrowserCardProps) => {
+    const { t } = useTranslation();
+
     return (
         <Card
             className="select-card"
             footer={
                 <Button onClick={onClick} disabled={disabled}>
-                    <>File browser</>
+                    {t("card.file-browser.open-browser")}
                 </Button>
             }
         >
@@ -29,7 +32,7 @@ export const FileBrowserCard = ({
                     size="4x"
                 />
             </div>
-            <>Manage files on the controller</>
+            <>{t("card.file-browser.open-browser-description")}</>
         </Card>
     );
 };

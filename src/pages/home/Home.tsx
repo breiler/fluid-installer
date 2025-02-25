@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import AlertMessage from "../../components/alertmessage/AlertMessage";
@@ -24,6 +25,7 @@ import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 
 const Home = () => {
     usePageView("Home");
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const controllerService = useContext(ControllerServiceContext);
@@ -87,23 +89,20 @@ const Home = () => {
                 setShow={setShowLogModal}
                 rows={startupLogRows}
             />
-            <PageTitle>FluidNC Web Installer</PageTitle>
-            <p>
-                You are now connected to a device, please choose an action below
-            </p>
+            <PageTitle>{t("page.connection.title")}</PageTitle>
+            <p>{t("page.home.description")}</p>
             <div className="container text-center select-mode">
                 <Row>
                     <Col xs={12}>
                         {isBootError && (
                             <AlertMessage variant="danger">
-                                There was an error during boot, likely due to an
-                                unvalid configuration.
+                                {t("page.home.error-while-booting")}
                                 <br />
                                 <a
                                     href="#"
                                     onClick={() => setShowLogModal(true)}
                                 >
-                                    Click here to see details
+                                    {t("page.home.show-details")}
                                 </a>
                             </AlertMessage>
                         )}

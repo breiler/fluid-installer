@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Nav } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
@@ -23,6 +24,7 @@ import { VersionCommand } from "../../services/controllerservice/commands/Versio
 const Navigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useTranslation();
 
     const controllerService = useContext(ControllerServiceContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,45 +59,47 @@ const Navigation = () => {
                 onSelect={handleSelect}
             >
                 <Nav.Link eventKey="/">
-                    <FontAwesomeIcon icon={faHome as IconDefinition} /> Home
+                    <FontAwesomeIcon icon={faHome as IconDefinition} />{" "}
+                    {t("panel.navigation.home")}
                 </Nav.Link>
                 <Nav.Link eventKey={Page.INSTALLER}>
                     <FontAwesomeIcon icon={faDownload as IconDefinition} />{" "}
-                    Install
+                    {t("panel.navigation.install")}
                 </Nav.Link>
                 <Nav.Link eventKey={Page.TERMINAL}>
                     <FontAwesomeIcon icon={faTerminal as IconDefinition} />{" "}
-                    Terminal
+                    {t("panel.navigation.terminal")}
                 </Nav.Link>
                 {version && (
                     <Nav.Link eventKey={Page.FILEBROWSER}>
                         <FontAwesomeIcon
                             icon={faFolderOpen as IconDefinition}
                         />{" "}
-                        File browser
+                        {t("panel.navigation.file-browser")}
                     </Nav.Link>
                 )}
                 {stats?.version && (
                     <Nav.Link eventKey={Page.WIFI}>
-                        <FontAwesomeIcon icon={faWifi as IconDefinition} /> WiFi
+                        <FontAwesomeIcon icon={faWifi as IconDefinition} />{" "}
+                        {t("panel.navigation.wifi")}
                     </Nav.Link>
                 )}
                 {version && (
                     <Nav.Link eventKey={Page.CALIBRATE}>
                         <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
-                        Calibrate
+                        {t("panel.navigation.calibrate")}
                     </Nav.Link>
                 )}
                 <hr />
                 <Nav.Link onClick={restart}>
                     <FontAwesomeIcon icon={faPowerOff as IconDefinition} />{" "}
-                    Restart
+                    {t("panel.navigation.restart")}
                 </Nav.Link>
                 <Nav.Link onClick={() => controllerService?.disconnect()}>
                     <FontAwesomeIcon
                         icon={faRightFromBracket as IconDefinition}
                     />{" "}
-                    Disconnect
+                    {t("panel.navigation.disconnect")}
                 </Nav.Link>
             </Nav>
             <hr className="d-flex d-sm-none" />

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Card from "../card";
 import Button from "../../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,12 +33,14 @@ export const WiFiCard = ({
     disabled = false,
     stats
 }: WiFiCardProps) => {
+    const { t } = useTranslation();
+
     return (
         <Card
             className="select-card"
             footer={
                 <Button onClick={onClick} disabled={disabled}>
-                    <>Configure WiFi</>
+                    {t("card.wifi.configure")}
                 </Button>
             }
         >
@@ -47,14 +50,14 @@ export const WiFiCard = ({
             <>
                 {stats?.connectedTo === undefined &&
                     stats?.apSSID === undefined && (
-                        <>Manage the controller WiFi settings</>
+                        <>{t("card.wifi.configure.description")}</>
                     )}
             </>
             <>
                 {stats?.apSSID !== undefined &&
                     stats?.connectedTo === undefined && (
                         <>
-                            Access point{" "}
+                            {t("card.wifi.access-point")}{" "}
                             <span className="text-nowrap">
                                 {stats?.apSSID} {stats.signal}
                             </span>
@@ -65,7 +68,7 @@ export const WiFiCard = ({
             <>
                 {stats?.connectedTo !== undefined && (
                     <>
-                        Connected to{" "}
+                        {t("card.wifi.connected-to")}{" "}
                         <span className="text-nowrap">
                             {stats?.connectedTo} ({stats?.signal})
                         </span>

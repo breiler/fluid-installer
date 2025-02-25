@@ -19,8 +19,8 @@
         },
         "home": {
             "description": "Du är nu ansluten till din hårdvara, välj nedan vad du vill göra",
-            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
-            "show-details": "Click here to see details"
+            "error-while-booting": "Ett fel uppstod under uppstart, sannolikt på grund av en ogiltig konfiguration.",
+            "show-details": "Klicka här för att se detaljer"
         }
     },
     "panel": {
@@ -53,7 +53,7 @@
             "open-terminal-description": "Öppna en seriell terminal till din hårdvara"
         },
         "file-browser": {
-            "open-browser": "Filbläddrare",
+            "open-browser": "Filhanterare",
             "open-browser-description": "Hantera filer på din hårdvara"
         },
         "calibrate": {

@@ -1,70 +1,70 @@
 {
     "header": {
         "language": {
-            "en": "English",
-            "sv": "Svenska"
+            "en": "Engels",
+            "sv": "Zweeds"
         },
-        "documentation": "Documentation"
+        "documentation": "Documentatie"
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "Documentatie"
     },
     "page": {
         "connection": {
-            "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
-            "connect": "Connect",
-            "connecting": "Connecting",
-            "establishing-connection": "Establishing connection to controller"
+            "title": "FluidNC Web Installatie",
+            "description": "Deze tool maakt het gemakkelijk om FluidNC op uw controller te installeren of bij te werken. Sluit uw controller aan en druk op Verbinden om door te gaan.",
+            "connect": "Verbinden",
+            "connecting": "Bezig met verbinden",
+            "establishing-connection": "Verbinding met controller tot stand brengen"
         },
         "home": {
-            "description": "You are now connected to a device, please choose an action below",
-            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
-            "show-details": "Click here to see details"
+            "description": "Je bent nu verbonden met een apparaat, kies hieronder een actie",
+            "error-while-booting": "Er is een fout opgetreden tijdens het opstarten, waarschijnlijk door een ongeldige configuratie.",
+            "show-details": "Klik hier om de details te bekijken"
         }
     },
     "panel": {
         "navigation": {
-            "home": "Home",
-            "install": "Install",
+            "home": "Startscherm",
+            "install": "Installeren",
             "terminal": "Terminal",
-            "file-browser": "File browser",
+            "file-browser": "Bestandsbrowser",
             "wifi": "WiFi",
-            "calibrate": "Calibrate",
-            "restart": "Restart",
-            "disconnect": "Disconnect"
+            "calibrate": "Kalibreren",
+            "restart": "Herstarten",
+            "disconnect": "Verbinding verbreken"
         }
     },
     "component": {
         "log": {
-            "show-details": "Show details",
-            "hide-details": "Hide details"
+            "show-details": "Toon details",
+            "hide-details": "Verberg details"
         }
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC on your controller",
-            "install-description": "The controller does not seem to have FluidNC installed, do you wish to install it?",
-            "upgrade-button": "Upgrade FluidNC",
-            "install-button": "Install FluidNC"
+            "upgrade-description": "Upgrade FluidNC op je controller",
+            "install-description": "De controller lijkt FluidNC niet te hebben geïnstalleerd, wilt je het installeren?",
+            "upgrade-button": "Werk FluidNC bij",
+            "install-button": "Installeer FluidNC"
         },
         "terminal": {
-            "open-terminal": "Open terminal",
-            "open-terminal-description": "Open a serial terminal to your controller"
+            "open-terminal": "Terminal openen",
+            "open-terminal-description": "Open een seriële terminal voor je controller"
         },
         "file-browser": {
-            "open-browser": "File browser",
-            "open-browser-description": "Manage files on the controller"
+            "open-browser": "Bestandsbrowser",
+            "open-browser-description": "Bestanden beheren op controller"
         },
         "calibrate": {
-            "calibrate": "Calibrate",
-            "calibrate-description": "Calibrate settings on your controller"
+            "calibrate": "Kalibreren",
+            "calibrate-description": "Instellingen kalibreren op je controller"
         },
         "wifi": {
-            "configure": "Configure WiFi",
-            "configure-description": "Manage the controller WiFi settings",
-            "connected-to": "Connected to",
-            "access-point": "Access Point"
+            "configure": "Wifi configureren",
+            "configure-description": "Beheer de WiFi-instellingen van de controller",
+            "connected-to": "Verbonden met",
+            "access-point": "Acces Point"
         }
     }
 }

@@ -19,9 +19,9 @@
         }
     },
     "component": {
-      "log": {
-         "show-details": "Show details",
-         "hide-details": "Hide details"
-      }
+        "log": {
+            "show-details": "Show details",
+            "hide-details": "Hide details"
+        }
     }
 }

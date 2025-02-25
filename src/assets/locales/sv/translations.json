@@ -19,9 +19,9 @@
         }
     },
     "component": {
-      "log": {
-         "show-details": "Visa detaljer",
-         "hide-details": "Dölj detaljer"
-      }
+        "log": {
+            "show-details": "Visa detaljer",
+            "hide-details": "Dölj detaljer"
+        }
     }
 }

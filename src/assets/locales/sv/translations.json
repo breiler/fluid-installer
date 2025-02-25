@@ -1,0 +1,27 @@
+{
+    "header": {
+        "language": {
+            "en": "English",
+            "sv": "Svenska"
+        },
+        "documentation": "Dokumentation"
+    },
+    "footer": {
+        "documentation": "Dokumentation"
+    },
+    "page": {
+        "connection": {
+            "title": "FluidNC installerare",
+            "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din hårdvaruenhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",
+            "connect": "Anslut",
+            "connecting": "Ansluter",
+            "establishing-connection": "Etablerar en anslutning till din hårdvaruenhet"
+        }
+    },
+    "component": {
+      "log": {
+         "show-details": "Visa detaljer",
+         "hide-details": "Dölj detaljer"
+      }
+    }
+}

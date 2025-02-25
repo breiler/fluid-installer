@@ -4,37 +4,88 @@ import React from "react";
 import "./Header.scss";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
+import { NavDropdown } from "react-bootstrap";
 
 const logoUrl = new URL("../../assets/logo.svg", import.meta.url);
 
-const Header = () => (
-    <nav className="header nav navbar navbar-expand navbar-dark bg-dark">
-        <div className="container-fluid">
-            <a className="navbar-brand" href="./">
-                <img src={logoUrl.toString()} alt="logo" width={100} />
-            </a>
+type FlagProps = {
+    language: string;
+};
 
-            <div className="navbar-nav">
-                <a
-                    className="nav-link active"
-                    href="http://wiki.fluidnc.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
-                    Documentation
+const Flag = ({ language }: FlagProps) => {
+    switch (language) {
+        case "en":
+            return <span className={"fi fi-us"}>&nbsp;</span>;
+        case "sv":
+            return <span className={"fi fi-se"}>&nbsp;</span>;
+    }
+};
+
+type LanguageDropDownProps = {
+    language: string;
+};
+const LanguageDropDown = ({ language }: LanguageDropDownProps) => {
+    const { t, i18n } = useTranslation();
+
+    return (
+        <NavDropdown.Item onClick={() => i18n.changeLanguage(language)}>
+            <Flag language={language} />
+            {t("header.language." + language)}
+        </NavDropdown.Item>
+    );
+};
+
+const Header = () => {
+    const { t, i18n } = useTranslation();
+    return (
+        <nav className="header nav navbar navbar-expand navbar-dark bg-dark">
+            <div className="container-fluid">
+                <a className="navbar-brand" href="./">
+                    <img src={logoUrl.toString()} alt="logo" width={100} />
                 </a>
 
-                <a
-                    className="nav-link active"
-                    href="https://github.com/bdring/FluidNC"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    <FontAwesomeIcon icon={faGithub as IconDefinition} /> Github
-                </a>
+                <div className="navbar-nav">
+                    <a
+                        className="nav-link active"
+                        href="http://wiki.fluidnc.com/"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
+                        {t("header.documentation")}
+                    </a>
+
+                    <a
+                        className="nav-link active"
+                        href="https://github.com/bdring/FluidNC"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <FontAwesomeIcon icon={faGithub as IconDefinition} />{" "}
+                        Github
+                    </a>
+
+                    <NavDropdown
+                        title={
+                            <>
+                                <Flag language={i18n.resolvedLanguage} />
+                                {t("header.language." + i18n.language)}
+                            </>
+                        }
+                    >
+                        {Object.keys(i18n.services.resourceStore.data).map(
+                            (language) => (
+                                <LanguageDropDown
+                                    key={language}
+                                    language={language}
+                                />
+                            )
+                        )}
+                    </NavDropdown>
+                </div>
             </div>
-        </div>
-    </nav>
-);
+        </nav>
+    );
+};
 export default Header;

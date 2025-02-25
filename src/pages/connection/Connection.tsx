@@ -10,6 +10,7 @@ import usePageView from "../../hooks/usePageView";
 import ControllerLog from "../../components/controllerlog/ControllerLog";
 import { Col, Container, Modal, Row, Button } from "react-bootstrap";
 import LatestVersionCard from "../../components/cards/latestversioncard/LatestVersionCard";
+import { useTranslation } from "react-i18next";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
 
@@ -19,6 +20,8 @@ type Props = {
 
 const Connection = ({ onConnect }: Props) => {
     usePageView("Connection");
+    const { t } = useTranslation();
+
     const [showLog, setShowLog] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [connectionState, setConnectionState] = useState<ConnectionState>(
@@ -67,13 +70,10 @@ const Connection = ({ onConnect }: Props) => {
                         {(connectionState === ConnectionState.DISCONNECTED ||
                             connectionState === ConnectionState.CONNECTING) && (
                             <>
-                                <PageTitle>FluidNC Web Installer</PageTitle>
-                                <p>
-                                    This tool will make it easy to install or
-                                    upgrade FluidNC on your controller. Plug in
-                                    your controller and press Connect to
-                                    continue.
-                                </p>
+                                <PageTitle>
+                                    {t("page.connection.title")}
+                                </PageTitle>
+                                <p>{t("page.connection.description")}</p>
                                 <div
                                     className="mx-auto"
                                     style={{ textAlign: "center" }}
@@ -112,10 +112,10 @@ const Connection = ({ onConnect }: Props) => {
                                     <>
                                         {connectionState ===
                                             ConnectionState.CONNECTING &&
-                                            "Connecting"}
+                                            t("page.connection.connecting")}
                                         {connectionState ===
                                             ConnectionState.DISCONNECTED &&
-                                            "Connect"}
+                                            t("page.connection.connect")}
                                     </>
                                 </Button>
                             </div>
@@ -126,10 +126,16 @@ const Connection = ({ onConnect }: Props) => {
                                 <>
                                     <Modal show={true} size="lg" centered>
                                         <Modal.Body>
-                                            <h3>Connecting</h3>
+                                            <h3>
+                                                {t(
+                                                    "page.connection.connecting"
+                                                )}
+                                            </h3>
                                             <p>
-                                                Establishing connection to
-                                                controller <Spinner />
+                                                {t(
+                                                    "page.connection.establishing-connection"
+                                                )}{" "}
+                                                <Spinner />
                                             </p>
                                             <ControllerLog
                                                 show={showLog}

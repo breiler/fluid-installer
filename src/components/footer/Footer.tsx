@@ -4,8 +4,11 @@ import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Footer.scss";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+    const { t } = useTranslation();
+
     return (
         <footer className="footer page-footer font-small blue pt-4">
             <ul className="list-unstyled text-start">
@@ -13,7 +16,7 @@ const Footer = () => {
                     <a href="http://wiki.fluidnc.com/">
                         {" "}
                         <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
-                        Documentation
+                        {t("footer.documentation")}
                     </a>
                 </li>
                 <li>

@@ -19,9 +19,12 @@ import PageTitle from "./components/pagetitle/PageTitle";
 import WiFiSettings from "./pages/wifisettings/WiFiSettings";
 import Calibrate from "./pages/calibrate/Calibrate";
 import Footer from "./components/footer/Footer";
+import { useTranslation } from "react-i18next";
 
 const App = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
     const [controllerService, setControllerService] =
         useState<ControllerService>();
     const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(
@@ -46,7 +49,9 @@ const App = () => {
                 scrollable={true}
                 centered={false}
             >
-                <Modal.Body>Lost the connection to the controller</Modal.Body>
+                <Modal.Body>
+                    {t("Lost the connection to the controller")}
+                </Modal.Body>
                 <Modal.Footer>
                     <Button
                         onClick={() => {

@@ -3,6 +3,7 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactNode, useEffect, useRef } from "react";
 import "./Log.scss";
+import { useTranslation } from "react-i18next";
 
 type LogProps = {
     show: boolean;
@@ -13,6 +14,7 @@ type LogProps = {
 
 const Log = ({ show = false, showExpand, onShow, children }: LogProps) => {
     const bottom = useRef<HTMLDivElement>(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         bottom?.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -30,7 +32,7 @@ const Log = ({ show = false, showExpand, onShow, children }: LogProps) => {
                 <>
                     {show && (
                         <a href="#" onClick={() => onShow(false)}>
-                            Hide details{" "}
+                            {t("component.log.hide-details")}{" "}
                             <FontAwesomeIcon
                                 icon={faChevronUp as IconDefinition}
                             />
@@ -39,7 +41,7 @@ const Log = ({ show = false, showExpand, onShow, children }: LogProps) => {
 
                     {!show && (
                         <a href="#" onClick={() => onShow(true)}>
-                            Show details{" "}
+                            {t("component.log.show-details")}{" "}
                             <FontAwesomeIcon
                                 icon={faChevronDown as IconDefinition}
                             />

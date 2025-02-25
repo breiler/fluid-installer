@@ -15,13 +15,56 @@
             "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din hårdvaruenhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",
             "connect": "Anslut",
             "connecting": "Ansluter",
-            "establishing-connection": "Etablerar en anslutning till din hårdvaruenhet"
+            "establishing-connection": "Etablerar en anslutning till din hårdvara"
+        },
+        "home": {
+            "description": "Du är nu ansluten till din hårdvara, välj nedan vad du vill göra",
+            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
+            "show-details": "Click here to see details"
+        }
+    },
+    "panel": {
+        "navigation": {
+            "home": "Hem",
+            "install": "Installera",
+            "terminal": "Terminal",
+            "file-browser": "Filbläddrare",
+            "wifi": "WiFi",
+            "calibrate": "Kalibrera",
+            "restart": "Starta om",
+            "disconnect": "Stäng anslutning"
         }
     },
     "component": {
         "log": {
             "show-details": "Visa detaljer",
             "hide-details": "Dölj detaljer"
+        }
+    },
+    "card": {
+        "install": {
+            "upgrade-description": "Uppgradera FluidNC på din hårdvara",
+            "install-description": "Din hårdvara verkar inte ha FluidNC installerat, vill du installera det?",
+            "upgrade-button": "Uppgradera FluidNC",
+            "install-button": "Installera FluidNC"
+        },
+        "terminal": {
+            "open-terminal": "Öppna terminal",
+            "open-terminal-description": "Öppna en seriell terminal till din hårdvara"
+        },
+        "file-browser": {
+            "open-browser": "Filbläddrare",
+            "open-browser-description": "Hantera filer på din hårdvara"
+        },
+        "calibrate": {
+            "calibrate": "Kalibrera",
+            "calibrate-description": "Kalibrera inställningarna på din hårdvara"
+        },
+        "wifi": {
+            "configure": "Konfigurera WiFi",
+            "configure-description": "Hantera WiFi-inställningar på hårdvaran",
+            "connected-to": "Ansluten till",
+            "access-point": "Accesspunkt"
         }
     }
 }

@@ -1,9 +1,5 @@
 {
     "header": {
-        "language": {
-            "en": "English",
-            "sv": "Svenska"
-        },
         "documentation": "Dokumentation"
     },
     "footer": {

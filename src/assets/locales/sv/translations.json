@@ -11,7 +11,7 @@
     },
     "page": {
         "connection": {
-            "title": "FluidNC installerare",
+            "title": "FluidNC webb-installerare",
             "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din hårdvaruenhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",
             "connect": "Anslut",
             "connecting": "Ansluter",

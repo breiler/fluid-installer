@@ -1,0 +1,70 @@
+{
+    "header": {
+        "language": {
+            "en": "English",
+            "sv": "Svenska"
+        },
+        "documentation": "Documentation"
+    },
+    "footer": {
+        "documentation": "Documentation"
+    },
+    "page": {
+        "connection": {
+            "title": "FluidNC Web Installer",
+            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
+            "connect": "Connect",
+            "connecting": "Connecting",
+            "establishing-connection": "Establishing connection to controller"
+        },
+        "home": {
+            "description": "You are now connected to a device, please choose an action below",
+            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
+            "show-details": "Click here to see details"
+        }
+    },
+    "panel": {
+        "navigation": {
+            "home": "Home",
+            "install": "Install",
+            "terminal": "Terminal",
+            "file-browser": "File browser",
+            "wifi": "WiFi",
+            "calibrate": "Calibrate",
+            "restart": "Restart",
+            "disconnect": "Disconnect"
+        }
+    },
+    "component": {
+        "log": {
+            "show-details": "Show details",
+            "hide-details": "Hide details"
+        }
+    },
+    "card": {
+        "install": {
+            "upgrade-description": "Upgrade FluidNC on your controller",
+            "install-description": "The controller does not seem to have FluidNC installed, do you wish to install it?",
+            "upgrade-button": "Upgrade FluidNC",
+            "install-button": "Install FluidNC"
+        },
+        "terminal": {
+            "open-terminal": "Open terminal",
+            "open-terminal-description": "Open a serial terminal to your controller"
+        },
+        "file-browser": {
+            "open-browser": "File browser",
+            "open-browser-description": "Manage files on the controller"
+        },
+        "calibrate": {
+            "calibrate": "Calibrate",
+            "calibrate-description": "Calibrate settings on your controller"
+        },
+        "wifi": {
+            "configure": "Configure WiFi",
+            "configure-description": "Manage the controller WiFi settings",
+            "connected-to": "Connected to",
+            "access-point": "Access Point"
+        }
+    }
+}

@@ -6,6 +6,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 import { NavDropdown } from "react-bootstrap";
+import { Language } from "../../i18n";
 
 const logoUrl = new URL("../../assets/logo.svg", import.meta.url);
 
@@ -19,6 +20,8 @@ const Flag = ({ language }: FlagProps) => {
             return <span className={"fi fi-us"}>&nbsp;</span>;
         case "sv":
             return <span className={"fi fi-se"}>&nbsp;</span>;
+        case "nl":
+            return <span className={"fi fi-nl"}>&nbsp;</span>;
     }
 };
 
@@ -26,12 +29,12 @@ type LanguageDropDownProps = {
     language: string;
 };
 const LanguageDropDown = ({ language }: LanguageDropDownProps) => {
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
 
     return (
         <NavDropdown.Item onClick={() => i18n.changeLanguage(language)}>
             <Flag language={language} />
-            {t("header.language." + language)}
+            {Language[language]}
         </NavDropdown.Item>
     );
 };
@@ -70,7 +73,7 @@ const Header = () => {
                         title={
                             <>
                                 <Flag language={i18n.resolvedLanguage} />
-                                {t("header.language." + i18n.language)}
+                                {Language[i18n.language]}
                             </>
                         }
                     >

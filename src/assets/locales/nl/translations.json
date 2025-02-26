@@ -1,9 +1,5 @@
 {
     "header": {
-        "language": {
-            "en": "Engels",
-            "sv": "Zweeds"
-        },
         "documentation": "Documentatie"
     },
     "footer": {

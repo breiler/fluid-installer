@@ -18,6 +18,38 @@
             "description": "Agora você está conectado a um dispositivo, por favor selecione uma ação abaixo",
             "error-while-booting": "Ocorreu um erro durante a inicialização, provavelmente devido a uma configuração inválida.",
             "show-details": "Clique aqui para visualizar detalhes"
+        },
+        "file-browser": {
+            "title": "File browser",
+            "loading": "Loading...",
+            "downloading": "Downloading...",
+            "uploading": "Uploading",
+            "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",
+            "create-config": "Create config",
+            "create-new-config": "Create new config",
+            "upload": "Upload",
+            "active-config": "Active config",
+            "select-config": "Select config",
+            "select-as-config": "Select as config",
+            "edit": "Edit",
+            "delete": "Delete",
+            "download": "Download"
+        },
+        "terminal": {
+            "title": "Terminal",
+            "restarting": "Restarting controller...",
+            "restart": "Restart",
+            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
+            "reset": "Reset",
+            "reset-description": "Resets the controller with a 0x18 command",
+            "unlock": "Unlock",
+            "unlock-description": "Unlocks the controller with $X",
+            "status": "Status",
+            "status-description": "Get the controller status",
+            "startup": "Startup messages",
+            "startup-description": "Get startup log messages",
+            "version": "Version",
+            "version-description": "Get the firmware version"
         }
     },
     "panel": {

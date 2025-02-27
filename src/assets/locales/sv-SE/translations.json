@@ -1,7 +1,7 @@
 {
     "header": {
         "documentation": "Dokumentation",
-        "translate": "Add translations"
+        "translate": "Översättningar"
     },
     "footer": {
         "documentation": "Dokumentation"
@@ -9,7 +9,7 @@
     "page": {
         "connection": {
             "title": "FluidNC webb-installerare",
-            "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din hårdvaruenhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",
+            "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din enhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",
             "connect": "Anslut",
             "connecting": "Ansluter",
             "establishing-connection": "Etablerar en anslutning till din enhet"

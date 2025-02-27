@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faClose, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faFire } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Col, Modal } from "react-bootstrap";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
@@ -118,7 +118,7 @@ const ConfirmPage = ({
                 </Button>
                 <Button onClick={() => onInstall(+baud, files)}>
                     <FontAwesomeIcon
-                        icon={faSave as IconDefinition}
+                        icon={faFire as IconDefinition}
                         style={{ marginRight: "8px" }}
                     />
                     {t("modal.installer.install")}

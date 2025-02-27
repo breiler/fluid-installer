@@ -147,8 +147,15 @@ const Firmware = ({ onInstall }: Props) => {
                                         ))}
                                     </Form.Select>
                                 </Col>
-                                <Col sm="4" md="3" lg="3">
+                                <Col
+                                    xs="3"
+                                    sm="3"
+                                    md="2"
+                                    lg="2"
+                                    style={{ paddingLeft: 0 }}
+                                >
                                     <DropdownButton
+                                        variant="outline"
                                         className={"d-grid"}
                                         size="lg"
                                         title={

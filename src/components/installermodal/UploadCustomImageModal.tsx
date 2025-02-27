@@ -13,8 +13,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
     faBan,
+    faClose,
     faFile,
-    faFileArrowUp
+    faFileArrowUp,
+    faFire
 } from "@fortawesome/free-solid-svg-icons";
 import BootloaderInfo from "../../panels/bootloaderinfo/BootloaderInfo";
 import Log from "../log/Log";
@@ -156,13 +158,18 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={onClose}>
-                            <>Close</>
+                            <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}
+                            {t("modal.installer.cancel")}
                         </Button>
                         <Button
                             disabled={!currentFile}
                             variant={currentFile ? "success" : "secondary"}
                             onClick={() => onInstall(currentFileData)}
                         >
+                            <FontAwesomeIcon
+                                icon={faFire as IconDefinition}
+                                style={{ marginRight: "8px" }}
+                            />
                             {t("modal.installer.install")}
                         </Button>
                     </Modal.Footer>

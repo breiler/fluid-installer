@@ -11,7 +11,7 @@
             "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din hårdvaruenhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",
             "connect": "Anslut",
             "connecting": "Ansluter",
-            "establishing-connection": "Etablerar en anslutning till din hårdvara"
+            "establishing-connection": "Etablerar en anslutning till din enhet"
         },
         "home": {
             "description": "Du är nu ansluten till din hårdvara, välj nedan vad du vill göra",
@@ -32,7 +32,7 @@
         },
         "firmware": {
             "install": "Installera",
-            "install-description": "Välj vilken firmware du vill installera på din enhet.",
+            "install-description": "Välj vilken version du vill installera på din enhet.",
             "loading": "Laddar...",
             "install-custom-image": "Installera ett eget paket...",
             "show-prereleases": "Visa förhandsversioner",
@@ -67,10 +67,10 @@
             "installation-speed-help": "Vissa enheter måste installeras med lägre hastighet. Om du får problem kan du försöka minska hastigheten.",
             "install": "Installera",
             "cancel": "Avbryt",
-            "select-image": "Välj paket",
-            "select-image-description1": "Om du har laddat ner ett paket manuellt kan du installera här.",
+            "select-image": "Installera eget paket",
+            "select-image-description1": "Om du har laddat ner ett paket manuellt kan du installera den här.",
             "select-image-description2": "Välj firmware.bin-fil att installera på enheten.",
-            "select-image-button": "Välj firmware-paket"
+            "select-image-button": "Välj paket"
         }
     },
     "card": {

@@ -1,6 +1,7 @@
 {
     "header": {
-        "documentation": "Documentatie"
+        "documentation": "Documentatie",
+        "translate": "Add translations"
     },
     "footer": {
         "documentation": "Documentatie"
@@ -17,6 +18,38 @@
             "description": "Je bent nu verbonden met een apparaat, kies hieronder een actie",
             "error-while-booting": "Er is een fout opgetreden tijdens het opstarten, waarschijnlijk door een ongeldige configuratie.",
             "show-details": "Klik hier om de details te bekijken"
+        },
+        "file-browser": {
+            "title": "File browser",
+            "loading": "Loading...",
+            "downloading": "Downloading...",
+            "uploading": "Uploading",
+            "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",
+            "create-config": "Create config",
+            "create-new-config": "Create new config",
+            "upload": "Upload",
+            "active-config": "Active config",
+            "select-config": "Select config",
+            "select-as-config": "Select as config",
+            "edit": "Edit",
+            "delete": "Delete",
+            "download": "Download"
+        },
+        "terminal": {
+            "title": "Terminal",
+            "restarting": "Restarting controller...",
+            "restart": "Restart",
+            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
+            "reset": "Reset",
+            "reset-description": "Resets the controller with a 0x18 command",
+            "unlock": "Unlock",
+            "unlock-description": "Unlocks the controller with $X",
+            "status": "Status",
+            "status-description": "Get the controller status",
+            "startup": "Startup messages",
+            "startup-description": "Get startup log messages",
+            "version": "Version",
+            "version-description": "Get the firmware version"
         }
     },
     "panel": {

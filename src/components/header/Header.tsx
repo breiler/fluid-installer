@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Header.scss";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
-import { NavDropdown } from "react-bootstrap";
+import { Dropdown, NavDropdown } from "react-bootstrap";
 import { Language } from "../../i18n";
 
 const logoUrl = new URL("../../assets/logo.svg", import.meta.url);
@@ -89,6 +89,17 @@ const Header = () => {
                                 />
                             )
                         )}
+                        <Dropdown.Divider />
+                        <Dropdown.Item
+                            href="https://crowdin.com/project/fluid-installer"
+                            target="_blank"
+                        >
+                            <FontAwesomeIcon
+                                icon={faExternalLink as IconDefinition}
+                                style={{ marginRight: 10 }}
+                            />
+                            {t("header.translate")}
+                        </Dropdown.Item>
                     </NavDropdown>
                 </div>
             </div>

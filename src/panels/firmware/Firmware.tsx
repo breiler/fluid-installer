@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-
+import { useTranslation } from "react-i18next";
 import { Spinner } from "../../components";
 import {
     FirmwareChoice,
@@ -35,6 +35,7 @@ type Props = {
 };
 
 const Firmware = ({ onInstall }: Props) => {
+    const { t } = useTranslation();
     const [selectedChoices, setSelectedChoices] = useState<FirmwareChoice[]>(
         []
     );
@@ -118,11 +119,8 @@ const Firmware = ({ onInstall }: Props) => {
 
             {!errorMessage && (
                 <>
-                    <PageTitle>Install</PageTitle>
-                    <p>
-                        Select which firmware you want to install on your
-                        controller.
-                    </p>
+                    <PageTitle>{t("panel.firmware.install")}</PageTitle>
+                    <p>{t("panel.firmware.install-description")}</p>
 
                     <Row>
                         <Col sm="12" md="12" lg="9" xl="8">
@@ -135,7 +133,9 @@ const Firmware = ({ onInstall }: Props) => {
                                         }
                                     >
                                         {!releases?.length && (
-                                            <option>Loading...</option>
+                                            <option>
+                                                {t("panel.firmware.loading")}
+                                            </option>
                                         )}
                                         {releases.map((release) => (
                                             <option
@@ -172,7 +172,9 @@ const Firmware = ({ onInstall }: Props) => {
                                             {" "}
                                             <FormCheck
                                                 type="switch"
-                                                label="Show pre-releases"
+                                                label={t(
+                                                    "panel.firmware.show-prereleases"
+                                                )}
                                                 checked={
                                                     showPrerelease === "true"
                                                 }
@@ -189,7 +191,9 @@ const Firmware = ({ onInstall }: Props) => {
                                                     faFileArrowUp as IconDefinition
                                                 }
                                             />
-                                            Install a custom image...
+                                            {t(
+                                                "panel.firmware.install-custom-image"
+                                            )}
                                         </Dropdown.Item>
                                     </DropdownButton>
                                 </Col>
@@ -202,7 +206,7 @@ const Firmware = ({ onInstall }: Props) => {
             {isLoading && (
                 <Row style={{ marginTop: "40px" }}>
                     <Col sm="12" md="12" lg="9" xl="8">
-                        Fetching <Spinner />
+                        {t("panel.firmware.fetching")} <Spinner />
                     </Col>
                 </Row>
             )}

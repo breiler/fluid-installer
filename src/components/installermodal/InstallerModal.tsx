@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Spinner } from "../../components";
 import { Modal } from "react-bootstrap";
 import {
@@ -50,6 +51,7 @@ const InstallerModal = ({
     const [progress, setProgress] = useState<FlashProgress>(initialProgress);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [log, setLog] = useState("");
+    const { t } = useTranslation();
 
     const onLogData = (data: string) => {
         setLog((l) => l + data);
@@ -82,9 +84,7 @@ const InstallerModal = ({
         try {
             const status = await controllerService?.connect();
             if (status !== ControllerStatus.CONNECTED) {
-                setErrorMessage(
-                    "An error occured while reconnecting, please reboot the controller"
-                );
+                setErrorMessage(t("modal.installer.error-reconnecting"));
                 setState(InstallerState.ERROR);
             }
 
@@ -100,7 +100,10 @@ const InstallerModal = ({
                         return;
                     }
 
-                    console.log("Uploading: ", extraFile);
+                    console.log(
+                        t("modal.installer.uploading") + ": ",
+                        extraFile
+                    );
                     return GithubService.getExtraFile(release, extraFile)
                         .then((data) => {
                             validateSignature(extraFile.signature, data);
@@ -138,9 +141,10 @@ const InstallerModal = ({
             {(state === InstallerState.DOWNLOADING ||
                 state === InstallerState.CHECKING_SIGNATURES) && (
                 <Modal.Body>
-                    <h3>Downloading</h3>
+                    <h3>{t("modal.installer.downloading")}</h3>
                     <p>
-                        Downloading package... <Spinner />
+                        {t("modal.installer.downloading-description")}{" "}
+                        <Spinner />
                     </p>
                     <Log show={showLog} onShow={setShowLog}>
                         {log}
@@ -167,9 +171,10 @@ const InstallerModal = ({
             )}
             {state === InstallerState.RESTARTING && (
                 <Modal.Body>
-                    <h3>Restarting</h3>
+                    <h3>{t("modal.installer.restarting")}</h3>
                     <p>
-                        Waiting for controller restart... <Spinner />
+                        {t("modal.installer.restarting-description")}{" "}
+                        <Spinner />
                     </p>
                     <Log show={showLog} onShow={setShowLog}>
                         {log}
@@ -178,9 +183,10 @@ const InstallerModal = ({
             )}
             {state === InstallerState.UPLOADING_FILES && (
                 <Modal.Body>
-                    <h3>Uploading files</h3>
+                    <h3>{t("modal.installer.uploading-files")}</h3>
                     <p>
-                        Uploading files... <Spinner />
+                        {t("modal.installer.uploading-files-description")}{" "}
+                        <Spinner />
                     </p>
                     <Log show={showLog} onShow={setShowLog}>
                         {log}
@@ -190,18 +196,15 @@ const InstallerModal = ({
             {state === InstallerState.DONE && (
                 <>
                     <Modal.Body>
-                        <h3>Done</h3>
-                        <p>
-                            The controller has been successfully installed and
-                            is ready to be used.
-                        </p>
+                        <h3>{t("modal.installer.done")}</h3>
+                        <p>{t("modal.installer.done-description")}</p>
                         <Log show={showLog} onShow={setShowLog}>
                             {log}
                         </Log>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={onClose}>
-                            <>Continue</>
+                            {t("modal.installer.continue")}
                         </Button>
                     </Modal.Footer>
                 </>
@@ -209,7 +212,7 @@ const InstallerModal = ({
             {state === InstallerState.ERROR && (
                 <>
                     <Modal.Body>
-                        <h3>Error!</h3>
+                        <h3>{t("modal.installer.error")}</h3>
                         <div className="alert alert-danger">
                             <FontAwesomeIcon icon={faBan as IconDefinition} />{" "}
                             {errorMessage}
@@ -220,7 +223,7 @@ const InstallerModal = ({
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={onClose}>
-                            <>Close</>
+                            {t("modal.installer.close")}
                         </Button>
                     </Modal.Footer>
                 </>

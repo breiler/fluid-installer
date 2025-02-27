@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faClose, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,16 +31,17 @@ const ConfirmPage = ({
 }: Props) => {
     const [baud, setBaud] = useLocalStorage("baud", "921600");
     const [files, setFiles] = useState<string[]>([]);
+    const { t } = useTranslation();
 
     return (
         <>
             <Modal.Body>
-                <h3>Confirm installation</h3>
+                <h3>{t("modal.installer.confirm-installation")}</h3>
                 <p>
-                    This will install the firmware{" "}
-                    <strong>{release.name}</strong> to the controller. It will{" "}
-                    {!choice.erase && <strong>not</strong>} erase the
-                    controller.
+                    {t("modal.installer.confirm-installation-description", {
+                        release: release.name,
+                        not: !choice.erase ? t("modal.installer.not") : ""
+                    })}
                 </p>
 
                 <Col lg={8}>
@@ -84,7 +86,9 @@ const ConfirmPage = ({
                                             );
                                         }
                                     }}
-                                    label={"Install " + key}
+                                    label={
+                                        t("modal.installer.install") + " " + key
+                                    }
                                     value={files.includes(key)}
                                 />
                             );
@@ -93,7 +97,7 @@ const ConfirmPage = ({
 
                 <Col lg={8}>
                     <SelectField
-                        label="Installation speed"
+                        label={t("modal.installer.installation-speed")}
                         options={[
                             {
                                 name: "921600 baud",
@@ -103,20 +107,21 @@ const ConfirmPage = ({
                         ]}
                         value={baud}
                         setValue={(value) => setBaud(value)}
-                        helpText="Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed."
+                        helpText={t("modal.installer.installation-speed-help")}
                     ></SelectField>
                 </Col>
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={onCancel} variant="secondary">
-                    <FontAwesomeIcon icon={faClose as IconDefinition} /> Cancel
+                    <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}
+                    {t("modal.installer.cancel")}
                 </Button>
                 <Button onClick={() => onInstall(+baud, files)}>
                     <FontAwesomeIcon
                         icon={faSave as IconDefinition}
                         style={{ marginRight: "8px" }}
                     />
-                    Install
+                    {t("modal.installer.install")}
                 </Button>
             </Modal.Footer>
         </>

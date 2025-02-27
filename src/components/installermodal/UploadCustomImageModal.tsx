@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Spinner } from "..";
 import { Button, Modal } from "react-bootstrap";
 import {
@@ -31,6 +32,7 @@ type UploadCustomImageModalProps = {
 };
 
 const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
+    const { t } = useTranslation();
     const [showLog, setShowLog] = useState<boolean>(false);
     const controllerService = useContext(ControllerServiceContext);
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
@@ -110,9 +112,7 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
         try {
             const status = await controllerService?.connect();
             if (status !== ControllerStatus.CONNECTED) {
-                setErrorMessage(
-                    "An error occured while reconnecting, please reboot the controller"
-                );
+                setErrorMessage(t("modal.installer.error-reconnecting"));
                 setState(InstallerState.ERROR);
             }
 
@@ -130,22 +130,16 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
             {state === InstallerState.SELECT_PACKAGE && (
                 <>
                     <Modal.Body>
-                        <h3>Select image</h3>
-                        <p>
-                            If you have downloaded a package manually you can
-                            flash the image from here.
-                        </p>
-                        <p>
-                            Select the <b>firmware.bin</b> file to flash the
-                            controller with.
-                        </p>
+                        <h3>{t("modal.installer.select-image")}</h3>
+                        <p>{t("modal.installer.select-image-description1")}</p>
+                        <p>{t("modal.installer.select-image-description2")}</p>
                         {!currentFile && (
                             <Button onClick={onUpload}>
                                 <FontAwesomeIcon
                                     icon={faFileArrowUp as IconDefinition}
                                     style={{ marginRight: "10px" }}
                                 />
-                                Select firmware image
+                                {t("modal.installer.select-image-button")}
                             </Button>
                         )}
                         {currentFile && (
@@ -169,7 +163,7 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
                             variant={currentFile ? "success" : "secondary"}
                             onClick={() => onInstall(currentFileData)}
                         >
-                            Install
+                            {t("modal.installer.install")}
                         </Button>
                     </Modal.Footer>
                 </>
@@ -177,9 +171,10 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
             {(state === InstallerState.DOWNLOADING ||
                 state === InstallerState.CHECKING_SIGNATURES) && (
                 <Modal.Body>
-                    <h3>Downloading</h3>
+                    <h3>{t("modal.installer.downloading")}</h3>
                     <p>
-                        Downloading package... <Spinner />
+                        {t("modal.installer.downloading-description")}{" "}
+                        <Spinner />
                     </p>
                     <Log show={showLog} onShow={setShowLog}>
                         {log}
@@ -206,9 +201,10 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
             )}
             {state === InstallerState.RESTARTING && (
                 <Modal.Body>
-                    <h3>Restarting</h3>
+                    <h3>{t("modal.installer.restarting")}</h3>
                     <p>
-                        Waiting for controller restart... <Spinner />
+                        {t("modal.installer.restarting-description")}{" "}
+                        <Spinner />
                     </p>
                     <Log show={showLog} onShow={setShowLog}>
                         {log}
@@ -217,9 +213,10 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
             )}
             {state === InstallerState.UPLOADING_FILES && (
                 <Modal.Body>
-                    <h3>Uploading files</h3>
+                    <h3>{t("modal.installer.uploading-files")}</h3>
                     <p>
-                        Uploading files... <Spinner />
+                        {t("modal.installer.uploading-files-description")}{" "}
+                        <Spinner />
                     </p>
                     <Log show={showLog} onShow={setShowLog}>
                         {log}
@@ -229,18 +226,15 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
             {state === InstallerState.DONE && (
                 <>
                     <Modal.Body>
-                        <h3>Done</h3>
-                        <p>
-                            The controller has been successfully installed and
-                            is ready to be used.
-                        </p>
+                        <h3>{t("modal.installer.done")}</h3>
+                        <p>{t("modal.installer.done-description")}</p>
                         <Log show={showLog} onShow={setShowLog}>
                             {log}
                         </Log>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={onClose}>
-                            <>Continue</>
+                            {t("modal.installer.continue")}
                         </Button>
                     </Modal.Footer>
                 </>
@@ -248,7 +242,7 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
             {state === InstallerState.ERROR && (
                 <>
                     <Modal.Body>
-                        <h3>Error!</h3>
+                        <h3>{t("modal.installer.error")}</h3>
                         <div className="alert alert-danger">
                             <FontAwesomeIcon icon={faBan as IconDefinition} />{" "}
                             {errorMessage}
@@ -259,7 +253,7 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={onClose}>
-                            <>Close</>
+                            {t("modal.installer.close")}
                         </Button>
                     </Modal.Footer>
                 </>

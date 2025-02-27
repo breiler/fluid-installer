@@ -29,12 +29,48 @@
             "calibrate": "Calibrate",
             "restart": "Restart",
             "disconnect": "Disconnect"
+        },
+        "firmware": {
+            "install": "Install",
+            "install-description": "Select which firmware you want to install on your controller.",
+            "loading": "Loading...",
+            "install-custom-image": "Install a custom image...",
+            "show-prereleases": "Show pre-releases",
+            "fetching": "Fetching"
         }
     },
     "component": {
         "log": {
             "show-details": "Show details",
             "hide-details": "Hide details"
+        }
+    },
+    "modal": {
+        "installer": {
+            "error-reconnecting": "An error occured while reconnecting, please reboot the controller",
+            "uploading": "Uploading",
+            "downloading": "Downloading",
+            "downloading-description": "Downloading package...",
+            "restarting": "Restarting",
+            "restarting-description": "Waiting for controller restart...",
+            "uploading-files": "Uploading files",
+            "uploading-files-description": "Uploading files...",
+            "done": "Done",
+            "done-description": "The controller has been successfully installed and is ready to be used.",
+            "continue": "Continue",
+            "error": "Error!",
+            "close": "Close",
+            "confirm-installation": "Confirm installation",
+            "confirm-installation-description": "This will install the firmware \"{{release}}\" to the controller. It will {{not}} erase the controller.",
+            "not": "not",
+            "installation-speed": "Installation speed",
+            "installation-speed-help": "Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed.",
+            "install": "Install",
+            "cancel": "Cancel",
+            "select-image": "Select image",
+            "select-image-description1": "If you have downloaded a package manually you can flash the image from here.",
+            "select-image-description2": "Select the firmware.bin file to flash the controller with.",
+            "select-image-button": "Select firmware image"
         }
     },
     "card": {

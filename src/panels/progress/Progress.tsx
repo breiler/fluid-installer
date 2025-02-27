@@ -3,6 +3,7 @@ import { Spinner } from "../../components";
 import ProgressBar from "../../components/progressbar/ProgressBar";
 import { InstallerState } from "../../services/InstallService";
 import { FlashProgress } from "../../services/FlashService";
+import { useTranslation } from "react-i18next";
 
 type Props = {
     progress: FlashProgress;
@@ -11,24 +12,25 @@ type Props = {
 
 const Progress = ({ progress, status }: Props) => {
     const { fileIndex, fileCount, fileProgress } = progress;
+    const { t } = useTranslation();
 
     return (
         <>
-            <h3>Installing</h3>
+            <h3>{t("panel.progress.title")}</h3>
             <p>
                 {status === InstallerState.DOWNLOADING && (
                     <>
-                        Downloading package... <Spinner />
+                        {t("panel.progress.downloading")} <Spinner />
                     </>
                 )}
                 {status === InstallerState.CHECKING_SIGNATURES && (
                     <>
-                        Validating images... <Spinner />
+                        {t("panel.progress.validating")} <Spinner />
                     </>
                 )}
                 {status === InstallerState.FLASHING && (
                     <>
-                        Installing package to device... <Spinner />
+                        {t("panel.progress.flashing")} <Spinner />
                     </>
                 )}
             </p>

@@ -4,11 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Alert } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const BOOLOADER_WARNING_TIMEOUT = 8000;
 
 const BootloaderInfo = () => {
     const [showBootloaderWarning, setShowBootloaderWarning] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         setShowBootloaderWarning(false);
@@ -19,10 +21,10 @@ const BootloaderInfo = () => {
 
     return (
         <>
-            <h3>Installing</h3>
+            <h3>{t("panel.progress.title")}</h3>
             {!showBootloaderWarning && (
                 <p>
-                    Waiting for controller to enter bootloader... <Spinner />
+                    {t("panel.bootloader.waiting")} <Spinner />
                 </p>
             )}
             {showBootloaderWarning && (
@@ -31,7 +33,7 @@ const BootloaderInfo = () => {
                         icon={faWarning as IconDefinition}
                         size="lg"
                     />{" "}
-                    Bootloader not active - Try holding down the BOOT switch
+                    {t("panel.bootloader.not-active")}
                 </Alert>
             )}
         </>

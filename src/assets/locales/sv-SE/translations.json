@@ -70,6 +70,16 @@
             "install-custom-image": "Installera ett eget paket...",
             "show-prereleases": "Visa förhandsversioner",
             "fetching": "Hämtar"
+        },
+        "progress": {
+            "title": "Installerar",
+            "downloading": "Laddar ner paket...",
+            "validating": "Validerar paket...",
+            "flashing": "Installerar paket till enheten..."
+        },
+        "bootloader": {
+            "waiting": "Väntar på att enheten ska komma in i bootloadern...",
+            "not-active": "Bootloader är inte aktiv - Försök att hålla ner BOOT-knappen"
         }
     },
     "component": {

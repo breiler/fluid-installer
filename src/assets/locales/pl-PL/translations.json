@@ -70,6 +70,16 @@
             "install-custom-image": "Install a custom image...",
             "show-prereleases": "Show pre-releases",
             "fetching": "Fetching"
+        },
+        "progress": {
+            "title": "Installing",
+            "downloading": "Downloading package...",
+            "validating": "Validating images...",
+            "flashing": "Installing package to device..."
+        },
+        "bootloader": {
+            "waiting": "Waiting for controller to enter bootloader...",
+            "not-active": "Bootloader not active - Try holding down the BOOT switch"
         }
     },
     "component": {

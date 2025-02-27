@@ -18,6 +18,38 @@
             "description": "Du är nu ansluten till din hårdvara, välj nedan vad du vill göra",
             "error-while-booting": "Ett fel uppstod under uppstart, sannolikt på grund av en ogiltig konfiguration.",
             "show-details": "Klicka här för att se detaljer"
+        },
+        "file-browser": {
+            "title": "Filhanterare",
+            "loading": "Laddar...",
+            "downloading": "Laddar ner...",
+            "uploading": "Laddar upp",
+            "config-missing": "Konfigurationsfilen \"{{configFilename}}\" saknas, vill du skapa den?",
+            "create-config": "Skapa konfiguration",
+            "create-new-config": "Create new config",
+            "upload": "Upload",
+            "active-config": "Active config",
+            "select-config": "Select config",
+            "select-as-config": "Select as config",
+            "edit": "Edit",
+            "delete": "Delete",
+            "download": "Download"
+        },
+        "terminal": {
+            "title": "Terminal",
+            "restarting": "Restarting controller...",
+            "restart": "Restart",
+            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
+            "reset": "Reset",
+            "reset-description": "Resets the controller with a 0x18 command",
+            "unlock": "Unlock",
+            "unlock-description": "Unlocks the controller with $X",
+            "status": "Status",
+            "status-description": "Get the controller status",
+            "startup": "Startup messages",
+            "startup-description": "Get startup log messages",
+            "version": "Version",
+            "version-description": "Get the firmware version"
         }
     },
     "panel": {

@@ -75,7 +75,6 @@
             "title": "Installerar",
             "downloading": "Laddar ner paket...",
             "validating": "Validerar paket...",
-            "waiting": "Validating images...",
             "flashing": "Installerar paket till enheten..."
         },
         "bootloader": {

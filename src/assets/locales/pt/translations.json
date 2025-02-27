@@ -1,66 +1,66 @@
 {
     "header": {
-        "documentation": "Documentation"
+        "documentation": "Documentação"
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "Documentação"
     },
     "page": {
         "connection": {
-            "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
-            "connect": "Connect",
-            "connecting": "Connecting",
-            "establishing-connection": "Establishing connection to controller"
+            "title": "Instalador Web FluidNC",
+            "description": "Essa ferramenta irá facilitar a instalação ou atualização do FluidNC na sua controladora. Conecte a sua controladora e pressione Conectar para continuar.",
+            "connect": "Conectar",
+            "connecting": "Conectando",
+            "establishing-connection": "Estabelecendo conexão com a controladora"
         },
         "home": {
-            "description": "You are now connected to a device, please choose an action below",
-            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
-            "show-details": "Click here to see details"
+            "description": "Agora você está conectado a um dispositivo, por favor selecione uma ação abaixo",
+            "error-while-booting": "Ocorreu um erro durante a inicialização, provavelmente devido a uma configuração inválida.",
+            "show-details": "Clique aqui para visualizar detalhes"
         }
     },
     "panel": {
         "navigation": {
-            "home": "Home",
-            "install": "Install",
+            "home": "Início",
+            "install": "Instalar",
             "terminal": "Terminal",
-            "file-browser": "File browser",
-            "wifi": "WiFi",
-            "calibrate": "Calibrate",
-            "restart": "Restart",
-            "disconnect": "Disconnect"
+            "file-browser": "Navegador de arquivos",
+            "wifi": "Wi-Fi",
+            "calibrate": "Calibrar",
+            "restart": "Reiniciar",
+            "disconnect": "Desconectar"
         }
     },
     "component": {
         "log": {
-            "show-details": "Show details",
-            "hide-details": "Hide details"
+            "show-details": "Exibir detalhes",
+            "hide-details": "Ocultar detalhes"
         }
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC on your controller",
-            "install-description": "The controller does not seem to have FluidNC installed, do you wish to install it?",
-            "upgrade-button": "Upgrade FluidNC",
-            "install-button": "Install FluidNC"
+            "upgrade-description": "Atualizar FluidNC na sua controladora",
+            "install-description": "A controladora parece não ter o FluidNC instalado, deseja instalá-lo?",
+            "upgrade-button": "Atualizar o FluidNC",
+            "install-button": "Instalar o FluidNC"
         },
         "terminal": {
-            "open-terminal": "Open terminal",
-            "open-terminal-description": "Open a serial terminal to your controller"
+            "open-terminal": "Abrir terminal",
+            "open-terminal-description": "Abrir um terminal para sua controladora"
         },
         "file-browser": {
-            "open-browser": "File browser",
-            "open-browser-description": "Manage files on the controller"
+            "open-browser": "Navegador de arquivos",
+            "open-browser-description": "Gerenciar arquivos da controladora"
         },
         "calibrate": {
-            "calibrate": "Calibrate",
-            "calibrate-description": "Calibrate settings on your controller"
+            "calibrate": "Calibrar",
+            "calibrate-description": "Calibrar configurações da sua controladora"
         },
         "wifi": {
-            "configure": "Configure WiFi",
-            "configure-description": "Manage the controller WiFi settings",
-            "connected-to": "Connected to",
-            "access-point": "Access Point"
+            "configure": "Configurar Wi-Fi",
+            "configure-description": "Gerenciar configurações de Wi-Fi da controladora",
+            "connected-to": "Conectado a",
+            "access-point": "Ponto de Acesso"
         }
     }
 }

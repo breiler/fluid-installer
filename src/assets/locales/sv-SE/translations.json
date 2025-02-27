@@ -72,15 +72,15 @@
             "fetching": "Hämtar"
         },
         "progress": {
-            "title": "Installing",
-            "downloading": "Downloading package...",
-            "validating": "Validating images...",
+            "title": "Installerar",
+            "downloading": "Laddar ner paket...",
+            "validating": "Validerar paket...",
             "waiting": "Validating images...",
-            "flashing": "Installing package to device..."
+            "flashing": "Installerar paket till enheten..."
         },
         "bootloader": {
-            "waiting": "Waiting for controller to enter bootloader...",
-            "not-active": "Bootloader not active - Try holding down the BOOT switch"
+            "waiting": "Väntar på att enheten ska komma in i bootloadern...",
+            "not-active": "Bootloader är inte aktiv - Försök att hålla ner BOOT-knappen"
         }
     },
     "component": {

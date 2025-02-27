@@ -1,6 +1,7 @@
 {
     "header": {
-        "documentation": "Documentatie"
+        "documentation": "Documentatie",
+        "translate": "Add translations"
     },
     "footer": {
         "documentation": "Documentatie"

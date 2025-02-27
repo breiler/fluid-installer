@@ -28,6 +28,7 @@ import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
 import CreateFileModal from "../../components/createfilemodal/CreateFileModal";
 import { generateNewFileName } from "../../utils/utils";
+import { useTranslation } from "react-i18next";
 
 type EditFile = {
     file: ControllerFile;
@@ -53,6 +54,7 @@ const fileUpload = (file, onSave) => {
 
 const FileBrowser = () => {
     usePageView("File browser");
+    const { t } = useTranslation();
     const controllerService = useContext(ControllerServiceContext);
     const [files, setFiles] = useState<ControllerFile[]>([]);
     const [configFilename, setConfigFilename] = useState<string>("");
@@ -207,12 +209,23 @@ const FileBrowser = () => {
 
     return (
         <>
-            <PageTitle>File browser</PageTitle>
-            <SpinnerModal show={isLoading} text="Loading..." />
-            <SpinnerModal show={isDownloading} text="Downloading..." />
+            <PageTitle>{t("page.file-browser.title")}</PageTitle>
+            <SpinnerModal
+                show={isLoading}
+                text={t("page.file-browser.loading")}
+            />
+            <SpinnerModal
+                show={isDownloading}
+                text={t("page.file-browser.downloading")}
+            />
             <SpinnerModal
                 show={isUploading}
-                text={"Uploading " + currentFileName + "..."}
+                text={
+                    t("page.file-browser.uploading") +
+                    " " +
+                    currentFileName +
+                    "..."
+                }
             />
 
             {showNewConfigDialog && (
@@ -244,15 +257,15 @@ const FileBrowser = () => {
                 !files.find((file) => file.name === configFilename) && (
                     <>
                         <Alert variant="warning">
-                            The configuration file{" "}
-                            <strong>{configFilename}</strong> is missing, do you
-                            want to create it?
+                            {t("page.file-browser.config-missing", {
+                                configFilename
+                            })}
                             <br />
                             <br />
                             <Button
                                 onClick={() => setShowNewConfigDialog(true)}
                             >
-                                <>Create config</>
+                                {t("page.file-browser.create-config")}
                             </Button>
                         </Alert>
                     </>
@@ -286,7 +299,13 @@ const FileBrowser = () => {
                                 <div className="d-flex w-100">
                                     <div className="p-2 flex-grow-1 align-self-center">
                                         <a
-                                            title={"Download " + file.name}
+                                            title={
+                                                t(
+                                                    "page.file-browser.download"
+                                                ) +
+                                                " " +
+                                                file.name
+                                            }
                                             style={{ textDecoration: "none" }}
                                             className="align-self-center"
                                             href="#"
@@ -320,7 +339,11 @@ const FileBrowser = () => {
                                         }}
                                     >
                                         <Button
-                                            title={"Delete " + file.name}
+                                            title={
+                                                t("page.file-browser.delete") +
+                                                " " +
+                                                file.name
+                                            }
                                             style={{ marginRight: "0px" }}
                                             disabled={isDownloading}
                                             buttonType={"btn-danger"}
@@ -344,7 +367,13 @@ const FileBrowser = () => {
                                             file.name.endsWith(".yaml")) && (
                                             <Button
                                                 disabled={isDownloading}
-                                                title={"Edit " + file.name}
+                                                title={
+                                                    t(
+                                                        "page.file-browser.edit"
+                                                    ) +
+                                                    " " +
+                                                    file.name
+                                                }
                                                 onClick={() => onEdit(file)}
                                             >
                                                 <>
@@ -368,7 +397,9 @@ const FileBrowser = () => {
                                                 id={"select-file-" + file.name}
                                                 type="checkbox"
                                                 variant="outline-primary"
-                                                title="Select as config"
+                                                title={t(
+                                                    "page.file-browser.select-as-config"
+                                                )}
                                                 checked={
                                                     file.name === configFilename
                                                 }
@@ -381,11 +412,19 @@ const FileBrowser = () => {
                                             >
                                                 {file.name ===
                                                     configFilename && (
-                                                    <>Active config</>
+                                                    <>
+                                                        {t(
+                                                            "page.file-browser.active-config"
+                                                        )}
+                                                    </>
                                                 )}
                                                 {file.name !==
                                                     configFilename && (
-                                                    <>Select config</>
+                                                    <>
+                                                        {t(
+                                                            "page.file-browser.select-config"
+                                                        )}
+                                                    </>
                                                 )}
                                             </ToggleButton>
                                         )}
@@ -415,25 +454,21 @@ const FileBrowser = () => {
                         onClick={() => setShowNewConfigDialog(true)}
                         buttonType="btn-warning"
                     >
-                        <>
-                            <FontAwesomeIcon
-                                icon={faEdit as IconDefinition}
-                                size="xs"
-                            />{" "}
-                            Create new config
-                        </>
+                        <FontAwesomeIcon
+                            icon={faEdit as IconDefinition}
+                            size="xs"
+                        />{" "}
+                        {t("page.file-browser.create-new-config")}
                     </Button>
                     <Button
                         onClick={() => onUpload()}
                         style={{ marginRight: "0px" }}
                     >
-                        <>
-                            <FontAwesomeIcon
-                                icon={faUpload as IconDefinition}
-                                size="xs"
-                            />{" "}
-                            Upload
-                        </>
+                        <FontAwesomeIcon
+                            icon={faUpload as IconDefinition}
+                            size="xs"
+                        />{" "}
+                        {t("page.file-browser.upload")}
                     </Button>
                 </div>
             </div>

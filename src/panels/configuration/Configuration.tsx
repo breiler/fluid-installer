@@ -98,8 +98,12 @@ const Configuration = ({
                     />
                     <TextAreaField
                         label="Meta"
-                        value={config.meta}
-                        setValue={(value) => appendConfig({ meta: value })}
+                        value={(config.meta ?? "").replaceAll("<br/>", "\n")}
+                        setValue={(value) =>
+                            appendConfig({
+                                meta: ("" + value).replaceAll("\n", "<br/>")
+                            })
+                        }
                         maxLength={1000}
                     />
                 </Container>

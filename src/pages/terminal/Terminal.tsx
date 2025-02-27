@@ -24,6 +24,7 @@ import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
 import { Command } from "../../services";
+import { useTranslation } from "react-i18next";
 
 const decoder = new TextDecoder();
 let buffer = "";
@@ -78,6 +79,7 @@ const buttonStyle = { marginBottom: "16px", marginRight: "16px" };
 
 const Terminal = () => {
     usePageView("Terminal");
+    const { t } = useTranslation();
     const controllerService = useContext(ControllerServiceContext);
     const xtermRef: React.RefObject<Xterm> = createRef<Xterm>();
     const [error, setError] = useState<string | undefined>();
@@ -158,84 +160,87 @@ const Terminal = () => {
 
     return (
         <>
-            <PageTitle>Terminal</PageTitle>
-            <SpinnerModal show={isLoading} text="Restarting controller..." />
+            <PageTitle>{t("page.terminal.title")}</PageTitle>
+            <SpinnerModal
+                show={isLoading}
+                text={t("page.terminal.restarting")}
+            />
             {!error && (
                 <>
                     <div>
                         <Button
                             onClick={onRestart}
                             variant="danger"
-                            title="Does a hard reset on the controller by setting DTR/RTS"
+                            title={t("page.terminal.restart-description")}
                             disabled={isLoading}
                             style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faPowerOff as IconDefinition}
                             />{" "}
-                            Restart
+                            {t("page.terminal.restart")}
                         </Button>
                         <Button
                             onClick={onReset}
                             variant="warning"
-                            title="Resets the controller with a 0x18 command"
+                            title={t("page.terminal.reset-description")}
                             disabled={isLoading}
                             style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faArrowsRotate as IconDefinition}
                             />{" "}
-                            Reset
+                            {t("page.terminal.reset")}
                         </Button>
                         <Button
                             onClick={onUnlock}
                             variant="secondary"
-                            title="Unlocks the controller with $X"
+                            title={t("page.terminal.unlock-description")}
                             disabled={isLoading}
                             style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faLockOpen as IconDefinition}
                             />{" "}
-                            Unlock
+                            {t("page.terminal.unlock")}
                         </Button>
                         <Button
                             onClick={onGetStatus}
                             variant="secondary"
-                            title="Get the controller status"
+                            title={t("page.terminal.status-description")}
                             disabled={isLoading}
                             style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faQuestion as IconDefinition}
                             />{" "}
-                            Status
+                            {t("page.terminal.status")}
                         </Button>
 
                         <Button
                             onClick={onGetStartupMessages}
                             variant="secondary"
-                            title="Get startup log messages"
+                            title={t("page.terminal.startup-description")}
                             disabled={isLoading}
                             style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faSquarePollHorizontal as IconDefinition}
                             />{" "}
-                            Startup messages
+                            {t("page.terminal.startup")}
                         </Button>
 
                         <Button
                             onClick={onGetVersion}
                             variant="secondary"
-                            title="Get the firmware version"
+                            title={t("page.terminal.version-description")}
                             disabled={isLoading}
                             style={buttonStyle}
                         >
                             <FontAwesomeIcon
                                 icon={faCodeBranch as IconDefinition}
                             />{" "}
-                            Version
+                            {t("page.terminal.version")}
                         </Button>
                     </div>
                     <Xterm

@@ -75,7 +75,6 @@
             "title": "Installing",
             "downloading": "Downloading package...",
             "validating": "Validating images...",
-            "waiting": "Validating images...",
             "flashing": "Installing package to device..."
         },
         "bootloader": {

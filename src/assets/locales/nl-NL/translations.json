@@ -36,7 +36,7 @@
             "download": "Download"
         },
         "terminal": {
-            "title": "Terminal",
+            "title": "",
             "restarting": "Restarting controller...",
             "restart": "Restart",
             "restart-description": "Does a hard reset on the controller by setting DTR/RTS",

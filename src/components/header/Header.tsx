@@ -16,6 +16,8 @@ type FlagProps = {
 
 const Flag = ({ language }: FlagProps) => {
     switch (language) {
+        case "de":
+            return <span className={"fi fi-de"}>&nbsp;</span>;
         case "en":
             return <span className={"fi fi-us"}>&nbsp;</span>;
         case "sv":

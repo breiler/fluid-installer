@@ -8,6 +8,7 @@ import swedishTranslations from "./assets/locales/sv-SE/translations.json";
 import dutchTranslations from "./assets/locales/nl-NL/translations.json";
 import brazilianTranslations from "./assets/locales/pt-BR/translations.json";
 import portugueseTranslations from "./assets/locales/pt-PT/translations.json";
+import germanTranslations from "./assets/locales/de-DE/translations.json";
 
 i18n.use(Backend)
     .use(LanguageDetector)
@@ -25,13 +26,15 @@ i18n.addResourceBundle("sv", "translation", swedishTranslations);
 i18n.addResourceBundle("nl", "translation", dutchTranslations);
 i18n.addResourceBundle("pt-BR", "translation", brazilianTranslations);
 i18n.addResourceBundle("pt-PT", "translation", portugueseTranslations);
+i18n.addResourceBundle("de", "translation", germanTranslations);
 
 export const Language = {
     en: "English",
     nl: "Nederlands",
     "pt-BR": "Português",
     "pt-PT": "Português",
-    sv: "Svenska"
+    sv: "Svenska",
+    de: "Deutsch"
 };
 
 export default i18n;

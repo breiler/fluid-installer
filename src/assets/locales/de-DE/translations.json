@@ -1,17 +1,17 @@
 {
     "header": {
-        "documentation": "Documentation",
-        "translate": "Add translations"
+        "documentation": "Dokumentation",
+        "translate": "Übersetzungen hinzufügen"
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "Dokumentation"
     },
     "page": {
         "connection": {
             "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
-            "connect": "Connect",
-            "connecting": "Connecting",
+            "description": "Dieses Tool vereinfacht die Installation oder Aktualisierung von FluidNC auf Ihrem Controller. Schließen Sie Ihren Controller an und drücken Sie die Verbinden-Taste, um fortzufahren.",
+            "connect": "verbinden",
+            "connecting": "Verbindung wird hergestellt",
             "establishing-connection": "Establishing connection to controller"
         },
         "home": {

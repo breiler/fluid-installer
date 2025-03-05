@@ -10,7 +10,7 @@
         "connection": {
             "title": "FluidNC Web Installer",
             "description": "Dieses Tool vereinfacht die Installation oder Aktualisierung von FluidNC auf Ihrem Controller. Schließen Sie Ihren Controller an und drücken Sie die Verbinden-Taste, um fortzufahren.",
-            "connect": "verbinden",
+            "connect": "Verbinden",
             "connecting": "Verbindung wird hergestellt",
             "establishing-connection": "Verbindung zum Controller wird hergestellt"
         },

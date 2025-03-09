@@ -49,12 +49,12 @@
             "startup": "Startup messages",
             "startup-description": "Get startup log messages",
             "version": "Version",
-            "version-description": "Get the firmware version"
+            "version-description": "Obtenir la version du firmware"
         }
     },
     "panel": {
         "navigation": {
-            "home": "Home",
+            "home": "Accueil",
             "install": "Install",
             "terminal": "Terminal",
             "file-browser": "File browser",
@@ -68,7 +68,7 @@
             "install-description": "Select which firmware you want to install on your controller.",
             "loading": "Loading...",
             "install-custom-image": "Install a custom image...",
-            "show-prereleases": "Show pre-releases",
+            "show-prereleases": "Afficher les pré-versions",
             "fetching": "Fetching"
         },
         "progress": {

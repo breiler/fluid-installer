@@ -69,7 +69,7 @@
             "loading": "Loading...",
             "install-custom-image": "Install a custom image...",
             "show-prereleases": "Afficher les pré-versions",
-            "fetching": "Fetching"
+            "fetching": "Chercher"
         },
         "progress": {
             "title": "Installing",
@@ -139,7 +139,7 @@
             "configure": "Configure WiFi",
             "configure-description": "Manage the controller WiFi settings",
             "connected-to": "Connected to",
-            "access-point": "Access Point"
+            "access-point": "Point d’Accès"
         }
     }
 }

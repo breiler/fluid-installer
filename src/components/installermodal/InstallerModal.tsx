@@ -22,6 +22,10 @@ import BootloaderInfo from "../../panels/bootloaderinfo/BootloaderInfo";
 import Log from "../log/Log";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import ConfirmPage from "./ConfirmPage";
+import useTrackEvent, {
+    TrackAction,
+    TrackCategory
+} from "../../hooks/useTrackEvent";
 
 type InstallerModalProps = {
     onClose: () => void;
@@ -52,6 +56,7 @@ const InstallerModal = ({
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [log, setLog] = useState("");
     const { t } = useTranslation();
+    const trackEvent = useTrackEvent();
 
     const onLogData = (data: string) => {
         setLog((l) => l + data);
@@ -59,10 +64,26 @@ const InstallerModal = ({
     };
 
     const onInstall = async (baud: number, files: string[]) => {
+        trackEvent(
+            TrackCategory.Install,
+            TrackAction.InstallClick,
+            release.name +
+                " - " +
+                choice.name +
+                " - " +
+                files.join(",") +
+                " - " +
+                baud
+        );
+
         try {
             await controllerService?.disconnect(false);
         } catch (_error) {
-            // never mind
+            trackEvent(
+                TrackCategory.Install,
+                TrackAction.InstallFail,
+                "Disconnect"
+            );
         }
 
         let hasErrors = false;
@@ -79,6 +100,11 @@ const InstallerModal = ({
             setErrorMessage(error);
             setState(InstallerState.ERROR);
             hasErrors = true;
+            trackEvent(
+                TrackCategory.Install,
+                TrackAction.InstallFail,
+                "Install choice"
+            );
         });
 
         try {
@@ -86,6 +112,11 @@ const InstallerModal = ({
             if (status !== ControllerStatus.CONNECTED) {
                 setErrorMessage(t("modal.installer.error-reconnecting"));
                 setState(InstallerState.ERROR);
+                trackEvent(
+                    TrackCategory.Install,
+                    TrackAction.InstallFail,
+                    "Reconnect"
+                );
             }
 
             if (!hasErrors) {
@@ -124,6 +155,11 @@ const InstallerModal = ({
         } catch (error) {
             setErrorMessage(error);
             setState(InstallerState.ERROR);
+            trackEvent(
+                TrackCategory.Install,
+                TrackAction.InstallFail,
+                "Restart"
+            );
         }
     };
 

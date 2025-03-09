@@ -20,10 +20,16 @@ import WiFiSettings from "./pages/wifisettings/WiFiSettings";
 import Calibrate from "./pages/calibrate/Calibrate";
 import Footer from "./components/footer/Footer";
 import { useTranslation } from "react-i18next";
+import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 
 const App = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const instance = createInstance({
+        urlBase: "https://matomo.bitpusher.se/",
+        siteId: 2
+        // disabled: false, // optional, default value: false. Disables all tracking operations if set to true.
+    });
 
     const [controllerService, setControllerService] =
         useState<ControllerService>();
@@ -42,94 +48,102 @@ const App = () => {
     }, [controllerService]);
 
     return (
-        <>
-            <Modal
-                show={controllerStatus === ControllerStatus.CONNECTION_LOST}
-                size="sm"
-                scrollable={true}
-                centered={false}
-            >
-                <Modal.Body>
-                    {t("Lost the connection to the controller")}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        onClick={() => {
-                            setControllerService(undefined);
-                            setControllerStatus(ControllerStatus.DISCONNECTED);
-                        }}
-                    >
-                        <>
-                            <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}
-                            Close
-                        </>
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-            <ControllerServiceContext.Provider value={controllerService}>
-                <Header />
-
-                <div className="container">
-                    {isSafari() ||
-                        (isFirefox() && (
+        <MatomoProvider value={instance}>
+            <>
+                <Modal
+                    show={controllerStatus === ControllerStatus.CONNECTION_LOST}
+                    size="sm"
+                    scrollable={true}
+                    centered={false}
+                >
+                    <Modal.Body>
+                        {t("Lost the connection to the controller")}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            onClick={() => {
+                                setControllerService(undefined);
+                                setControllerStatus(
+                                    ControllerStatus.DISCONNECTED
+                                );
+                            }}
+                        >
                             <>
-                                <PageTitle>Browser not supported</PageTitle>
-                                <p>Please use Chrome, Edge or Opera instead</p>
+                                <FontAwesomeIcon
+                                    icon={faClose as IconDefinition}
+                                />{" "}
+                                Close
                             </>
-                        ))}
-                    {!isSafari() && !isFirefox() && !controllerService && (
-                        <Connection onConnect={setControllerService} />
-                    )}
-                    {!isSafari() && !isFirefox() && controllerService && (
-                        <Container>
-                            <Row>
-                                <Col sm={5} md={4} lg={3}>
-                                    <Navigation />
-                                </Col>
-                                <Col
-                                    sm={7}
-                                    md={8}
-                                    lg={9}
-                                    style={{ marginTop: "32px" }}
-                                >
-                                    <Routes>
-                                        <Route index element={<Home />} />
-                                        <Route
-                                            path="install"
-                                            element={
-                                                <Installer
-                                                    onClose={() =>
-                                                        navigate(Page.HOME)
-                                                    }
-                                                />
-                                            }
-                                        />
-                                        <Route
-                                            path="terminal"
-                                            element={<Terminal />}
-                                        />
-                                        <Route
-                                            path="files"
-                                            element={<FileBrowser />}
-                                        />
-                                        <Route
-                                            path="wifi"
-                                            element={<WiFiSettings />}
-                                        />
-                                        <Route
-                                            path="calibrate"
-                                            element={<Calibrate />}
-                                        />
-                                    </Routes>
-                                </Col>
-                            </Row>
-                        </Container>
-                    )}
-                </div>
-                <Footer />
-            </ControllerServiceContext.Provider>
-        </>
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                <ControllerServiceContext.Provider value={controllerService}>
+                    <Header />
+
+                    <div className="container">
+                        {isSafari() ||
+                            (isFirefox() && (
+                                <>
+                                    <PageTitle>Browser not supported</PageTitle>
+                                    <p>
+                                        Please use Chrome, Edge or Opera instead
+                                    </p>
+                                </>
+                            ))}
+                        {!isSafari() && !isFirefox() && !controllerService && (
+                            <Connection onConnect={setControllerService} />
+                        )}
+                        {!isSafari() && !isFirefox() && controllerService && (
+                            <Container>
+                                <Row>
+                                    <Col sm={5} md={4} lg={3}>
+                                        <Navigation />
+                                    </Col>
+                                    <Col
+                                        sm={7}
+                                        md={8}
+                                        lg={9}
+                                        style={{ marginTop: "32px" }}
+                                    >
+                                        <Routes>
+                                            <Route index element={<Home />} />
+                                            <Route
+                                                path="install"
+                                                element={
+                                                    <Installer
+                                                        onClose={() =>
+                                                            navigate(Page.HOME)
+                                                        }
+                                                    />
+                                                }
+                                            />
+                                            <Route
+                                                path="terminal"
+                                                element={<Terminal />}
+                                            />
+                                            <Route
+                                                path="files"
+                                                element={<FileBrowser />}
+                                            />
+                                            <Route
+                                                path="wifi"
+                                                element={<WiFiSettings />}
+                                            />
+                                            <Route
+                                                path="calibrate"
+                                                element={<Calibrate />}
+                                            />
+                                        </Routes>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        )}
+                    </div>
+                    <Footer />
+                </ControllerServiceContext.Provider>
+            </>
+        </MatomoProvider>
     );
 };
 

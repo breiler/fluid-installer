@@ -80,6 +80,10 @@
         "bootloader": {
             "waiting": "Warte darauf, dass der Controller auf den Bootloader zugreifen kann...",
             "not-active": "Bootloader nicht aktiv - Versuchen Sie, die BOOT-Taste gedrückt zu halten"
+        },
+        "unsupported": {
+            "title": "Browser not supported",
+            "description": "Please use Chrome, Edge or Opera instead"
         }
     },
     "component": {

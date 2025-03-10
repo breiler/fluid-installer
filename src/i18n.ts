@@ -9,6 +9,7 @@ import dutchTranslations from "./assets/locales/nl-NL/translations.json";
 import brazilianTranslations from "./assets/locales/pt-BR/translations.json";
 import portugueseTranslations from "./assets/locales/pt-PT/translations.json";
 import germanTranslations from "./assets/locales/de-DE/translations.json";
+import frenchTranslations from "./assets/locales/fr-FR/translations.json";
 
 i18n.use(Backend)
     .use(LanguageDetector)
@@ -21,12 +22,13 @@ i18n.use(Backend)
         }
     });
 
+i18n.addResourceBundle("de", "translation", germanTranslations);
 i18n.addResourceBundle("en", "translation", englishTranslations);
-i18n.addResourceBundle("sv", "translation", swedishTranslations);
+i18n.addResourceBundle("fr", "translation", frenchTranslations);
 i18n.addResourceBundle("nl", "translation", dutchTranslations);
 i18n.addResourceBundle("pt-BR", "translation", brazilianTranslations);
 i18n.addResourceBundle("pt-PT", "translation", portugueseTranslations);
-i18n.addResourceBundle("de", "translation", germanTranslations);
+i18n.addResourceBundle("sv", "translation", swedishTranslations);
 
 export const Language = {
     en: "English",
@@ -34,7 +36,8 @@ export const Language = {
     "pt-BR": "Português",
     "pt-PT": "Português",
     sv: "Svenska",
-    de: "Deutsch"
+    de: "Deutsch",
+    fr: "Français"
 };
 
 export default i18n;

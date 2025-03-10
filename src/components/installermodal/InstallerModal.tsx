@@ -78,11 +78,11 @@ const InstallerModal = ({
 
         try {
             await controllerService?.disconnect(false);
-        } catch (_error) {
+        } catch (error) {
             trackEvent(
                 TrackCategory.Install,
                 TrackAction.InstallFail,
-                "Disconnect"
+                "Disconnect - " + error
             );
         }
 
@@ -103,7 +103,7 @@ const InstallerModal = ({
             trackEvent(
                 TrackCategory.Install,
                 TrackAction.InstallFail,
-                "Install choice"
+                "Install choice - " + error
             );
         });
 
@@ -158,7 +158,7 @@ const InstallerModal = ({
             trackEvent(
                 TrackCategory.Install,
                 TrackAction.InstallFail,
-                "Restart"
+                "Restart - " + error
             );
         }
     };

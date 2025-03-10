@@ -4,7 +4,6 @@ import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
-
 import { Header } from "./components";
 import Page from "./model/Page";
 import { Installer, Terminal } from "./pages";

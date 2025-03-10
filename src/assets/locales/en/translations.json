@@ -83,7 +83,7 @@
         },
         "unsupported": {
             "title": "Browser not supported",
-            "description": "Please use Chrome, Edge or Opera instead"
+            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
         }
     },
     "component": {

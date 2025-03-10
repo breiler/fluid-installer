@@ -80,6 +80,10 @@
         "bootloader": {
             "waiting": "Väntar på att enheten ska komma in i bootloadern...",
             "not-active": "Bootloader är inte aktiv - Försök att hålla ner BOOT-knappen"
+        },
+        "unsupported": {
+            "title": "Browser not supported",
+            "description": "Please use Chrome, Edge or Opera instead"
         }
     },
     "component": {

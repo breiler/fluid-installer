@@ -80,6 +80,10 @@
         "bootloader": {
             "waiting": "Waiting for controller to enter bootloader...",
             "not-active": "Bootloader not active - Try holding down the BOOT switch"
+        },
+        "unsupported": {
+            "title": "Browser not supported",
+            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
         }
     },
     "component": {

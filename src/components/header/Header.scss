@@ -1,18 +1,39 @@
 .header {
+    color: white;
     margin-bottom: 20px;
-}
 
-.header .nav a {
-    margin-left: 16px;
-    margin-right: 16px;
-}
+    a {
+       margin-left: 8px;
+       margin-right: 8px;
+    }
 
-.header .nav img {
-    padding-bottom: 3px;
-    margin-left: 5px;
-    margin-right: 5px;
-}
+    img {
+       padding-bottom: 3px;
+       margin-left: 5px;
+       margin-right: 5px;
+    }
+    
+    .fi {
+        margin-right: 8px;
+    }
 
-.header .fi {
-    margin-right: 8px;
+    .navbar-toggler {
+        margin-right: 12px;
+    }
+
+    .collapse {
+        align-items: end;
+    }
+
+    .dropdown-menu[data-bs-popper] {
+        left: -64%;
+        top: 2.6em;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .dropdown-item {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }

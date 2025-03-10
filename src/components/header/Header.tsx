@@ -5,7 +5,7 @@ import "./Header.scss";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
-import { Dropdown, NavDropdown } from "react-bootstrap";
+import { Dropdown, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { Language } from "../../i18n";
 
 const logoUrl = new URL("../../assets/logo.svg", import.meta.url);
@@ -48,64 +48,60 @@ const LanguageDropDown = ({ language }: LanguageDropDownProps) => {
 const Header = () => {
     const { t, i18n } = useTranslation();
     return (
-        <nav className="header nav navbar navbar-expand navbar-dark bg-dark">
-            <div className="container-fluid">
-                <a className="navbar-brand" href="./">
-                    <img src={logoUrl.toString()} alt="logo" width={100} />
-                </a>
+        <Navbar expand="sm" bg="dark" data-bs-theme="dark" className="header">
+            <Navbar.Brand href="./">
+                <img src={logoUrl.toString()} alt="logo" width={100} />
+            </Navbar.Brand>
+            <Navbar.Toggle />
 
-                <div className="navbar-nav">
-                    <a
-                        className="nav-link active"
-                        href="http://wiki.fluidnc.com/"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
-                        {t("header.documentation")}
-                    </a>
+            <Navbar.Collapse className="justify-content-end">
+                <Nav.Link
+                    href="http://wiki.fluidnc.com/"
+                    target="_blank"
+                    className="nav-link active"
+                >
+                    <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
+                    {t("header.documentation")}
+                </Nav.Link>
 
-                    <a
-                        className="nav-link active"
-                        href="https://github.com/bdring/FluidNC"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        <FontAwesomeIcon icon={faGithub as IconDefinition} />{" "}
-                        Github
-                    </a>
+                <Nav.Link
+                    href="https://github.com/bdring/FluidNC"
+                    target="_blank"
+                    className="nav-link active"
+                >
+                    <FontAwesomeIcon icon={faGithub as IconDefinition} /> Github
+                </Nav.Link>
 
-                    <NavDropdown
-                        title={
-                            <>
-                                <Flag language={i18n.resolvedLanguage} />
-                                {Language[i18n.language]}
-                            </>
-                        }
-                    >
-                        {Object.keys(i18n.services.resourceStore.data).map(
-                            (language) => (
-                                <LanguageDropDown
-                                    key={language}
-                                    language={language}
-                                />
-                            )
-                        )}
-                        <Dropdown.Divider />
-                        <Dropdown.Item
-                            href="https://crowdin.com/project/fluid-installer"
-                            target="_blank"
-                        >
-                            <FontAwesomeIcon
-                                icon={faExternalLink as IconDefinition}
-                                style={{ marginRight: 10 }}
+                <NavDropdown
+                    title={
+                        <>
+                            <Flag language={i18n.resolvedLanguage} />
+                            {Language[i18n.language]}
+                        </>
+                    }
+                >
+                    {Object.keys(i18n.services.resourceStore.data).map(
+                        (language) => (
+                            <LanguageDropDown
+                                key={language}
+                                language={language}
                             />
-                            {t("header.translate")}
-                        </Dropdown.Item>
-                    </NavDropdown>
-                </div>
-            </div>
-        </nav>
+                        )
+                    )}
+                    <Dropdown.Divider />
+                    <Dropdown.Item
+                        href="https://crowdin.com/project/fluid-installer"
+                        target="_blank"
+                    >
+                        <FontAwesomeIcon
+                            icon={faExternalLink as IconDefinition}
+                            style={{ marginRight: 10 }}
+                        />
+                        {t("header.translate")}
+                    </Dropdown.Item>
+                </NavDropdown>
+            </Navbar.Collapse>
+        </Navbar>
     );
 };
 export default Header;

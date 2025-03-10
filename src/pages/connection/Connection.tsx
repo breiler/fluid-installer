@@ -151,7 +151,7 @@ const Connection = ({ onConnect }: Props) => {
                             )}
                     </div>
                 </Col>
-                <Col xs={12} md={5} lg={5}>
+                <Col xs={12} sm={12} md={5} lg={5}>
                     <LatestVersionCard />
                 </Col>
             </Row>

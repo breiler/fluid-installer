@@ -15,12 +15,12 @@ import { isSafari, isFirefox } from "./utils/utils";
 import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
-import PageTitle from "./components/pagetitle/PageTitle";
 import WiFiSettings from "./pages/wifisettings/WiFiSettings";
 import Calibrate from "./pages/calibrate/Calibrate";
 import Footer from "./components/footer/Footer";
 import { useTranslation } from "react-i18next";
 import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
+import Unsupported from "./panels/unsupported/Unsupported";
 
 const App = () => {
     const navigate = useNavigate();
@@ -31,6 +31,7 @@ const App = () => {
         // disabled: false, // optional, default value: false. Disables all tracking operations if set to true.
     });
 
+    console.log(navigator.userAgent);
     const [controllerService, setControllerService] =
         useState<ControllerService>();
     const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(
@@ -82,15 +83,7 @@ const App = () => {
                     <Header />
 
                     <div className="container">
-                        {isSafari() ||
-                            (isFirefox() && (
-                                <>
-                                    <PageTitle>Browser not supported</PageTitle>
-                                    <p>
-                                        Please use Chrome, Edge or Opera instead
-                                    </p>
-                                </>
-                            ))}
+                        {(isSafari() || isFirefox()) && <Unsupported />}
                         {!isSafari() && !isFirefox() && !controllerService && (
                             <Connection onConnect={setControllerService} />
                         )}

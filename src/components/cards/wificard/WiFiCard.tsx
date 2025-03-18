@@ -50,7 +50,7 @@ export const WiFiCard = ({
             <>
                 {stats?.connectedTo === undefined &&
                     stats?.apSSID === undefined && (
-                        <>{t("card.wifi.configure.description")}</>
+                        <>{t("card.wifi.configure-description")}</>
                     )}
             </>
             <>

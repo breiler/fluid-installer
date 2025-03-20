@@ -55,7 +55,7 @@
     "panel": {
         "navigation": {
             "home": "Page d’accueil",
-            "install": "installer",
+            "install": "Installer",
             "terminal": "Terminal",
             "file-browser": "Navigateur de fichiers",
             "wifi": "Wi-Fi",

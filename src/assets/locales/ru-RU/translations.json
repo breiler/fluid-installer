@@ -1,6 +1,6 @@
 {
     "header": {
-        "documentation": "Documentation",
+        "documentation": "Документация",
         "translate": "Add translations"
     },
     "footer": {
@@ -24,7 +24,7 @@
             "loading": "Loading...",
             "downloading": "Downloading...",
             "uploading": "Uploading",
-            "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",
+            "config-missing": "Конфигурационный файл \"{{configFilename}}\" отсутствует, хотите его создать?",
             "create-config": "Create config",
             "create-new-config": "Create new config",
             "upload": "Upload",

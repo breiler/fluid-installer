@@ -124,8 +124,8 @@
         "install": {
             "upgrade-description": "Uppgradera FluidNC på din hårdvara",
             "install-description": "Din hårdvara verkar inte ha FluidNC installerat, vill du installera det?",
-            "upgrade-button": "Uppgradera FluidNC",
-            "install-button": "Installera FluidNC"
+            "upgrade-button": "Uppgradera",
+            "install-button": "Installera"
         },
         "terminal": {
             "open-terminal": "Öppna terminal",

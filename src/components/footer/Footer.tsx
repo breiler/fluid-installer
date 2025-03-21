@@ -13,14 +13,22 @@ const Footer = () => {
         <footer className="footer page-footer font-small blue pt-4">
             <ul className="list-unstyled text-start">
                 <li>
-                    <a href="http://wiki.fluidnc.com/" target="_blank" rel="noreferrer">
+                    <a
+                        href="http://wiki.fluidnc.com/"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         {" "}
                         <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
                         {t("footer.documentation")}
                     </a>
                 </li>
                 <li>
-                    <a href="https://github.com/bdring/FluidNC" target="_blank" rel="noreferrer">
+                    <a
+                        href="https://github.com/bdring/FluidNC"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         <FontAwesomeIcon icon={faGithub as IconDefinition} />{" "}
                         FluidNC
                     </a>
@@ -28,7 +36,8 @@ const Footer = () => {
                 <li>
                     <a
                         href="https://github.com/breiler/fluid-installer"
-                        target="_blank" rel="noreferrer"
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         <FontAwesomeIcon icon={faGithub as IconDefinition} />{" "}
                         Installer
@@ -37,7 +46,8 @@ const Footer = () => {
                 <li>
                     <a
                         href="https://crowdin.com/project/fluid-installer"
-                        target="_blank" rel="noreferrer"
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         <FontAwesomeIcon
                             icon={faExternalLink as IconDefinition}

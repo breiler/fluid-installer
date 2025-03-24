@@ -1,10 +1,10 @@
 {
     "header": {
         "documentation": "Документация",
-        "translate": "Add translations"
+        "translate": "Добавить перевод"
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "Документация"
     },
     "page": {
         "connection": {

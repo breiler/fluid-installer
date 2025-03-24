@@ -3,6 +3,8 @@
         "jsx": "react",
         "lib": ["ES2023", "DOM"],
         "esModuleInterop": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler"
     }
 }

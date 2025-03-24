@@ -30,6 +30,7 @@ export const flashDevice = async (
     };
 
     const transport = new Transport(serialPort);
+    let loader: ESPLoader;
     try {
         onState(InstallerState.ENTER_FLASH_MODE);
         const loaderOptions = {
@@ -37,7 +38,7 @@ export const flashDevice = async (
             baudrate: baud,
             terminal: terminal
         } as LoaderOptions;
-        const loader = new ESPLoader(loaderOptions);
+        loader = new ESPLoader(loaderOptions);
         await loader!.main();
 
         // We need to wait after connecting...
@@ -71,7 +72,7 @@ export const flashDevice = async (
         await transport.setDTR(false);
         await transport.setRTS(true);
         await new Promise((r) => setTimeout(r, 100));
-        await transport.setDTR(true);
+        await transport.setRTS(false);
         await new Promise((r) => setTimeout(r, 50));
         await transport.disconnect();
         await new Promise((r) => setTimeout(r, 1000));

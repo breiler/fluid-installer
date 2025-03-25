@@ -144,6 +144,9 @@
             "configure-description": "Beheer de WiFi-instellingen van de controller",
             "connected-to": "Verbonden met",
             "access-point": "Acces Point"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

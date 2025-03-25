@@ -1,4 +1,3 @@
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Header.scss";
@@ -66,14 +65,6 @@ const Header = () => {
                 >
                     <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
                     {t("header.documentation")}
-                </Nav.Link>
-
-                <Nav.Link
-                    href="https://github.com/bdring/FluidNC"
-                    target="_blank"
-                    className="nav-link active"
-                >
-                    <FontAwesomeIcon icon={faGithub as IconDefinition} /> Github
                 </Nav.Link>
 
                 <NavDropdown

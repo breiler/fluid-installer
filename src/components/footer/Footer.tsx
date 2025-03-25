@@ -1,5 +1,5 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faBook, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -21,6 +21,16 @@ const Footer = () => {
                         {" "}
                         <FontAwesomeIcon icon={faBook as IconDefinition} />{" "}
                         {t("footer.documentation")}
+                    </a>
+                </li>
+                <li>
+                    <a
+                        href="https://discord.gg/j29vtknJnU"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <FontAwesomeIcon icon={faDiscord as IconDefinition} />{" "}
+                        Discord
                     </a>
                 </li>
                 <li>

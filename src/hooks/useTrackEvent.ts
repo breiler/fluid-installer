@@ -6,7 +6,8 @@ export enum TrackCategory {
 
 export enum TrackAction {
     InstallClick = "InstallClick",
-    InstallFail = "InstallFail"
+    InstallFail = "InstallFail",
+    InstallSuccess = "InstallSuccess"
 }
 
 const useTrackEvent = () => {

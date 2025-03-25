@@ -151,6 +151,17 @@ const InstallerModal = ({
 
             if (!hasErrors) {
                 setState(InstallerState.DONE);
+                trackEvent(
+                    TrackCategory.Install,
+                    TrackAction.InstallSuccess,
+                    release.name +
+                        " - " +
+                        choice.name +
+                        " - " +
+                        files.join(",") +
+                        " - " +
+                        baud
+                );
             }
         } catch (error) {
             setErrorMessage(error);
@@ -158,7 +169,7 @@ const InstallerModal = ({
             trackEvent(
                 TrackCategory.Install,
                 TrackAction.InstallFail,
-                "Restart - " + error
+                "Post install - " + error
             );
         }
     };

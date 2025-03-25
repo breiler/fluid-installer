@@ -116,12 +116,12 @@
             "cancel": "Avbryt",
             "select-image": "Installera eget paket",
             "select-image-description1": "Om du har laddat ner ett paket manuellt kan du installera den här.",
-            "select-image-description2": "Välj firmware.bin-fil att installera på enheten.",
+            "select-image-description2": "Välj den firmware.bin-fil du vill installera.",
             "select-image-button": "Välj paket"
         },
         "lost-connection": {
-            "description": "Lost the connection to the controller",
-            "close": "Close"
+            "description": "Förlorade anslutningen till enheten",
+            "close": "Stäng"
         }
     },
     "card": {

@@ -82,8 +82,8 @@
             "not-active": "Bootloader nicht aktiv - Versuchen Sie, die BOOT-Taste gedrückt zu halten"
         },
         "unsupported": {
-            "title": "",
-            "description": ""
+            "title": "Browser not supported",
+            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
         }
     },
     "component": {
@@ -120,8 +120,8 @@
             "select-image-button": "Firmware-Image auswählen"
         },
         "lost-connection": {
-            "description": "",
-            "close": ""
+            "description": "Lost the connection to the controller",
+            "close": "Close"
         }
     },
     "card": {
@@ -150,7 +150,7 @@
             "access-point": "Access-Point"
         },
         "donate": {
-            "description": ""
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

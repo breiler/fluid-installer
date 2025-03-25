@@ -118,6 +118,10 @@
             "select-image-description1": "Om du har laddat ner ett paket manuellt kan du installera den här.",
             "select-image-description2": "Välj firmware.bin-fil att installera på enheten.",
             "select-image-button": "Välj paket"
+        },
+        "lost-connection": {
+            "description": "Lost the connection to the controller",
+            "close": "Close"
         }
     },
     "card": {

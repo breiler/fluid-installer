@@ -20,7 +20,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
-import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import SpinnerModal from "../../modals/spinnermodal/SpinnerModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
 import { Command } from "../../services";
@@ -97,7 +97,6 @@ const Terminal = () => {
 
     useEffect(() => {
         if (controllerService) {
-            console.log("initiating terminal");
             controllerService
                 .connect()
                 .then(() => controllerService.serialPort.addReader(onResponse))

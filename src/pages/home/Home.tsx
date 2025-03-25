@@ -8,7 +8,7 @@ import { FileBrowserCard } from "../../components/cards/filebrowsercard/FileBrow
 import { InstallCard } from "../../components/cards/installcard/InstallCard";
 import { TerminalCard } from "../../components/cards/terminalcard/TerminalCard";
 import { WiFiCard } from "../../components/cards/wificard/WiFiCard";
-import LogModal from "../../components/logmodal/LogModal";
+import LogModal from "../../modals/logmodal/LogModal";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import usePageView from "../../hooks/usePageView";
@@ -21,7 +21,7 @@ import {
 import { sleep } from "../../utils/utils";
 import "./Home.scss";
 import { VersionCommand } from "../../services/controllerservice/commands/VersionCommand";
-import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import SpinnerModal from "../../modals/spinnermodal/SpinnerModal";
 
 const Home = () => {
     usePageView("Home");
@@ -42,8 +42,7 @@ const Home = () => {
             .send(new GetStatsCommand(), 5000)
             .then((command) => setStats(command.getStats()))
             .catch((error) => {
-                console.error("Got an error while fetching stats", error);
-                throw "Got an error while fetching stats";
+                console.warn("Got an error while fetching stats", error);
             });
 
         await controllerService

@@ -8,7 +8,7 @@ import {
     SetConfigFilenameCommand
 } from "../../services/controllerservice";
 import { Button } from "../../components";
-import { Alert, ToggleButton } from "react-bootstrap";
+import { Alert, FormSelect, Stack, ToggleButton } from "react-bootstrap";
 import {
     faTrash,
     faFile,
@@ -17,18 +17,21 @@ import {
     faFileZipper,
     faPen,
     faUpload,
-    faEdit
+    faEdit,
+    faFileCode,
+    faRefresh
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import EditorModal from "../../components/editormodal/EditorModal";
-import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import ConfigurationModal from "../../modals/configurationmodal/ConfigurationModal";
+import SpinnerModal from "../../modals/spinnermodal/SpinnerModal";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import usePageView from "../../hooks/usePageView";
-import CreateFileModal from "../../components/createfilemodal/CreateFileModal";
+import CreateFileModal from "../../modals/createfilemodal/CreateFileModal";
 import { generateNewFileName } from "../../utils/utils";
 import { useTranslation } from "react-i18next";
+import EditFileModal from "../../modals/editfilemodal/EditFileModal";
 
 type EditFile = {
     file: ControllerFile;
@@ -38,7 +41,6 @@ type EditFile = {
 
 const fileUpload = (file, onSave) => {
     return new Promise((resolve) => {
-        console.log("Uploading", file);
         const reader = new FileReader();
         reader.onload = (readerEvent) => {
             const content = readerEvent?.target?.result as ArrayBuffer;
@@ -58,6 +60,9 @@ const FileBrowser = () => {
     const controllerService = useContext(ControllerServiceContext);
     const [files, setFiles] = useState<ControllerFile[]>([]);
     const [configFilename, setConfigFilename] = useState<string>("");
+    const [editConfiguration, setEditConfiguration] = useState<
+        EditFile | undefined
+    >();
     const [editFile, setEditFile] = useState<EditFile | undefined>();
     const [uploadError, setUploadError] = useState<string | undefined>();
 
@@ -66,6 +71,9 @@ const FileBrowser = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [showNewConfigDialog, setShowNewConfigDialog] = useState(false);
     const [currentFileName, setCurrentFileName] = useState("");
+    const [fileSystem, setFileSystem] = useState<"/sd/" | "/localfs/">(
+        "/localfs/"
+    );
 
     const init = async () => {
         if (!controllerService) {
@@ -88,13 +96,23 @@ const FileBrowser = () => {
         init();
     }, [controllerService]);
 
+    useEffect(() => {
+        refresh();
+    }, [fileSystem]);
+
+    const refresh = async () => {
+        setIsLoading(true);
+        await refreshFileList();
+        setIsLoading(false);
+    };
+
     const refreshFileList = async (): Promise<void> => {
         if (!controllerService) {
             return Promise.resolve();
         }
-
+        setFiles([]);
         return controllerService
-            .send(new ListFilesCommand())
+            .send(new ListFilesCommand(fileSystem === "/sd/"))
             .then((listCommand) => {
                 setFiles(listCommand.getFiles());
             });
@@ -105,8 +123,10 @@ const FileBrowser = () => {
             return;
         }
 
-        await controllerService.send(new DeleteFileCommand(file.name));
-        await refreshFileList();
+        await controllerService.send(
+            new DeleteFileCommand(fileSystem, file.name)
+        );
+        await refresh();
     };
 
     const onDownload = async (file: ControllerFile) => {
@@ -117,7 +137,7 @@ const FileBrowser = () => {
 
         try {
             const fileData = await controllerService.downloadFile(
-                "/littlefs/" + file.name
+                fileSystem + file.name
             );
             const fileBlob = new Blob([fileData], {
                 type: "application/octet-binary;charset=utf-8"
@@ -133,14 +153,30 @@ const FileBrowser = () => {
         }
     };
 
-    const onEdit = async (file: ControllerFile) => {
+    const onEditConfiguration = async (file: ControllerFile) => {
         if (!controllerService) {
             return;
         }
 
         setIsDownloading(true);
         controllerService
-            .downloadFile("/littlefs/" + file.name)
+            .downloadFile(fileSystem + file.name)
+            .then((fileData) => {
+                setEditConfiguration({ file, fileData, createNew: false });
+            })
+            .finally(() => {
+                setIsDownloading(false);
+            });
+    };
+
+    const onEditFile = async (file: ControllerFile) => {
+        if (!controllerService) {
+            return;
+        }
+
+        setIsDownloading(true);
+        controllerService
+            .downloadFile(fileSystem + file.name)
             .then((fileData) => {
                 setEditFile({ file, fileData, createNew: false });
             })
@@ -153,7 +189,7 @@ const FileBrowser = () => {
         if (!controllerService) {
             return;
         }
-        setEditFile({
+        setEditConfiguration({
             file: { id: filename, name: filename, size: 0 },
             fileData: content
                 ? Buffer.from(content)
@@ -191,7 +227,7 @@ const FileBrowser = () => {
 
     const onSave = async (file: ControllerFile, fileData: Buffer) => {
         return await controllerService
-            ?.uploadFile("/littlefs/" + file.name, fileData)
+            ?.uploadFile(fileSystem + file.name, fileData)
             .then(async () => await refreshFileList())
             .catch((error) => setUploadError(error));
     };
@@ -227,7 +263,6 @@ const FileBrowser = () => {
                     "..."
                 }
             />
-
             {showNewConfigDialog && (
                 <CreateFileModal
                     show={
@@ -243,9 +278,18 @@ const FileBrowser = () => {
                 />
             )}
 
+            {editConfiguration && (
+                <ConfigurationModal
+                    createNew={editConfiguration.createNew}
+                    file={editConfiguration?.file}
+                    fileData={editConfiguration?.fileData}
+                    onSave={onSave}
+                    onClose={() => setEditConfiguration(undefined)}
+                />
+            )}
+
             {editFile && (
-                <EditorModal
-                    createNew={editFile.createNew}
+                <EditFileModal
                     file={editFile?.file}
                     fileData={editFile?.fileData}
                     onSave={onSave}
@@ -254,6 +298,8 @@ const FileBrowser = () => {
             )}
 
             {configFilename &&
+                fileSystem !== "/sd/" &&
+                !isLoading &&
                 !files.find((file) => file.name === configFilename) && (
                     <>
                         <Alert variant="warning">
@@ -271,7 +317,7 @@ const FileBrowser = () => {
                     </>
                 )}
 
-            <div style={{ height: 300 }}>
+            <div style={{ height: 300, marginTop: "16px" }}>
                 <ul className="list-group">
                     {files.sort().map((file) => {
                         let icon = faFile as IconDefinition;
@@ -287,6 +333,11 @@ const FileBrowser = () => {
                             file.name.endsWith(".png")
                         ) {
                             icon = faFileImage as IconDefinition;
+                        } else if (
+                            file.name.endsWith(".nc") ||
+                            file.name.endsWith(".gcode")
+                        ) {
+                            icon = faFileCode as IconDefinition;
                         } else if (
                             file.name.endsWith(".gz") ||
                             file.name.endsWith(".zip")
@@ -374,7 +425,34 @@ const FileBrowser = () => {
                                                     " " +
                                                     file.name
                                                 }
-                                                onClick={() => onEdit(file)}
+                                                onClick={() =>
+                                                    onEditConfiguration(file)
+                                                }
+                                            >
+                                                <>
+                                                    <FontAwesomeIcon
+                                                        icon={
+                                                            faPen as IconDefinition
+                                                        }
+                                                        size="xs"
+                                                    />
+                                                </>
+                                            </Button>
+                                        )}
+
+                                        {(file.name.endsWith(".nc") ||
+                                            file.name.endsWith(".gcode") ||
+                                            file.name.endsWith(".txt")) && (
+                                            <Button
+                                                disabled={isDownloading}
+                                                title={
+                                                    t(
+                                                        "page.file-browser.edit"
+                                                    ) +
+                                                    " " +
+                                                    file.name
+                                                }
+                                                onClick={() => onEditFile(file)}
                                             >
                                                 <>
                                                     <FontAwesomeIcon
@@ -392,42 +470,47 @@ const FileBrowser = () => {
                                         style={{ minWidth: "130px" }}
                                     >
                                         {(file.name.endsWith(".yml") ||
-                                            file.name.endsWith(".yaml")) && (
-                                            <ToggleButton
-                                                id={"select-file-" + file.name}
-                                                type="checkbox"
-                                                variant="outline-primary"
-                                                title={t(
-                                                    "page.file-browser.select-as-config"
-                                                )}
-                                                checked={
-                                                    file.name === configFilename
-                                                }
-                                                value={file.name}
-                                                onChange={(event) =>
-                                                    onChangeConfig(
-                                                        event.target.value
-                                                    )
-                                                }
-                                            >
-                                                {file.name ===
-                                                    configFilename && (
-                                                    <>
-                                                        {t(
-                                                            "page.file-browser.active-config"
-                                                        )}
-                                                    </>
-                                                )}
-                                                {file.name !==
-                                                    configFilename && (
-                                                    <>
-                                                        {t(
-                                                            "page.file-browser.select-config"
-                                                        )}
-                                                    </>
-                                                )}
-                                            </ToggleButton>
-                                        )}
+                                            file.name.endsWith(".yaml")) &&
+                                            fileSystem !== "/sd/" && (
+                                                <ToggleButton
+                                                    id={
+                                                        "select-file-" +
+                                                        file.name
+                                                    }
+                                                    type="checkbox"
+                                                    variant="outline-primary"
+                                                    title={t(
+                                                        "page.file-browser.select-as-config"
+                                                    )}
+                                                    checked={
+                                                        file.name ===
+                                                        configFilename
+                                                    }
+                                                    value={file.name}
+                                                    onChange={(event) =>
+                                                        onChangeConfig(
+                                                            event.target.value
+                                                        )
+                                                    }
+                                                >
+                                                    {file.name ===
+                                                        configFilename && (
+                                                        <>
+                                                            {t(
+                                                                "page.file-browser.active-config"
+                                                            )}
+                                                        </>
+                                                    )}
+                                                    {file.name !==
+                                                        configFilename && (
+                                                        <>
+                                                            {t(
+                                                                "page.file-browser.select-config"
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </ToggleButton>
+                                            )}
                                     </div>
                                 </div>
                             </li>
@@ -446,20 +529,43 @@ const FileBrowser = () => {
                     </Alert>
                 )}
 
-                <div
-                    className="d-flex justify-content-end"
-                    style={{ marginTop: "16px", paddingBottom: "100px" }}
-                >
-                    <Button
-                        onClick={() => setShowNewConfigDialog(true)}
-                        buttonType="btn-warning"
-                    >
-                        <FontAwesomeIcon
-                            icon={faEdit as IconDefinition}
-                            size="xs"
-                        />{" "}
-                        {t("page.file-browser.create-new-config")}
-                    </Button>
+                <Stack direction="horizontal" style={{ marginTop: 12 }}>
+                    <Stack direction="horizontal">
+                        <FormSelect
+                            value={fileSystem}
+                            onChange={(e) =>
+                                setFileSystem(
+                                    e.target.value === "/sd/"
+                                        ? "/sd/"
+                                        : "/localfs/"
+                                )
+                            }
+                        >
+                            <option value="/localfs/">Flash</option>
+                            <option value="/sd/">SD-card</option>
+                        </FormSelect>
+                        <Button onClick={refresh} buttonType="">
+                            <FontAwesomeIcon
+                                icon={faRefresh as IconDefinition}
+                                size="xs"
+                            />
+                        </Button>
+                    </Stack>
+                    <div className="p-2 ms-auto">
+                        {fileSystem !== "/sd/" && (
+                            <Button
+                                onClick={() => setShowNewConfigDialog(true)}
+                                buttonType="btn-warning"
+                            >
+                                <FontAwesomeIcon
+                                    icon={faEdit as IconDefinition}
+                                    size="xs"
+                                />{" "}
+                                {t("page.file-browser.create-new-config")}
+                            </Button>
+                        )}
+                    </div>
+
                     <Button
                         onClick={() => onUpload()}
                         style={{ marginRight: "0px" }}
@@ -470,7 +576,7 @@ const FileBrowser = () => {
                         />{" "}
                         {t("page.file-browser.upload")}
                     </Button>
-                </div>
+                </Stack>
             </div>
         </>
     );

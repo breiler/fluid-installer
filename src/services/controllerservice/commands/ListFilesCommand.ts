@@ -2,13 +2,14 @@ import { Command } from "./Command";
 import { ControllerFile } from "../types";
 
 export class ListFilesCommand extends Command {
-    constructor() {
-        super("$LocalFS/List");
+    constructor(sd: boolean = false) {
+        super(sd ? "$SD/List" : "$LocalFS/List");
     }
 
     getFiles = (): ControllerFile[] => {
         return this.response
-            .filter((line) => line.indexOf("[FILE:") == 0)
+            .filter((line) => line.indexOf("[FILE: ") == 0)
+            .filter((line) => line.indexOf("[FILE:  ") == -1) // Only allow files in root directory
             .map((line) => {
                 return {
                     id: line.substring(7, line.indexOf("|")),

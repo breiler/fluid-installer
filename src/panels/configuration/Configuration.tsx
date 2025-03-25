@@ -201,7 +201,11 @@ const Configuration = ({
 
             {currentTab === ConfigurationTab.SOURCE && (
                 <>
-                    <Editor value={value} onChange={updateValue} />
+                    <Editor
+                        value={value}
+                        onChange={updateValue}
+                        format="yaml"
+                    />
                 </>
             )}
         </div>

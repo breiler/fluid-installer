@@ -24,6 +24,10 @@ export class GetStatsCommand extends Command {
     }
 
     getStats(): Stats {
+        if (this.response[0].indexOf("error:") === 0) {
+            return {};
+        }
+
         try {
             return {
                 version: this.getParam("FW version"),

@@ -11,8 +11,8 @@ import {
     GithubRelease,
     GithubReleaseManifest
 } from "../../services";
-import SelectField from "../fields/SelectField";
-import BooleanField from "../fields/BooleanField";
+import SelectField from "../../components/fields/SelectField";
+import BooleanField from "../../components/fields/BooleanField";
 
 type Props = {
     onCancel: () => void;

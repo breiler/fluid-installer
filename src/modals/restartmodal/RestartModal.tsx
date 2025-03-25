@@ -7,7 +7,7 @@ import "./RestartModal.scss";
 import { faCheck, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import ControllerLog from "../controllerlog/ControllerLog";
+import ControllerLog from "../../components/controllerlog/ControllerLog";
 
 type RestartModalProps = {
     show?: boolean;

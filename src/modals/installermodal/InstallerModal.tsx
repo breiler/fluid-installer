@@ -1,26 +1,39 @@
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Spinner } from "..";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Spinner } from "../../components";
+import { Modal } from "react-bootstrap";
 import {
     ControllerStatus,
+    FirmwareChoice,
+    FirmwareFile,
+    GithubRelease,
+    GithubReleaseManifest,
+    GithubService,
     InstallService,
-    InstallerState
+    InstallerState,
+    validateSignature
 } from "../../services";
 import { Progress } from "../../panels";
 import { FlashProgress } from "../../services/FlashService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import {
-    faBan,
-    faClose,
-    faFile,
-    faFileArrowUp,
-    faFire
-} from "@fortawesome/free-solid-svg-icons";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
 import BootloaderInfo from "../../panels/bootloaderinfo/BootloaderInfo";
-import Log from "../log/Log";
+import Log from "../../components/log/Log";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import ConfirmPage from "./ConfirmPage";
+import useTrackEvent, {
+    TrackAction,
+    TrackCategory
+} from "../../hooks/useTrackEvent";
+
+type InstallerModalProps = {
+    onClose: () => void;
+    onCancel: () => void;
+    release: GithubRelease;
+    manifest: GithubReleaseManifest;
+    choice: FirmwareChoice;
+};
 
 const initialProgress: FlashProgress = {
     fileIndex: 0,
@@ -29,86 +42,69 @@ const initialProgress: FlashProgress = {
     fileProgress: 0
 };
 
-type UploadCustomImageModalProps = {
-    onClose: () => void;
-};
-
-const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
-    const { t } = useTranslation();
+const InstallerModal = ({
+    onClose,
+    onCancel,
+    release,
+    manifest,
+    choice
+}: InstallerModalProps) => {
     const [showLog, setShowLog] = useState<boolean>(false);
     const controllerService = useContext(ControllerServiceContext);
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
     const [progress, setProgress] = useState<FlashProgress>(initialProgress);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [log, setLog] = useState("");
-    const [currentFile, setCurrentFile] = useState<File | undefined>();
-    const [currentFileData, setCurrentFileData] = useState<
-        Uint8Array | undefined
-    >();
+    const { t } = useTranslation();
+    const trackEvent = useTrackEvent();
 
     const onLogData = (data: string) => {
         setLog((l) => l + data);
         console.log(data);
     };
 
-    const onUpload = async () => {
-        return new Promise((resolve) => {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.multiple = false;
-            input.accept = ".bin";
+    const onInstall = async (baud: number, files: string[]) => {
+        trackEvent(
+            TrackCategory.Install,
+            TrackAction.InstallClick,
+            release.name +
+                " - " +
+                choice.name +
+                " - " +
+                files.join(",") +
+                " - " +
+                baud
+        );
 
-            // eslint-disable-next-line
-            input.onchange = async (e: any) => {
-                const files = e?.target?.files ?? [];
-                if (files.length === 0) {
-                    resolve(1);
-                }
-
-                for (const file of files) {
-                    setCurrentFile(file);
-                    setCurrentFileData(await getFileData(file));
-                }
-                resolve(1);
-            };
-            input.click();
-        });
-    };
-
-    const getFileData = (file): Promise<Uint8Array> => {
-        return new Promise((resolve) => {
-            console.log("Uploading", file);
-            const reader = new FileReader();
-            reader.onload = (readerEvent) => {
-                const content = readerEvent?.target?.result as ArrayBuffer;
-                if (!content) {
-                    return;
-                }
-
-                resolve(new Uint8Array(Buffer.from(content)));
-            };
-            reader.readAsArrayBuffer(file);
-        });
-    };
-
-    const onInstall = async (fileData: Uint8Array) => {
         try {
             await controllerService?.disconnect(false);
-        } catch (_error) {
-            // never mind
+        } catch (error) {
+            trackEvent(
+                TrackCategory.Install,
+                TrackAction.InstallFail,
+                "Disconnect - " + error
+            );
         }
 
         let hasErrors = false;
-        await InstallService.installImage(
-            controllerService.serialPort,
-            fileData,
+        await InstallService.installChoice(
+            release,
+            controllerService!.serialPort!,
+            manifest,
+            choice,
             setProgress,
             setState,
-            onLogData
+            onLogData,
+            baud
         ).catch((error) => {
             setErrorMessage(error);
             setState(InstallerState.ERROR);
             hasErrors = true;
+            trackEvent(
+                TrackCategory.Install,
+                TrackAction.InstallFail,
+                "Install choice - " + error
+            );
         });
 
         try {
@@ -116,64 +112,78 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
             if (status !== ControllerStatus.CONNECTED) {
                 setErrorMessage(t("modal.installer.error-reconnecting"));
                 setState(InstallerState.ERROR);
+                trackEvent(
+                    TrackCategory.Install,
+                    TrackAction.InstallFail,
+                    "Reconnect"
+                );
             }
 
             if (!hasErrors) {
+                setState(InstallerState.UPLOADING_FILES);
+            }
+
+            await Promise.all(
+                files.map((file) => {
+                    const extraFile = manifest.files?.[file] as FirmwareFile;
+
+                    if (!extraFile) {
+                        return;
+                    }
+
+                    console.log(
+                        t("modal.installer.uploading") + ": ",
+                        extraFile
+                    );
+                    return GithubService.getExtraFile(release, extraFile)
+                        .then((data) => {
+                            validateSignature(extraFile.signature, data);
+                            return data;
+                        })
+                        .then((data) =>
+                            controllerService?.uploadFile(
+                                extraFile["controller-path"],
+                                Buffer.from(data)
+                            )
+                        );
+                })
+            );
+
+            if (!hasErrors) {
                 setState(InstallerState.DONE);
+                trackEvent(
+                    TrackCategory.Install,
+                    TrackAction.InstallSuccess,
+                    release.name +
+                        " - " +
+                        choice.name +
+                        " - " +
+                        files.join(",") +
+                        " - " +
+                        baud
+                );
             }
         } catch (error) {
             setErrorMessage(error);
             setState(InstallerState.ERROR);
+            trackEvent(
+                TrackCategory.Install,
+                TrackAction.InstallFail,
+                "Post install - " + error
+            );
         }
     };
 
     return (
         <Modal centered show={true} size="lg">
             {state === InstallerState.SELECT_PACKAGE && (
-                <>
-                    <Modal.Body>
-                        <h3>{t("modal.installer.select-image")}</h3>
-                        <p>{t("modal.installer.select-image-description1")}</p>
-                        <p>{t("modal.installer.select-image-description2")}</p>
-                        {!currentFile && (
-                            <Button onClick={onUpload}>
-                                <FontAwesomeIcon
-                                    icon={faFileArrowUp as IconDefinition}
-                                    style={{ marginRight: "10px" }}
-                                />
-                                {t("modal.installer.select-image-button")}
-                            </Button>
-                        )}
-                        {currentFile && (
-                            <>
-                                <p>
-                                    <FontAwesomeIcon
-                                        icon={faFile as IconDefinition}
-                                        style={{ marginRight: "10px" }}
-                                    />
-                                    {currentFile.name}
-                                </p>
-                            </>
-                        )}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={onClose}>
-                            <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}
-                            {t("modal.installer.cancel")}
-                        </Button>
-                        <Button
-                            disabled={!currentFile}
-                            variant={currentFile ? "success" : "secondary"}
-                            onClick={() => onInstall(currentFileData)}
-                        >
-                            <FontAwesomeIcon
-                                icon={faFire as IconDefinition}
-                                style={{ marginRight: "8px" }}
-                            />
-                            {t("modal.installer.install")}
-                        </Button>
-                    </Modal.Footer>
-                </>
+                <ConfirmPage
+                    release={release}
+                    choice={choice}
+                    manifest={manifest}
+                    onCancel={onCancel}
+                    onInstall={onInstall}
+                />
             )}
             {(state === InstallerState.DOWNLOADING ||
                 state === InstallerState.CHECKING_SIGNATURES) && (
@@ -269,4 +279,4 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
     );
 };
 
-export default UploadCustomImageModal;
+export default InstallerModal;

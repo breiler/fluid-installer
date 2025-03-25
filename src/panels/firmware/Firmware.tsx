@@ -23,7 +23,7 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faFileArrowUp, faSliders } from "@fortawesome/free-solid-svg-icons";
-import UploadCustomImageModal from "../../components/installermodal/UploadCustomImageModal";
+import UploadCustomImageModal from "../../modals/installermodal/UploadCustomImageModal";
 import VersionCard from "../../components/cards/versioncard/VersionCard";
 
 type Props = {

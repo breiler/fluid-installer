@@ -13,9 +13,9 @@ import ConfigurationTabs from "../../panels/configuration/ConfigurationTabs";
 import { ControllerFile } from "../../services/controllerservice";
 import CreateFileModal from "../createfilemodal/CreateFileModal";
 import { generateNewFileName } from "../../utils/utils";
-import { ButtonType } from "../button";
+import { ButtonType } from "../../components/button";
 
-type EditorModalProps = {
+type ConfigurationModalProps = {
     file?: ControllerFile;
     fileData?: Buffer;
     createNew: boolean;
@@ -23,13 +23,13 @@ type EditorModalProps = {
     onSave: (file: ControllerFile, fileData: Buffer) => Promise<void>;
 };
 
-const EditorModal = ({
+const ConfigurationModal = ({
     file,
     fileData,
     createNew,
     onClose,
     onSave
-}: EditorModalProps) => {
+}: ConfigurationModalProps) => {
     const [value, setValue] = useState<string>(fileData?.toString() || "");
     const [hasErrors, setHasErrors] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -148,4 +148,4 @@ const EditorModal = ({
     );
 };
 
-export default EditorModal;
+export default ConfigurationModal;

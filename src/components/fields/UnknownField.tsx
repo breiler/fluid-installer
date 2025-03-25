@@ -26,7 +26,6 @@ const UnknownField = <T extends unknown>({
     const onBlur = () => {
         try {
             const data = yaml.load(text);
-            console.log(data);
             setValue && setValue(data);
         } catch (error) {
             console.debug(error);

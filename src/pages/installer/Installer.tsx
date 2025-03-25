@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InstallerModal from "../../components/installermodal/InstallerModal";
+import InstallerModal from "../../modals/installermodal/InstallerModal";
 import usePageView from "../../hooks/usePageView";
 import Firmware from "../../panels/firmware/Firmware";
 import {

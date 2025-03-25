@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import Log from "../log/Log";
+import Log from "../../components/log/Log";
 import { createLogLine } from "../../utils/logutils";
 
 type RestartModalProps = {

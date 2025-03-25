@@ -14,7 +14,7 @@ import {
 import AlertMessage from "../../components/alertmessage/AlertMessage";
 import { Link } from "react-router-dom";
 import jsYaml from "js-yaml";
-import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import SpinnerModal from "../../modals/spinnermodal/SpinnerModal";
 
 type AxisPinsProps = {
     axis: string;

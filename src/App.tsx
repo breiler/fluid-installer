@@ -30,7 +30,6 @@ const App = () => {
         // disabled: false, // optional, default value: false. Disables all tracking operations if set to true.
     });
 
-    console.log(navigator.userAgent);
     const [controllerService, setControllerService] =
         useState<ControllerService>();
     const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(

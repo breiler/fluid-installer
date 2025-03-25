@@ -10,14 +10,14 @@ import {
     Row,
     Image
 } from "react-bootstrap";
-import Button from "../button";
+import Button from "../../components/button";
 import ConfigService, {
     ConfigBoard,
     ConfigFile
 } from "../../services/ConfigService";
 import { Config } from "../../model/Config";
 import { fileDataToConfig } from "../../utils/utils";
-import AlertMessage from "../alertmessage/AlertMessage";
+import AlertMessage from "../../components/alertmessage/AlertMessage";
 
 type Props = {
     show: boolean;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import jsYaml from "js-yaml";
 import { linter, lintGutter } from "@codemirror/lint";
@@ -44,21 +44,30 @@ const yamlLinter = linter((view) => {
 type Props = {
     value: string;
     onChange: (value: string) => void;
+    format: "yaml" | "other";
 };
 
-const Editor = ({ value, onChange }: Props) => {
+const Editor = ({ value, onChange, format }: Props) => {
+    const extensions = useMemo(() => {
+        if (format === "yaml") {
+            return [
+                lintGutter(),
+                yamlLinter,
+                basicSetup,
+                StreamLanguage.define(yaml)
+            ];
+        }
+
+        return [lintGutter(), basicSetup];
+    }, [format]);
+
     return (
         <>
             <ReactCodeMirror
                 minHeight="300px"
                 value={value}
                 onChange={onChange}
-                extensions={[
-                    lintGutter(),
-                    yamlLinter,
-                    basicSetup,
-                    StreamLanguage.define(yaml)
-                ]}
+                extensions={extensions}
             />
         </>
     );

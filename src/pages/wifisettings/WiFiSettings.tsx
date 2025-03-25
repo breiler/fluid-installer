@@ -37,7 +37,7 @@ import { Command } from "../../services";
 import { Spinner } from "../../components";
 import WiFiStats from "./WifiStats";
 import { sleep } from "../../utils/utils";
-import SpinnerModal from "../../components/spinnermodal/SpinnerModal";
+import SpinnerModal from "../../modals/spinnermodal/SpinnerModal";
 
 const getSignalColor = (signal: number) => {
     if (signal > 60) {
@@ -110,7 +110,6 @@ const WiFiSettings = () => {
 
     const refresh = async () => {
         setLoadingType("settings");
-        console.log("refreshing...");
         await controllerService
             ?.send(new GetSettingsCommand())
             .then((command) => {

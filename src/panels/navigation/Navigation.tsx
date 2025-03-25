@@ -17,7 +17,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import "./Navigation.scss";
 import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
-import RestartModal from "../../components/restartmodal/RestartModal";
+import RestartModal from "../../modals/restartmodal/RestartModal";
 import Page from "../../model/Page";
 import { VersionCommand } from "../../services/controllerservice/commands/VersionCommand";
 

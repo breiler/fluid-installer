@@ -144,6 +144,9 @@
             "configure-description": "Manage the controller WiFi settings",
             "connected-to": "Connected to",
             "access-point": "Access Point"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

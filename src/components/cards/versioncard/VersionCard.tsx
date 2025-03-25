@@ -16,13 +16,7 @@ const VersionCard = ({ release, isLatest }: Props) => {
         setReleaseDate("");
         if (release) {
             const date = new Date(release.published_at);
-            setReleaseDate(
-                date.getFullYear() +
-                    "-" +
-                    (date.getMonth() + 1) +
-                    "-" +
-                    date.getDate()
-            );
+            setReleaseDate(date.toISOString().slice(0, 10));
         }
     }, [release]);
     return (
@@ -50,7 +44,7 @@ const VersionCard = ({ release, isLatest }: Props) => {
                 )}
 
                 {release && (
-                    <ShowMore>
+                    <ShowMore maxHeight={250}>
                         <Markdown>{release.body}</Markdown>
                     </ShowMore>
                 )}

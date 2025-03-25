@@ -17,7 +17,8 @@ const DonateCard = () => {
                     <a
                         href="https://www.paypal.com/donate/?hosted_button_id=8DYLB6ZYYDG7Y"
                         target="_blank"
-                        style={{ marginRight: 18 }} rel="noreferrer"
+                        style={{ marginRight: 18 }}
+                        rel="noreferrer"
                     >
                         <FontAwesomeIcon
                             icon={faCcPaypal as IconDefinition}
@@ -28,7 +29,8 @@ const DonateCard = () => {
 
                     <a
                         href="https://github.com/sponsors/bdring"
-                        target="_blank" rel="noreferrer"
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         <FontAwesomeIcon
                             icon={faGithubSquare as IconDefinition}

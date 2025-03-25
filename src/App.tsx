@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { Button, Col, Container, Modal, Row } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { Col, Container, Row } from "react-bootstrap";
 import { Header } from "./components";
 import Page from "./model/Page";
 import { Installer, Terminal } from "./pages";
@@ -11,73 +8,35 @@ import FileBrowser from "./pages/filebrowser";
 import Home from "./pages/home";
 import { Connection } from "./panels";
 import { isSafari, isFirefox } from "./utils/utils";
-import { ControllerService, ControllerStatus } from "./services";
+import { ControllerService } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
 import WiFiSettings from "./pages/wifisettings/WiFiSettings";
 import Calibrate from "./pages/calibrate/Calibrate";
 import Footer from "./components/footer/Footer";
-import { useTranslation } from "react-i18next";
 import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 import Unsupported from "./panels/unsupported/Unsupported";
+import LostConnectionModal from "./modals/lostconnectionmodal/LostConnectionModal";
 
 const App = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation();
     const instance = createInstance({
         urlBase: "https://matomo.bitpusher.se/",
         siteId: 2
-        // disabled: false, // optional, default value: false. Disables all tracking operations if set to true.
     });
 
     const [controllerService, setControllerService] =
         useState<ControllerService>();
-    const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(
-        ControllerStatus.DISCONNECTED
-    );
 
-    useEffect(() => {
-        controllerService?.addListener((status) => {
-            if (status === ControllerStatus.DISCONNECTED) {
-                setControllerService(undefined);
-            } else if (status === ControllerStatus.CONNECTION_LOST) {
-                setControllerStatus(status);
-            }
-        });
-    }, [controllerService]);
+    const onCloseConnection = () => {
+        setControllerService(undefined);
+    };
 
     return (
         <MatomoProvider value={instance}>
             <>
-                <Modal
-                    show={controllerStatus === ControllerStatus.CONNECTION_LOST}
-                    size="sm"
-                    scrollable={true}
-                    centered={false}
-                >
-                    <Modal.Body>
-                        {t("Lost the connection to the controller")}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            onClick={() => {
-                                setControllerService(undefined);
-                                setControllerStatus(
-                                    ControllerStatus.DISCONNECTED
-                                );
-                            }}
-                        >
-                            <>
-                                <FontAwesomeIcon
-                                    icon={faClose as IconDefinition}
-                                />{" "}
-                                Close
-                            </>
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
                 <ControllerServiceContext.Provider value={controllerService}>
+                    <LostConnectionModal onClose={onCloseConnection} />
                     <Header />
 
                     <div className="container">

@@ -144,6 +144,9 @@
             "configure-description": "WLAN-Einstellungen des Controllers konfigurieren",
             "connected-to": "Verbunden mit",
             "access-point": "Access-Point"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

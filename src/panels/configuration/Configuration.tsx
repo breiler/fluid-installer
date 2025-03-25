@@ -18,6 +18,7 @@ import ControlGroup from "./groups/ControlGroup";
 import ProbeGroup from "./groups/ProbeGroup";
 import "./Configuration.scss";
 import TextAreaField from "../../components/fields/TextAreaField";
+import UARTGroup from "./groups/UARTGroup";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -139,6 +140,22 @@ const Configuration = ({
                         board={Boards[0]}
                         spi={config.spi}
                         setValue={(spi) => appendConfig({ spi })}
+                        usedPins={usedPins}
+                    />
+
+                    <UARTGroup
+                        board={Boards[0]}
+                        uartName={"UART1"}
+                        uart={config.uart1}
+                        setValue={(uart) => appendConfig({ uart1: uart })}
+                        usedPins={usedPins}
+                    />
+
+                    <UARTGroup
+                        board={Boards[0]}
+                        uartName={"UART2"}
+                        uart={config.uart2}
+                        setValue={(uart) => appendConfig({ uart2: uart })}
                         usedPins={usedPins}
                     />
 

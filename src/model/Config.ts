@@ -205,6 +205,13 @@ export const getUsedPins = (config: Config) => {
     addPin("i2so.data_pin", config.i2so?.data_pin, usedPins);
     addPin("i2so.ws_pin", config.i2so?.ws_pin, usedPins);
 
+    addPin("uart1.txd_pin", config.uart1?.txd_pin, usedPins);
+    addPin("uart1.rxd_pin", config.uart1?.rxd_pin, usedPins);
+    addPin("uart1.rts_pin", config.uart1?.rts_pin, usedPins);
+
+    addPin("uart2.txd_pin", config.uart2?.txd_pin, usedPins);
+    addPin("uart2.rxd_pin", config.uart2?.rxd_pin, usedPins);
+    addPin("uart2.rts_pin", config.uart2?.rts_pin, usedPins);
     return usedPins;
 };
 
@@ -244,6 +251,8 @@ export type Config = {
 
     axes?: Axes;
 
+    uart1?: Uart;
+    uart2?: Uart;
     i2so?: I2ISO;
     i2c0?: I2C0Config;
     spi?: SPI;

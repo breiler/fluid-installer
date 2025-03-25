@@ -9,8 +9,8 @@ import { deepMerge } from "../../../utils/utils";
 import AxisGroup from "./AxisGroup";
 import PinField from "../../../components/fields/PinField";
 import BooleanField from "../../../components/fields/BooleanField";
-import TextField from "../../../components/fields/TextField";
 import SteppingGroup from "./SteppingGroup";
+import SelectField from "../../../components/fields/SelectField";
 
 type SelectFieldProps = {
     board: Board;
@@ -43,9 +43,13 @@ const AxesGroup = ({
                 helpText="This controls whether you are required to home at startup or not. You will get an homing alarm at startup if this value is true. This prevents motion until you home the machine or clear the alarm."
             />
 
-            <TextField
+            <SelectField
                 label="Homing runs"
-                value={config?.axes?.homing_runs ?? 2}
+                value={
+                    config?.axes?.homing_runs
+                        ? config?.axes?.homing_runs + ""
+                        : "2"
+                }
                 setValue={(value) =>
                     setValue({
                         ...config!,
@@ -55,7 +59,29 @@ const AxesGroup = ({
                         }
                     })
                 }
-                helpText="This sets the number of touches during the homing sequence. The default is 2 to match the Grbl style."
+                options={[
+                    {
+                        name: "1",
+                        value: "1"
+                    },
+                    {
+                        name: "2",
+                        value: "2"
+                    },
+                    {
+                        name: "3",
+                        value: "3"
+                    },
+                    {
+                        name: "4",
+                        value: "4"
+                    },
+                    {
+                        name: "5",
+                        value: "5"
+                    }
+                ]}
+                helpText="This sets the number of touches during the homing sequence. The default is 2 to match the GRBL style."
             />
 
             <BooleanField

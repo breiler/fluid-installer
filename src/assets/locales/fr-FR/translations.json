@@ -144,6 +144,9 @@
             "configure-description": "Gérer les paramètres WiFi du contrôleur",
             "connected-to": "Connecté à",
             "access-point": "Point d’Accès wifi"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

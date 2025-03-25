@@ -118,6 +118,10 @@
             "select-image-description1": "If you have downloaded a package manually you can flash the image from here.",
             "select-image-description2": "Select the firmware.bin file to flash the controller with.",
             "select-image-button": "Select firmware image"
+        },
+        "lost-connection": {
+            "description": "Lost the connection to the controller",
+            "close": "Close"
         }
     },
     "card": {
@@ -144,6 +148,9 @@
             "configure-description": "Beheer de WiFi-instellingen van de controller",
             "connected-to": "Verbonden met",
             "access-point": "Acces Point"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

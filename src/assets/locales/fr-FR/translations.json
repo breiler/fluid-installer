@@ -118,6 +118,10 @@
             "select-image-description1": "Si vous avez téléchargé un micrologiciel manuellement, vous pouvez flasher l'image du micrologiciel à partir d'ici.",
             "select-image-description2": "Sélectionnez le fichier firmware.bin avec lequel le contrôleur sera flashé.",
             "select-image-button": "Sélectionnez l'image du micrologiciel"
+        },
+        "lost-connection": {
+            "description": "Lost the connection to the controller",
+            "close": "Close"
         }
     },
     "card": {
@@ -144,6 +148,9 @@
             "configure-description": "Gérer les paramètres WiFi du contrôleur",
             "connected-to": "Connecté à",
             "access-point": "Point d’Accès wifi"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

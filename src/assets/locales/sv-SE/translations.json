@@ -116,8 +116,12 @@
             "cancel": "Avbryt",
             "select-image": "Installera eget paket",
             "select-image-description1": "Om du har laddat ner ett paket manuellt kan du installera den här.",
-            "select-image-description2": "Välj firmware.bin-fil att installera på enheten.",
+            "select-image-description2": "Välj den firmware.bin-fil du vill installera.",
             "select-image-button": "Välj paket"
+        },
+        "lost-connection": {
+            "description": "Förlorade anslutningen till enheten",
+            "close": "Stäng"
         }
     },
     "card": {
@@ -144,6 +148,9 @@
             "configure-description": "Hantera WiFi-inställningar på hårdvaran",
             "connected-to": "Ansluten till",
             "access-point": "Accesspunkt"
+        },
+        "donate": {
+            "description": "Vänligen överväg en donation till FluidNC-projektet via länkarna nedan för att hålla igång det."
         }
     }
 }

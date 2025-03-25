@@ -118,6 +118,10 @@
             "select-image-description1": "Bei manuellem Download können Sie das Image hier flashen.",
             "select-image-description2": "Wählen Sie die Firmware.bin zum flashen des Controllers.",
             "select-image-button": "Firmware-Image auswählen"
+        },
+        "lost-connection": {
+            "description": "Lost the connection to the controller",
+            "close": "Close"
         }
     },
     "card": {
@@ -144,6 +148,9 @@
             "configure-description": "WLAN-Einstellungen des Controllers konfigurieren",
             "connected-to": "Verbunden mit",
             "access-point": "Access-Point"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

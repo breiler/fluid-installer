@@ -144,6 +144,9 @@
             "configure-description": "Hantera WiFi-inställningar på hårdvaran",
             "connected-to": "Ansluten till",
             "access-point": "Accesspunkt"
+        },
+        "donate": {
+            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
         }
     }
 }

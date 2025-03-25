@@ -6,7 +6,6 @@ import SelectField from "../../components/fields/SelectField";
 import jsYaml from "js-yaml";
 import AxesGroup from "./groups/AxesGroup";
 import { Boards } from "../../model/Boards";
-import SPIGroup from "./groups/SPIGroup";
 import I2SOGroup from "./groups/I2SOGroup";
 import SDCardGroup from "./groups/SDCardGroup";
 import Editor from "../../components/editor/Editor";
@@ -136,13 +135,6 @@ const Configuration = ({
                         usedPins={usedPins}
                     />
 
-                    <SPIGroup
-                        board={Boards[0]}
-                        spi={config.spi}
-                        setValue={(spi) => appendConfig({ spi })}
-                        usedPins={usedPins}
-                    />
-
                     <UARTGroup
                         board={Boards[0]}
                         uartName={"UART1"}
@@ -169,7 +161,10 @@ const Configuration = ({
                     <SDCardGroup
                         board={Boards[0]}
                         sdcard={config.sdcard}
-                        setValue={(sdcard) => appendConfig({ sdcard })}
+                        spi={config.spi}
+                        setValue={(spi, sdcard) =>
+                            appendConfig({ spi, sdcard })
+                        }
                         usedPins={usedPins}
                     />
 

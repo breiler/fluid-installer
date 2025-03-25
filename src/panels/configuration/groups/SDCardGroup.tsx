@@ -1,5 +1,10 @@
 import React from "react";
-import { Pin, PinConfig, SDCard } from "../../../model/Config";
+import {
+    Pin,
+    PinConfig,
+    SDCard,
+    SPI as SPIConfig
+} from "../../../model/Config";
 import PinField from "../../../components/fields/PinField";
 import { Board } from "../../../model/Boards";
 import { Form } from "react-bootstrap";
@@ -7,12 +12,13 @@ import CollapseSection from "../../../components/collapsesection/CollapseSection
 
 type SPIProps = {
     board: Board;
+    spi?: SPIConfig;
     sdcard?: SDCard;
-    setValue: (sdcard?: SDCard) => void;
+    setValue: (spi?: SPIConfig, sdcard?: SDCard) => void;
     usedPins: Map<string, PinConfig>;
 };
 
-const SDCardGroup = ({ board, sdcard, setValue, usedPins }: SPIProps) => {
+const SDCardGroup = ({ board, spi, sdcard, setValue, usedPins }: SPIProps) => {
     return (
         <div style={{ marginBottom: "48px" }}>
             <h4>
@@ -23,12 +29,19 @@ const SDCardGroup = ({ board, sdcard, setValue, usedPins }: SPIProps) => {
                     checked={!!sdcard}
                     onChange={() => {
                         if (sdcard) {
-                            setValue(undefined);
+                            setValue(undefined, undefined);
                         } else {
-                            setValue({
-                                card_detect_pin: Pin.NO_PIN,
-                                cs_pin: Pin.GPIO_5
-                            });
+                            setValue(
+                                spi ?? {
+                                    miso_pin: Pin.GPIO_19,
+                                    mosi_pin: Pin.GPIO_23,
+                                    sck_pin: Pin.GPIO_18
+                                },
+                                {
+                                    card_detect_pin: Pin.NO_PIN,
+                                    cs_pin: Pin.GPIO_5
+                                }
+                            );
                         }
                     }}
                 ></Form.Check>
@@ -36,11 +49,57 @@ const SDCardGroup = ({ board, sdcard, setValue, usedPins }: SPIProps) => {
 
             <CollapseSection show={!!sdcard}>
                 <PinField
+                    label="MISO Pin"
+                    board={board}
+                    value={PinConfig.fromString(spi?.miso_pin)}
+                    setValue={(misoPin) => {
+                        setValue(
+                            {
+                                ...spi,
+                                ...{ miso_pin: misoPin.toString() }
+                            },
+                            sdcard
+                        );
+                    }}
+                    usedPins={usedPins}
+                />
+                <PinField
+                    label="MOSI Pin"
+                    board={board}
+                    value={PinConfig.fromString(spi?.mosi_pin)}
+                    setValue={(mosiPin) => {
+                        setValue(
+                            {
+                                ...spi,
+                                ...{ mosi_pin: mosiPin.toString() }
+                            },
+                            sdcard
+                        );
+                    }}
+                    usedPins={usedPins}
+                />
+                <PinField
+                    label="SCK Pin"
+                    board={board}
+                    value={PinConfig.fromString(spi?.sck_pin)}
+                    setValue={(sckPin) => {
+                        setValue(
+                            {
+                                ...spi,
+                                ...{ sck_pin: sckPin.toString() }
+                            },
+                            sdcard
+                        );
+                    }}
+                    usedPins={usedPins}
+                />
+
+                <PinField
                     label="Card Detect Pin"
                     board={board}
                     value={PinConfig.fromString(sdcard?.card_detect_pin)}
                     setValue={(value) => {
-                        setValue({
+                        setValue(spi, {
                             ...sdcard,
                             ...{ card_detect_pin: value.toString() }
                         });
@@ -52,7 +111,7 @@ const SDCardGroup = ({ board, sdcard, setValue, usedPins }: SPIProps) => {
                     board={board}
                     value={PinConfig.fromString(sdcard?.cs_pin)}
                     setValue={(value) => {
-                        setValue({
+                        setValue(spi, {
                             ...sdcard,
                             ...{ cs_pin: value.toString() }
                         });

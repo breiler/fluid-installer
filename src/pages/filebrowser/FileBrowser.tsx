@@ -8,7 +8,13 @@ import {
     SetConfigFilenameCommand
 } from "../../services/controllerservice";
 import { Button } from "../../components";
-import { Alert, FormSelect, Stack, ToggleButton } from "react-bootstrap";
+import {
+    Alert,
+    ButtonGroup,
+    Spinner,
+    Stack,
+    ToggleButton
+} from "react-bootstrap";
 import {
     faTrash,
     faFile,
@@ -19,7 +25,9 @@ import {
     faUpload,
     faEdit,
     faFileCode,
-    faRefresh
+    faRefresh,
+    faMicrochip,
+    faSdCard
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -319,6 +327,12 @@ const FileBrowser = () => {
 
             <div style={{ height: 300, marginTop: "16px" }}>
                 <ul className="list-group">
+                    {isLoading && (
+                        <li className="list-group-item">
+                            <Spinner size="sm" variant="secondary" />{" "}
+                            {t("page.file-browser.loading")}
+                        </li>
+                    )}
                     {files.sort().map((file) => {
                         let icon = faFile as IconDefinition;
                         if (
@@ -531,19 +545,35 @@ const FileBrowser = () => {
 
                 <Stack direction="horizontal" style={{ marginTop: 12 }}>
                     <Stack direction="horizontal">
-                        <FormSelect
-                            value={fileSystem}
-                            onChange={(e) =>
-                                setFileSystem(
-                                    e.target.value === "/sd/"
-                                        ? "/sd/"
-                                        : "/localfs/"
-                                )
-                            }
-                        >
-                            <option value="/localfs/">Flash</option>
-                            <option value="/sd/">SD-card</option>
-                        </FormSelect>
+                        <ButtonGroup>
+                            <ToggleButton
+                                value={fileSystem}
+                                id={"toggle-localfs"}
+                                type="checkbox"
+                                variant="outline-primary"
+                                checked={fileSystem === "/localfs/"}
+                                onChange={() => setFileSystem("/localfs/")}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faMicrochip as IconDefinition}
+                                />{" "}
+                                Flash
+                            </ToggleButton>
+                            <ToggleButton
+                                value={fileSystem}
+                                id={"toggle-sd"}
+                                type="checkbox"
+                                variant="outline-primary"
+                                checked={fileSystem === "/sd/"}
+                                onChange={() => setFileSystem("/sd/")}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSdCard as IconDefinition}
+                                />{" "}
+                                SD
+                            </ToggleButton>
+                        </ButtonGroup>
+
                         <Button onClick={refresh} buttonType="">
                             <FontAwesomeIcon
                                 icon={faRefresh as IconDefinition}

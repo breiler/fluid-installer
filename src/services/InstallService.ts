@@ -10,7 +10,6 @@ import { SerialPort } from "../utils/serialport/SerialPort";
 import { FlashFile, flashDevice } from "../utils/flash";
 import sha256 from "crypto-js/sha256";
 import { enc } from "crypto-js/core";
-import { analytics, logEvent } from "./FirebaseService";
 import { convertUint8ArrayToBinaryString } from "../utils/utils";
 
 export enum FirmwareType {
@@ -82,18 +81,7 @@ export const InstallService = {
                 onState,
                 onLogData
             );
-
-            logEvent(analytics, "install", {
-                version: "custom-image",
-                success: true
-            });
         } catch (error) {
-            logEvent(analytics, "install", {
-                version: "custom-image",
-                success: false,
-                error: error
-            });
-
             console.error(error);
             onState(InstallerState.ERROR);
             throw "Was not able to flash device: " + error;
@@ -122,12 +110,6 @@ export const InstallService = {
         try {
             imageFiles = await GithubService.getImageFiles(release, images);
         } catch (error) {
-            logEvent(analytics, "install", {
-                version: release.name,
-                success: false,
-                error: error
-            });
-
             console.error(error);
             onState(InstallerState.ERROR);
             throw "Could not download image files";
@@ -137,12 +119,6 @@ export const InstallService = {
             onState(InstallerState.CHECKING_SIGNATURES);
             validateImageSignatures(images, imageFiles);
         } catch (error) {
-            logEvent(analytics, "install", {
-                version: release.name,
-                success: false,
-                error: error
-            });
-
             onState(InstallerState.ERROR);
             throw error;
         }
@@ -161,18 +137,7 @@ export const InstallService = {
                 onState,
                 onLogData
             );
-
-            logEvent(analytics, "install", {
-                version: release.name,
-                success: true
-            });
         } catch (error) {
-            logEvent(analytics, "install", {
-                version: release.name,
-                success: false,
-                error: error
-            });
-
             console.error(error);
             onState(InstallerState.ERROR);
             throw "Was not able to flash device: " + error;

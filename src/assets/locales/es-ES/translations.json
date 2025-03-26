@@ -1,156 +1,156 @@
 {
     "header": {
-        "documentation": "Documentation",
-        "translate": "Add translations"
+        "documentation": "Documentos",
+        "translate": "Agregar traducción"
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "Documentos"
     },
     "page": {
         "connection": {
-            "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
-            "connect": "Connect",
-            "connecting": "Connecting",
-            "establishing-connection": "Establishing connection to controller"
+            "title": "FluidNC Instalador Web",
+            "description": "Esta herramienta facilitará la instalación o actualización de FluidNC en su controlador. Conecte el controlador y pulse \"Conectar\" para continuar.",
+            "connect": "Conectar",
+            "connecting": "Conectando",
+            "establishing-connection": "Estableciendo conexión con el controlador"
         },
         "home": {
-            "description": "You are now connected to a device, please choose an action below",
-            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
-            "show-details": "Click here to see details"
+            "description": "Ahora está conectado a un dispositivo, elija una acción a continuación",
+            "error-while-booting": "Se produjo un error durante el arranque, probablemente debido a una configuración no válida.",
+            "show-details": "Haga clic aquí para ver los detalles"
         },
         "file-browser": {
-            "title": "File browser",
-            "loading": "Loading...",
-            "downloading": "Downloading...",
-            "uploading": "Uploading",
-            "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",
-            "create-config": "Create config",
-            "create-new-config": "Create new config",
-            "upload": "Upload",
-            "active-config": "Active config",
-            "select-config": "Select config",
-            "select-as-config": "Select as config",
-            "edit": "Edit",
-            "delete": "Delete",
-            "download": "Download"
+            "title": "Explorador de archivos",
+            "loading": "Cargando...",
+            "downloading": "Descargando...",
+            "uploading": "Subiendo",
+            "config-missing": "Falta el archivo de configuración \"{{configFilename}}\", ¿desea crearlo?",
+            "create-config": "Crear configuración",
+            "create-new-config": "Crear nueva configuración",
+            "upload": "Subir",
+            "active-config": "Configuración activa",
+            "select-config": "Seleccione configuración",
+            "select-as-config": "Seleccionar como configuración",
+            "edit": "Editar",
+            "delete": "Borrar",
+            "download": "Descargar"
         },
         "terminal": {
             "title": "Terminal",
-            "restarting": "Restarting controller...",
-            "restart": "Restart",
-            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
+            "restarting": "Reiniciando el controlador...",
+            "restart": "Reanudar",
+            "restart-description": "¿Se realiza un reinicio completo del controlador configurando DTR/RTS?",
             "reset": "Reset",
-            "reset-description": "Resets the controller with a 0x18 command",
-            "unlock": "Unlock",
-            "unlock-description": "Unlocks the controller with $X",
-            "status": "Status",
-            "status-description": "Get the controller status",
-            "startup": "Startup messages",
-            "startup-description": "Get startup log messages",
+            "reset-description": "Reinicia el controlador con un comando 0x18",
+            "unlock": "Desbloquear",
+            "unlock-description": "Desbloquea el controlador con $X",
+            "status": "Estado",
+            "status-description": "Obtener el estado del controlador",
+            "startup": "Mensajes de inicio",
+            "startup-description": "Obtener mensajes de registro de inicio",
             "version": "Version",
-            "version-description": "Get the firmware version"
+            "version-description": "Obtener la versión del firmware"
         }
     },
     "panel": {
         "navigation": {
             "home": "Home",
-            "install": "Install",
+            "install": "Instalar",
             "terminal": "Terminal",
-            "file-browser": "File browser",
+            "file-browser": "Explorador de archivos",
             "wifi": "WiFi",
-            "calibrate": "Calibrate",
-            "restart": "Restart",
-            "disconnect": "Disconnect"
+            "calibrate": "Calibrar",
+            "restart": "Reiniciar",
+            "disconnect": "Desconectar"
         },
         "firmware": {
-            "install": "Install",
-            "install-description": "Select which firmware you want to install on your controller.",
-            "loading": "Loading...",
-            "install-custom-image": "Install a custom image...",
-            "show-prereleases": "Show pre-releases",
-            "fetching": "Fetching"
+            "install": "Instalar",
+            "install-description": "Seleccione el firmware que desea instalar en su controlador.",
+            "loading": "Cargando...",
+            "install-custom-image": "Instalar una imagen personalizada...",
+            "show-prereleases": "Mostrar prelanzamientos",
+            "fetching": "Obteniendo"
         },
         "progress": {
-            "title": "Installing",
-            "downloading": "Downloading package...",
-            "validating": "Validating images...",
-            "flashing": "Installing package to device..."
+            "title": "Instalando",
+            "downloading": "Descargando paquete...",
+            "validating": "Validando imágenes...",
+            "flashing": "Instalando paquete en el dispositivo..."
         },
         "bootloader": {
-            "waiting": "Waiting for controller to enter bootloader...",
-            "not-active": "Bootloader not active - Try holding down the BOOT switch"
+            "waiting": "Esperando que el controlador ingrese al cargador de arranque...",
+            "not-active": "Cargador de arranque no activo: intenta mantener presionado el interruptor BOOT"
         },
         "unsupported": {
-            "title": "Browser not supported",
-            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
+            "title": "Navegador no compatible",
+            "description": "Su navegador web actual no es compatible, utilice Chrome, Edge u Opera en su lugar"
         }
     },
     "component": {
         "log": {
-            "show-details": "Show details",
-            "hide-details": "Hide details"
+            "show-details": "Mostrar detalles",
+            "hide-details": "Ocultar detalles"
         }
     },
     "modal": {
         "installer": {
-            "error-reconnecting": "An error occured while reconnecting, please reboot the controller",
-            "uploading": "Uploading",
-            "downloading": "Downloading",
-            "downloading-description": "Downloading package...",
-            "restarting": "Restarting",
-            "restarting-description": "Waiting for controller restart...",
-            "uploading-files": "Uploading files",
-            "uploading-files-description": "Uploading files...",
-            "done": "Done",
-            "done-description": "The controller has been successfully installed and is ready to be used.",
-            "continue": "Continue",
-            "error": "Error!",
-            "close": "Close",
-            "confirm-installation": "Confirm installation",
-            "confirm-installation-description": "This will install the firmware \"{{release}}\" to the controller. It will {{not}} erase the controller.",
-            "not": "not",
-            "installation-speed": "Installation speed",
-            "installation-speed-help": "Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed.",
-            "install": "Install",
-            "cancel": "Cancel",
-            "select-image": "Select image",
-            "select-image-description1": "If you have downloaded a package manually you can flash the image from here.",
-            "select-image-description2": "Select the firmware.bin file to flash the controller with.",
-            "select-image-button": "Select firmware image"
+            "error-reconnecting": "Se produjo un error al reconectarse, reinicie el controlador.",
+            "uploading": "Subiendo",
+            "downloading": "Descargando",
+            "downloading-description": "Descargando paquete...",
+            "restarting": "Reiniciando",
+            "restarting-description": "Esperando que se reinicie el controlador...",
+            "uploading-files": "Subiendo archivos",
+            "uploading-files-description": "Subiendo archivos...",
+            "done": "Hecho",
+            "done-description": "El controlador se ha instalado correctamente y está listo para usarse.",
+            "continue": "Continuar",
+            "error": "¡Error!",
+            "close": "Cerrar",
+            "confirm-installation": "Confirme instalación",
+            "confirm-installation-description": "Esto instalará el firmware \"{{release}}\" en el controlador. No lo borrará.",
+            "not": "no",
+            "installation-speed": "Velocidad de instalación",
+            "installation-speed-help": "Algunos controladores deben instalarse a una velocidad más baja. Si tiene problemas, puede intentar reducir la velocidad.",
+            "install": "Instalar",
+            "cancel": "Cancelar",
+            "select-image": "Seleccione imagen",
+            "select-image-description1": "Si has descargado un paquete manualmente puedes flashear la imagen desde aquí.",
+            "select-image-description2": "Seleccione el archivo firmware .bin para flashear el controlador.",
+            "select-image-button": "Seleccionar imagen de firmware"
         },
         "lost-connection": {
-            "description": "Lost the connection to the controller",
-            "close": "Close"
+            "description": "Se perdió la conexión con el controlador",
+            "close": "Cerrar"
         }
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC on your controller",
-            "install-description": "The controller does not seem to have FluidNC installed, do you wish to install it?",
-            "upgrade-button": "Upgrade FluidNC",
-            "install-button": "Install FluidNC"
+            "upgrade-description": "Actualice FluidNC en su controlador",
+            "install-description": "Parece que el controlador no tiene instalado FluidNC, ¿desea instalarlo?",
+            "upgrade-button": "Actualice FluidNC",
+            "install-button": "Instale FluidNC"
         },
         "terminal": {
-            "open-terminal": "Open terminal",
-            "open-terminal-description": "Open a serial terminal to your controller"
+            "open-terminal": "Abrir terminal",
+            "open-terminal-description": "Abra una terminal serial a su controlador"
         },
         "file-browser": {
-            "open-browser": "File browser",
-            "open-browser-description": "Manage files on the controller"
+            "open-browser": "Explorador de archivos",
+            "open-browser-description": "Administrar archivos en el controlador"
         },
         "calibrate": {
-            "calibrate": "Calibrate",
-            "calibrate-description": "Calibrate settings on your controller"
+            "calibrate": "Calibrar",
+            "calibrate-description": "Calibrar la configuración de su controlador"
         },
         "wifi": {
-            "configure": "Configure WiFi",
-            "configure-description": "Manage the controller WiFi settings",
-            "connected-to": "Connected to",
-            "access-point": "Access Point"
+            "configure": "Configurar Wi-Fi",
+            "configure-description": "Administrar la configuración Wi-Fi del controlador",
+            "connected-to": "Conectado a",
+            "access-point": "Punto de acceso"
         },
         "donate": {
-            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
+            "description": "Considere hacer una donación al proyecto FluidNC a través de los enlaces a continuación para sostener el proyecto."
         }
     }
 }

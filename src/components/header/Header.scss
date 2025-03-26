@@ -26,7 +26,8 @@
     }
 
     .dropdown-menu[data-bs-popper] {
-        left: -80px;
+        left: unset;
+        right: 5px;
         top: 2.6em;
         border-top-left-radius: 0;
         border-top-right-radius: 0;

@@ -15,7 +15,7 @@
             "establishing-connection": "Etablerar en anslutning till din enhet"
         },
         "home": {
-            "description": "Du är nu ansluten till din hårdvara, välj nedan vad du vill göra",
+            "description": "Du är nu ansluten till din enhet, välj nedan vad du vill göra",
             "error-while-booting": "Ett fel uppstod under uppstart, sannolikt på grund av en ogiltig konfiguration.",
             "show-details": "Klicka här för att se detaljer"
         },
@@ -78,7 +78,7 @@
             "flashing": "Installerar paket till enheten..."
         },
         "bootloader": {
-            "waiting": "Väntar på att enheten ska komma in i bootloadern...",
+            "waiting": "Väntar på att enheten ska starta bootloadern...",
             "not-active": "Bootloader är inte aktiv - Försök att hålla ner BOOT-knappen"
         },
         "unsupported": {
@@ -120,28 +120,28 @@
             "select-image-button": "Välj paket"
         },
         "lost-connection": {
-            "description": "Förlorade anslutningen till enheten",
+            "description": "Tappade anslutningen till enheten",
             "close": "Stäng"
         }
     },
     "card": {
         "install": {
             "upgrade-description": "Uppgradera FluidNC på din hårdvara",
-            "install-description": "Din hårdvara verkar inte ha FluidNC installerat, vill du installera det?",
+            "install-description": "Din enhet verkar inte ha FluidNC installerat, vill du installera det?",
             "upgrade-button": "Uppgradera",
             "install-button": "Installera"
         },
         "terminal": {
             "open-terminal": "Öppna terminal",
-            "open-terminal-description": "Öppna en seriell terminal till din hårdvara"
+            "open-terminal-description": "Öppna en seriell terminal till din enhet"
         },
         "file-browser": {
             "open-browser": "Filhanterare",
-            "open-browser-description": "Hantera filer på din hårdvara"
+            "open-browser-description": "Hantera filer på din enhet"
         },
         "calibrate": {
             "calibrate": "Kalibrera",
-            "calibrate-description": "Kalibrera inställningarna på din hårdvara"
+            "calibrate-description": "Kalibrera inställningarna på din enhet"
         },
         "wifi": {
             "configure": "Konfigurera WiFi",

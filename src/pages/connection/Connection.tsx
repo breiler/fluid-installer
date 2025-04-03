@@ -12,6 +12,10 @@ import { Col, Container, Modal, Row, Button } from "react-bootstrap";
 import LatestVersionCard from "../../components/cards/latestversioncard/LatestVersionCard";
 import { useTranslation } from "react-i18next";
 import DonateCard from "../../components/cards/donatecard/DonateCard";
+import useTrackEvent, {
+    TrackAction,
+    TrackCategory
+} from "../../hooks/useTrackEvent";
 
 const connectImageUrl = new URL("../../assets/connect.svg", import.meta.url);
 
@@ -22,6 +26,7 @@ type Props = {
 const Connection = ({ onConnect }: Props) => {
     usePageView("Connection");
     const { t } = useTranslation();
+    const trackEvent = useTrackEvent();
 
     const [showLog, setShowLog] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -42,6 +47,12 @@ const Connection = ({ onConnect }: Props) => {
                     setConnectionState(ConnectionState.DISCONNECTED);
                     throw error;
                 });
+            const info = serialPortDevice.getNativeSerialPort().getInfo();
+            trackEvent(
+                TrackCategory.Connect,
+                TrackAction.ConnectionStart,
+                `[${info.usbProductId}, ${info.usbVendorId}]`
+            );
 
             const controllerService = new ControllerService(serialPortDevice);
             setControllerService(controllerService);
@@ -52,16 +63,18 @@ const Connection = ({ onConnect }: Props) => {
                     "Could not establish connection to the controller. Please check that nothing else is connected to it"
                 );
                 setConnectionState(ConnectionState.DISCONNECTED);
+                trackEvent(TrackCategory.Connect, TrackAction.ConnectionFailed);
                 throw error;
             });
 
             await new Promise((r) => setTimeout(r, 3000));
+            trackEvent(TrackCategory.Connect, TrackAction.ConnectionSuccess);
             setConnectionState(ConnectionState.CONNECTED);
             onConnect(controllerService);
         } catch (_error) {
             //Never mind
         }
-    }, [onConnect]);
+    }, [onConnect, trackEvent]);
 
     return (
         <Container>

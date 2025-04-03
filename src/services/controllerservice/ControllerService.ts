@@ -146,7 +146,9 @@ export class ControllerService {
         }
     }
 
-    private async waitForWelcomeString(bufferedReader: SerialBufferedReader) {
+    private async waitForWelcomeString(
+        bufferedReader: SerialBufferedReader
+    ): Promise<boolean> {
         console.log("Waiting for welcome string");
         const currentTime = Date.now();
         let fastFlashResponses = 0;

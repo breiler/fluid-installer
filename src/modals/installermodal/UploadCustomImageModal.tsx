@@ -99,17 +99,19 @@ const UploadCustomImageModal = ({ onClose }: UploadCustomImageModalProps) => {
         }
 
         let hasErrors = false;
-        await InstallService.installImage(
-            controllerService.serialPort,
-            fileData,
-            setProgress,
-            setState,
-            onLogData
-        ).catch((error) => {
+        try {
+            await InstallService.installImage(
+                controllerService.serialPort,
+                fileData,
+                setProgress,
+                setState,
+                onLogData
+            );
+        } catch (error) {
             setErrorMessage(error);
             setState(InstallerState.ERROR);
             hasErrors = true;
-        });
+        }
 
         try {
             const status = await controllerService?.connect();

@@ -1,6 +1,5 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
-import { ReactElement } from "react-markdown/lib/react-markdown";
 import ToolTip from "../tooltip/ToolTip";
 
 type TextFieldProps = {

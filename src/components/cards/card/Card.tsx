@@ -1,5 +1,4 @@
-import React from "react";
-import { ReactElement } from "react-markdown/lib/react-markdown";
+import React, { ReactElement } from "react";
 
 type Props = {
     children?: ReactElement | ReactElement[];

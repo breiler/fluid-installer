@@ -1,13 +1,17 @@
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 
 export enum TrackCategory {
-    Install = "Install"
+    Install = "Install",
+    Connect = "Connect"
 }
 
 export enum TrackAction {
     InstallClick = "InstallClick",
     InstallFail = "InstallFail",
-    InstallSuccess = "InstallSuccess"
+    InstallSuccess = "InstallSuccess",
+    ConnectionStart = "ConnectionStart",
+    ConnectionSuccess = "ConnectionSuccess",
+    ConnectionFailed = "ConnectionFailed"
 }
 
 const useTrackEvent = () => {

@@ -1,156 +1,156 @@
 {
     "header": {
-        "documentation": "Documentation",
-        "translate": "Add translations"
+        "documentation": "Документація",
+        "translate": "Додати переклади"
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "Документація"
     },
     "page": {
         "connection": {
-            "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
-            "connect": "Connect",
-            "connecting": "Connecting",
-            "establishing-connection": "Establishing connection to controller"
+            "title": "Вебвстановлювач FluidNC",
+            "description": "Цей інструмент спрощує встановлення або оновлення FluidNC на ваш контролер. Під’єднайте контролер і натисніть «Підключити», щоб продовжити.",
+            "connect": "Підключити",
+            "connecting": "Підключення",
+            "establishing-connection": "Встановлення з’єднання з контролером"
         },
         "home": {
-            "description": "You are now connected to a device, please choose an action below",
-            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
-            "show-details": "Click here to see details"
+            "description": "Ви підключені до пристрою, будь ласка, виберіть одну з дій нижче",
+            "error-while-booting": "Під час запуску сталася помилка, ймовірно через некоректну конфігурацію.",
+            "show-details": "Клацніть тут, щоб переглянути деталі"
         },
         "file-browser": {
-            "title": "File browser",
-            "loading": "Loading...",
-            "downloading": "Downloading...",
-            "uploading": "Uploading",
-            "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",
-            "create-config": "Create config",
-            "create-new-config": "Create new config",
-            "upload": "Upload",
-            "active-config": "Active config",
-            "select-config": "Select config",
-            "select-as-config": "Select as config",
-            "edit": "Edit",
-            "delete": "Delete",
-            "download": "Download"
+            "title": "Оглядач файлів",
+            "loading": "Завантаження...",
+            "downloading": "Завантаження...",
+            "uploading": "Вивантаження",
+            "config-missing": "Файл конфігурації {{configFilename}} відсутній. Бажаєте створити його?",
+            "create-config": "Створити файл конфігурації",
+            "create-new-config": "Створити новий конфіг",
+            "upload": "Вивантажити",
+            "active-config": "Активний конфіг",
+            "select-config": "Вибрати конфіг",
+            "select-as-config": "Обрати як конфіг",
+            "edit": "Редагувати",
+            "delete": "Видалити",
+            "download": "Завантажити"
         },
         "terminal": {
-            "title": "Terminal",
-            "restarting": "Restarting controller...",
-            "restart": "Restart",
-            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
-            "reset": "Reset",
-            "reset-description": "Resets the controller with a 0x18 command",
-            "unlock": "Unlock",
-            "unlock-description": "Unlocks the controller with $X",
-            "status": "Status",
-            "status-description": "Get the controller status",
-            "startup": "Startup messages",
-            "startup-description": "Get startup log messages",
-            "version": "Version",
-            "version-description": "Get the firmware version"
+            "title": "Термінал",
+            "restarting": "Перезапуск контролера...",
+            "restart": "Перезапуск",
+            "restart-description": "Виконує жорстке скидання контролера шляхом встановлення DTR/RTS",
+            "reset": "Скидання",
+            "reset-description": "Скидає контролер за допомогою команди 0x18",
+            "unlock": "Розблокувати",
+            "unlock-description": "Розблоковує контролер за допомогою команди $X",
+            "status": "Статус",
+            "status-description": "Отримати стан контролера",
+            "startup": "Повідомлення під час запуску",
+            "startup-description": "Отримати журнал стартових повідомлень",
+            "version": "Версія",
+            "version-description": "Отримати версію прошивки"
         }
     },
     "panel": {
         "navigation": {
-            "home": "Home",
-            "install": "Install",
-            "terminal": "Terminal",
-            "file-browser": "File browser",
-            "wifi": "WiFi",
-            "calibrate": "Calibrate",
-            "restart": "Restart",
-            "disconnect": "Disconnect"
+            "home": "Головна",
+            "install": "Встановити",
+            "terminal": "Термінал",
+            "file-browser": "Оглядач файлів",
+            "wifi": "Wi-Fi",
+            "calibrate": "Калібрування",
+            "restart": "Перезапуск",
+            "disconnect": "Відключити"
         },
         "firmware": {
-            "install": "Install",
-            "install-description": "Select which firmware you want to install on your controller.",
-            "loading": "Loading...",
-            "install-custom-image": "Install a custom image...",
-            "show-prereleases": "Show pre-releases",
-            "fetching": "Fetching"
+            "install": "Встановити",
+            "install-description": "Виберіть прошивку, яку бажаєте встановити на свій контролер.",
+            "loading": "Завантаження...",
+            "install-custom-image": "Встановити власний образ...",
+            "show-prereleases": "Показати попередні релізи",
+            "fetching": "Отримання"
         },
         "progress": {
-            "title": "Installing",
-            "downloading": "Downloading package...",
-            "validating": "Validating images...",
-            "flashing": "Installing package to device..."
+            "title": "Встановлення",
+            "downloading": "Завантаження пакета...",
+            "validating": "Перевірка образів...",
+            "flashing": "Встановлення пакета на пристрій..."
         },
         "bootloader": {
-            "waiting": "Waiting for controller to enter bootloader...",
-            "not-active": "Bootloader not active - Try holding down the BOOT switch"
+            "waiting": "Очікування входу контролера в завантажувач...",
+            "not-active": "Завантажувач не активний — спробуйте утримувати кнопку BOOT"
         },
         "unsupported": {
-            "title": "Browser not supported",
-            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
+            "title": "Цей браузер не підтримується",
+            "description": "Ваш браузер не підтримується. Рекомендуємо використовувати Chrome, Edge або Opera"
         }
     },
     "component": {
         "log": {
-            "show-details": "Show details",
-            "hide-details": "Hide details"
+            "show-details": "Докладніше",
+            "hide-details": "Згорнути"
         }
     },
     "modal": {
         "installer": {
-            "error-reconnecting": "An error occured while reconnecting, please reboot the controller",
-            "uploading": "Uploading",
-            "downloading": "Downloading",
-            "downloading-description": "Downloading package...",
-            "restarting": "Restarting",
-            "restarting-description": "Waiting for controller restart...",
-            "uploading-files": "Uploading files",
-            "uploading-files-description": "Uploading files...",
-            "done": "Done",
-            "done-description": "The controller has been successfully installed and is ready to be used.",
-            "continue": "Continue",
-            "error": "Error!",
-            "close": "Close",
-            "confirm-installation": "Confirm installation",
-            "confirm-installation-description": "This will install the firmware \"{{release}}\" to the controller. It will {{not}} erase the controller.",
-            "not": "not",
-            "installation-speed": "Installation speed",
-            "installation-speed-help": "Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed.",
-            "install": "Install",
-            "cancel": "Cancel",
-            "select-image": "Select image",
-            "select-image-description1": "If you have downloaded a package manually you can flash the image from here.",
-            "select-image-description2": "Select the firmware.bin file to flash the controller with.",
-            "select-image-button": "Select firmware image"
+            "error-reconnecting": "Під час повторного підключення сталася помилка. Будь ласка, перезапустіть контролер",
+            "uploading": "Вивантаження",
+            "downloading": "Завантаження",
+            "downloading-description": "Завантаження пакета...",
+            "restarting": "Перезапуск",
+            "restarting-description": "Очікування перезапуску контролера...",
+            "uploading-files": "Вивантаження файлів",
+            "uploading-files-description": "Вивантаження файлів...",
+            "done": "Готово",
+            "done-description": "Контролер успішно встановлено й він готовий до використання.",
+            "continue": "Продовжити",
+            "error": "Помилка!",
+            "close": "Закрити",
+            "confirm-installation": "Підтвердити встановлення",
+            "confirm-installation-description": "Це встановить прошивку \"{{release}}\" на контролер. Це {{not}} призведе до стирання даних контролера.",
+            "not": "не",
+            "installation-speed": "Швидкість встановлення",
+            "installation-speed-help": "Деякі контролери потребують встановлення на нижчій швидкості. Якщо у вас виникають проблеми, спробуйте зменшити швидкість.",
+            "install": "Встановити",
+            "cancel": "Скасувати",
+            "select-image": "Виберіть образ",
+            "select-image-description1": "Якщо ви вручну завантажили пакет, можете прошити образ звідси.",
+            "select-image-description2": "Виберіть файл firmware.bin, щоб прошити контролер.",
+            "select-image-button": "Виберіть образ прошивки"
         },
         "lost-connection": {
-            "description": "Lost the connection to the controller",
-            "close": "Close"
+            "description": "Втрачено з’єднання з контролером",
+            "close": "Закрити"
         }
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC on your controller",
-            "install-description": "The controller does not seem to have FluidNC installed, do you wish to install it?",
-            "upgrade-button": "Upgrade FluidNC",
-            "install-button": "Install FluidNC"
+            "upgrade-description": "Оновити FluidNC на вашому контролері",
+            "install-description": "Схоже, що на контролері не встановлено FluidNC. Бажаєте встановити його?",
+            "upgrade-button": "Оновити FluidNC",
+            "install-button": "Встановити FluidNC"
         },
         "terminal": {
-            "open-terminal": "Open terminal",
-            "open-terminal-description": "Open a serial terminal to your controller"
+            "open-terminal": "Відкрити Термінал",
+            "open-terminal-description": "Відкрити серійний термінал до контролера"
         },
         "file-browser": {
-            "open-browser": "File browser",
-            "open-browser-description": "Manage files on the controller"
+            "open-browser": "Оглядач файлів",
+            "open-browser-description": "Керувати файлами на контролері"
         },
         "calibrate": {
-            "calibrate": "Calibrate",
-            "calibrate-description": "Calibrate settings on your controller"
+            "calibrate": "Калібрувати",
+            "calibrate-description": "Калібрувати налаштування на вашому контролері"
         },
         "wifi": {
-            "configure": "Configure WiFi",
-            "configure-description": "Manage the controller WiFi settings",
-            "connected-to": "Connected to",
-            "access-point": "Access Point"
+            "configure": "Налаштувати Wi-Fi",
+            "configure-description": "Керування налаштуваннями Wi-Fi контролера",
+            "connected-to": "Підключено до",
+            "access-point": "Точка доступу"
         },
         "donate": {
-            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
+            "description": "Будь ласка, розгляньте можливість зробити пожертву на підтримку проєкту FluidNC за посиланнями нижче, щоб він продовжував розвиватися."
         }
     }
 }

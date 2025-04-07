@@ -27,7 +27,7 @@ const TrackStart = () => {
     const trackEvent = useTrackEvent();
     useEffect(() => {
         trackEvent(TrackCategory.Start, TrackAction.Start);
-    }, [trackEvent]);
+    }, []);
     return <></>;
 };
 

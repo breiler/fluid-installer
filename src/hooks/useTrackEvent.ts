@@ -1,6 +1,7 @@
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 
 export enum TrackCategory {
+    Start = "Start",
     Install = "Install",
     Connect = "Connect",
     Disconnect = "Disconnect",
@@ -8,6 +9,7 @@ export enum TrackCategory {
 }
 
 export enum TrackAction {
+    Start = "Start",
     InstallClick = "InstallClick",
     InstallFail = "InstallFail",
     InstallSuccess = "InstallSuccess",

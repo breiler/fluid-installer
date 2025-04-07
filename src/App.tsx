@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Col, Container, Row } from "react-bootstrap";
 import { Header } from "./components";
@@ -18,6 +18,18 @@ import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 import Unsupported from "./panels/unsupported/Unsupported";
 import LostConnectionModal from "./modals/lostconnectionmodal/LostConnectionModal";
 import useControllerStatus from "./hooks/useControllerStatus";
+import useTrackEvent, {
+    TrackAction,
+    TrackCategory
+} from "./hooks/useTrackEvent";
+
+const TrackStart = () => {
+    const trackEvent = useTrackEvent();
+    useEffect(() => {
+        trackEvent(TrackCategory.Start, TrackAction.Start);
+    }, [trackEvent]);
+    return <></>;
+};
 
 const App = () => {
     const navigate = useNavigate();
@@ -38,6 +50,7 @@ const App = () => {
     return (
         <MatomoProvider value={instance}>
             <>
+                <TrackStart />
                 <ControllerServiceContext.Provider value={controllerService}>
                     <LostConnectionModal onClose={onCloseConnection} />
                     <Header />

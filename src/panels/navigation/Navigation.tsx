@@ -20,11 +20,16 @@ import { Stats } from "../../services/controllerservice/commands/GetStatsCommand
 import RestartModal from "../../modals/restartmodal/RestartModal";
 import Page from "../../model/Page";
 import { VersionCommand } from "../../services/controllerservice/commands/VersionCommand";
+import useTrackEvent, {
+    TrackAction,
+    TrackCategory
+} from "../../hooks/useTrackEvent";
 
 const Navigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { t } = useTranslation();
+    const trackEvent = useTrackEvent();
 
     const controllerService = useContext(ControllerServiceContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -40,8 +45,14 @@ const Navigation = () => {
     }, [controllerService]);
 
     const restart = () => {
+        trackEvent(TrackCategory.Restart, TrackAction.RestartClick);
         setIsLoading(true);
         controllerService?.hardReset().finally(() => setIsLoading(false));
+    };
+
+    const disconnect = async () => {
+        trackEvent(TrackCategory.Disconnect, TrackAction.DisconnectClick);
+        await controllerService?.disconnect(true);
     };
 
     const handleSelect = (eventKey) => {
@@ -95,7 +106,7 @@ const Navigation = () => {
                     <FontAwesomeIcon icon={faPowerOff as IconDefinition} />{" "}
                     {t("panel.navigation.restart")}
                 </Nav.Link>
-                <Nav.Link onClick={() => controllerService?.disconnect()}>
+                <Nav.Link onClick={disconnect}>
                     <FontAwesomeIcon
                         icon={faRightFromBracket as IconDefinition}
                     />{" "}

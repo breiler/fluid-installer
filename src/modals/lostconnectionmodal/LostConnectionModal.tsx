@@ -3,9 +3,10 @@ import { Button, Modal } from "react-bootstrap";
 import { ControllerStatus } from "../../services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faPlugCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import { useTranslation } from "react-i18next";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import useControllerStatus from "../../hooks/useControllerStatus";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 
 type LostConnectionModalProps = {
     onClose: () => void;
@@ -13,30 +14,18 @@ type LostConnectionModalProps = {
 
 const LostConnectionModal = ({ onClose }: LostConnectionModalProps) => {
     const { t } = useTranslation();
+    const [showModal, setShowModal] = useState(false);
     const controllerService = useContext(ControllerServiceContext);
-    const [controllerStatus, setControllerStatus] = useState<ControllerStatus>(
-        ControllerStatus.DISCONNECTED
-    );
+    const controllerStatus = useControllerStatus(controllerService);
 
     useEffect(() => {
-        const listener = (status) => {
-            if (status === ControllerStatus.CONNECTION_LOST) {
-                setControllerStatus(status);
-            }
-        };
-
-        controllerService?.addListener(listener);
-
-        () => controllerService?.removeListener(listener);
-    }, [controllerService]);
+        if (controllerStatus === ControllerStatus.CONNECTION_LOST) {
+            setShowModal(true);
+        }
+    }, [controllerStatus]);
 
     return (
-        <Modal
-            show={controllerStatus === ControllerStatus.CONNECTION_LOST}
-            size="sm"
-            scrollable={true}
-            centered={true}
-        >
+        <Modal show={showModal} size="sm" scrollable={true} centered={true}>
             <Modal.Body>
                 <div
                     className="d-flex justify-content-center text-danger"
@@ -53,8 +42,8 @@ const LostConnectionModal = ({ onClose }: LostConnectionModalProps) => {
             <Modal.Footer>
                 <Button
                     onClick={() => {
-                        setControllerStatus(undefined);
                         onClose();
+                        setShowModal(false);
                     }}
                 >
                     <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}

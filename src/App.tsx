@@ -8,7 +8,7 @@ import FileBrowser from "./pages/filebrowser";
 import Home from "./pages/home";
 import { Connection } from "./panels";
 import { isSafari, isFirefox } from "./utils/utils";
-import { ControllerService } from "./services";
+import { ControllerService, ControllerStatus } from "./services";
 import { ControllerServiceContext } from "./context/ControllerServiceContext";
 import Navigation from "./panels/navigation/Navigation";
 import WiFiSettings from "./pages/wifisettings/WiFiSettings";
@@ -17,6 +17,7 @@ import Footer from "./components/footer/Footer";
 import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 import Unsupported from "./panels/unsupported/Unsupported";
 import LostConnectionModal from "./modals/lostconnectionmodal/LostConnectionModal";
+import useControllerStatus from "./hooks/useControllerStatus";
 
 const App = () => {
     const navigate = useNavigate();
@@ -32,6 +33,8 @@ const App = () => {
         setControllerService(undefined);
     };
 
+    const controllerStatus = useControllerStatus(controllerService);
+
     return (
         <MatomoProvider value={instance}>
             <>
@@ -41,54 +44,67 @@ const App = () => {
 
                     <div className="container">
                         {(isSafari() || isFirefox()) && <Unsupported />}
-                        {!isSafari() && !isFirefox() && !controllerService && (
-                            <Connection onConnect={setControllerService} />
-                        )}
-                        {!isSafari() && !isFirefox() && controllerService && (
-                            <Container>
-                                <Row>
-                                    <Col sm={5} md={4} lg={3}>
-                                        <Navigation />
-                                    </Col>
-                                    <Col
-                                        sm={7}
-                                        md={8}
-                                        lg={9}
-                                        style={{ marginTop: "32px" }}
-                                    >
-                                        <Routes>
-                                            <Route index element={<Home />} />
-                                            <Route
-                                                path="install"
-                                                element={
-                                                    <Installer
-                                                        onClose={() =>
-                                                            navigate(Page.HOME)
-                                                        }
-                                                    />
-                                                }
-                                            />
-                                            <Route
-                                                path="terminal"
-                                                element={<Terminal />}
-                                            />
-                                            <Route
-                                                path="files"
-                                                element={<FileBrowser />}
-                                            />
-                                            <Route
-                                                path="wifi"
-                                                element={<WiFiSettings />}
-                                            />
-                                            <Route
-                                                path="calibrate"
-                                                element={<Calibrate />}
-                                            />
-                                        </Routes>
-                                    </Col>
-                                </Row>
-                            </Container>
-                        )}
+                        {!isSafari() &&
+                            !isFirefox() &&
+                            (!controllerService ||
+                                controllerStatus ===
+                                    ControllerStatus.DISCONNECTED) && (
+                                <Connection onConnect={setControllerService} />
+                            )}
+                        {!isSafari() &&
+                            !isFirefox() &&
+                            controllerService &&
+                            controllerStatus !==
+                                ControllerStatus.DISCONNECTED && (
+                                <Container>
+                                    <Row>
+                                        <Col sm={5} md={4} lg={3}>
+                                            <Navigation />
+                                        </Col>
+                                        <Col
+                                            sm={7}
+                                            md={8}
+                                            lg={9}
+                                            style={{ marginTop: "32px" }}
+                                        >
+                                            <Routes>
+                                                <Route
+                                                    index
+                                                    element={<Home />}
+                                                />
+                                                <Route
+                                                    path="install"
+                                                    element={
+                                                        <Installer
+                                                            onClose={() =>
+                                                                navigate(
+                                                                    Page.HOME
+                                                                )
+                                                            }
+                                                        />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="terminal"
+                                                    element={<Terminal />}
+                                                />
+                                                <Route
+                                                    path="files"
+                                                    element={<FileBrowser />}
+                                                />
+                                                <Route
+                                                    path="wifi"
+                                                    element={<WiFiSettings />}
+                                                />
+                                                <Route
+                                                    path="calibrate"
+                                                    element={<Calibrate />}
+                                                />
+                                            </Routes>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            )}
                     </div>
                     <Footer />
                 </ControllerServiceContext.Provider>

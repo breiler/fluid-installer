@@ -20,8 +20,8 @@ const RestartModal = ({ show }: RestartModalProps) => {
     const controllerService = useContext(ControllerServiceContext);
 
     useEffect(() => {
-        return controllerService?.addListener((state) => {
-            if (state === ControllerStatus.CONNECTED) {
+        return controllerService?.addListener((status) => {
+            if (status === ControllerStatus.CONNECTED) {
                 setIsConnected(true);
             } else {
                 setIsConnected(false);

@@ -8,8 +8,8 @@
     },
     "page": {
         "connection": {
-            "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
+            "title": "",
+            "description": "",
             "connect": "Connect",
             "connecting": "Connecting",
             "establishing-connection": "Establishing connection to controller"

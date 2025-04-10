@@ -33,6 +33,8 @@ const Flag = ({ language }: FlagProps) => {
             return <span className={"fi fi-pt"}>&nbsp;</span>;
         case "uk":
             return <span className={"fi fi-ua"}>&nbsp;</span>;
+        case "it":
+            return <span className={"fi fi-it"}>&nbsp;</span>;
         default:
             return <span className={`fi fi-${language}`}>&nbsp;</span>;
     }

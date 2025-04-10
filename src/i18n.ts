@@ -13,6 +13,7 @@ import frenchTranslations from "./assets/locales/fr-FR/translations.json";
 import russianTranslations from "./assets/locales/ru-RU/translations.json";
 import spanishTranslations from "./assets/locales/es-ES/translations.json";
 import ukrainianTranslation from "./assets/locales/uk-UA/translations.json";
+import italianTranslation from "./assets/locales/it-IT/translations.json";
 
 i18n.use(Backend)
     .use(LanguageDetector)
@@ -25,10 +26,12 @@ i18n.use(Backend)
         }
     });
 
+// This orders the language bar
 i18n.addResourceBundle("de", "translation", germanTranslations);
 i18n.addResourceBundle("en", "translation", englishTranslations);
 i18n.addResourceBundle("es", "translation", spanishTranslations);
 i18n.addResourceBundle("fr", "translation", frenchTranslations);
+i18n.addResourceBundle("it", "translation", italianTranslation);
 i18n.addResourceBundle("nl", "translation", dutchTranslations);
 i18n.addResourceBundle("pt-BR", "translation", brazilianTranslations);
 i18n.addResourceBundle("pt-PT", "translation", portugueseTranslations);
@@ -44,6 +47,7 @@ export const Language = {
     "pt-PT": "Português",
     sv: "Svenska",
     de: "Deutsch",
+    it: "Italiano",
     fr: "Français",
     ru: "Русский",
     uk: "Yкраїнська"

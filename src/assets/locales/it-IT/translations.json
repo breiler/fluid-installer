@@ -12,7 +12,7 @@
             "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
             "connect": "Connect",
             "connecting": "Connecting",
-            "establishing-connection": "Establishing connection to controller"
+            "establishing-connection": "Stabilire la connessione al controllore"
         },
         "home": {
             "description": "You are now connected to a device, please choose an action below",
@@ -37,7 +37,7 @@
         },
         "terminal": {
             "title": "Terminal",
-            "restarting": "Restarting controller...",
+            "restarting": "Riavvio del controller...",
             "restart": "Restart",
             "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
             "reset": "Reset",
@@ -45,7 +45,7 @@
             "unlock": "Unlock",
             "unlock-description": "Unlocks the controller with $X",
             "status": "Status",
-            "status-description": "Get the controller status",
+            "status-description": "Ottieni lo stato del controller",
             "startup": "Startup messages",
             "startup-description": "Get startup log messages",
             "version": "Version",
@@ -57,7 +57,7 @@
             "home": "Home",
             "install": "Install",
             "terminal": "Terminal",
-            "file-browser": "File browser",
+            "file-browser": "Sfoglia File",
             "wifi": "WiFi",
             "calibrate": "Calibrate",
             "restart": "Restart",
@@ -66,7 +66,7 @@
         "firmware": {
             "install": "Install",
             "install-description": "Select which firmware you want to install on your controller.",
-            "loading": "Loading...",
+            "loading": "Caricamento...",
             "install-custom-image": "Install a custom image...",
             "show-prereleases": "Show pre-releases",
             "fetching": "Fetching"

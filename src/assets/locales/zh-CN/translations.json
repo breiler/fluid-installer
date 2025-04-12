@@ -12,10 +12,10 @@
             "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
             "connect": "Connect",
             "connecting": "Connecting",
-            "establishing-connection": "Establishing connection to controller"
+            "establishing-connection": "建立到控制器的连接"
         },
         "home": {
-            "description": "You are now connected to a device, please choose an action below",
+            "description": "",
             "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
             "show-details": "Click here to see details"
         },

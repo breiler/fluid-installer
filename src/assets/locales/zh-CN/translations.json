@@ -1,10 +1,10 @@
 {
     "header": {
-        "documentation": "Documentation",
-        "translate": "Add translations"
+        "documentation": "",
+        "translate": ""
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "帮助文档"
     },
     "page": {
         "connection": {

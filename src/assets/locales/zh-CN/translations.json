@@ -1,7 +1,7 @@
 {
     "header": {
-        "documentation": "",
-        "translate": ""
+        "documentation": "Documentation",
+        "translate": "Add translations"
     },
     "footer": {
         "documentation": "帮助文档"
@@ -15,7 +15,7 @@
             "establishing-connection": "建立到控制器的连接"
         },
         "home": {
-            "description": "",
+            "description": "You are now connected to a device, please choose an action below",
             "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
             "show-details": "Click here to see details"
         },

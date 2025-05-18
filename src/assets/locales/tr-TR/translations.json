@@ -1,7 +1,7 @@
 {
     "header": {
-        "documentation": "Documentation",
-        "translate": "Add translations"
+        "documentation": "Dökümantasyon",
+        "translate": "Çeviri ekle"
     },
     "footer": {
         "documentation": "Belgeler"
@@ -11,53 +11,53 @@
             "title": "FluidNC Web Yükleyicisi",
             "description": "Bu araç, kontrolcünüze FluIDNC'yi kurmanızı veya yükseltmenizi kolaylaştıracaktır. Denetleyicinizi bilgisayarınıza bağlayın ve devam etmek için Bağlan tuşuna basın.",
             "connect": "Bağlan",
-            "connecting": "Bağlanıyor",
-            "establishing-connection": "Kontrolcüye bağlan"
+            "connecting": "Bağlanıyor...",
+            "establishing-connection": "Kontrolcüye bağlanıyor"
         },
         "home": {
             "description": "Şimdi bir cihaza bağlısınız, lütfen aşağıdan bir eylem seçin",
-            "error-while-booting": "Önyükleme sırasında muhtemelen geçersiz yapılandırma nedeniyle bir hata aldın.",
-            "show-details": "Dtayları görüntülemek için tıkla"
+            "error-while-booting": "Önyükleme sırasında muhtemelen geçersiz bir yapılandırma nedeniyle bir hata oluştu.",
+            "show-details": "Detayları görüntülemek için tıklayın"
         },
         "file-browser": {
-            "title": "Dosya gezgini",
+            "title": "Dosya Gezgini",
             "loading": "Yükleniyor...",
             "downloading": "İndiriliyor...",
             "uploading": "Karşıya yükleniyor",
             "config-missing": "",
-            "create-config": "konfigürasyon oluştur",
+            "create-config": "Konfigürasyon oluştur",
             "create-new-config": "Yeni konfigürasyon oluştur",
             "upload": "Yükle",
             "active-config": "Aktif konfigürasyon",
-            "select-config": "konfigürasyon seç",
-            "select-as-config": "konfigürasyon seç",
+            "select-config": "Konfigürasyon seç",
+            "select-as-config": "Konfigürasyon olarak seç",
             "edit": "Düzenle",
             "delete": "Sil",
             "download": "İndir"
         },
         "terminal": {
             "title": "Terminal",
-            "restarting": "Kontrolcü yeniden başlatılıyor ...",
+            "restarting": "Kontrolcü yeniden başlatılıyor...",
             "restart": "Yeniden Başlat",
-            "restart-description": "DTR/RTS ayarlayarak denetleyiciye hard reset",
-            "reset": "Reset",
-            "reset-description": " Kontrolcüyü 0x18 komutu ile resetle",
+            "restart-description": "DTR/RTS ayarlayarak kontrolcüye donanım sıfırlama",
+            "reset": "Sıfırla",
+            "reset-description": "Kontrolcüyü 0x18 komutu ile sıfırla",
             "unlock": "Kilidi Aç",
             "unlock-description": "Yazılım kilidini aç",
             "status": "Durum",
             "status-description": "Kontrolcü durumunu görüntüle",
-            "startup": "Başlangış mesajları",
-            "startup-description": "Başlangıç ​​mesajlarını görüntüle",
+            "startup": "Başlangıç Mesajları",
+            "startup-description": "Başlangıç mesajlarını görüntüle",
             "version": "Sürüm",
-            "version-description": "Yazılımı sürümünü seç"
+            "version-description": "Yazılım sürümünü görüntüle"
         }
     },
     "panel": {
         "navigation": {
-            "home": "Ana sayfa",
+            "home": "Ana Sayfa",
             "install": "Yükle",
             "terminal": "Terminal",
-            "file-browser": "Dosya gezgini",
+            "file-browser": "Dosya Gezgini",
             "wifi": "WiFi",
             "calibrate": "Kalibre et",
             "restart": "Yeniden Başlat",
@@ -65,92 +65,92 @@
         },
         "firmware": {
             "install": "Yükle",
-            "install-description": "Denetleyicinize hangi ürün yazılımını yüklemek istediğinizi seçin",
+            "install-description": "Kontrolcünüze hangi ürün yazılımını yüklemek istediğinizi seçin",
             "loading": "Yükleniyor...",
-            "install-custom-image": "Install a custom image...",
-            "show-prereleases": "Show pre-releases",
-            "fetching": ""
+            "install-custom-image": "Özel bir yazılım dosyası yükle...",
+            "show-prereleases": "Geliştirici Sürümlerini Görüntüle",
+            "fetching": "Alınıyor"
         },
         "progress": {
-            "title": "Installing",
-            "downloading": "Downloading package...",
-            "validating": "Validating images...",
-            "flashing": "Installing package to device..."
+            "title": "Yükleniyor",
+            "downloading": "Paket indiriliyor...",
+            "validating": "İmaj doğrulanıyor...",
+            "flashing": "Paket cihazınıza yükleniyor..."
         },
         "bootloader": {
-            "waiting": "Kontrolcü önyükleyici girmesi bekleniyor...",
-            "not-active": "Bootloader not active - Try holding down the BOOT switch"
+            "waiting": "Kontrolcünün önyükleyiciye girmesi bekleniyor...",
+            "not-active": "Önyükleyici aktif değil - Lütfen önyükleme anahtarını tetikleyin"
         },
         "unsupported": {
-            "title": "Browser not supported",
-            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
+            "title": "Tarayıcınız Desteklenmiyor",
+            "description": "Mevcut web tarayıcınız desteklenmiyor, lütfen Chrome, Edge veya Opera kullanın."
         }
     },
     "component": {
         "log": {
-            "show-details": "Show details",
-            "hide-details": "Hide details"
+            "show-details": "Detayları Göster",
+            "hide-details": "Detayları Gizle"
         }
     },
     "modal": {
         "installer": {
-            "error-reconnecting": "An error occured while reconnecting, please reboot the controller",
-            "uploading": "Uploading",
-            "downloading": "Downloading",
-            "downloading-description": "Downloading package...",
-            "restarting": "Restarting",
-            "restarting-description": "Waiting for controller restart...",
-            "uploading-files": "Uploading files",
-            "uploading-files-description": "Uploading files...",
-            "done": "Done",
-            "done-description": "The controller has been successfully installed and is ready to be used.",
-            "continue": "Continue",
-            "error": "Error!",
-            "close": "Close",
-            "confirm-installation": "Confirm installation",
-            "confirm-installation-description": "This will install the firmware \"{{release}}\" to the controller. It will {{not}} erase the controller.",
-            "not": "not",
-            "installation-speed": "Installation speed",
-            "installation-speed-help": "Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed.",
-            "install": "Install",
-            "cancel": "Cancel",
-            "select-image": "Select image",
-            "select-image-description1": "If you have downloaded a package manually you can flash the image from here.",
-            "select-image-description2": "Select the firmware.bin file to flash the controller with.",
-            "select-image-button": "Select firmware image"
+            "error-reconnecting": "Yeniden bağlanırken bir hata oluştu, lütfen kontrolcüyü yeniden başlatın.",
+            "uploading": "Yükleniyor...",
+            "downloading": "İndiriliyor...",
+            "downloading-description": "Paket indiriliyor...",
+            "restarting": "Yeniden başlatılıyor...",
+            "restarting-description": "Kontrolcünün yeniden başlatılması bekleniyor...",
+            "uploading-files": "Dosyalar yükleniyor...",
+            "uploading-files-description": "Dosyalar yükleniyor...",
+            "done": "Tamamlandı",
+            "done-description": "Kontrolcü başarıyla kuruldu ve kullanıma hazır.",
+            "continue": "Devam",
+            "error": "Hata!",
+            "close": "Kapat",
+            "confirm-installation": "Kurulumu Onayla",
+            "confirm-installation-description": "",
+            "not": "Hariç",
+            "installation-speed": "Yükleme Hızı",
+            "installation-speed-help": "Bazı kontrolcülerin daha düşük bir hızda kurulması gerekir. Sorun yaşıyorsanız, hızı düşürmeyi deneyebilirsiniz.",
+            "install": "Yükle",
+            "cancel": "İptal",
+            "select-image": "İmaj Seç",
+            "select-image-description1": "Manuel olarak bir paketi indirdiyseniz, imajı buradan yükleyebilirsiniz.",
+            "select-image-description2": "Kontrolcüye yüklenecek firmware.bin dosyasını seçin.",
+            "select-image-button": "Yazılım dosyasını seçin"
         },
         "lost-connection": {
-            "description": "Lost the connection to the controller",
-            "close": "Close"
+            "description": "Kontrolcü ile bağlantı koptu.",
+            "close": "Kapat"
         }
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC on your controller",
-            "install-description": "The controller does not seem to have FluidNC installed, do you wish to install it?",
-            "upgrade-button": "Upgrade FluidNC",
-            "install-button": "Install FluidNC"
+            "upgrade-description": "FluidNC yazılımınızı güncelleyin.",
+            "install-description": "Kontrolcüde FluidNC yüklü değil görünüyor, yüklemek ister misiniz?",
+            "upgrade-button": "FluidNC yazılımını yükselt",
+            "install-button": "FluidNC yazılımını yükle"
         },
         "terminal": {
-            "open-terminal": "Open terminal",
-            "open-terminal-description": "Open a serial terminal to your controller"
+            "open-terminal": "Terminali Göster",
+            "open-terminal-description": "Kontrolcünüzde bir seri terminal açın."
         },
         "file-browser": {
-            "open-browser": "File browser",
-            "open-browser-description": "Manage files on the controller"
+            "open-browser": "Dosya Gezgini",
+            "open-browser-description": "Kontrolcü dosyalarını düzenleyin."
         },
         "calibrate": {
-            "calibrate": "Calibrate",
-            "calibrate-description": "Kontrolcü ayarlarını kalibre edin"
+            "calibrate": "Kalibre Et",
+            "calibrate-description": "Kontrolcü ayarlarını kalibre edin."
         },
         "wifi": {
-            "configure": "Wifi Konfigürasyonu",
-            "configure-description": "Kontrolcü WiFi ayarlarını yönetin",
-            "connected-to": "Connected to",
-            "access-point": "Access Point"
+            "configure": "WiFi Konfigürasyonu",
+            "configure-description": "Kontrolcü WiFi ayarlarını yönetin.",
+            "connected-to": "Bağlı Olunan",
+            "access-point": "Erişim Noktası (Access Point)"
         },
         "donate": {
-            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
+            "description": "Lütfen FluidNC projesinin devamı için aşağıdaki bağlantılar aracılığıyla bağış yapmayı düşünün."
         }
     }
 }

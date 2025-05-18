@@ -4,72 +4,72 @@
         "translate": "Add translations"
     },
     "footer": {
-        "documentation": "Documentation"
+        "documentation": "Belgeler"
     },
     "page": {
         "connection": {
-            "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
-            "connect": "Connect",
-            "connecting": "Connecting",
-            "establishing-connection": "Establishing connection to controller"
+            "title": "FluidNC Web Yükleyicisi",
+            "description": "Bu araç, kontrolcünüze FluIDNC'yi kurmanızı veya yükseltmenizi kolaylaştıracaktır. Denetleyicinizi bilgisayarınıza bağlayın ve devam etmek için Bağlan tuşuna basın.",
+            "connect": "Bağlan",
+            "connecting": "Bağlanıyor",
+            "establishing-connection": "Kontrolcüye bağlan"
         },
         "home": {
-            "description": "You are now connected to a device, please choose an action below",
-            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
-            "show-details": "Click here to see details"
+            "description": "Şimdi bir cihaza bağlısınız, lütfen aşağıdan bir eylem seçin",
+            "error-while-booting": "Önyükleme sırasında muhtemelen geçersiz yapılandırma nedeniyle bir hata aldın.",
+            "show-details": "Dtayları görüntülemek için tıkla"
         },
         "file-browser": {
-            "title": "File browser",
-            "loading": "Loading...",
-            "downloading": "Downloading...",
-            "uploading": "Uploading",
-            "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",
-            "create-config": "Create config",
-            "create-new-config": "Create new config",
-            "upload": "Upload",
-            "active-config": "Active config",
-            "select-config": "Select config",
-            "select-as-config": "Select as config",
-            "edit": "Edit",
-            "delete": "Delete",
-            "download": "Download"
+            "title": "Dosya gezgini",
+            "loading": "Yükleniyor...",
+            "downloading": "İndiriliyor...",
+            "uploading": "Karşıya yükleniyor",
+            "config-missing": "",
+            "create-config": "konfigürasyon oluştur",
+            "create-new-config": "Yeni konfigürasyon oluştur",
+            "upload": "Yükle",
+            "active-config": "Aktif konfigürasyon",
+            "select-config": "konfigürasyon seç",
+            "select-as-config": "konfigürasyon seç",
+            "edit": "Düzenle",
+            "delete": "Sil",
+            "download": "İndir"
         },
         "terminal": {
             "title": "Terminal",
-            "restarting": "Restarting controller...",
-            "restart": "Restart",
-            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
+            "restarting": "Kontrolcü yeniden başlatılıyor ...",
+            "restart": "Yeniden Başlat",
+            "restart-description": "DTR/RTS ayarlayarak denetleyiciye hard reset",
             "reset": "Reset",
-            "reset-description": "Resets the controller with a 0x18 command",
-            "unlock": "Unlock",
-            "unlock-description": "Unlocks the controller with $X",
-            "status": "Status",
-            "status-description": "Get the controller status",
-            "startup": "Startup messages",
-            "startup-description": "Get startup log messages",
-            "version": "Version",
-            "version-description": "Get the firmware version"
+            "reset-description": " Kontrolcüyü 0x18 komutu ile resetle",
+            "unlock": "Kilidi Aç",
+            "unlock-description": "Yazılım kilidini aç",
+            "status": "Durum",
+            "status-description": "Kontrolcü durumunu görüntüle",
+            "startup": "Başlangış mesajları",
+            "startup-description": "Başlangıç ​​mesajlarını görüntüle",
+            "version": "Sürüm",
+            "version-description": "Yazılımı sürümünü seç"
         }
     },
     "panel": {
         "navigation": {
-            "home": "Home",
-            "install": "Install",
+            "home": "Ana sayfa",
+            "install": "Yükle",
             "terminal": "Terminal",
-            "file-browser": "File browser",
+            "file-browser": "Dosya gezgini",
             "wifi": "WiFi",
-            "calibrate": "Calibrate",
-            "restart": "Restart",
-            "disconnect": "Disconnect"
+            "calibrate": "Kalibre et",
+            "restart": "Yeniden Başlat",
+            "disconnect": "Bağlantıyı kes"
         },
         "firmware": {
-            "install": "Install",
-            "install-description": "Select which firmware you want to install on your controller.",
-            "loading": "Loading...",
+            "install": "Yükle",
+            "install-description": "Denetleyicinize hangi ürün yazılımını yüklemek istediğinizi seçin",
+            "loading": "Yükleniyor...",
             "install-custom-image": "Install a custom image...",
             "show-prereleases": "Show pre-releases",
-            "fetching": "Fetching"
+            "fetching": ""
         },
         "progress": {
             "title": "Installing",
@@ -78,7 +78,7 @@
             "flashing": "Installing package to device..."
         },
         "bootloader": {
-            "waiting": "Waiting for controller to enter bootloader...",
+            "waiting": "Kontrolcü önyükleyici girmesi bekleniyor...",
             "not-active": "Bootloader not active - Try holding down the BOOT switch"
         },
         "unsupported": {
@@ -141,11 +141,11 @@
         },
         "calibrate": {
             "calibrate": "Calibrate",
-            "calibrate-description": "Calibrate settings on your controller"
+            "calibrate-description": "Kontrolcü ayarlarını kalibre edin"
         },
         "wifi": {
-            "configure": "Configure WiFi",
-            "configure-description": "Manage the controller WiFi settings",
+            "configure": "Wifi Konfigürasyonu",
+            "configure-description": "Kontrolcü WiFi ayarlarını yönetin",
             "connected-to": "Connected to",
             "access-point": "Access Point"
         },

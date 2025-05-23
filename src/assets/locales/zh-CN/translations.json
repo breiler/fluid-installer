@@ -1,7 +1,7 @@
 {
     "header": {
-        "documentation": "Documentation",
-        "translate": "Add translations"
+        "documentation": "帮助文档",
+        "translate": "添加翻译"
     },
     "footer": {
         "documentation": "帮助文档"

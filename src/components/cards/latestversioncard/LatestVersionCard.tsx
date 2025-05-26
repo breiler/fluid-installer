@@ -8,9 +8,14 @@ const LatestVersionCard = () => {
 
     useEffect(() => {
         setLatestRelease(undefined);
-        GithubService.getReleases().then(async (releases) => {
-            setLatestRelease(releases[0]);
-        });
+        GithubService.getReleases()
+            .then(async (releases) => {
+                setLatestRelease(releases[0]);
+            })
+            .catch((error) => {
+                console.error("Could not fetch releases", error);
+                setLatestRelease(undefined);
+            });
     }, []);
 
     return (

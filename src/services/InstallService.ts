@@ -82,7 +82,6 @@ export const InstallService = {
                 onLogData
             );
         } catch (error) {
-            console.error(error);
             onState(InstallerState.ERROR);
             throw "Was not able to flash device: " + error;
         }
@@ -138,7 +137,6 @@ export const InstallService = {
                 onLogData
             );
         } catch (error) {
-            console.error(error);
             onState(InstallerState.ERROR);
             throw "Was not able to flash device: " + error;
         }

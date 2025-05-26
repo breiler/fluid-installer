@@ -97,7 +97,7 @@ const InstallerModal = ({
             onLogData,
             baud
         ).catch((error) => {
-            setErrorMessage(error);
+            setErrorMessage(error.toString());
             setState(InstallerState.ERROR);
             hasErrors = true;
             trackEvent(
@@ -164,7 +164,7 @@ const InstallerModal = ({
                 );
             }
         } catch (error) {
-            setErrorMessage(error);
+            setErrorMessage(error.toString());
             setState(InstallerState.ERROR);
             trackEvent(
                 TrackCategory.Install,

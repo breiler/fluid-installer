@@ -202,10 +202,11 @@ export class SerialPort {
         this.state = SerialPortState.DISCONNECTING;
         if (this.serialPort.readable?.locked) {
             try {
-                this.reader.cancel();
-                this.reader.releaseLock();
+                await this.reader.releaseLock();
+                await this.reader.cancel();
+                await sleep(500);
             } catch (_error) {
-                // never mind
+                console.error(_error);
             }
         }
 
@@ -278,13 +279,12 @@ export class SerialPort {
     };
 
     private startReading = async () => {
-        try {
-            while (this.state === SerialPortState.CONNECTED) {
-                if (!this.serialPort.readable) {
-                    continue;
-                }
-
-                this.reader = this.serialPort.readable.getReader();
+        while (
+            this.state === SerialPortState.CONNECTED &&
+            this.serialPort.readable
+        ) {
+            this.reader = this.serialPort.readable.getReader();
+            try {
                 while (this.state === SerialPortState.CONNECTED) {
                     const { value, done } = await this.reader.read();
                     if (done) {
@@ -297,9 +297,10 @@ export class SerialPort {
                         );
                     }
                 }
+            } catch (_error) {
+                console.error(_error);
+                this.dispatchEvent(SerialPortEvent.CONNECTION_ERROR);
             }
-        } catch (_error) {
-            this.dispatchEvent(SerialPortEvent.CONNECTION_ERROR);
         }
     };
 }

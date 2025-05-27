@@ -48,7 +48,7 @@ const SelectDevicePage = () => {
                             </Card.Title>
                             <Card.Text>
                                 Use this option if you want to install or
-                                upgrade your FluidDial pendant.
+                                upgrade your CYD or M5Dial pendant.
                             </Card.Text>
                             <Button
                                 variant="primary"

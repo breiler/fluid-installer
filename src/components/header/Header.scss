@@ -26,9 +26,6 @@
     }
 
     .dropdown-menu[data-bs-popper] {
-        left: unset;
-        right: 5px;
-        top: 2.6em;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
@@ -36,5 +33,19 @@
     .dropdown-item {
         margin-left: 0;
         margin-right: 0;
+    }
+
+    .left {
+        .dropdown-menu[data-bs-popper] {
+            top: 47px;
+        }
+    }
+
+    .right {
+        .dropdown-menu[data-bs-popper] {
+            left: unset;
+            right: 5px;
+            top: 39px;
+        }
     }
 }

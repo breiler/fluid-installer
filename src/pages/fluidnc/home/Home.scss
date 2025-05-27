@@ -1,0 +1,18 @@
+.select-icon {
+    color: gray;
+    margin: 20px;
+}
+
+.select-card {
+    min-height: 270px;
+    margin-bottom: 20px;
+
+    button {
+        margin-right: 0px;
+        min-width: 150px;
+    }
+}
+
+.select-mode .col:first-child {
+    padding-left: 0px !important;
+}

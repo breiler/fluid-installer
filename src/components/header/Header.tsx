@@ -6,6 +6,8 @@ import { faBook, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 import { Dropdown, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { Language } from "../../i18n";
+import { Link, useLocation } from "react-router-dom";
+import Page from "../../model/Page";
 
 const logoUrl = new URL("../../assets/logo.svg", import.meta.url);
 
@@ -60,11 +62,50 @@ const LanguageDropDown = ({ language }: LanguageDropDownProps) => {
 
 const Header = () => {
     const { t, i18n } = useTranslation();
+    const location = useLocation();
+
     return (
-        <Navbar expand="sm" bg="dark" data-bs-theme="dark" className="header">
-            <Navbar.Brand href="./">
-                <img src={logoUrl.toString()} alt="logo" width={100} />
-            </Navbar.Brand>
+        <Navbar
+            expand="sm"
+            bg="dark"
+            data-bs-theme="dark"
+            className="header"
+            style={{ height: "60px" }}
+        >
+            <NavDropdown
+                className="left"
+                title={
+                    <Navbar.Brand href="./">
+                        {(location.pathname.startsWith("/fluidnc") ||
+                            location.pathname == "/") && (
+                            <img
+                                src={logoUrl.toString()}
+                                alt="FluidNC logo"
+                                width={100}
+                            />
+                        )}
+                        {location.pathname.startsWith("/fluiddial") && (
+                            <img
+                                src={"/images/fluiddial.png"}
+                                alt="FluidDial logo"
+                                width={100}
+                            />
+                        )}
+                    </Navbar.Brand>
+                }
+            >
+                <Dropdown.Item as={Link} to={Page.HOME}>
+                    Home
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item as={Link} to={Page.FLUIDNC_HOME}>
+                    FluidNC
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={Page.FLUID_DIAL_HOME}>
+                    FluidDial
+                </Dropdown.Item>
+            </NavDropdown>
+
             <Navbar.Toggle />
 
             <Navbar.Collapse className="justify-content-end">
@@ -78,6 +119,7 @@ const Header = () => {
                 </Nav.Link>
 
                 <NavDropdown
+                    className="right"
                     title={
                         <>
                             <Flag language={i18n.resolvedLanguage} />

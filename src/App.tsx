@@ -1,128 +1,72 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { Header } from "./components";
 import Page from "./model/Page";
-import { Installer, Terminal } from "./pages";
-import FileBrowser from "./pages/filebrowser";
-import Home from "./pages/home";
-import { Connection } from "./panels";
+import FileBrowser from "./pages/fluidnc/filebrowser";
+import Home from "./pages/fluidnc/home";
 import { isSafari, isFirefox } from "./utils/utils";
-import { ControllerService, ControllerStatus } from "./services";
-import { ControllerServiceContext } from "./context/ControllerServiceContext";
-import Navigation from "./panels/navigation/Navigation";
-import WiFiSettings from "./pages/wifisettings/WiFiSettings";
-import Calibrate from "./pages/calibrate/Calibrate";
-import Footer from "./components/footer/Footer";
-import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
-import Unsupported from "./panels/unsupported/Unsupported";
-import LostConnectionModal from "./modals/lostconnectionmodal/LostConnectionModal";
-import useControllerStatus from "./hooks/useControllerStatus";
-import useTrackEvent, {
-    TrackAction,
-    TrackCategory
-} from "./hooks/useTrackEvent";
 
-const TrackStart = () => {
-    const trackEvent = useTrackEvent();
-    useEffect(() => {
-        trackEvent(TrackCategory.Start, TrackAction.Start);
-    }, []);
-    return <></>;
+import WiFiSettings from "./pages/fluidnc/wifisettings/WiFiSettings";
+import Calibrate from "./pages/fluidnc/calibrate/Calibrate";
+import Footer from "./components/footer/Footer";
+import Unsupported from "./panels/unsupported/Unsupported";
+
+import MatomoTracker from "./components/matomotracker/MatomoTracker";
+import FluidNCOutlet from "./outlets/FluidNCOutlet";
+import SelectDevicePage from "./pages/selectdevice/SelectDevicePage";
+import FluidDialOutlet from "./outlets/FluidDialOutlet";
+import FluidDialHomePage from "./pages/fluiddial/home/HomePage";
+import Installer from "./pages/fluidnc/installer";
+import Terminal from "./pages/fluidnc/terminal";
+import NotFoundPage from "./pages/notfound/NotFoundPage";
+
+const Root = () => {
+    const navigate = useNavigate();
+
+    if (isSafari() || isFirefox()) {
+        return <Unsupported />;
+    }
+
+    return (
+        <Routes>
+            <Route index element={<SelectDevicePage />} />
+            <Route path={Page.FLUIDNC_HOME} element={<FluidNCOutlet />}>
+                <Route index element={<Home />} />
+                <Route
+                    path={Page.FLUIDNC_INSTALLER}
+                    element={
+                        <Installer
+                            onClose={() => navigate(Page.FLUIDNC_HOME)}
+                        />
+                    }
+                />
+                <Route path={Page.FLUIDNC_TERMINAL} element={<Terminal />} />
+                <Route
+                    path={Page.FLUIDNC_FILEBROWSER}
+                    element={<FileBrowser />}
+                />
+                <Route path={Page.FLUIDNC_WIFI} element={<WiFiSettings />} />
+                <Route path={Page.FLUIDNC_CALIBRATE} element={<Calibrate />} />
+            </Route>
+            <Route path={Page.FLUID_DIAL_HOME} element={<FluidDialOutlet />}>
+                <Route index element={<FluidDialHomePage />} />
+            </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+    );
 };
 
 const App = () => {
-    const navigate = useNavigate();
-    const instance = createInstance({
-        urlBase: "https://matomo.bitpusher.se/",
-        siteId: 2
-    });
-
-    const [controllerService, setControllerService] =
-        useState<ControllerService>();
-
-    const onCloseConnection = () => {
-        setControllerService(undefined);
-    };
-
-    const controllerStatus = useControllerStatus(controllerService);
-
     return (
-        <MatomoProvider value={instance}>
-            <>
-                <TrackStart />
-                <ControllerServiceContext.Provider value={controllerService}>
-                    <LostConnectionModal onClose={onCloseConnection} />
-                    <Header />
-
-                    <div className="container">
-                        {(isSafari() || isFirefox()) && <Unsupported />}
-                        {!isSafari() &&
-                            !isFirefox() &&
-                            (!controllerService ||
-                                controllerStatus ===
-                                    ControllerStatus.DISCONNECTED) && (
-                                <Connection onConnect={setControllerService} />
-                            )}
-                        {!isSafari() &&
-                            !isFirefox() &&
-                            controllerService &&
-                            controllerStatus !==
-                                ControllerStatus.DISCONNECTED && (
-                                <Container>
-                                    <Row>
-                                        <Col sm={5} md={4} lg={3}>
-                                            <Navigation />
-                                        </Col>
-                                        <Col
-                                            sm={7}
-                                            md={8}
-                                            lg={9}
-                                            style={{ marginTop: "32px" }}
-                                        >
-                                            <Routes>
-                                                <Route
-                                                    index
-                                                    element={<Home />}
-                                                />
-                                                <Route
-                                                    path="install"
-                                                    element={
-                                                        <Installer
-                                                            onClose={() =>
-                                                                navigate(
-                                                                    Page.HOME
-                                                                )
-                                                            }
-                                                        />
-                                                    }
-                                                />
-                                                <Route
-                                                    path="terminal"
-                                                    element={<Terminal />}
-                                                />
-                                                <Route
-                                                    path="files"
-                                                    element={<FileBrowser />}
-                                                />
-                                                <Route
-                                                    path="wifi"
-                                                    element={<WiFiSettings />}
-                                                />
-                                                <Route
-                                                    path="calibrate"
-                                                    element={<Calibrate />}
-                                                />
-                                            </Routes>
-                                        </Col>
-                                    </Row>
-                                </Container>
-                            )}
-                    </div>
-                    <Footer />
-                </ControllerServiceContext.Provider>
-            </>
-        </MatomoProvider>
+        <MatomoTracker>
+            <Header />
+            <Container>
+                <Root />
+            </Container>
+            <Footer />
+        </MatomoTracker>
     );
 };
 

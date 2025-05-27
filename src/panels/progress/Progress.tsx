@@ -11,7 +11,6 @@ type Props = {
 };
 
 const Progress = ({ progress, status }: Props) => {
-    const { fileIndex, fileCount, fileProgress } = progress;
     const { t } = useTranslation();
 
     return (
@@ -36,8 +35,11 @@ const Progress = ({ progress, status }: Props) => {
             </p>
 
             <ProgressBar
-                maxValue={fileCount * 100}
-                currentValue={fileIndex * 100 + fileProgress}
+                maxValue={(progress?.fileCount ?? 1) * 100}
+                currentValue={
+                    (progress?.fileIndex ?? 0) * 100 +
+                    (progress?.fileProgress ?? 0)
+                }
             />
         </>
     );

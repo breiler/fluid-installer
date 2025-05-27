@@ -45,6 +45,16 @@ const Footer = () => {
                 </li>
                 <li>
                     <a
+                        href="https://github.com/bdring/FluidDial"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <FontAwesomeIcon icon={faGithub as IconDefinition} />{" "}
+                        FluidDial
+                    </a>
+                </li>
+                <li>
+                    <a
                         href="https://github.com/breiler/fluid-installer"
                         target="_blank"
                         rel="noreferrer"

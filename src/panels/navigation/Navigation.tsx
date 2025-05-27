@@ -65,24 +65,24 @@ const Navigation = () => {
             <Nav
                 variant="pills"
                 activeKey={location.pathname}
-                defaultActiveKey="/install"
+                defaultActiveKey="install"
                 className="flex-column navigation-container"
                 onSelect={handleSelect}
             >
-                <Nav.Link eventKey="/">
+                <Nav.Link eventKey={Page.FLUIDNC_HOME}>
                     <FontAwesomeIcon icon={faHome as IconDefinition} />{" "}
                     {t("panel.navigation.home")}
                 </Nav.Link>
-                <Nav.Link eventKey={Page.INSTALLER}>
+                <Nav.Link eventKey={Page.FLUIDNC_INSTALLER}>
                     <FontAwesomeIcon icon={faDownload as IconDefinition} />{" "}
                     {t("panel.navigation.install")}
                 </Nav.Link>
-                <Nav.Link eventKey={Page.TERMINAL}>
+                <Nav.Link eventKey={Page.FLUIDNC_TERMINAL}>
                     <FontAwesomeIcon icon={faTerminal as IconDefinition} />{" "}
                     {t("panel.navigation.terminal")}
                 </Nav.Link>
                 {version && (
-                    <Nav.Link eventKey={Page.FILEBROWSER}>
+                    <Nav.Link eventKey={Page.FLUIDNC_FILEBROWSER}>
                         <FontAwesomeIcon
                             icon={faFolderOpen as IconDefinition}
                         />{" "}
@@ -90,13 +90,13 @@ const Navigation = () => {
                     </Nav.Link>
                 )}
                 {stats?.version && (
-                    <Nav.Link eventKey={Page.WIFI}>
+                    <Nav.Link eventKey={Page.FLUIDNC_WIFI}>
                         <FontAwesomeIcon icon={faWifi as IconDefinition} />{" "}
                         {t("panel.navigation.wifi")}
                     </Nav.Link>
                 )}
                 {version && (
-                    <Nav.Link eventKey={Page.CALIBRATE}>
+                    <Nav.Link eventKey={Page.FLUIDNC_CALIBRATE}>
                         <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
                         {t("panel.navigation.calibrate")}
                     </Nav.Link>

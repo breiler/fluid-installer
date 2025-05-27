@@ -50,6 +50,16 @@
             "startup-description": "Başlangıç mesajlarını görüntüle",
             "version": "Sürüm",
             "version-description": "Yazılım sürümünü görüntüle"
+        },
+        "not-found": {
+            "title": "Page not found",
+            "go-back-home": "Return back home"
+        },
+        "fluiddial": {
+            "connection": {
+                "title": "FluidDial Web Installer",
+                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+            }
         }
     },
     "panel": {

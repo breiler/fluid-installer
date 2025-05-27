@@ -50,6 +50,16 @@
             "startup-description": "Get startup log messages",
             "version": "Version",
             "version-description": "Get the firmware version"
+        },
+        "not-found": {
+            "title": "Page not found",
+            "go-back-home": "Return back home"
+        },
+        "fluiddial": {
+            "connection": {
+                "title": "FluidDial Web Installer",
+                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+            }
         }
     },
     "panel": {

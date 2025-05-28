@@ -2,9 +2,11 @@ import React from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Page from "../../model/Page";
+import { useTranslation } from "react-i18next";
 const logoUrl = new URL("../../assets/logo-light.svg", import.meta.url);
 
 const SelectDevicePage = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     return (
@@ -22,15 +24,14 @@ const SelectDevicePage = () => {
                                 />
                             </Card.Title>
                             <Card.Text>
-                                Use this option if you want to install, upgrade
-                                or configure your FluidNC controller.
+                                {t("page.select-device.fluidnc")}
                             </Card.Text>
 
                             <Button
                                 variant="primary"
                                 onClick={() => navigate(Page.FLUIDNC_HOME)}
                             >
-                                Continue
+                                {t("page.select-device.continue")}
                             </Button>
                         </Card.Body>
                     </Card>
@@ -47,14 +48,13 @@ const SelectDevicePage = () => {
                                 />
                             </Card.Title>
                             <Card.Text>
-                                Use this option if you want to install or
-                                upgrade your FluidDial (CYD or M5Dial) pendant.
+                                {t("page.select-device.fluiddial")}
                             </Card.Text>
                             <Button
                                 variant="primary"
                                 onClick={() => navigate(Page.FLUID_DIAL_HOME)}
                             >
-                                Continue
+                                {t("page.select-device.continue")}
                             </Button>
                         </Card.Body>
                     </Card>

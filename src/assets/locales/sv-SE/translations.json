@@ -58,7 +58,7 @@
         "fluiddial": {
             "connection": {
                 "title": "FluidDial webb-installerare",
-                "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din enhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta."
+                "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidDial på din enhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta."
             }
         }
     },

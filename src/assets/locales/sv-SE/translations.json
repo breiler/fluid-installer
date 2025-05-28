@@ -52,13 +52,13 @@
             "version-description": "Hämta enhetens programvaruversion"
         },
         "not-found": {
-            "title": "Page not found",
-            "go-back-home": "Return back home"
+            "title": "Sidan kunde inte hittas",
+            "go-back-home": "Gå tillbaka"
         },
         "fluiddial": {
             "connection": {
-                "title": "FluidDial Web Installer",
-                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+                "title": "FluidDial webb-installerare",
+                "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din enhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta."
             }
         }
     },

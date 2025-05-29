@@ -107,7 +107,10 @@ export const InstallService = {
 
         let imageFiles: Uint8Array[] = [];
         try {
-            imageFiles = await GithubService.getImageFiles(release, images);
+            imageFiles = await new GithubService().getImageFiles(
+                release,
+                images
+            );
         } catch (error) {
             console.error(error);
             onState(InstallerState.ERROR);

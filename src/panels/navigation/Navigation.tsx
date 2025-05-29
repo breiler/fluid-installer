@@ -50,9 +50,9 @@ const Navigation = () => {
         controllerService?.hardReset().finally(() => setIsLoading(false));
     };
 
-    const disconnect = async () => {
+    const disconnect = () => {
         trackEvent(TrackCategory.Disconnect, TrackAction.DisconnectClick);
-        await controllerService?.disconnect(true);
+        controllerService?.disconnect(true);
     };
 
     const handleSelect = (eventKey) => {

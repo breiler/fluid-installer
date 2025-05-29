@@ -135,7 +135,8 @@ const InstallerModal = ({
                         t("modal.installer.uploading") + ": ",
                         extraFile
                     );
-                    return GithubService.getExtraFile(release, extraFile)
+                    return new GithubService()
+                        .getExtraFile(release, extraFile)
                         .then((data) => {
                             validateSignature(extraFile.signature, data);
                             return data;

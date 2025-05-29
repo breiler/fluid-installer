@@ -2,9 +2,17 @@ export type GithubReleaseAsset = {
     id: number;
     name: string;
 };
+export const FLUIDNC_RELEASES_API =
+    "https://api.github.com/repos/bdring/FluidNC/releases";
 
-export const RESOURCES_BASE_URL =
+export const FLUIDNC_RESOURCES_BASE_URL =
     "https://raw.githubusercontent.com/bdring/fluidnc-releases/main/releases";
+
+export const FLUIDDIAL_RELEASES_API =
+    "https://api.github.com/repos/bdring/FluidNC/releases";
+
+export const FLUIDDIAL_RESOURCES_BASE_URL =
+    "https://raw.githubusercontent.com/bdring/fluiddial-releases/main/releases";
 
 export const CONFIG_BASE_URL =
     "https://raw.githubusercontent.com/breiler/fluidnc-config-files/refs/heads/fluid-installer";
@@ -76,16 +84,31 @@ export type GithubReleaseManifest = {
 
 let configTree: GithubTree;
 
-export const GithubService = {
+export class GithubService {
+    private apiURL: string;
+    private resourcesURL: string;
+
+    constructor(apiURL?: string, resourcesURL?: string) {
+        if (apiURL) {
+            this.apiURL = apiURL;
+        } else {
+            this.apiURL = FLUIDNC_RELEASES_API;
+        }
+
+        if (resourcesURL) {
+            this.resourcesURL = resourcesURL;
+        } else {
+            this.resourcesURL = FLUIDDIAL_RESOURCES_BASE_URL;
+        }
+    }
+
     /**
      * Fetches all available releases from github
      *
      * @returns a promise with all available github releases
      */
-    getReleases: (
-        includePrerelease: boolean = false
-    ): Promise<GithubRelease[]> => {
-        return fetch("https://api.github.com/repos/bdring/FluidNC/releases")
+    getReleases(includePrerelease: boolean = false): Promise<GithubRelease[]> {
+        return fetch(this.apiURL)
             .then((res) => res.json())
             .then((releases) => {
                 return releases
@@ -107,9 +130,9 @@ export const GithubService = {
                     )
                     .sort((release1, release2) => release2?.id - release1?.id);
             });
-    },
+    }
 
-    getConfigTree: (): Promise<GithubTree> => {
+    getConfigTree(): Promise<GithubTree> {
         // If the file has been retreived, return a cached variant
         if (configTree) {
             return Promise.resolve(configTree);
@@ -132,12 +155,10 @@ export const GithubService = {
                 return Promise.reject(new Error(response.statusText));
             }
         });
-    },
+    }
 
-    getReleaseManifest: (
-        release: GithubRelease
-    ): Promise<GithubReleaseManifest> => {
-        const manifestBaseUrl = RESOURCES_BASE_URL + "/" + release.name;
+    getReleaseManifest(release: GithubRelease): Promise<GithubReleaseManifest> {
+        const manifestBaseUrl = FLUIDNC_RESOURCES_BASE_URL + "/" + release.name;
         const manifestUrl = manifestBaseUrl + "/manifest.json";
 
         return fetch(manifestUrl, {
@@ -151,13 +172,13 @@ export const GithubService = {
                 return Promise.reject(new Error(response.statusText));
             }
         });
-    },
+    }
 
-    getImageFiles: (
+    getImageFiles(
         release: GithubRelease,
         images: FirmwareImage[]
-    ): Promise<Uint8Array[]> => {
-        const baseUrl = RESOURCES_BASE_URL + "/" + release.name + "/";
+    ): Promise<Uint8Array[]> {
+        const baseUrl = FLUIDNC_RESOURCES_BASE_URL + "/" + release.name + "/";
 
         return Promise.all(
             images.map((image) => {
@@ -178,13 +199,13 @@ export const GithubService = {
                     .then((buffer) => new Uint8Array(buffer));
             })
         );
-    },
+    }
 
-    getExtraFile: (
+    getExtraFile(
         release: GithubRelease,
         file: FirmwareFile
-    ): Promise<Uint8Array> => {
-        const baseUrl = RESOURCES_BASE_URL + "/" + release.name + "/";
+    ): Promise<Uint8Array> {
+        const baseUrl = FLUIDNC_RESOURCES_BASE_URL + "/" + release.name + "/";
 
         return fetch(baseUrl + file.path, {
             headers: {
@@ -200,4 +221,4 @@ export const GithubService = {
             })
             .then((buffer) => new Uint8Array(buffer));
     }
-};
+}

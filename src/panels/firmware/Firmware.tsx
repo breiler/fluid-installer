@@ -62,7 +62,8 @@ const Firmware = ({ onInstall }: Props) => {
 
         if (release) {
             setLoading(true);
-            GithubService.getReleaseManifest(release)
+            new GithubService()
+                .getReleaseManifest(release)
                 .then((manifest) => {
                     setReleaseManifest(manifest);
                     setSelectedChoices([manifest.installable]);
@@ -77,7 +78,8 @@ const Firmware = ({ onInstall }: Props) => {
     };
 
     const fetchReleases = () => {
-        GithubService.getReleases(showPrerelease === "true")
+        new GithubService()
+            .getReleases(showPrerelease === "true")
             .then((releases) => {
                 setReleases(releases);
             })

@@ -26,21 +26,19 @@ const FluidNCOutlet = () => {
     }
 
     return (
-        <Container>
-            <Row>
-                <Col sm={5} md={4} lg={3}>
-                    <Navigation />
-                </Col>
-                <Col sm={7} md={8} lg={9} style={{ marginTop: "32px" }}>
-                    <ControllerServiceContext.Provider
-                        value={controllerService}
-                    >
+        <ControllerServiceContext.Provider value={controllerService}>
+            <Container>
+                <Row>
+                    <Col sm={5} md={4} lg={3}>
+                        <Navigation />
+                    </Col>
+                    <Col sm={7} md={8} lg={9} style={{ marginTop: "32px" }}>
                         <LostConnectionModal onClose={onCloseConnection} />
                         <Outlet />
-                    </ControllerServiceContext.Provider>
-                </Col>
-            </Row>
-        </Container>
+                    </Col>
+                </Row>
+            </Container>
+        </ControllerServiceContext.Provider>
     );
 };
 

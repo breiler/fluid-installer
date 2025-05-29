@@ -8,7 +8,8 @@ const LatestVersionCard = () => {
 
     useEffect(() => {
         setLatestRelease(undefined);
-        GithubService.getReleases()
+        new GithubService()
+            .getReleases()
             .then(async (releases) => {
                 setLatestRelease(releases[0]);
             })

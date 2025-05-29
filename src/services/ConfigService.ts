@@ -21,7 +21,7 @@ export type ConfigFile = {
 
 const ConfigService = {
     getBoards: () => {
-        return GithubService.getConfigTree().then((configTree) =>
+        return new GithubService().getConfigTree().then((configTree) =>
             configTree.tree
                 .filter(
                     (node) =>

@@ -7,6 +7,11 @@
         "documentation": "Documentation"
     },
     "page": {
+        "select-device": {
+            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
+            "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
+            "continue": "Continue"
+        },
         "connection": {
             "title": "Installateur Web FluidNC",
             "description": "Cet outil facilitera l'installation ou la mise à niveau de FluidNC sur votre contrôleur. Branchez votre contrôleur et appuyez sur Connecter pour continuer.",

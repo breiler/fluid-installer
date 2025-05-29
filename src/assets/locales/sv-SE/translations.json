@@ -7,6 +7,11 @@
         "documentation": "Dokumentation"
     },
     "page": {
+        "select-device": {
+            "fluidnc": "Använd det här alternativet om du vill installera, uppgradera eller konfigurera din FluidNC-enhet.",
+            "fluiddial": "Använd det här alternativet om du vill installera eller uppgradera din FluidDial-kontroll (CYD eller M5Dial).",
+            "continue": "Fortsätt"
+        },
         "connection": {
             "title": "FluidNC webb-installerare",
             "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din enhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",

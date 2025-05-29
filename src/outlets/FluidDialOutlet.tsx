@@ -15,8 +15,8 @@ const FluidDialOutlet = () => {
     return (
         <Container>
             <Row>
-                <Col sm={5} md={4} lg={3}></Col>
-                <Col sm={7} md={8} lg={9} style={{ marginTop: "32px" }}>
+                <Col sm={0} md={2} lg={3}></Col>
+                <Col sm={12} md={8} lg={9} style={{ marginTop: "32px" }}>
                     <SerialPortContext.Provider value={serialPort}>
                         <Outlet />
                     </SerialPortContext.Provider>

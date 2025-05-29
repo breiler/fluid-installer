@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { Header } from "./components";
@@ -20,9 +20,11 @@ import FluidDialHomePage from "./pages/fluiddial/home/HomePage";
 import Installer from "./pages/fluidnc/installer";
 import Terminal from "./pages/fluidnc/terminal";
 import NotFoundPage from "./pages/notfound/NotFoundPage";
+import { GithubService } from "./services";
 
 const Root = () => {
     const navigate = useNavigate();
+    const githubService = useMemo(() => new GithubService(), []);
 
     if (isSafari() || isFirefox()) {
         return <Unsupported />;
@@ -38,6 +40,7 @@ const Root = () => {
                     element={
                         <Installer
                             onClose={() => navigate(Page.FLUIDNC_HOME)}
+                            githubService={githubService}
                         />
                     }
                 />

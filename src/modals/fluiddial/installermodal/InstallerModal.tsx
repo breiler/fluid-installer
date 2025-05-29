@@ -1,31 +1,28 @@
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Spinner } from "../../components";
+import { Button, Spinner } from "../../../components";
 import { Modal } from "react-bootstrap";
 import {
-    ControllerStatus,
     FirmwareChoice,
-    FirmwareFile,
     GithubRelease,
     GithubReleaseManifest,
     GithubService,
     InstallService,
-    InstallerState,
-    validateSignature
-} from "../../services";
-import { Progress } from "../../panels";
-import { FlashProgress } from "../../services/FlashService";
+    InstallerState
+} from "../../../services";
+import { Progress } from "../../../panels";
+import { FlashProgress } from "../../../services/FlashService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
-import BootloaderInfo from "../../panels/bootloaderinfo/BootloaderInfo";
-import Log from "../../components/log/Log";
-import { ControllerServiceContext } from "../../context/ControllerServiceContext";
-import ConfirmPage from "./ConfirmPage";
+import BootloaderInfo from "../../../panels/bootloaderinfo/BootloaderInfo";
+import Log from "../../../components/log/Log";
 import useTrackEvent, {
     TrackAction,
     TrackCategory
-} from "../../hooks/useTrackEvent";
+} from "../../../hooks/useTrackEvent";
+import { SerialPortContext } from "../../../context/SerialPortContext";
+import ConfirmPage from "../../installermodal/ConfirmPage";
 
 type InstallerModalProps = {
     onClose: () => void;
@@ -33,6 +30,7 @@ type InstallerModalProps = {
     release: GithubRelease;
     manifest: GithubReleaseManifest;
     choice: FirmwareChoice;
+    githubService: GithubService;
 };
 
 const initialProgress: FlashProgress = {
@@ -47,16 +45,17 @@ const InstallerModal = ({
     onCancel,
     release,
     manifest,
-    choice
+    choice,
+    githubService
 }: InstallerModalProps) => {
     const [showLog, setShowLog] = useState<boolean>(false);
-    const controllerService = useContext(ControllerServiceContext);
     const [state, setState] = useState(InstallerState.SELECT_PACKAGE);
     const [progress, setProgress] = useState<FlashProgress>(initialProgress);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [log, setLog] = useState("");
     const { t } = useTranslation();
     const trackEvent = useTrackEvent();
+    const serialPort = useContext(SerialPortContext);
 
     const onLogData = (data: string) => {
         setLog((l) => l + data);
@@ -76,21 +75,11 @@ const InstallerModal = ({
                 baud
         );
 
-        try {
-            await controllerService?.disconnect(false);
-        } catch (error) {
-            trackEvent(
-                TrackCategory.Install,
-                TrackAction.InstallFail,
-                "Disconnect - " + error
-            );
-        }
-
         let hasErrors = false;
         await InstallService.installChoice(
-            new GithubService(),
+            githubService,
             release,
-            controllerService!.serialPort!,
+            serialPort,
             manifest,
             choice,
             setProgress,
@@ -109,48 +98,6 @@ const InstallerModal = ({
         });
 
         try {
-            const status = await controllerService?.connect();
-            if (status !== ControllerStatus.CONNECTED) {
-                setErrorMessage(t("modal.installer.error-reconnecting"));
-                setState(InstallerState.ERROR);
-                trackEvent(
-                    TrackCategory.Install,
-                    TrackAction.InstallFail,
-                    "Reconnect"
-                );
-            }
-
-            if (!hasErrors) {
-                setState(InstallerState.UPLOADING_FILES);
-            }
-
-            await Promise.all(
-                files.map((file) => {
-                    const extraFile = manifest.files?.[file] as FirmwareFile;
-
-                    if (!extraFile) {
-                        return;
-                    }
-
-                    console.log(
-                        t("modal.installer.uploading") + ": ",
-                        extraFile
-                    );
-                    return new GithubService()
-                        .getExtraFile(release, extraFile)
-                        .then((data) => {
-                            validateSignature(extraFile.signature, data);
-                            return data;
-                        })
-                        .then((data) =>
-                            controllerService?.uploadFile(
-                                extraFile["controller-path"],
-                                Buffer.from(data)
-                            )
-                        );
-                })
-            );
-
             if (!hasErrors) {
                 setState(InstallerState.DONE);
                 trackEvent(

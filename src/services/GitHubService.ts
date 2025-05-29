@@ -9,7 +9,7 @@ export const FLUIDNC_RESOURCES_BASE_URL =
     "https://raw.githubusercontent.com/bdring/fluidnc-releases/main/releases";
 
 export const FLUIDDIAL_RELEASES_API =
-    "https://api.github.com/repos/bdring/FluidNC/releases";
+    "https://api.github.com/repos/bdring/FluidDial/releases";
 
 export const FLUIDDIAL_RESOURCES_BASE_URL =
     "https://raw.githubusercontent.com/bdring/fluiddial-releases/main/releases";
@@ -28,7 +28,7 @@ export type GithubRelease = {
     url: string;
     draft: boolean;
     prerelease: boolean;
-    assets: GithubReleaseAsset[];
+    created_at: string;
     published_at: string;
 };
 
@@ -98,7 +98,7 @@ export class GithubService {
         if (resourcesURL) {
             this.resourcesURL = resourcesURL;
         } else {
-            this.resourcesURL = FLUIDDIAL_RESOURCES_BASE_URL;
+            this.resourcesURL = FLUIDNC_RESOURCES_BASE_URL;
         }
     }
 
@@ -110,8 +110,8 @@ export class GithubService {
     getReleases(includePrerelease: boolean = false): Promise<GithubRelease[]> {
         return fetch(this.apiURL)
             .then((res) => res.json())
-            .then((releases) => {
-                return releases
+            .then((releases) =>
+                releases
                     .filter(
                         (release) =>
                             includePrerelease ||
@@ -122,14 +122,8 @@ export class GithubService {
                             new Date(release.created_at) >
                             new Date("2023-06-08T21:23:04Z")
                     )
-                    .filter((release) =>
-                        release.assets.filter(
-                            (asset) =>
-                                asset.name.endsWith("-posix.zip").length > 0
-                        )
-                    )
-                    .sort((release1, release2) => release2?.id - release1?.id);
-            });
+                    .sort((release1, release2) => release2?.id - release1?.id)
+            );
     }
 
     getConfigTree(): Promise<GithubTree> {
@@ -158,7 +152,7 @@ export class GithubService {
     }
 
     getReleaseManifest(release: GithubRelease): Promise<GithubReleaseManifest> {
-        const manifestBaseUrl = FLUIDNC_RESOURCES_BASE_URL + "/" + release.name;
+        const manifestBaseUrl = this.resourcesURL + "/" + release.name;
         const manifestUrl = manifestBaseUrl + "/manifest.json";
 
         return fetch(manifestUrl, {
@@ -178,7 +172,7 @@ export class GithubService {
         release: GithubRelease,
         images: FirmwareImage[]
     ): Promise<Uint8Array[]> {
-        const baseUrl = FLUIDNC_RESOURCES_BASE_URL + "/" + release.name + "/";
+        const baseUrl = this.resourcesURL + "/" + release.name + "/";
 
         return Promise.all(
             images.map((image) => {
@@ -205,7 +199,7 @@ export class GithubService {
         release: GithubRelease,
         file: FirmwareFile
     ): Promise<Uint8Array> {
-        const baseUrl = FLUIDNC_RESOURCES_BASE_URL + "/" + release.name + "/";
+        const baseUrl = this.resourcesURL + "/" + release.name + "/";
 
         return fetch(baseUrl + file.path, {
             headers: {

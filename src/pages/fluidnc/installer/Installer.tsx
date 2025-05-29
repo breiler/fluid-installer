@@ -5,14 +5,16 @@ import Firmware from "../../../panels/firmware/Firmware";
 import {
     FirmwareChoice,
     GithubRelease,
-    GithubReleaseManifest
+    GithubReleaseManifest,
+    GithubService
 } from "../../../services/GitHubService";
 
 type InstallerProps = {
     onClose: () => void;
+    githubService: GithubService;
 };
 
-const Installer = ({ onClose }: InstallerProps) => {
+const Installer = ({ onClose, githubService }: InstallerProps) => {
     usePageView("Installer");
 
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -32,6 +34,7 @@ const Installer = ({ onClose }: InstallerProps) => {
                 />
             )}
             <Firmware
+                githubService={githubService}
                 onInstall={(release, manifest, choice) => {
                     setRelease(release);
                     setManifest(manifest);

@@ -90,6 +90,7 @@ export const InstallService = {
     },
 
     installChoice: async (
+        githubService: GithubService,
         release: GithubRelease,
         serialPort: SerialPort,
         manifest: GithubReleaseManifest,
@@ -107,10 +108,7 @@ export const InstallService = {
 
         let imageFiles: Uint8Array[] = [];
         try {
-            imageFiles = await new GithubService().getImageFiles(
-                release,
-                images
-            );
+            imageFiles = await githubService.getImageFiles(release, images);
         } catch (error) {
             console.error(error);
             onState(InstallerState.ERROR);

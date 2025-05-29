@@ -32,9 +32,10 @@ type Props = {
         manifest: GithubReleaseManifest,
         choice: FirmwareChoice
     ) => void;
+    githubService: GithubService;
 };
 
-const Firmware = ({ onInstall }: Props) => {
+const Firmware = ({ onInstall, githubService }: Props) => {
     const { t } = useTranslation();
     const [selectedChoices, setSelectedChoices] = useState<FirmwareChoice[]>(
         []
@@ -62,7 +63,7 @@ const Firmware = ({ onInstall }: Props) => {
 
         if (release) {
             setLoading(true);
-            new GithubService()
+            githubService
                 .getReleaseManifest(release)
                 .then((manifest) => {
                     setReleaseManifest(manifest);
@@ -78,7 +79,7 @@ const Firmware = ({ onInstall }: Props) => {
     };
 
     const fetchReleases = () => {
-        new GithubService()
+        githubService
             .getReleases(showPrerelease === "true")
             .then((releases) => {
                 setReleases(releases);

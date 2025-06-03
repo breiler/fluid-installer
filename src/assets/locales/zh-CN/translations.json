@@ -79,7 +79,7 @@
             "disconnect": "Disconnect"
         },
         "firmware": {
-            "install": "Install",
+            "install": "安装",
             "install-description": "Select which firmware you want to install on your controller.",
             "loading": "Loading...",
             "install-custom-image": "Install a custom image...",

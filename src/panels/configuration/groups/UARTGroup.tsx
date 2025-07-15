@@ -33,7 +33,9 @@ const UARTGroup = ({ board, uart, uartName, setValue, usedPins }: SPIProps) => {
                                 rxd_pin: Pin.NO_PIN,
                                 rts_pin: Pin.NO_PIN,
                                 baud: 115200,
-                                mode: "8N1"
+                                mode: "8N1",
+                                passthrough_baud: 0,
+                                passthrough_mode: "8E1"
                             });
                         }
                     }}
@@ -114,6 +116,59 @@ const UARTGroup = ({ board, uart, uartName, setValue, usedPins }: SPIProps) => {
                         setValue({
                             ...uart!,
                             ...{ mode: value.toString() }
+                        });
+                    }}
+                />
+
+                <SelectField
+                    label="Passthrough Baud"
+                    value={
+                        uart?.passthrough_baud
+                            ? uart?.passthrough_baud + ""
+                            : ""
+                    }
+                    setValue={(value) => {
+                        setValue({
+                            ...uart!,
+                            ...{ passthrough_baud: +value.toString() }
+                        });
+                    }}
+                    options={[
+                        {
+                            name: "",
+                            value: "0"
+                        },
+                        {
+                            name: "115200",
+                            value: "115200"
+                        },
+                        {
+                            name: "230400",
+                            value: "230400"
+                        },
+                        {
+                            name: "460800",
+                            value: "460800"
+                        },
+                        {
+                            name: "921600",
+                            value: "921600"
+                        },
+                        {
+                            name: "1000000",
+                            value: "1000000"
+                        }
+                    ]}
+                />
+                <TextField
+                    label="Passthrough Mode"
+                    value={
+                        uart?.passthrough_mode ? uart?.passthrough_mode : "8E1"
+                    }
+                    setValue={(value) => {
+                        setValue({
+                            ...uart!,
+                            ...{ passthrough_mode: value.toString() }
                         });
                     }}
                 />

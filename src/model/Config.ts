@@ -659,6 +659,8 @@ export type Uart = {
     rts_pin?: string;
     baud?: number;
     mode?: string;
+    passthrough_baud?: number;
+    passthrough_mode?: string;
 };
 
 export type I2C0Config = {

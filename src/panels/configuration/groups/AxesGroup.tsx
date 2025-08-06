@@ -12,7 +12,7 @@ import BooleanField from "../../../components/fields/BooleanField";
 import SteppingGroup from "./SteppingGroup";
 import SelectField from "../../../components/fields/SelectField";
 
-type SelectFieldProps = {
+type AxisGroupProps = {
     board: Board;
     config?: Config;
     setValue?: (config: Config) => void;
@@ -24,7 +24,7 @@ const AxesGroup = ({
     config,
     setValue = () => {},
     usedPins
-}: SelectFieldProps) => {
+}: AxisGroupProps) => {
     return (
         <>
             <h4>Axes</h4>

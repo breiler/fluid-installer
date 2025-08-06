@@ -17,7 +17,7 @@ type TextFieldProps = {
     disabled?: boolean;
 };
 
-const TextField = ({
+const TextAreaField = ({
     label,
     value,
     setValue = () => {},
@@ -62,4 +62,4 @@ const TextField = ({
     );
 };
 
-export default TextField;
+export default TextAreaField;

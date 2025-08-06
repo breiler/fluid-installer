@@ -221,6 +221,8 @@ export type Config = {
      */
     board?: string;
 
+    kinematics?: Kinematics;
+
     /**
      * A basic description of the machine such as "Router XYYZ 10V Spindle"
      */
@@ -275,6 +277,42 @@ export type Config = {
     relay?: SpindleDriverRelay;
     NoSpindle?: SpindleDriverNoSpindle;
 };
+
+type Kinematics = {
+    Cartesian?: CartesianKinematics;
+    corexy?: CoreXYKinematics;
+    WallPlotter?: WallPlotterKinematic;
+    midtbot?: MidTbotKinematics;
+    parallel_delta?: ParallelDeltaKinematics;
+};
+
+type WallPlotterKinematic = {
+    left_axis?: number;
+    left_anchor_x?: number;
+    left_anchor_y?: number;
+    right_axis?: number;
+    right_anchor_x?: number;
+    right_anchor_y?: number;
+    segment_length?: number;
+};
+
+type ParallelDeltaKinematics = {
+    crank_mm?: number;
+    base_triangle_mm?: number;
+    linkage_mm?: number;
+    end_effector_triangle_mm?: number;
+    kinematic_segment_len_mm?: number;
+    homing_mpos_radians?: number;
+    soft_limits?: boolean;
+    max_z_mm?: number;
+    use_servos?: boolean;
+};
+
+type MidTbotKinematics = {};
+
+type CoreXYKinematics = {};
+
+type CartesianKinematics = {};
 
 type Start = {
     /**

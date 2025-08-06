@@ -28,6 +28,10 @@ export default [
                     varsIgnorePattern: "^_",
                     ignoreRestSiblings: true
                 }
+            ],
+            "@typescript-eslint/no-empty-object-type": [
+                "error",
+                { allowObjectTypes: "always" }
             ]
         }
     }

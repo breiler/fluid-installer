@@ -18,6 +18,7 @@ import ProbeGroup from "./groups/ProbeGroup";
 import "./Configuration.scss";
 import TextAreaField from "../../components/fields/TextAreaField";
 import UARTGroup from "./groups/UARTGroup";
+import KinematicsGroup from "./groups/KinematicsGroup";
 
 const DEFAULT_CONFIG: Config = {};
 
@@ -105,6 +106,10 @@ const Configuration = ({
                             })
                         }
                         maxLength={1000}
+                    />
+                    <KinematicsGroup
+                        config={config}
+                        setValue={(value) => appendConfig(value)}
                     />
                 </Container>
             )}

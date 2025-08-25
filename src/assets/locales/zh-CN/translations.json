@@ -10,77 +10,77 @@
         "select-device": {
             "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
             "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
-            "continue": "Continue"
+            "continue": "点击继续"
         },
         "connection": {
-            "title": "FluidNC Web Installer",
-            "description": "This tool will make it easy to install or upgrade FluidNC on your controller. Plug in your controller and press Connect to continue.",
-            "connect": "Connect",
-            "connecting": "Connecting",
+            "title": "FluidNC 在线安装配置引导",
+            "description": "此工具将易于在设备上安装或升级 FluidNC 。请将设备连接并按 Connect 继续。",
+            "connect": "连接",
+            "connecting": "连接中",
             "establishing-connection": "建立到控制器的连接"
         },
         "home": {
-            "description": "You are now connected to a device, please choose an action below",
-            "error-while-booting": "There was an error during boot, likely due to an invalid configuration.",
-            "show-details": "Click here to see details"
+            "description": "您已连接到设备，请可以进行下面的操作",
+            "error-while-booting": "启动时发生错误，可能是由于配置无效。",
+            "show-details": "点击这里查看详情"
         },
         "file-browser": {
-            "title": "File browser",
-            "loading": "Loading...",
-            "downloading": "Downloading...",
-            "uploading": "Uploading",
+            "title": "内置文件",
+            "loading": "加载中",
+            "downloading": "下载中",
+            "uploading": "上传中",
             "config-missing": "缺少配置文件“{{configFilename}}”，是否要创建它？",
-            "create-config": "Create config",
-            "create-new-config": "Create new config",
-            "upload": "Upload",
-            "active-config": "Active config",
-            "select-config": "Select config",
-            "select-as-config": "Select as config",
-            "edit": "Edit",
-            "delete": "Delete",
-            "download": "Download"
+            "create-config": "创建配置",
+            "create-new-config": "创建新配置",
+            "upload": "上传",
+            "active-config": "当前配置",
+            "select-config": "选择配置文件",
+            "select-as-config": "选择为配置文件",
+            "edit": "编辑",
+            "delete": "删除",
+            "download": "下载"
         },
         "terminal": {
-            "title": "Terminal",
-            "restarting": "Restarting controller...",
-            "restart": "Restart",
-            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
-            "reset": "Reset",
+            "title": "终端",
+            "restarting": "重新启动设备",
+            "restart": "重新启动",
+            "restart-description": "通过设置 DTR/RTS 在控制器上进行硬重置",
+            "reset": "重置",
             "reset-description": "Resets the controller with a 0x18 command",
-            "unlock": "Unlock",
-            "unlock-description": "Unlocks the controller with $X",
-            "status": "Status",
-            "status-description": "Get the controller status",
-            "startup": "Startup messages",
-            "startup-description": "Get startup log messages",
-            "version": "Version",
-            "version-description": "Get the firmware version"
+            "unlock": "解锁",
+            "unlock-description": "用$X解锁设备",
+            "status": "状态",
+            "status-description": "获得设备状态",
+            "startup": "获得初始化设备状态",
+            "startup-description": "获取初始化设备状态日志",
+            "version": "版本",
+            "version-description": "获取固件版本"
         },
         "not-found": {
-            "title": "Page not found",
-            "go-back-home": "Return back home"
+            "title": "无法找到页面",
+            "go-back-home": "返回主页"
         },
         "fluiddial": {
             "connection": {
-                "title": "FluidDial Web Installer",
-                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+                "title": "FluidDial 在线安装程序",
+                "description": "。"
             }
         }
     },
     "panel": {
         "navigation": {
-            "home": "Home",
-            "install": "Install",
-            "terminal": "Terminal",
-            "file-browser": "File browser",
-            "wifi": "WiFi",
-            "calibrate": "Calibrate",
-            "restart": "Restart",
-            "disconnect": "Disconnect"
+            "home": "归位",
+            "install": "安装",
+            "terminal": "终端",
+            "file-browser": "内置文件",
+            "wifi": "配置WiFi网络",
+            "calibrate": "检查引脚",
+            "restart": "重启",
+            "disconnect": "断开连接"
         },
         "firmware": {
             "install": "安装",
-            "install-description": "Select which firmware you want to install on your controller.",
+            "install-description": "请选择你想要在控制器上安装的固件版本。",
             "loading": "Loading...",
             "install-custom-image": "Install a custom image...",
             "show-prereleases": "显示预发布",
@@ -93,38 +93,38 @@
             "flashing": "Installing package to device..."
         },
         "bootloader": {
-            "waiting": "Waiting for controller to enter bootloader...",
-            "not-active": "Bootloader not active - Try holding down the BOOT switch"
+            "waiting": "正在等待控制器进入bootloader",
+            "not-active": "引导加载器未激活 - 请按下 BOOT 开关"
         },
         "unsupported": {
-            "title": "Browser not supported",
-            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
+            "title": "浏览器不支持",
+            "description": "您当前的浏览器不支持，请使用 Chrome、Edge 或 Opera 代替。"
         }
     },
     "component": {
         "log": {
-            "show-details": "Show details",
-            "hide-details": "Hide details"
+            "show-details": "显示详情",
+            "hide-details": "隐藏详情"
         }
     },
     "modal": {
         "installer": {
-            "error-reconnecting": "An error occured while reconnecting, please reboot the controller",
-            "uploading": "Uploading",
-            "downloading": "Downloading",
+            "error-reconnecting": "重新连接时发生错误，请重启设备",
+            "uploading": "上传中",
+            "downloading": "下载中",
             "downloading-description": "Downloading package...",
             "restarting": "Restarting",
             "restarting-description": "Waiting for controller restart...",
-            "uploading-files": "Uploading files",
-            "uploading-files-description": "Uploading files...",
-            "done": "Done",
-            "done-description": "The controller has been successfully installed and is ready to be used.",
-            "continue": "Continue",
-            "error": "Error!",
-            "close": "Close",
-            "confirm-installation": "Confirm installation",
-            "confirm-installation-description": "This will install the firmware \"{{release}}\" to the controller. It will {{not}} erase the controller.",
-            "not": "not",
+            "uploading-files": "上传文件",
+            "uploading-files-description": "上传文件中……",
+            "done": "已完成",
+            "done-description": "控制器已成功安装，可以开始使用。",
+            "continue": "继续",
+            "error": "错误!",
+            "close": "关闭",
+            "confirm-installation": "确认安装",
+            "confirm-installation-description": "将擦除设备并安装{{release}}版本的固件",
+            "not": "不",
             "installation-speed": "Installation speed",
             "installation-speed-help": "Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed.",
             "install": "Install",

@@ -63,7 +63,7 @@
         "fluiddial": {
             "connection": {
                 "title": "FluidDial 在线安装程序",
-                "description": "。"
+                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
             }
         }
     },

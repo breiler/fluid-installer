@@ -29,8 +29,8 @@ const SteppingGroup = ({ config, setValue = () => {} }: SteppingGroupProps) => {
 
     const showI2soWarning =
         !config?.i2so &&
-        (config?.stepping?.engine === "I2S_STATIC" ||
-            config?.stepping?.engine === "I2S_STREAM");
+        (config?.stepping?.engine?.toUpperCase() === "I2S_STATIC" ||
+            config?.stepping?.engine?.toUpperCase() === "I2S_STREAM");
 
     return (
         <div style={{ marginBottom: "48px" }}>
@@ -50,7 +50,7 @@ const SteppingGroup = ({ config, setValue = () => {} }: SteppingGroupProps) => {
                 <Col sm="8">
                     <Form.Select
                         aria-label={"Engine"}
-                        value={config?.stepping?.engine}
+                        value={config?.stepping?.engine?.toUpperCase()}
                         onChange={(event) =>
                             setValue({
                                 ...config?.stepping,
@@ -58,8 +58,8 @@ const SteppingGroup = ({ config, setValue = () => {} }: SteppingGroupProps) => {
                             })
                         }
                     >
-                        <option id={"RMT"} value={"RMT (using GPIO)"}>
-                            RMT
+                        <option id={"RMT"} value={"RMT"}>
+                            RMT (using GPIO)
                         </option>
                         <option id={"TIMED"} value={"TIMED"}>
                             TIMED

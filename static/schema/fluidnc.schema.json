@@ -1,0 +1,62 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://installer.fluidnc.com/schema/fluidnc.schema.json",
+    "title": "Schema for FluidNC config",
+    "description": "A schema for FluidNC config files",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "A basic description of the machine such as \"Router XYYZ 10V Spindle\"",
+            "maxLength": 80
+        },
+        "board": {
+            "type": "string",
+            "description": "Descriptive text such as \"ESP32 Dev Controller V4\".",
+            "maxLength": 80
+        },
+        "meta": {
+            "type": "string",
+            "description": "This is used to store information about the config file such as \"B. Dring 2022-03-15 Rev 2\"",
+            "maxLength": 80
+        },
+        "verbose_errors": {
+            "type": "boolean",
+            "description": "Prints an error string with each error code. This might not be compatible with some gcode senders."
+        },
+        "arc_tolerance_mm": {
+            "type": "number",
+            "description": "FluidNC converts arcs into tiny line segments representing the arc. This value determines how closely the segments represent the arc. This value is rarely changed by the user.",
+            "minimum": 0.001,
+            "maximum": 1
+        },
+        "junction_deviation_mm": {
+            "type": "number",
+            "description": "Junction deviation is used by the planner to calculate cornering speeds. This is generally not adjusted by the user. Read the firmware source code for a full description.",
+            "minimum": 0.01,
+            "maximum": 1
+        },
+        "report_inches": {
+            "type": "boolean",
+            "description": "Set to true for inches and false for millimeters. This is only for reporting and not input values."
+        },
+        "enable_parking_override_control": {
+            "type": "boolean",
+            "description": "This allows you to override the parking feature via gcode. When true M56 P0 disables parking and M56 P1 enables it."
+        },
+        "use_line_numbers": {
+            "type": "boolean",
+            "description": "Allow FluidNC to use line numbers in gcode. To use line numbers, set this to true. Put line numbers in the gcode with N<line number>, like N100. The line number that is currently being executed by the motion planner will be displayed in the status reports with Ln:100. If there is no line number information in the gcode, it will report Ln:0."
+        },
+        "planner_blocks": {
+            "type": "number",
+            "description": "This sets the number of blocks used in the planner. You should leave it at the default unless you are tuning for a special application.",
+            "minimum": 10,
+            "maximum": 120
+        },
+        "stepping": {
+         "description": "",
+         "$ref": "https://installer.fluidnc.com/schema/stepping.schema.json"
+        }
+    }
+}

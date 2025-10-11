@@ -8,7 +8,7 @@
         "pin": {
             "type": "string",
             "description": "Valid pin identifier such as gpio.0, i2so.12:high, etc.",
-            "pattern": "^(gpio|GPIO|i2so|I2SO)\\.\\d+(:ds\\d|:low|:high|:pu)*$"
+            "pattern": "^(NO_PIN|(gpio|GPIO|i2so|I2SO)\\.\\d+(:ds\\d|:low|:high|:pu)*)$"
         },
         "axis": {
             "type": "object",

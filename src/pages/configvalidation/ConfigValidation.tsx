@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Editor from "../../components/editor/Editor";
-import { Alert, Card } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import jsYaml from "js-yaml";
 
 import Ajv, { ErrorObject } from "ajv/dist/2020";
@@ -94,20 +94,26 @@ export const ConfigValidation = () => {
     });
 
     return (
-        <Card>
-            <Card.Body>
+        <>
+            <div
+                style={{
+                    height: "500px",
+                    overflowY: "auto",
+                    border: "1px solid #ddd",
+                    borderRadius: "0.5rem"
+                }}
+            >
                 <Editor value={config} onChange={setConfig} format={"yaml"} />
-
-                <div className="mt-3">
-                    {errors.length === 0 ? (
-                        <Alert variant="success" className="py-1 px-2 mb-0">
-                            ✅ Configuration is valid
-                        </Alert>
-                    ) : (
-                        <div>{formattedErrors}</div>
-                    )}
-                </div>
-            </Card.Body>
-        </Card>
+            </div>
+            <div className="mt-3">
+                {errors.length === 0 ? (
+                    <Alert variant="success" className="py-1 px-2 mb-0">
+                        ✅ Configuration is valid
+                    </Alert>
+                ) : (
+                    <div>{formattedErrors}</div>
+                )}
+            </div>
+        </>
     );
 };

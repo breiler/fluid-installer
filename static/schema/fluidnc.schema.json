@@ -5,359 +5,632 @@
     "description": "A schema for FluidNC config files",
     "type": "object",
     "$defs": {
-      "axis": {
-        "type": "object",
-        "properties": {
-          "steps_per_mm": {
-            "type": "integer"
-          },
-          "max_rate_mm_per_min": {
-            "type": "integer"
-          },
-          "acceleration_mm_per_sec2": {
-            "type": "integer"
-          },
-          "max_travel_mm": {
-            "type": "integer"
-          },
-          "homing": {
-            "type": "object",
-            "properties": {
-              "cycle": {
-                "type": "integer",
-                "description": "Homing cycles determine each axis home. Cycles allow you to home axes one at a time or group a few axes into a single cycle for multi-axis homing. Assign the same number to multiple axes to home them in the same cycle. Many people would home the Z first (cycle: 1) and then might home X and Y at the same time (cycle: 2)\nA setting of 1 or greater enables the axis for homing with $H. Anything lower than 1 will be an inactive cycle and no physical homing will occur for that axis.\nA setting of 0 means it will not home with $H, but you can still home it with $H<axis>\nA value of -1 means the machine will not move, but the current machine position (mpos) position of the axis will be set to the mpos_mm value for the axis. This can be used for axes that don't have any switches.\nTypically you would put the Z axis on cycle: 1 and the other axes on higher cycles.",
-                "enum": [
-                  -1,
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6
-                ]
-              },
-              "mpos_mm": {
-                "type": "integer"
-              },
-              "positive_direction": {
-                "type": "boolean"
-              },
-              "seek_mm_per_min": {
-                "type": "integer"
-              },
-              "feed_mm_per_min": {
-                "type": "integer"
-              }
-            }
-          },
-          "motor0": {
-            "$ref": "#/$defs/motor"
-          },
-          "motor1": {
-            "$ref": "#/$defs/motor"
-          }
-        }
-      },
-      "motor": {
-        "type": "object",
-        "properties": {
-          "limit_neg_pin": {
+        "pin": {
             "type": "string",
-            "default": "NO_PIN",
-            "description": "Pin used to detect limit switch activation on the negative side of axis travel."
-          },
-          "limit_pos_pin": {
-            "type": "string",
-            "description": "Pin used to detect limit switch activation on the positive side of axis travel. This switch will often be just beyond the max_travel limit."
-          },
-          "limit_all_pin": {
-            "type": "string",
-            "default": "NO_PIN",
-            "description": "Used when you want switches at both ends of travel wired to the same pin. If limit_all_pin is specified, do not specify a limit_neg_pin or a limit_pos_pin. A drawback to using this feature is that FluidNC does not know which end of travel is causing the trigger. It cannot determine which way to move to clear the switch. Because of this, switches must be cleared manually before homing."
-          },
-          "hard_limits": {
-            "type": "boolean",
-            "default": false,
-            "description": "Set this to true when you want to use the switches defined above as hard limits. Hard limits immediately stop all motion when the switch is activated. Position is considered lost and rehoming is required."
-          },
-          "pulloff_mm": {
-            "type": "integer",
-            "default": 1,
-            "description": "This is the distance to pull off a touched switch with this motor. This value should be greater than the amount you can travel after the switch is activated. This makes sure you can always clear the switch during homing."
-          },
-          "standard_stepper": {
-            "type": "object",
-            "properties": {
-              "step_pin": {
-                "type": "string",
-                "description": "Some external drivers require an inverted step pulse. You can invert the pulse by changing the active state attribute (:high or :low)"
-              },
-              "direction_pin": {
-                "type": "string",
-                "description": "This is used to control the direction. You can invert the direction by changing the active state attribute (:high or :low)"
-              },
-              "disable_pin": {
-                "type": "string",
-                "description": "This is used if your controller uses individual disable pins for each driver. Most basic controllers use a common disable pin for all drivers and that is set elsewhere in the config file. You can invert the direction by changing the active state attribute (:high or :low)"
-              }
-            }
-          }
-        }
-      },
-      "uart": {
-        "type": "object",
-        "properties": {
-          "txd_pin": {
-            "type": "string"
-          },
-          "rxd_pin": {
-            "type": "string"
-          },
-          "rts_pin": {
-            "type": "string"
-          },
-          "baud": {
-            "type": "integer"
-          },
-          "mode": {
-            "type": "string"
-          }
+            "description": "Valid pin identifier such as gpio.0, i2so.12:high, etc.",
+            "pattern": "^(gpio|GPIO|i2so|I2SO)\\.\\d+(:ds\\d|:low|:high|:pu)*$"
         },
-        "required": [
-          "baud",
-          "mode",
-          "rxd_pin",
-          "txd_pin"
-        ],
-        "examples": [
-          {
-            "txd_pin": "gpio.0",
-            "rxd_pin": "gpio.4",
-            "rts_pin": "gpio.13",
-            "baud": 115200,
-            "mode": "8N1"
-          }
-        ]
-      },
-      "uart_channel": {
-        "type": "object",
-        "properties": {
-          "report_interval_ms": {
-            "type": "integer",
-            "minimum": 50,
-            "maximum": 5000,
-            "description": "This sets the reporting interval during motion. It is generally used to update DROs. If you srt it to zero it will be off. Ideally it should be 0 or 50-5000 to prevent overloading the processor."
-          },
-          "uart_num": {
-            "type": "integer",
-            "description": "This connects it to a previously defined uart section."
-          },
-          "message_level": {
-            "enum": [
-              "none",
-              "error",
-              "warn",
-              "info",
-              "debug"
-            ],
-            "type": "string",
-            "description": "his allows you to limit the messages that will be sent to this channel. It is useful for displays and pendants that do not need the messages and would rather not have to process them. Only messages at levels less than or equal to the chosen value will be sent to the channel. The global configuration value $Message/Level also applies, limiting messages to all channels. The channel-specific message_level item is an additional restriction, so only messages at levels at or below the lesser of $Message/Level or message_level will go to this channel."
-          }
+        "axis": {
+            "type": "object",
+            "properties": {
+                "steps_per_mm": {
+                    "type": "integer"
+                },
+                "max_rate_mm_per_min": {
+                    "type": "integer"
+                },
+                "acceleration_mm_per_sec2": {
+                    "type": "integer"
+                },
+                "max_travel_mm": {
+                    "type": "integer"
+                },
+                "homing": {
+                    "type": "object",
+                    "properties": {
+                        "cycle": {
+                            "type": "integer",
+                            "description": "Homing cycles determine each axis home. Cycles allow you to home axes one at a time or group a few axes into a single cycle for multi-axis homing. Assign the same number to multiple axes to home them in the same cycle. Many people would home the Z first (cycle: 1) and then might home X and Y at the same time (cycle: 2)\nA setting of 1 or greater enables the axis for homing with $H. Anything lower than 1 will be an inactive cycle and no physical homing will occur for that axis.\nA setting of 0 means it will not home with $H, but you can still home it with $H<axis>\nA value of -1 means the machine will not move, but the current machine position (mpos) position of the axis will be set to the mpos_mm value for the axis. This can be used for axes that don't have any switches.\nTypically you would put the Z axis on cycle: 1 and the other axes on higher cycles.",
+                            "enum": [-1, 0, 1, 2, 3, 4, 5, 6]
+                        },
+                        "mpos_mm": {
+                            "type": "integer"
+                        },
+                        "positive_direction": {
+                            "type": "boolean"
+                        },
+                        "seek_mm_per_min": {
+                            "type": "integer"
+                        },
+                        "feed_mm_per_min": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "motor0": {
+                    "$ref": "#/$defs/motor"
+                },
+                "motor1": {
+                    "$ref": "#/$defs/motor"
+                }
+            }
+        },
+        "motor": {
+            "type": "object",
+            "properties": {
+                "limit_neg_pin": {
+                    "$ref": "#/$defs/pin",
+                    "default": "NO_PIN",
+                    "description": "Pin used to detect limit switch activation on the negative side of axis travel."
+                },
+                "limit_pos_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Pin used to detect limit switch activation on the positive side of axis travel. This switch will often be just beyond the max_travel limit."
+                },
+                "limit_all_pin": {
+                    "$ref": "#/$defs/pin",
+                    "default": "NO_PIN",
+                    "description": "Used when you want switches at both ends of travel wired to the same pin. If limit_all_pin is specified, do not specify a limit_neg_pin or a limit_pos_pin. A drawback to using this feature is that FluidNC does not know which end of travel is causing the trigger. It cannot determine which way to move to clear the switch. Because of this, switches must be cleared manually before homing."
+                },
+                "hard_limits": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Set this to true when you want to use the switches defined above as hard limits. Hard limits immediately stop all motion when the switch is activated. Position is considered lost and rehoming is required."
+                },
+                "pulloff_mm": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "This is the distance to pull off a touched switch with this motor. This value should be greater than the amount you can travel after the switch is activated. This makes sure you can always clear the switch during homing."
+                },
+                "standard_stepper": {
+                    "type": "object",
+                    "properties": {
+                        "step_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "Some external drivers require an inverted step pulse. You can invert the pulse by changing the active state attribute (:high or :low)"
+                        },
+                        "direction_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "This is used to control the direction. You can invert the direction by changing the active state attribute (:high or :low)"
+                        },
+                        "disable_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "This is used if your controller uses individual disable pins for each driver. Most basic controllers use a common disable pin for all drivers and that is set elsewhere in the config file. You can invert the direction by changing the active state attribute (:high or :low)"
+                        }
+                    }
+                },
+                "stepstick": {
+                    "type": "object",
+                    "properties": {
+                        "step_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "Some external drivers require an inverted step pulse. You can invert the pulse by changing the active state attribute (:high or :low)"
+                        },
+                        "direction_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "This is used to control the direction. You can invert the direction by changing the active state attribute (:high or :low)"
+                        },
+                        "disable_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "This is used if your controller uses individual disable pins for each driver. Most basic controllers use a common disable pin for all drivers and that is set elsewhere in the config file. You can invert the direction by changing the active state attribute (:high or :low)"
+                        },
+                        "ms1_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "This is used to set a voltage to the MS1 pin of the stepstick driver socket. You should specify the active state. This is the state that the pin will be set to. This is typically used to set the microstepping level. Most basic controllers do not route this pin to the controller and use a jumper instead. Example ms3: i2so.3:high"
+                        },
+                        "ms2_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "This is used to set a voltage to the MS1 pin of the stepstick driver socket. You should specify the active state. This is the state that the pin will be set to. This is typically used to set the microstepping level. Most basic controllers do not route this pin to the controller and use a jumper instead. Example ms3: i2so.3:high"
+                        },
+                        "ms3_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": "This is used to set a voltage to the MS1 pin of the stepstick driver socket. You should specify the active state. This is the state that the pin will be set to. This is typically used to set the microstepping level. Most basic controllers do not route this pin to the controller and use a jumper instead. Example ms3: i2so.3:high"
+                        },
+                        "reset_pin": {
+                            "$ref": "#/$defs/pin",
+                            "description": ": A pin on many stepstick controllers. This pin is only used to set the state of the pin at turn on. It does not do any active features at this time."
+                        }
+                    }
+                },
+                "tmc_2209": {
+                    "type": "object",
+                    "properties": {
+                        "uart_num": {
+                            "type": "integer"
+                        },
+                        "addr": {
+                            "type": "integer"
+                        },
+                        "r_sense_ohms": {
+                            "type": "number"
+                        },
+                        "run_amps": {
+                            "type": "number"
+                        },
+                        "hold_amps": {
+                            "type": "number"
+                        },
+                        "microsteps": {
+                            "type": "integer"
+                        },
+                        "stallguard": {
+                            "type": "integer"
+                        },
+                        "stallguard_debug": {
+                            "type": "boolean"
+                        },
+                        "toff_disable": {
+                            "type": "integer"
+                        },
+                        "toff_stealthchop": {
+                            "type": "integer"
+                        },
+                        "toff_coolstep": {
+                            "type": "integer"
+                        },
+                        "run_mode": {
+                            "type": "string"
+                        },
+                        "homing_mode": {
+                            "type": "string"
+                        },
+                        "homing_amps": {
+                            "type": "number"
+                        },
+                        "use_enable": {
+                            "type": "boolean"
+                        },
+                        "direction_pin": {
+                            "$ref": "#/$defs/pin"
+                        },
+                        "step_pin": {
+                            "$ref": "#/$defs/pin"
+                        },
+                        "disable_pin": {
+                            "$ref": "#/$defs/pin"
+                        }
+                    }
+                }
+            }
+        },
+        "uart": {
+            "type": "object",
+            "properties": {
+                "txd_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "rxd_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "rts_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "baud": {
+                    "type": "integer"
+                },
+                "mode": {
+                    "type": "string"
+                }
+            },
+            "required": ["baud", "mode", "rxd_pin", "txd_pin"],
+            "examples": [
+                {
+                    "txd_pin": "gpio.0",
+                    "rxd_pin": "gpio.4",
+                    "rts_pin": "gpio.13",
+                    "baud": 115200,
+                    "mode": "8N1"
+                }
+            ]
+        },
+        "uart_channel": {
+            "type": "object",
+            "properties": {
+                "report_interval_ms": {
+                    "type": "integer",
+                    "minimum": 50,
+                    "maximum": 5000,
+                    "description": "This sets the reporting interval during motion. It is generally used to update DROs. If you srt it to zero it will be off. Ideally it should be 0 or 50-5000 to prevent overloading the processor."
+                },
+                "uart_num": {
+                    "type": "integer",
+                    "description": "This connects it to a previously defined uart section."
+                },
+                "message_level": {
+                    "enum": ["none", "error", "warn", "info", "debug"],
+                    "type": "string",
+                    "description": "his allows you to limit the messages that will be sent to this channel. It is useful for displays and pendants that do not need the messages and would rather not have to process them. Only messages at levels less than or equal to the chosen value will be sent to the channel. The global configuration value $Message/Level also applies, limiting messages to all channels. The channel-specific message_level item is an additional restriction, so only messages at levels at or below the lesser of $Message/Level or message_level will go to this channel."
+                }
+            }
         }
-      }
     },
     "properties": {
-      "name": {
-        "type": "string",
-        "description": "A basic description of the machine such as \"Router XYYZ 10V Spindle\"",
-        "maxLength": 80
-      },
-      "board": {
-        "type": "string",
-        "description": "Descriptive text such as \"ESP32 Dev Controller V4\".",
-        "maxLength": 80
-      },
-      "meta": {
-        "type": "string",
-        "description": "This is used to store information about the config file such as \"B. Dring 2022-03-15 Rev 2\"",
-        "maxLength": 80
-      },
-      "verbose_errors": {
-        "type": "boolean",
-        "description": "Prints an error string with each error code. This might not be compatible with some gcode senders."
-      },
-      "arc_tolerance_mm": {
-        "type": "number",
-        "description": "FluidNC converts arcs into tiny line segments representing the arc. This value determines how closely the segments represent the arc. This value is rarely changed by the user.",
-        "minimum": 0.001,
-        "maximum": 1
-      },
-      "junction_deviation_mm": {
-        "type": "number",
-        "description": "Junction deviation is used by the planner to calculate cornering speeds. This is generally not adjusted by the user. Read the firmware source code for a full description.",
-        "minimum": 0.01,
-        "maximum": 1
-      },
-      "report_inches": {
-        "type": "boolean",
-        "description": "Set to true for inches and false for millimeters. This is only for reporting and not input values."
-      },
-      "enable_parking_override_control": {
-        "type": "boolean",
-        "description": "This allows you to override the parking feature via gcode. When true M56 P0 disables parking and M56 P1 enables it."
-      },
-      "use_line_numbers": {
-        "type": "boolean",
-        "description": "Allow FluidNC to use line numbers in gcode. To use line numbers, set this to true. Put line numbers in the gcode with N<line number>, like N100. The line number that is currently being executed by the motion planner will be displayed in the status reports with Ln:100. If there is no line number information in the gcode, it will report Ln:0."
-      },
-      "planner_blocks": {
-        "type": "number",
-        "description": "This sets the number of blocks used in the planner. You should leave it at the default unless you are tuning for a special application.",
-        "minimum": 10,
-        "maximum": 120
-      },
-      "stepping": {
-        "title": "Stepping",
-        "type": "object",
-        "properties": {
-          "engine": {
+        "name": {
             "type": "string",
-            "description": "This determines the method used to generate the steps in firmware. Controller board hardware is designed for either RMT or I2S stepping so you must choose a method that your controller board hardware uses. It is not possible to mix and match stepping types on different motors.",
-            "enum": [
-              "RMT",
-              "TIMED",
-              "I2S_STATIC",
-              "I2S_STREAM"
-            ]
-          },
-          "idle_ms": {
-            "type": "integer",
-            "description": "A value of 255 will keep the motors enabled at all times (preferred for most projects). Any other value, either between 0-254 or from 256- 4294967295, will disable all the motors that many milliseconds after the last step on any motor. Note: Motors can be manually disabled at any time with the $MD command.",
-            "minimum": 0,
-            "maximum": 4294967295
-          },
-          "dir_delay_us": {
-            "type": "integer",
-            "description": "The delay(microseconds) needed between a direction change and a step pulse. Many drivers do not need a delay here.",
-            "minimum": 0,
-            "maximum": 10
-          },
-          "pulse_us": {
-            "type": "integer",
-            "description": "The duration of the step pulses (microseconds). This is the \"on\" duration of the pulse. It typically needs an equal \"off\" duration. This means the max number of steps per second will be 1,000,000/(pulse_us*2). Stepper drivers will have a minimum required time length for pulses to register them. If the manufacturer provides a datasheet for the stepper driver, this value can be found",
-            "minimum": 0,
-            "maximum": 10
-          },
-          "disable_delay_us": {
-            "type": "integer",
-            "description": "Some motors need a delay from when they are enabled to when they can take the first step. This value is the number of microsecond delayed.",
-            "minimum": 0,
-            "maximum": 10
-          },
-          "segments": {
+            "description": "A basic description of the machine such as \"Router XYYZ 10V Spindle\"",
+            "maxLength": 80
+        },
+        "board": {
+            "type": "string",
+            "description": "Descriptive text such as \"ESP32 Dev Controller V4\".",
+            "maxLength": 80
+        },
+        "meta": {
+            "type": "string",
+            "description": "This is used to store information about the config file such as \"B. Dring 2022-03-15 Rev 2\"",
+            "maxLength": 80
+        },
+        "verbose_errors": {
+            "type": "boolean",
+            "description": "Prints an error string with each error code. This might not be compatible with some gcode senders."
+        },
+        "arc_tolerance_mm": {
             "type": "number",
-            "description": "This sets the number of segment buffers. You should leave this at the default unless you are trying to fine tune a special application.",
-            "minimum": 6,
-            "maximum": 20
-          }
+            "description": "FluidNC converts arcs into tiny line segments representing the arc. This value determines how closely the segments represent the arc. This value is rarely changed by the user.",
+            "minimum": 0.001,
+            "maximum": 1
         },
-        "required": []
-      },
-      "axes": {
-        "type": "object",
-        "properties": {
-          "shared_stepper_disable_pin": {
-            "type": "string"
-          },
-          "homing_runs": {
-            "type": "integer"
-          },
-          "x": {
-            "$ref": "#/$defs/axis"
-          },
-          "y": {
-            "$ref": "#/$defs/axis"
-          },
-          "z": {
-            "$ref": "#/$defs/axis"
-          },
-          "a": {
-            "$ref": "#/$defs/axis"
-          },
-          "b": {
-            "$ref": "#/$defs/axis"
-          },
-          "c": {
-            "$ref": "#/$defs/axis"
-          }
-        }
-      },
-      "parking": {
-        "title": "Parking",
-        "type": "object",
-        "description": "",
-        "properties": {
-          "enable": {
-            "type": "boolean"
-          },
-          "axis": {
-            "type": "string"
-          },
-          "pullout_distance_mm": {
-            "type": "integer"
-          },
-          "pullout_rate_mm_per_min": {
-            "type": "integer"
-          },
-          "target_mpos_mm": {
-            "type": "integer"
-          },
-          "rate_mm_per_min": {
-            "type": "integer"
-          }
+        "junction_deviation_mm": {
+            "type": "number",
+            "description": "Junction deviation is used by the planner to calculate cornering speeds. This is generally not adjusted by the user. Read the firmware source code for a full description.",
+            "minimum": 0.01,
+            "maximum": 1
         },
-        "required": [
-          "axis",
-          "enable",
-          "pullout_distance_mm",
-          "pullout_rate_mm_per_min",
-          "rate_mm_per_min",
-          "target_mpos_mm"
-        ]
-      },
-      "start": {
-        "type": "object",
-        "description": "This group controls optional things that happen at startup.",
-        "properties": {
-          "must_home": {
+        "report_inches": {
             "type": "boolean",
-            "description": "This controls whether you are required to home at startup or not. You will get a homing alarm at startup if this value is true. This prevents motion until you home the machine or clear the alarm.",
-            "default": true
-          },
-          "deactivate_parking": {
+            "description": "Set to true for inches and false for millimeters. This is only for reporting and not input values."
+        },
+        "enable_parking_override_control": {
             "type": "boolean",
-            "description": "Turns off the parking feature.",
-            "default": true
-          },
-          "check_limits": {
+            "description": "This allows you to override the parking feature via gcode. When true M56 P0 disables parking and M56 P1 enables it."
+        },
+        "use_line_numbers": {
             "type": "boolean",
-            "description": "If true this will report if any limit switches are active at startup if hard_limits are true for the axis.",
-            "default": false
-          }
+            "description": "Allow FluidNC to use line numbers in gcode. To use line numbers, set this to true. Put line numbers in the gcode with N<line number>, like N100. The line number that is currently being executed by the motion planner will be displayed in the status reports with Ln:100. If there is no line number information in the gcode, it will report Ln:0."
+        },
+        "planner_blocks": {
+            "type": "number",
+            "description": "This sets the number of blocks used in the planner. You should leave it at the default unless you are tuning for a special application.",
+            "minimum": 10,
+            "maximum": 120
+        },
+        "stepping": {
+            "title": "Stepping",
+            "type": "object",
+            "properties": {
+                "engine": {
+                    "type": "string",
+                    "description": "This determines the method used to generate the steps in firmware. Controller board hardware is designed for either RMT or I2S stepping so you must choose a method that your controller board hardware uses. It is not possible to mix and match stepping types on different motors.",
+                    "enum": ["RMT", "TIMED", "I2S_STATIC", "I2S_STREAM"]
+                },
+                "idle_ms": {
+                    "type": "integer",
+                    "description": "A value of 255 will keep the motors enabled at all times (preferred for most projects). Any other value, either between 0-254 or from 256- 4294967295, will disable all the motors that many milliseconds after the last step on any motor. Note: Motors can be manually disabled at any time with the $MD command.",
+                    "minimum": 0,
+                    "maximum": 4294967295
+                },
+                "dir_delay_us": {
+                    "type": "integer",
+                    "description": "The delay(microseconds) needed between a direction change and a step pulse. Many drivers do not need a delay here.",
+                    "minimum": 0,
+                    "maximum": 10
+                },
+                "pulse_us": {
+                    "type": "integer",
+                    "description": "The duration of the step pulses (microseconds). This is the \"on\" duration of the pulse. It typically needs an equal \"off\" duration. This means the max number of steps per second will be 1,000,000/(pulse_us*2). Stepper drivers will have a minimum required time length for pulses to register them. If the manufacturer provides a datasheet for the stepper driver, this value can be found",
+                    "minimum": 0,
+                    "maximum": 10
+                },
+                "disable_delay_us": {
+                    "type": "integer",
+                    "description": "Some motors need a delay from when they are enabled to when they can take the first step. This value is the number of microsecond delayed.",
+                    "minimum": 0,
+                    "maximum": 10
+                },
+                "segments": {
+                    "type": "number",
+                    "description": "This sets the number of segment buffers. You should leave this at the default unless you are trying to fine tune a special application.",
+                    "minimum": 6,
+                    "maximum": 20
+                }
+            },
+            "required": []
+        },
+        "axes": {
+            "type": "object",
+            "properties": {
+                "shared_stepper_disable_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "homing_runs": {
+                    "type": "integer"
+                },
+                "x": {
+                    "$ref": "#/$defs/axis"
+                },
+                "y": {
+                    "$ref": "#/$defs/axis"
+                },
+                "z": {
+                    "$ref": "#/$defs/axis"
+                },
+                "a": {
+                    "$ref": "#/$defs/axis"
+                },
+                "b": {
+                    "$ref": "#/$defs/axis"
+                },
+                "c": {
+                    "$ref": "#/$defs/axis"
+                }
+            }
+        },
+        "parking": {
+            "title": "Parking",
+            "type": "object",
+            "description": "",
+            "properties": {
+                "enable": {
+                    "type": "boolean"
+                },
+                "axis": {
+                    "type": "string"
+                },
+                "pullout_distance_mm": {
+                    "type": "integer"
+                },
+                "pullout_rate_mm_per_min": {
+                    "type": "integer"
+                },
+                "target_mpos_mm": {
+                    "type": "integer"
+                },
+                "rate_mm_per_min": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "axis",
+                "enable",
+                "pullout_distance_mm",
+                "pullout_rate_mm_per_min",
+                "rate_mm_per_min",
+                "target_mpos_mm"
+            ]
+        },
+        "start": {
+            "type": "object",
+            "description": "This group controls optional things that happen at startup.",
+            "properties": {
+                "must_home": {
+                    "type": "boolean",
+                    "description": "This controls whether you are required to home at startup or not. You will get a homing alarm at startup if this value is true. This prevents motion until you home the machine or clear the alarm.",
+                    "default": true
+                },
+                "deactivate_parking": {
+                    "type": "boolean",
+                    "description": "Turns off the parking feature.",
+                    "default": true
+                },
+                "check_limits": {
+                    "type": "boolean",
+                    "description": "If true this will report if any limit switches are active at startup if hard_limits are true for the axis.",
+                    "default": false
+                }
+            }
+        },
+        "uart1": {
+            "$ref": "#/$defs/uart"
+        },
+        "uart2": {
+            "$ref": "#/$defs/uart"
+        },
+        "uart_channel1": {
+            "$ref": "#/$defs/uart_channel"
+        },
+        "uart_channel2": {
+            "$ref": "#/$defs/uart_channel"
+        },
+        "control": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "safety_door_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "This is typically used with an enclosure door. If the machine is running, it will quickly stop and enter a Door mode (see available modes). It is often used with the parking feature. You must deactivate the switch to use the machine. If the door opening pauses a running job, after the door is closed again the job can be resumed by a cycle_start. cycle_start can be done via a play/resume button in the sender user interface (which sends the cycle start/resume realtime character ~), or by pressing a switch connected to a cycle_start_pin."
+                },
+                "reset_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Performs a \"soft reset\", the same as sending the Ctrl-X realtime character via the user interface."
+                },
+                "feed_hold_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Pauses a job that is running, the same as sending the '!' realtime character via the user interface. Paired with \"cycle_start_pin\" it will allow a machine to be paused and resumed with physical buttons."
+                },
+                "cycle_start_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Resumes a job that is paused, the same as sending the '~' realtime character via the user interface. Paired with \"feed_hold_pin\" it will allow a machine to be paused and resumed with physical buttons."
+                },
+                "macro0_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Runs macro0 configured in the macro section, the same as sending the 0x87 realtime character via the user interface."
+                },
+                "macro1_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Runs macro0 configured in the macro section, the same as sending the 0x88 realtime character via the user interface."
+                },
+                "macro2_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Runs macro2 configured in the macro section, the same as sending the 0x89 realtime character via the user interface."
+                },
+                "macro3_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Runs macro3 configured in the macro section, the same as sending the 0x8a realtime character via the user interface."
+                },
+                "fault_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Performs a hard stop, causing all motion to cease immediately without deceleration, thus possibly losing position accuracy. Stops the spindle if off_on_alarm is true in the active spindle configuration. Enters critical alarm state, which can only be exited via a soft reset."
+                },
+                "estop_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "Performs a hard stop, causing all motion to cease immediately without deceleration, thus possibly losing position accuracy. Stops the spindle if off_on_alarm is true in the active spindle configuration. Enters critical alarm state, which can only be exited via a soft reset."
+                },
+                "homing_button_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "This will do a home all ($H) when activated."
+                }
+            }
+        },
+        "probe": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "toolsetter_pin": {
+                    "$ref": "#/$defs/pin"
+                }
+            }
+        },
+        "spi": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "miso_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "mosi_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "sck_pin": {
+                    "$ref": "#/$defs/pin"
+                }
+            }
+        },
+        "i2so": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "bck_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "data_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "ws_pin": {
+                    "$ref": "#/$defs/pin"
+                }
+            }
+        },
+        "sdcard": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "cs_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "card_detect_pin": {
+                    "$ref": "#/$defs/pin"
+                }
+            }
+        },
+        "atc_manual": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "safe_z_mpos_mm": {
+                    "type": "integer"
+                },
+                "probe_seek_rate_mm_per_min": {
+                    "type": "integer"
+                },
+                "probe_feed_rate_mm_per_min": {
+                    "type": "integer"
+                },
+                "change_mpos_mm": {
+                    "type": "string"
+                },
+                "ets_mpos_mm": {
+                    "type": "string"
+                },
+                "ets_rapid_z_mpos_mm": {
+                    "type": "integer"
+                }
+            }
+        },
+        "10V": {
+            "type": "object",
+            "description": "0-10V control is designed for spindle controllers that have a 0-10V control input as well as separate pins for forward and reverse direction. The ESP32 cannot directly generate a 0 to 10V signal, but some FluidNC controllers have an adapter circuit that generates a 0 to 10V analog voltage from an ESP32 GPIO that is pulsed with a pulse-width modulation (PWM) waveform. The basic PWM spindle type can also be used with such hardware adapters, but it does not support separate forward and reverse direction pins. If you don't need that style of direction control, you can use the PWM spindle type.",
+            "properties": {
+                "forward_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "This is used to signal forward rotation if you have separate pins for forward and reverse. It may remain on after M5, but will turn off after M4."
+                },
+                "reverse_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "This is used to signal reverse rotation if you have separate pins for forward and reverse. It may remain on after M5, but will turn off after M3."
+                },
+                "pwm_hz": {
+                    "type": "integer",
+                    "description": "This is the frequency of the PWM signal. The precision (number of bits) of the PWM signal is based on the frequency. 20000000 will give you only 4 bits of precision. Each time you divide the pwm_freq by 2, you get another bit of precision.",
+                    "minimum": 1,
+                    "maximum": 20000000,
+                    "default": 5000
+                },
+                "output_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "This is the pin that the output PWM signal is put on. It turns off with M5. The s0_with_disable value can affect this pin."
+                },
+                "enable_pin": {
+                    "$ref": "#/$defs/pin",
+                    "description": "This pin can be used as an enable pin. The disable_with_s0 value can affect this pin."
+                },
+                "direction_pin": {
+                    "$ref": "#/$defs/pin"
+                },
+                "disable_with_s0": {
+                    "type": "boolean",
+                    "description": "By default disable is controlled by M5. If you also want it to disable when speed is set to 0 (S0), set this to true."
+                },
+                "s0_with_disable": {
+                    "type": "boolean",
+                    "description": "By default the speed signal is controlled by the speed value. It will stay on even in M5 mode. If you want it to go to the S0 value with M5, set this to true."
+                },
+                "spinup_ms": {
+                    "type": "integer",
+                    "description": "This is the time that will be given for the spindle to spin up to maximum RPM as defined in the speed map. The gcode following the speed change will wait until the spin up has completed. The time is proportional to the RPM change. If the change in RPM is only half of the full scale, the delay will only be half of the spinup_ms value.",
+                    "minimum": 0,
+                    "maximum": 20000,
+                    "default": 0
+                },
+                "spindown_ms": {
+                    "type": "integer",
+                    "description": "The action is the same as spinup_ms except that it applies when the RPM value goes down.",
+                    "minimum": 0,
+                    "maximum": 20000,
+                    "default": 0
+                },
+                "tool_num": {
+                    "type": "integer",
+                    "description": "This sets the range of tool numbers for this spindle. If you have multiple spindles you should set up a range for both spindles. When you specify a tool number with the M6 Tnnn gcode command it will switch to the tool that covers that range. The max value is 255",
+                    "minimum": 0,
+                    "maximum": 255,
+                    "default": 0
+                },
+                "speed_map": {
+                    "type": "string",
+                    "description": "This allows you to fine tune the speeds. You can linearize the RPM vs. PWM across the range and you can set things like minimum speeds."
+                },
+                "off_on_alarm": {
+                    "type": "boolean",
+                    "description": "Setting this to true will turn off the spindle whenever an alarm occurs. If you are using a safety door, you may want to enable this because the parking feature does not work in alarm mode."
+                },
+                "atc": {
+                    "type": "string"
+                }
+            },
+            "required": ["output_pin"]
         }
-      },
-      "uart1": {
-        "$ref": "#/$defs/uart"
-      },
-      "uart2": {
-        "$ref": "#/$defs/uart"
-      },
-      "uart_channel1": {
-        "$ref": "#/$defs/uart_channel"
-      },
-      "uart_channel2": {
-        "$ref": "#/$defs/uart_channel"
-      }
     }
-  }
+}

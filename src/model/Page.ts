@@ -7,7 +7,8 @@ export enum Page {
     FLUIDNC_CONFIGURATION = "/fluidnc/configuration",
     FLUIDNC_WIFI = "/fluidnc/wifi",
     FLUIDNC_CALIBRATE = "/fluidnc/calibrate",
-    FLUID_DIAL_HOME = "/fluiddial"
+    FLUID_DIAL_HOME = "/fluiddial",
+    FLUIDNC_CONFIG_VALIDATION = "/config"
 }
 
 export default Page;

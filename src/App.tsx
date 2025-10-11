@@ -21,6 +21,7 @@ import Installer from "./pages/fluidnc/installer";
 import Terminal from "./pages/fluidnc/terminal";
 import NotFoundPage from "./pages/notfound/NotFoundPage";
 import { GithubService } from "./services";
+import { ConfigValidation } from "./pages/configvalidation/ConfigValidation";
 
 const Root = () => {
     const navigate = useNavigate();
@@ -55,6 +56,10 @@ const Root = () => {
             <Route path={Page.FLUID_DIAL_HOME} element={<FluidDialOutlet />}>
                 <Route index element={<FluidDialHomePage />} />
             </Route>
+            <Route
+                path={Page.FLUIDNC_CONFIG_VALIDATION}
+                element={<ConfigValidation />}
+            />
 
             <Route path="*" element={<NotFoundPage />} />
         </Routes>

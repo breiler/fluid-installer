@@ -3,87 +3,16 @@
     "title": "Schema for FluidNC config",
     "description": "A schema for FluidNC config files",
     "definitions": {
-        "uartDefinition": {
-            "type": "object",
-            "properties": {
-                "txd_pin": {
-                    "type": "string"
-                },
-                "rxd_pin": {
-                    "type": "string"
-                },
-                "baud": {
-                    "type": "integer"
-                },
-                "mode": {
-                    "type": "string"
-                }
-            },
-            "required": ["baud", "mode", "rxd_pin", "txd_pin"]
-        }
+        
     },
     "type": "object",
     "properties": {
-        "uart1": {
-            "type": "object",
-            "description": "",
-            "allOf": [{ "$ref": "#/definitions/uartDefinition" }]
-        },
-        "uart2": {
-            "type": "object",
-            "description": "",
-            "allOf": [{ "$ref": "#/definitions/uartDefinition" }],
-            "additionalProperties": false
-        },
-        "uart_channel1": {
-            "type": "object",
-            "properties": {
-                "report_interval_ms": {
-                    "type": "integer",
-                    "minimum": 50,
-                    "maximum": 5000,
-                    "description": "This sets the reporting interval during motion. It is generally used to update DROs. If you srt it to zero it will be off. Ideally it should be 0 or 50-5000 to prevent overloading the processor."
-                },
-                "uart_num": {
-                    "type": "integer",
-                    "description": "This connects it to a previously defined uart section."
-                },
-                "message_level": {
-                    "enum": ["none", "error", "warn", "info", "debug"],
-                    "type": "string",
-                    "description": "his allows you to limit the messages that will be sent to this channel. It is useful for displays and pendants that do not need the messages and would rather not have to process them. Only messages at levels less than or equal to the chosen value will be sent to the channel. The global configuration value $Message/Level also applies, limiting messages to all channels. The channel-specific message_level item is an additional restriction, so only messages at levels at or below the lesser of $Message/Level or message_level will go to this channel."
-                }
-            }
-        },
-        "uart_channel2": {
-            "type": "object",
-            "description": "This sets the reporting interval during motion. It is generally used to update DROs. If you srt it to zero it will be off. Ideally it should be 0 or 50-5000 to prevent overloading the processor.",
-            "properties": {
-                "report_interval_ms": {
-                    "type": "integer",
-                    "minimum": 50,
-                    "maximum": 5000
-                },
-                "uart_num": {
-                    "type": "integer",
-                    "description": "This connects it to a previously defined uart section."
-                },
-                "message_level": {
-                    "enum": ["none", "error", "warn", "info", "debug"],
-                    "type": "string",
-                    "description": "his allows you to limit the messages that will be sent to this channel. It is useful for displays and pendants that do not need the messages and would rather not have to process them. Only messages at levels less than or equal to the chosen value will be sent to the channel. The global configuration value $Message/Level also applies, limiting messages to all channels. The channel-specific message_level item is an additional restriction, so only messages at levels at or below the lesser of $Message/Level or message_level will go to this channel."
-                }
-            }
-        },
+
+       
         "axes": {
             "type": "object",
             "properties": {
-                "shared_stepper_disable_pin": {
-                    "type": "string"
-                },
-                "homing_runs": {
-                    "type": "integer"
-                },
+               
                 "x": {
                     "type": "object",
                     "properties": {
@@ -868,56 +797,6 @@
                 "spindown_ms",
                 "spinup_ms",
                 "tool_num"
-            ]
-        },
-        "start": {
-            "type": "object",
-            "description": "This group controls optional things that happen at startup.",
-            "properties": {
-                "must_home": {
-                    "type": "boolean",
-                    "description": "This controls whether you are required to home at startup or not. You will get a homing alarm at startup if this value is true. This prevents motion until you home the machine or clear the alarm."
-                },
-                "deactivate_parking": {
-                    "type": "boolean",
-                    "description": "Turns off the parking feature."
-                },
-                "check_limits": {
-                    "type": "boolean",
-                    "description": "If true this will report if any limit switches are active at startup if hard_limits are true for the axis."
-                }
-            }
-        },
-        "parking": {
-            "type": "object",
-            "description": "",
-            "properties": {
-                "enable": {
-                    "type": "boolean"
-                },
-                "axis": {
-                    "type": "string"
-                },
-                "pullout_distance_mm": {
-                    "type": "integer"
-                },
-                "pullout_rate_mm_per_min": {
-                    "type": "integer"
-                },
-                "target_mpos_mm": {
-                    "type": "integer"
-                },
-                "rate_mm_per_min": {
-                    "type": "integer"
-                }
-            },
-            "required": [
-                "axis",
-                "enable",
-                "pullout_distance_mm",
-                "pullout_rate_mm_per_min",
-                "rate_mm_per_min",
-                "target_mpos_mm"
             ]
         }
     },

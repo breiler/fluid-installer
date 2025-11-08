@@ -46,7 +46,7 @@
             "restart": "Restartuj",
             "restart-description": "Wykonaj reset sprzętowy kontrolera ustawiając DTR/RTS",
             "reset": "Resetuj",
-            "reset-description": "Zresetuj kontroler komendą 0x18",
+            "reset-description": "Resetuje sterownik poleceniem 0x18",
             "unlock": "Odblokuj",
             "unlock-description": "Odblokuj oprogramowanie",
             "status": "Status",

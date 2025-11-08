@@ -123,7 +123,7 @@
             "error": "Błąd!",
             "close": "Zamknij",
             "confirm-installation": "Potwierdź instalację",
-            "confirm-installation-description": "This will install the firmware \"{{release}}\" to the controller. It will {{not}} erase the controller.",
+            "confirm-installation-description": "To spowoduje zainstalowanie firmware'u \"{{release}}\" do sterownika. {{not}} Spowoduje wymazanie sterownika.",
             "not": "Wyklucz",
             "installation-speed": "Prędkość instalacji",
             "installation-speed-help": "Niektóre kontrolery wymagają niższej prędkości instalacji. Jeśli masz problemy, spróbuj ją zmniejszyć.",

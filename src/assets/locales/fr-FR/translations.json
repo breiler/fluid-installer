@@ -8,9 +8,9 @@
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
+            "fluidnc": "Utilisez cette option si vous souhaitez installer, mettre à jour ou configurer votre contrôleur FluidNC.",
             "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
-            "continue": "Continue"
+            "continue": ""
         },
         "connection": {
             "title": "Installateur Web FluidNC",
@@ -57,7 +57,7 @@
             "version-description": "Obtenir la version du micrologiciel"
         },
         "not-found": {
-            "title": "Page not found",
+            "title": "Page non trouvée",
             "go-back-home": "Return back home"
         },
         "fluiddial": {

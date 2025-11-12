@@ -9,12 +9,12 @@
     "page": {
         "select-device": {
             "fluidnc": "Utilisez cette option si vous souhaitez installer, mettre à jour ou configurer votre contrôleur FluidNC.",
-            "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
-            "continue": ""
+            "fluiddial": "Utilisez cette option si vous voulez installer ou mettre à jour votre manette FluidDial (CYD ou M5Dial).",
+            "continue": "Continuer"
         },
         "connection": {
             "title": "Installateur Web FluidNC",
-            "description": "Cet outil facilitera l'installation ou la mise à niveau de FluidNC sur votre contrôleur. Branchez votre contrôleur et appuyez sur Connecter pour continuer.",
+            "description": "Cet outil facilitera l'installation ou la mise à niveau de FluidNC sur votre contrôleur. Branchez votre contrôleur et cliquez sur Connecter pour continuer.",
             "connect": "Connecter",
             "connecting": "Connexion en cours",
             "establishing-connection": "Établissement de la connexion au contrôleur"
@@ -58,12 +58,12 @@
         },
         "not-found": {
             "title": "Page non trouvée",
-            "go-back-home": "Return back home"
+            "go-back-home": "Retourner à la page d'accueil"
         },
         "fluiddial": {
             "connection": {
-                "title": "FluidDial Web Installer",
-                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+                "title": "Installateur Web FluidDial",
+                "description": "Cet outil facilitera l'installation ou la mise à niveau de FluidDial sur votre manette. Branchez votre manette et cliquez sur Connecter pour continuer."
             }
         }
     },
@@ -135,8 +135,8 @@
             "select-image-button": "Sélectionnez l'image du micrologiciel"
         },
         "lost-connection": {
-            "description": "Lost the connection to the controller",
-            "close": "Close"
+            "description": "Connexion avec le contrôleur perdue",
+            "close": "Fermer"
         }
     },
     "card": {
@@ -165,7 +165,7 @@
             "access-point": "Point d’Accès wifi"
         },
         "donate": {
-            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
+            "description": "Faites un don à l'équipe projet de FluidNC via les liens suivants afin de permettre la poursuite de son développement."
         }
     }
 }

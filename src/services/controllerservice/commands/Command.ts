@@ -5,6 +5,8 @@ export enum CommandState {
     TIMED_OUT
 }
 
+type StateListener = (state: CommandState) => void;
+
 export class Command {
     command: string;
     response: string[];
@@ -20,15 +22,16 @@ export class Command {
      */
     debugReceive: boolean;
 
-    onDone: () => Promise<void>;
+    listeners: StateListener[] = [];
+
+    addListener(listener: StateListener) {
+        this.listeners.push(listener);
+    }
 
     constructor(command: string) {
         this.state = CommandState.INITIATED;
         this.response = [];
         this.command = command;
-        this.onDone = () => {
-            return Promise.resolve();
-        };
     }
 
     appendLine = (line: string) => {
@@ -36,9 +39,7 @@ export class Command {
 
         if (line.startsWith("ok") || line.startsWith("error")) {
             this.state = CommandState.DONE;
-            if (this.onDone) {
-                this.onDone();
-            }
+            this.listeners.forEach((listener) => listener(CommandState.DONE));
         }
     };
 

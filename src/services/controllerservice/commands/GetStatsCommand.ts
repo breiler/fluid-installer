@@ -19,49 +19,60 @@ export type Stats = {
 };
 
 export class GetStatsCommand extends Command {
+    _stats: Stats = {};
+
     constructor() {
         super("[System/Stats]json=yes");
+        this.addListener(() => {
+            this._updateData();
+        });
     }
 
     getStats(): Stats {
+        return this._stats;
+    }
+
+    _getParam(data: any, param: string): string | undefined {
+        return data?.data?.find((field) => field.id.replace(": ", "") === param)
+            ?.value;
+    }
+
+    _updateData() {
         if (this.response[0].indexOf("error:") === 0) {
-            return {};
+            this._stats = {};
         }
 
         try {
-            return {
-                version: this.getParam("FW version"),
-                ip: this.getParam("IP"),
-                hostname: this.getParam("Hostname"),
-                ipMode: this.getParam("IP Mode"),
-                gateway: this.getParam("Gateway"),
-                netmask: this.getParam("Mask"),
-                dns: this.getParam("DNS"),
-                channel: this.getParam("Channel"),
-                signal: this.getParam("Signal"),
-                wifiMode: this.getParam("Current WiFi Mode"),
-                flashSize: this.getParam("Flash Size"),
-                cpuTemperature: this.getParam("CPU Temperature"),
-                currentWifiMode: this.getParam("Current WiFi Mode"),
-                apSSID: this.getParam("SSID"),
-                connectedTo: this.getParam("Connected to")
+            const data = JSON.parse(
+                this.response
+                    .filter((line) => !line.startsWith("[System/Stats"))
+                    .filter((line) => !line.startsWith("[JSONBEGIN:"))
+                    .filter((line) => !line.startsWith("[JSONEND:"))
+                    .filter((line) => !line.startsWith("<"))
+                    .filter((line) => !line.startsWith("ok"))
+                    .map((line) => line.replaceAll(/\[JSON:(.*)]/g, "$1"))
+                    .join("")
+            );
+
+            this._stats = {
+                version: this._getParam(data, "FW version"),
+                ip: this._getParam(data, "IP"),
+                hostname: this._getParam(data, "Hostname"),
+                ipMode: this._getParam(data, "IP Mode"),
+                gateway: this._getParam(data, "Gateway"),
+                netmask: this._getParam(data, "Mask"),
+                dns: this._getParam(data, "DNS"),
+                channel: this._getParam(data, "Channel"),
+                signal: this._getParam(data, "Signal"),
+                wifiMode: this._getParam(data, "Current WiFi Mode"),
+                flashSize: this._getParam(data, "Flash Size"),
+                cpuTemperature: this._getParam(data, "CPU Temperature"),
+                currentWifiMode: this._getParam(data, "Current WiFi Mode"),
+                apSSID: this._getParam(data, "SSID"),
+                connectedTo: this._getParam(data, "Connected to")
             };
         } catch (error) {
-            console.error("Could not parse ", this.response);
-            throw error;
+            console.error("Could not parse ", error);
         }
-    }
-
-    getParam(param: string): string | undefined {
-        const data = this.response
-            .filter((line) => !line.startsWith("<"))
-            .join("\n")
-            .replaceAll("[JSON:", "")
-            .replaceAll("]\n", "")
-            .replaceAll(/ok$/g, "");
-
-        return JSON.parse(data)?.data?.find(
-            (field) => field.id.replace(": ", "") === param
-        )?.value;
     }
 }

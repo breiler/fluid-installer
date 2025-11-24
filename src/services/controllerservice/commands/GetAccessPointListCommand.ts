@@ -26,12 +26,16 @@ export class GetAccessPointListCommand extends Command {
             const r = this.response
                 .filter(
                     (line) =>
+                        !line.startsWith("[JSONBEGIN") &&
+                        !line.startsWith("[JSONEND") &&
                         !line.startsWith("[MSG") &&
                         !line.startsWith("[OPT") &&
                         !line.startsWith("$Wifi")
                 )
+                .map((line) => line.replaceAll(/\[JSON:(.*)]/g, "$1"))
                 .slice(0, -1)
                 .join("");
+
             const accessPoints: AccessPointListInternal = JSON.parse(r);
             return accessPoints.AP_LIST.map((a) => ({
                 ssid: a.SSID,

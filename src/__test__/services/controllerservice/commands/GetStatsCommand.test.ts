@@ -1,7 +1,7 @@
 import { test, expect } from "@jest/globals";
 import { GetStatsCommand } from "../../../../services/controllerservice/commands/GetStatsCommand";
 
-test("test", () => {
+test("GetStatsCommand", () => {
     const command = new GetStatsCommand();
     command.appendLine("<Alarm|Wco:100>");
     command.appendLine(

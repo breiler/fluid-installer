@@ -251,12 +251,13 @@ export class ControllerService {
                     reject("Command timed out");
                 }, timeoutMs);
             }
-            (command as Command).onDone = async () => {
+
+            (command as Command).addListener(() => {
                 if (timer) {
                     clearTimeout(timer);
                 }
                 resolve(command);
-            };
+            });
         });
 
         this.serialPort.write(Buffer.from((command as Command).command + "\n"));

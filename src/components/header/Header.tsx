@@ -77,7 +77,7 @@ const Header = () => {
             <NavDropdown
                 className="left"
                 title={
-                    <Navbar.Brand href="./">
+                    <Navbar.Brand>
                         {(location.pathname.startsWith("/fluidnc") ||
                             location.pathname == "/") && (
                             <img

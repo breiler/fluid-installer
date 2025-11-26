@@ -15,12 +15,17 @@ export type Status = {
 };
 
 export class GetStatusCommand extends Command {
+    status_report: string;
     constructor() {
         super("?");
+        this.status_report = "";
+    }
+    onStatusReport(report: string) {
+        this.status_report = report;
     }
 
-    getStatus(): Status {
-        const statusLine = this.response.find((line) => line.startsWith("<"));
+    result(): Status {
+        const statusLine = this.status_report;
 
         const mposStart = statusLine.indexOf("MPos:") + 5;
         const mposEnd = statusLine.indexOf("|", mposStart);

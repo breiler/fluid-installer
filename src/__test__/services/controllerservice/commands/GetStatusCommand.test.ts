@@ -8,7 +8,7 @@ test("GetStatusCommand ", () => {
     );
     command.appendLine("ok");
 
-    const stats = command.getStatus();
+    const stats = command.result();
     expect(stats.state).toBe("Idle");
     expect(stats.machine.x).toBe(1);
     expect(stats.machine.y).toBe(10);

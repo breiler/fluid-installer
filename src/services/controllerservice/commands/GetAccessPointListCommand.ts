@@ -17,39 +17,35 @@ export type AccessPoint = {
 };
 
 export class GetAccessPointListCommand extends Command {
+    json: string;
     constructor() {
         super("$Wifi/ListAPs");
+        this.json = "";
     }
 
-    getAccessPoints = (): AccessPoint[] => {
-        try {
-            const r = this.response
-                .filter(
-                    (line) =>
-                        !line.startsWith("[JSONBEGIN") &&
-                        !line.startsWith("[JSONEND") &&
-                        !line.startsWith("[MSG") &&
-                        !line.startsWith("[OPT") &&
-                        !line.startsWith("$Wifi")
-                )
-                .map((line) => line.replaceAll(/\[JSON:(.*)]/g, "$1"))
-                .slice(0, -1)
-                .join("");
+    onMsg(tag: string, value: string) {
+        if (tag == "JSON") {
+            this.json += value;
+        }
+    }
 
-            const accessPoints: AccessPointListInternal = JSON.parse(r);
+    // Handle the unencapsulated response style
+    onText(value: string) {
+        this.json += value;
+    }
+
+    result(): AccessPoint[] {
+        try {
+            const accessPoints: AccessPointListInternal = JSON.parse(this.json);
             return accessPoints.AP_LIST.map((a) => ({
                 ssid: a.SSID,
                 signal: +a.SIGNAL,
                 isProtected: a.IS_PROTECTED === "1"
             })).sort((a, b) => b.signal - a.signal);
         } catch (error) {
-            console.error(
-                "An error occured while trying to parse accesspoint data",
-                this.response,
-                error
-            );
+            console.error("Error parsing accesspoint data: ", error);
         }
 
         return [];
-    };
+    }
 }

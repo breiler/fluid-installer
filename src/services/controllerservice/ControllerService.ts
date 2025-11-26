@@ -80,7 +80,7 @@ export class ControllerService {
         if (this.currentVersion) {
             try {
                 const command = await this.send(new GetStatsCommand(), 5000);
-                this.stats = command.getStats();
+                this.stats = command.result();
             } catch (error) {
                 console.warn("Could not retreive the controller status", error);
             }
@@ -89,6 +89,7 @@ export class ControllerService {
     }
 
     connect = async (): Promise<ControllerStatus> => {
+        let success: boolean = false;
         if (!this.serialPort.isOpen()) {
             const bufferedReader = new SerialBufferedReader();
             await this.serialPort.open(115200);
@@ -104,21 +105,29 @@ export class ControllerService {
                 this.serialPort.addReader(bufferedReader.getReader());
                 // Send reset echo mode and reset controller
                 await this.serialPort.write(Buffer.from([0x0c, 0x18]));
-                await this._initializeController(bufferedReader);
+                success = await this._initializeController(bufferedReader);
             } finally {
                 this.serialPort.removeReader(bufferedReader.getReader());
             }
 
-            this.status = ControllerStatus.CONNECTED;
-            this.serialPort.addReader(this.onData);
+            if (success) {
+                this.status = ControllerStatus.CONNECTED;
+                this.serialPort.addReader(this.onData);
+            } else {
+                this.status = ControllerStatus.UNKNOWN_DEVICE;
+            }
         }
 
-        await this.getStats();
+        if (success) {
+            await this.getStats();
+        }
 
         return Promise.resolve(this.status);
     };
 
-    private async _initializeController(bufferedReader: SerialBufferedReader) {
+    private async _initializeController(
+        bufferedReader: SerialBufferedReader
+    ): Promise<boolean> {
         const gotWelcomeString =
             await this.waitForWelcomeString(bufferedReader);
         if (gotWelcomeString) {
@@ -132,9 +141,10 @@ export class ControllerService {
             await this.serialPort.write(Buffer.from("$Build/Info\n"));
             const versionResponse = await bufferedReader.waitForLine(2000);
             this.currentVersion = versionResponse.toString();
-            console.log("Got version: " + this.currentVersion);
             await this.waitForSettle(bufferedReader);
+            return true;
         }
+        return false;
     }
 
     private async waitForSettle(
@@ -163,7 +173,8 @@ export class ControllerService {
                 if (this.isFastFlashBootString(response.toString())) {
                     fastFlashResponses++;
                     if (fastFlashResponses >= 3) {
-                        console.log("Controller is resetting");
+                        console.log("Controller is in a reboot loop");
+                        this.serialPort.holdReset();
                         return false;
                     }
                 }
@@ -178,10 +189,13 @@ export class ControllerService {
     }
 
     private isFastFlashBootString(response: string) {
-        return response.indexOf("SPI_FAST_FLASH_BOOT") > 0;
+        return (
+            response.indexOf("SPI_FAST_FLASH_BOOT") > 0 ||
+            response.indexOf("rst:") > 0
+        );
     }
 
-    disconnect(notify = true): Promise<void> {
+    async disconnect(notify = true): Promise<void> {
         this.serialPort.removeReader(this.onData);
         if (notify) {
             this.status = ControllerStatus.DISCONNECTED;
@@ -198,20 +212,64 @@ export class ControllerService {
 
         let endLineIndex = this.buffer.indexOf("\n");
         while (endLineIndex >= 0) {
-            const line = this.buffer.substring(0, endLineIndex);
+            let line = this.buffer.substring(0, endLineIndex);
             this.buffer = this.buffer.substring(endLineIndex + 1);
 
             if (this.commands.length) {
-                if (this.commands[0].debugReceive) {
+                const command = this.commands[0];
+                if (command.debugReceive) {
                     console.log("<<< " + line);
                 }
-                this.commands[0].appendLine(line);
-                if (this.commands[0].state == CommandState.DONE) {
+                if (line.startsWith("<")) {
+                    // Get Status Report (?) is uniquely a single-character command
+                    // whose response does not end with "ok" or "error"
+                    command.onStatusReport?.(line.slice(1, -1));
+                } else if (line.startsWith("ok")) {
+                    // Format is just "ok"
+                    command.onDone();
+                } else if (line.startsWith("error")) {
+                    command.onError(line);
+                } else if (line.startsWith("[")) {
+                    if (line.endsWith("]")) {
+                        line = line.slice(1, -1);
+                        const pos = line.indexOf(":");
+                        let tag: string;
+                        let value: string;
+                        if (pos == -1) {
+                            tag = line;
+                            value = undefined;
+                        } else {
+                            tag = line.substring(0, pos);
+                            value = line.substring(pos + 1);
+                        }
+                        command.onMsg?.(tag, value);
+                    } else {
+                        console.error("Unterminated message " + line);
+                    }
+                } else if (line.startsWith("$")) {
+                    line = line.substring(1);
+                    let name: string;
+                    let value: string;
+                    const pos = line.indexOf("=");
+                    if (pos == -1) {
+                        name = line;
+                        value = undefined;
+                    } else {
+                        name = line.substring(0, pos);
+                        value = line.substring(pos + 1);
+                    }
+                    command.onItem?.(name, value);
+                } else {
+                    command.onText?.(line);
+                }
+
+                if (command.state == CommandState.DONE) {
                     this.commands = this.commands.slice(1);
                 }
-            } else {
+            } else if (line.length) {
                 console.log("<<< " + line);
             }
+
             endLineIndex = this.buffer.indexOf("\n");
         }
     };
@@ -312,8 +370,10 @@ export class ControllerService {
 
         try {
             this.serialPort.addReader(bufferedReader.getReader());
-            await this._initializeController(bufferedReader);
-            this.status = ControllerStatus.CONNECTED;
+            const okay = await this._initializeController(bufferedReader);
+            this.status = okay
+                ? ControllerStatus.CONNECTED
+                : ControllerStatus.UNKNOWN_CONTROLLER;
         } finally {
             this.serialPort.removeReader(bufferedReader.getReader());
         }
@@ -322,7 +382,7 @@ export class ControllerService {
 
     private isWelcomeString(response: string | undefined) {
         if (response) {
-            console.log(response);
+            //     console.log(response);
         }
         return (
             response &&

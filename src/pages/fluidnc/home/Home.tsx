@@ -40,14 +40,14 @@ const Home = () => {
         await sleep(1000);
         await controllerService
             .send(new GetStatsCommand(), 5000)
-            .then((command) => setStats(command.getStats()))
+            .then((command) => setStats(command.result()))
             .catch((error) => {
                 console.warn("Got an error while fetching stats", error);
             });
 
         await controllerService
             .send(new VersionCommand(), 5000)
-            .then((command) => setVersion(command.getVersionNumber()))
+            .then((command) => setVersion(command.result()))
             .catch((error) => {
                 console.error("Got an error while fetching version", error);
                 throw "Got an error while fetching version";
@@ -57,11 +57,11 @@ const Home = () => {
             .send(new GetStartupShowCommand())
             .then((command) => {
                 setBootError(
-                    !!command.response.find(
+                    !!command.messages.find(
                         (line) => line.indexOf("[MSG:ERR:") > -1
                     )
                 );
-                setStartupLogRows(command.response);
+                setStartupLogRows(command.messages);
             })
             .catch((error) => {
                 console.error(

@@ -33,9 +33,9 @@ export class Command {
     }
 
     unwrap(msg: string, tag: string): string | undefined {
-        prefix = "[" + tag + ":";
+        const prefix: string = "[" + tag + ":";
         if (msg.indexOf(prefix) == 0) {
-            return msg.slice(prefix.length(), -1);
+            return msg.slice(prefix.length, -1);
         } else {
             return undefined;
         }

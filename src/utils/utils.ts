@@ -82,8 +82,13 @@ export const sleep = (milliseconds: number) => {
 export const fileDataToConfig = (data): Config => {
     // Workaround for values beginning with # (should not be treated as comments)
     const regexp = /^(\s*.*:[ \t]*)(#\S.*)$/gm;
-    const transformedValue = data.replace(regexp, '$1"$2"');
-    return jsYaml.load(transformedValue);
+    data = data.replace(regexp, '$1"$2"');
+
+    // Workaround for values that contains an E (8E1) should not be treated as numeric values
+    const modeRegexp = /^(\s*.*:[ \t]*)(\d+E\d+)$/gm;
+    data = data.replace(modeRegexp, '$1"$2"');
+
+    return jsYaml.load(data);
 };
 
 /**

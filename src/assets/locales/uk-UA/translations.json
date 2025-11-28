@@ -10,7 +10,7 @@
         "select-device": {
             "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
             "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
-            "continue": "Continue"
+            "continue": "Продовжити"
         },
         "connection": {
             "title": "Вебвстановлювач FluidNC",
@@ -58,11 +58,11 @@
         },
         "not-found": {
             "title": "Page not found",
-            "go-back-home": "Return back home"
+            "go-back-home": "Повернутися додому"
         },
         "fluiddial": {
             "connection": {
-                "title": "FluidDial Web Installer",
+                "title": "Веб-інсталятор FluidDial",
                 "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
             }
         }

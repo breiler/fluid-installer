@@ -26,7 +26,7 @@ const InitConfig = () => {
             );
             setConfigExists(
                 !!listFiles
-                    .getFiles()
+                    .result()
                     .find((file) => file.name === command.getFilename())
             );
 

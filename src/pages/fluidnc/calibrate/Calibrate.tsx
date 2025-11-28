@@ -118,7 +118,7 @@ const Calibrate = () => {
                 controllerService!
                     .send(new GetGpioDumpCommand())
                     .then((command) => {
-                        setGpioStatusList(command.getStatusList());
+                        setGpioStatusList(command.result());
                     })
                     .catch((error) => console.error(error));
             }, 500);
@@ -144,10 +144,10 @@ const Calibrate = () => {
                 const configFilenameCommand = await controllerService.send(
                     new GetConfigFilenameCommand()
                 );
-                setConfigFile(configFilenameCommand.getFilename());
+                setConfigFile(configFilenameCommand.result());
                 console.log(
                     "Configured config file",
-                    configFilenameCommand.getFilename()
+                    configFilenameCommand.result()
                 );
 
                 const listCommand = await controllerService.send(
@@ -156,14 +156,14 @@ const Calibrate = () => {
 
                 const configFileExists =
                     listCommand
-                        .getFiles()
+                        .result()
                         .map((f) => f.name)
-                        .indexOf(configFilenameCommand.getFilename()) > -1;
+                        .indexOf(configFilenameCommand.result()) > -1;
 
                 console.log("Config file exists", configFileExists);
                 if (configFileExists) {
                     const fileData = await controllerService.downloadFile(
-                        configFilenameCommand.getFilename()
+                        configFilenameCommand.result()
                     );
                     setConfig(fileDataToConfig(fileData.toString()));
 

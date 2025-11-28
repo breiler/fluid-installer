@@ -30,7 +30,7 @@ export const InstallCard = ({
 
         controllerService
             .send(new VersionCommand(), 5000)
-            .then((command) => setVersion(command.getVersionNumber()))
+            .then((command) => setVersion(command.result()))
             .finally(() => setIsLoading(false));
     }, [controllerService, setIsLoading]);
 

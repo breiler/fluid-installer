@@ -29,7 +29,7 @@ export const ConfigValidation = () => {
             const regexp = /^(\s*.*:[ \t]*)(#\S.*)$/gm;
             const transformedValue = config.replace(regexp, '$1"$2"');
             jsonConfig = jsYaml.load(transformedValue || "");
-        } catch (e: any) {
+        } catch (e: YAMLException) {
             setErrors([
                 {
                     instancePath: "",
@@ -37,7 +37,7 @@ export const ConfigValidation = () => {
                     keyword: "syntax",
                     schemaPath: "",
                     params: {}
-                } as any
+                } as ErrorObject
             ]);
             return;
         }

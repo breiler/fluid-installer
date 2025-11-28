@@ -124,7 +124,7 @@ export class SerialPort {
             await loader.main();
 
             // We need to wait after connecting...
-            await new Promise((f) => setTimeout(f, 2000));
+            await new Promise((f) => setTimeout(f, 500));
             const flashId = await loader.readFlashId();
             const flashIdLowbyte = (flashId >> 16) & 0xff;
 
@@ -278,6 +278,15 @@ export class SerialPort {
         await new Promise((r) => setTimeout(r, 50));
     };
 
+    // This is used to hold the ESP32 in reset if it is stuck in a reboot loop
+    holdReset = async () => {
+        await this.serialPort.setSignals({
+            dataTerminalReady: false,
+            requestToSend: true
+        });
+        await new Promise((r) => setTimeout(r, 100));
+    };
+
     private startReading = async () => {
         while (
             this.state === SerialPortState.CONNECTED &&
@@ -296,6 +305,10 @@ export class SerialPort {
                             reader(Buffer.from(value))
                         );
                     }
+                }
+                if (this.state === SerialPortState.DISCONNECTING) {
+                    // Final read to flush
+                    await this.reader.read();
                 }
             } catch (_error) {
                 console.error(_error);

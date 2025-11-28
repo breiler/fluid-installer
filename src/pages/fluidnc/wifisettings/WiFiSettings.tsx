@@ -88,7 +88,7 @@ const WiFiSettings = () => {
         const result =
             (
                 await controllerService?.send(new GetAccessPointListCommand())
-            )?.getAccessPoints() ?? [];
+            )?.result() ?? [];
 
         if (result.length === 0) {
             return;
@@ -100,7 +100,7 @@ const WiFiSettings = () => {
         setLoadingType("network statistics");
         const result = (
             await controllerService?.send(new GetStatsCommand())
-        )?.getStats();
+        )?.result();
 
         if (!result) {
             return;
@@ -113,53 +113,43 @@ const WiFiSettings = () => {
         await controllerService
             ?.send(new GetSettingsCommand())
             .then((command) => {
-                const settings = command.getSettings();
+                const settings = command.result();
                 setSettings(settings);
-                setWifiMode(settings.wifiMode);
-                setHostname(settings.hostname);
-                setStationSSID(settings.stationSSID);
-                setStationIpMode(settings.stationIpMode);
-                setStationPassword(settings.stationPassword);
-                setStationMinSecurity(settings.stationMinSecurity);
-                setStationIP(settings.stationIP);
-                setStationGateway(settings.stationGateway);
-                setStationNetmask(settings.stationNetmask);
-                setApSSID(settings.apSSID);
-                setApPassword(settings.apPassword);
-                setApChannel(settings.apChannel);
-                setApIP(settings.apIP);
-                setApCountry(settings.apCountry);
+                setWifiMode(settings.get("WiFi/Mode"));
+                setHostname(settings.get("Hostname"));
+                setStationSSID(settings.get("Sta/SSID"));
+                setStationIpMode(settings.get("Sta/IpMode"));
+                setStationPassword(settings.get("Sta/Password"));
+                setStationMinSecurity(settings.get("Sta/MinSecurity"));
+                setStationIP(settings.get("StaIP"));
+                setStationGateway(settings.get("Sta/Gateway"));
+                setStationNetmask(settings.get("Sta/Netmask"));
+                setApSSID(settings.get("AP/SSID"));
+                setApPassword(settings.get("AP/Password"));
+                setApChannel(settings.get("AP/Channel"));
+                setApIP(settings.get("AP/IP"));
+                setApCountry(settings.get("AP/Country"));
             });
     };
 
     const saveSettings = async () => {
         setIsSaving(true);
+        const setSetting = async (name: string, value: string) => {
+            if (value != settings.get(name)) {
+                await controllerService.send(new Command(name + "=" + value));
+            }
+        };
         try {
-            if (hostname !== settings?.hostname) {
-                await controllerService?.send(
-                    new Command("$Hostname=" + hostname)
-                );
-            }
+            setSetting("Hostname", hostname);
+            setSetting("WiFi/Mode", wifiMode);
+            setSetting("Sta/SSID", stationSSID);
+            setSetting("Sta/IpMode", stationIpMode);
+            setSetting("Sta/MinSecurity", stationMinSecurity);
+            setSetting("Sta/IP", stationIP);
+            setSetting("Sta/Gateway", stationGateway);
+            setSetting("Sta/Netmask", stationNetmask);
 
-            if (wifiMode !== settings?.wifiMode) {
-                await controllerService?.send(
-                    new Command("$WiFi/Mode=" + wifiMode)
-                );
-            }
-
-            if (stationSSID !== settings?.stationSSID) {
-                await controllerService?.send(
-                    new Command("$Sta/SSID=" + stationSSID)
-                );
-            }
-
-            if (stationIpMode !== settings?.stationIpMode) {
-                await controllerService?.send(
-                    new Command("$Sta/IPMode=" + stationIpMode)
-                );
-            }
-
-            if (stationPassword !== settings?.stationPassword) {
+            if (stationPassword !== settings.get()) {
                 await controllerService?.send(
                     new Command(
                         "$Sta/Password=" + encodePassword(stationPassword ?? "")
@@ -167,57 +157,16 @@ const WiFiSettings = () => {
                 );
             }
 
-            if (stationMinSecurity !== settings?.stationMinSecurity) {
-                await controllerService?.send(
-                    new Command("$Sta/MinSecurity=" + stationMinSecurity)
-                );
-            }
+            setSetting("AP/SSID", apSSID);
+            setSetting("AP/Channel", apChannel);
+            setSetting("AP/IP", apIP);
+            setSetting("AP/Country", apCountry);
 
-            if (stationIP !== settings?.stationIP) {
-                await controllerService?.send(
-                    new Command("$Sta/IP=" + stationIP)
-                );
-            }
-
-            if (stationGateway !== settings?.stationGateway) {
-                await controllerService?.send(
-                    new Command("$Sta/Gateway=" + stationGateway)
-                );
-            }
-
-            if (stationNetmask !== settings?.stationNetmask) {
-                await controllerService?.send(
-                    new Command("$Sta/Netmask=" + stationNetmask)
-                );
-            }
-
-            if (apSSID !== settings?.apSSID) {
-                await controllerService?.send(
-                    new Command("$AP/SSID=" + apSSID)
-                );
-            }
-
-            if (apPassword !== settings?.apPassword) {
+            if (apPassword !== settings.get("AP/Password")) {
                 await controllerService?.send(
                     new Command(
                         "$AP/Password=" + encodePassword(apPassword ?? "")
                     )
-                );
-            }
-
-            if (apChannel !== settings?.apChannel) {
-                await controllerService?.send(
-                    new Command("$AP/Channel=" + apChannel)
-                );
-            }
-
-            if (apIP !== settings?.apIP) {
-                await controllerService?.send(new Command("$AP/IP=" + apIP));
-            }
-
-            if (apCountry !== settings?.apCountry) {
-                await controllerService?.send(
-                    new Command("$AP/Country=" + apCountry)
                 );
             }
 
@@ -550,21 +499,21 @@ const WiFiSettings = () => {
                     onClick={() => saveSettings()}
                     disabled={
                         isSaving ||
-                        (hostname === settings?.hostname &&
-                            wifiMode === settings?.wifiMode &&
-                            stationSSID === settings?.stationSSID &&
-                            stationIpMode === settings?.stationIpMode &&
-                            stationPassword === settings?.stationPassword &&
+                        (hostname === settings?.get("Hostname") &&
+                            wifiMode === settings?.get("WiFi/Mode") &&
+                            stationSSID === settings?.get("Sta/SSID") &&
+                            stationIpMode === settings?.get("Sta/IpMode") &&
+                            stationPassword === settings?.get("Sta/Password") &&
                             stationMinSecurity ===
-                                settings?.stationMinSecurity &&
-                            stationIP === settings?.stationIP &&
-                            stationGateway === settings?.stationGateway &&
-                            stationNetmask === settings?.stationNetmask &&
-                            apSSID === settings?.apSSID &&
-                            apPassword === settings?.apPassword &&
-                            apChannel === settings?.apChannel &&
-                            apIP === settings?.apIP &&
-                            apCountry === settings?.apCountry)
+                                settings?.get("Sta/MinSecurity") &&
+                            stationIP === settings?.get("Sta/IP") &&
+                            stationGateway === settings?.get("Sta/Gateway") &&
+                            stationNetmask === settings?.get("Sta/Netmask") &&
+                            apSSID === settings?.get("AP/SSID") &&
+                            apPassword === settings?.get("AP/Password") &&
+                            apChannel === settings?.get("AP/Channel") &&
+                            apIP === settings?.get("AP/IP") &&
+                            apCountry === settings?.get("AP/Country"))
                     }
                 >
                     <FontAwesomeIcon icon={faSave as Icon} /> Save{" "}

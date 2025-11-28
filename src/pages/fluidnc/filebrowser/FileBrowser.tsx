@@ -95,7 +95,7 @@ const FileBrowser = () => {
         setConfigFilename(
             await (
                 await controllerService.send(new GetConfigFilenameCommand())
-            ).getFilename()
+            ).result()
         );
         setIsLoading(false);
     };
@@ -122,7 +122,7 @@ const FileBrowser = () => {
         return controllerService
             .send(new ListFilesCommand(fileSystem === "/sd/"))
             .then((listCommand) => {
-                setFiles(listCommand.getFiles());
+                setFiles(listCommand.result());
             });
     };
 
@@ -247,7 +247,7 @@ const FileBrowser = () => {
         setConfigFilename(
             await (
                 await controllerService!.send(new GetConfigFilenameCommand())
-            ).getFilename()
+            ).result()
         );
     };
 

@@ -41,7 +41,7 @@ const Navigation = () => {
         controllerService.getStats().then(setStats);
         controllerService
             .send(new VersionCommand(), 5000)
-            .then((command) => setVersion(command.getVersionNumber()));
+            .then((command) => setVersion(command.result()));
     }, [controllerService]);
 
     const restart = () => {

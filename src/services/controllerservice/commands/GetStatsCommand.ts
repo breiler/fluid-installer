@@ -20,39 +20,39 @@ export type Stats = {
 
 export class GetStatsCommand extends Command {
     _stats: Stats = {};
+    json: string;
 
     constructor() {
         super("[System/Stats]json=yes");
+        this.json = "";
         this.addListener(() => {
             this._updateData();
         });
     }
 
-    getStats(): Stats {
+    // Handle the encapsulated response style
+    onMsg(tag: string, value: string) {
+        if (tag == "JSON") {
+            this.json += value;
+        }
+    }
+
+    // Handle the unencapsulated response style
+    onText(value: string) {
+        this.json += value;
+    }
+
+    result(): Stats {
         return this._stats;
     }
 
-    _getParam(data: any, param: string): string | undefined {
-        return data?.data?.find((field) => field.id.replace(": ", "") === param)
-            ?.value;
+    _getParam(object: any, param: string): string | undefined {
+        return object?.data?.find((field) => field.id === param)?.value;
     }
 
     _updateData() {
-        if (this.response[0].indexOf("error:") === 0) {
-            this._stats = {};
-        }
-
         try {
-            const data = JSON.parse(
-                this.response
-                    .filter((line) => !line.startsWith("[System/Stats"))
-                    .filter((line) => !line.startsWith("[JSONBEGIN:"))
-                    .filter((line) => !line.startsWith("[JSONEND:"))
-                    .filter((line) => !line.startsWith("<"))
-                    .filter((line) => !line.startsWith("ok"))
-                    .map((line) => line.replaceAll(/\[JSON:(.*)]/g, "$1"))
-                    .join("")
-            );
+            const data = JSON.parse(this.json);
 
             this._stats = {
                 version: this._getParam(data, "FW version"),

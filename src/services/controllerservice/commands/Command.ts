@@ -9,7 +9,6 @@ type StateListener = (state: CommandState) => void;
 
 export class Command {
     command: string;
-    response: string[];
     state: CommandState;
 
     /**
@@ -30,18 +29,27 @@ export class Command {
 
     constructor(command: string) {
         this.state = CommandState.INITIATED;
-        this.response = [];
         this.command = command;
     }
 
-    appendLine = (line: string) => {
-        this.response.push(line);
-
-        if (line.startsWith("ok") || line.startsWith("error")) {
-            this.state = CommandState.DONE;
-            this.listeners.forEach((listener) => listener(CommandState.DONE));
+    unwrap(msg: string, tag: string): string | undefined {
+        prefix = "[" + tag + ":";
+        if (msg.indexOf(prefix) == 0) {
+            return msg.slice(prefix.length(), -1);
+        } else {
+            return undefined;
         }
-    };
+    }
+
+    onDone() {
+        this.listeners.forEach((listener) => listener(CommandState.DONE));
+        this.state = CommandState.DONE;
+    }
+
+    onError(error: string) {
+        console.error("Command ", this.command, "failed with ", error);
+        this.onDone();
+    }
 
     getCommand() {
         return this.command;

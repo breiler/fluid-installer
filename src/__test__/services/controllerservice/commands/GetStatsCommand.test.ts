@@ -3,14 +3,14 @@ import { GetStatsCommand } from "../../../../services/controllerservice/commands
 
 test("GetStatsCommand", () => {
     const command = new GetStatsCommand();
-    command.appendLine("<Alarm|Wco:100>");
-    command.appendLine(
-        '[JSON:{"cmd":"420","status":"ok","data":[{"id":"SSID","value":"test1"},]'
+    command.onMsg(
+        "JSON",
+        '{"cmd":"420","status":"ok","data":[{"id":"SSID","value":"test1"},'
     );
-    command.appendLine('[JSON:{"id":"Connected to","value":"test2"}]}]');
-    command.appendLine("ok");
+    command.onMsg("JSON", '{"id":"Connected to","value":"test2"}]}');
+    command._updateData();
 
-    const stats = command.getStats();
+    const stats = command.result();
     expect(stats.apSSID).toBe("test1");
     expect(stats.connectedTo).toBe("test2");
 });

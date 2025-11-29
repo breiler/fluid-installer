@@ -14,14 +14,12 @@ import { ControllerServiceContext } from "../../../context/ControllerServiceCont
 import usePageView from "../../../hooks/usePageView";
 import Page from "../../../model/Page";
 import { GetStartupShowCommand } from "../../../services/controllerservice/commands/GetStartupShowCommand";
-import {
-    GetStatsCommand,
-    Stats
-} from "../../../services/controllerservice/commands/GetStatsCommand";
+import { GetStatsCommand } from "../../../services/controllerservice/commands/GetStatsCommand";
 import { sleep } from "../../../utils/utils";
 import "./Home.scss";
 import { VersionCommand } from "../../../services/controllerservice/commands/VersionCommand";
 import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
+import useControllerState from "../../../store/ControllerState";
 
 const Home = () => {
     usePageView("Home");
@@ -29,11 +27,12 @@ const Home = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const controllerService = useContext(ControllerServiceContext);
-    const [stats, setStats] = useState<Stats>();
-    const [version, setVersion] = useState<string>();
     const [isBootError, setBootError] = useState<boolean>(false);
     const [showLogModal, setShowLogModal] = useState<boolean>(false);
     const [startupLogRows, setStartupLogRows] = useState<string[]>([]);
+    const { version, setVersion, stats, setStats } = useControllerState(
+        (state) => state
+    );
 
     const init = async () => {
         if (!controllerService) return;
@@ -132,7 +131,6 @@ const Home = () => {
                         <Col xs={12} md={6} lg={4}>
                             <WiFiCard
                                 onClick={() => navigate(Page.FLUIDNC_WIFI)}
-                                stats={stats}
                             />
                         </Col>
                     )}

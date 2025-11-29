@@ -10,20 +10,19 @@ import {
     faWifi
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Nav } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import "./Navigation.scss";
-import { Stats } from "../../services/controllerservice/commands/GetStatsCommand";
 import RestartModal from "../../modals/restartmodal/RestartModal";
 import Page from "../../model/Page";
-import { VersionCommand } from "../../services/controllerservice/commands/VersionCommand";
 import useTrackEvent, {
     TrackAction,
     TrackCategory
 } from "../../hooks/useTrackEvent";
+import useControllerState from "../../store/ControllerState";
 
 const Navigation = () => {
     const navigate = useNavigate();
@@ -33,16 +32,9 @@ const Navigation = () => {
 
     const controllerService = useContext(ControllerServiceContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [stats, setStats] = useState<Stats>();
-    const [version, setVersion] = useState<string>();
 
-    useEffect(() => {
-        if (!controllerService) return;
-        controllerService.getStats().then(setStats);
-        controllerService
-            .send(new VersionCommand(), 5000)
-            .then((command) => setVersion(command.result()));
-    }, [controllerService]);
+    const stats = useControllerState((state) => state.stats);
+    const version = useControllerState((state) => state.version);
 
     const restart = () => {
         trackEvent(TrackCategory.Restart, TrackAction.RestartClick);
@@ -81,7 +73,7 @@ const Navigation = () => {
                     <FontAwesomeIcon icon={faTerminal as IconDefinition} />{" "}
                     {t("panel.navigation.terminal")}
                 </Nav.Link>
-                {version && (
+                {version !== "?" && (
                     <Nav.Link eventKey={Page.FLUIDNC_FILEBROWSER}>
                         <FontAwesomeIcon
                             icon={faFolderOpen as IconDefinition}
@@ -89,13 +81,13 @@ const Navigation = () => {
                         {t("panel.navigation.file-browser")}
                     </Nav.Link>
                 )}
-                {stats?.version && (
+                {stats.version && (
                     <Nav.Link eventKey={Page.FLUIDNC_WIFI}>
                         <FontAwesomeIcon icon={faWifi as IconDefinition} />{" "}
                         {t("panel.navigation.wifi")}
                     </Nav.Link>
                 )}
-                {version && (
+                {version !== "?" && (
                     <Nav.Link eventKey={Page.FLUIDNC_CALIBRATE}>
                         <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
                         {t("panel.navigation.calibrate")}

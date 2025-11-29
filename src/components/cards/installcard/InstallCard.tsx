@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import Button from "../../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
 import { Card } from "react-bootstrap";
-import { VersionCommand } from "../../../services/controllerservice/commands/VersionCommand";
-import Spinner from "../../spinner";
+import useControllerState from "../../../store/ControllerState";
 
 type InstallCardProps = {
     disabled?: boolean;
@@ -18,21 +16,8 @@ export const InstallCard = ({
     onClick,
     disabled = false
 }: InstallCardProps) => {
-    const controllerService = useContext(ControllerServiceContext);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [version, setVersion] = useState<string>();
+    const version = useControllerState((state) => state.version);
     const { t } = useTranslation();
-
-    useEffect(() => {
-        setIsLoading(false);
-        if (!controllerService) return;
-        setIsLoading(true);
-
-        controllerService
-            .send(new VersionCommand(), 5000)
-            .then((command) => setVersion(command.result()))
-            .finally(() => setIsLoading(false));
-    }, [controllerService, setIsLoading]);
 
     return (
         <Card className="select-card">
@@ -43,11 +28,12 @@ export const InstallCard = ({
                         size="4x"
                     />
                 </div>
-                {isLoading && <Spinner />}
-                {!isLoading && version && (
-                    <p>{t("card.install.upgrade-description")}</p>
+                {version !== "?" && (
+                    <>
+                        <p>{t("card.install.upgrade-description")}</p>
+                    </>
                 )}
-                {!isLoading && !version && (
+                {version === "?" && (
                     <p>{t("card.install.install-description")}</p>
                 )}
             </Card.Body>

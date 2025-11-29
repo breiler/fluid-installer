@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWifi } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Stats } from "../../../services/controllerservice/commands/GetStatsCommand";
+import useControllerState from "../../../store/ControllerState";
 
 type WiFiCardProps = {
     disabled?: boolean;
-    stats?: Stats;
     onClick: () => void;
 };
 
@@ -28,12 +28,9 @@ const WebUiLink = ({ stats }: { stats: Stats }) => {
     );
 };
 
-export const WiFiCard = ({
-    onClick,
-    disabled = false,
-    stats
-}: WiFiCardProps) => {
+export const WiFiCard = ({ onClick, disabled = false }: WiFiCardProps) => {
     const { t } = useTranslation();
+    const stats = useControllerState((state) => state.stats);
 
     return (
         <Card

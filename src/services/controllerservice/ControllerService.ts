@@ -223,7 +223,7 @@ export class ControllerService {
                 if (line.startsWith("<")) {
                     // Get Status Report (?) is uniquely a single-character command
                     // whose response does not end with "ok" or "error"
-                    command.onStatusReport?.(line.slice(1, -1));
+                    command.onStatusReport(line.slice(1, -1));
                 } else if (line.startsWith("ok")) {
                     // Format is just "ok"
                     command.onDone();
@@ -242,7 +242,7 @@ export class ControllerService {
                             tag = line.substring(0, pos);
                             value = line.substring(pos + 1);
                         }
-                        command.onMsg?.(tag, value);
+                        command.onMsg(tag, value);
                     } else {
                         console.error("Unterminated message " + line);
                     }
@@ -258,7 +258,7 @@ export class ControllerService {
                         name = line.substring(0, pos);
                         value = line.substring(pos + 1);
                     }
-                    command.onItem?.(name, value);
+                    command.onItem(name, value);
                 } else {
                     command.onText?.(line);
                 }
@@ -373,7 +373,7 @@ export class ControllerService {
             const okay = await this._initializeController(bufferedReader);
             this.status = okay
                 ? ControllerStatus.CONNECTED
-                : ControllerStatus.UNKNOWN_CONTROLLER;
+                : ControllerStatus.UNKNOWN_DEVICE;
         } finally {
             this.serialPort.removeReader(bufferedReader.getReader());
         }

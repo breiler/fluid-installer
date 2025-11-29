@@ -1,5 +1,14 @@
 import { Command } from "./Command";
 
+type Response = {
+    data?: ResponseData[];
+};
+
+type ResponseData = {
+    id: string;
+    value: string;
+};
+
 export type Stats = {
     version?: string;
     ip?: string;
@@ -46,7 +55,7 @@ export class GetStatsCommand extends Command {
         return this._stats;
     }
 
-    _getParam(object: any, param: string): string | undefined {
+    _getParam(object: Response, param: string): string | undefined {
         return object?.data?.find((field) => field.id === param)?.value;
     }
 

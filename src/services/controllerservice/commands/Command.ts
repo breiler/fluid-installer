@@ -54,4 +54,24 @@ export class Command {
     getCommand() {
         return this.command;
     }
+
+    onMsg(tag: string, value: string) {
+        console.trace("onMsg " + tag + ": " + value);
+    }
+
+    onItem(name: string, value: string) {
+        if (value) {
+            console.trace("onItem: " + name + "=" + value);
+        } else {
+            console.trace("onItem: " + name);
+        }
+    }
+
+    onText(text: string) {
+        console.trace("onText: " + text);
+    }
+
+    onStatusReport(report: string) {
+        console.trace("onStatusReport: " + report);
+    }
 }

@@ -16,6 +16,7 @@ export const Markdown = ({ children }: Props) => {
                 </pre>
             }
             resetKeys={[children]}
+            onError={() => {}}
         >
             <ReactMarkdown
                 className="markdown card-text"

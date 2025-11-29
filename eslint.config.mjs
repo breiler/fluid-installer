@@ -12,6 +12,13 @@ export default [
     ...tseslint.configs.recommended,
     pluginReact.configs.flat.recommended,
     {
+        settings: {
+            react: {
+                version: "detect"
+            }
+        }
+    },
+    {
         rules: {
             "no-constant-condition": "off",
             "@typescript-eslint/no-explicit-any": "warn",

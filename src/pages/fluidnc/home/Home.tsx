@@ -119,7 +119,7 @@ const Home = () => {
                             onClick={() => navigate(Page.FLUIDNC_TERMINAL)}
                         />
                     </Col>
-                    {version && (
+                    {version !== "?" && (
                         <Col xs={12} md={6} lg={4}>
                             <FileBrowserCard
                                 onClick={() =>
@@ -136,7 +136,7 @@ const Home = () => {
                             />
                         </Col>
                     )}
-                    {version && (
+                    {version !== "?" && (
                         <Col xs={12} md={6} lg={4}>
                             <CalibrateCard
                                 onClick={() => navigate(Page.FLUIDNC_CALIBRATE)}

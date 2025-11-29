@@ -9,10 +9,8 @@ type FirmwareChoiceProps = {
 
 const FirmwareBreadcrumb = ({ choice, onClick }: FirmwareChoiceProps) => {
     return (
-        <BreadcrumbItem key={choice.name}>
-            <a href="#" onClick={() => onClick(choice)}>
-                {choice.name}
-            </a>
+        <BreadcrumbItem key={choice.name} onClick={() => onClick(choice)}>
+            {choice.name}
         </BreadcrumbItem>
     );
 };

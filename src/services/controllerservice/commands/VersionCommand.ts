@@ -9,8 +9,8 @@ export class VersionCommand extends Command {
 
     onMsg(tag: string, value: string) {
         if (tag == "VER") {
-            const versionRegex = new RegExp("^([0-9\\.]+).*$", "g");
-            this.version = versionRegex.exec(value?.at(1)) ?? "?";
+            const match = value.match(/^([0-9.]+)/);
+            this.version = match?.[1] ?? "?";
         }
     }
 

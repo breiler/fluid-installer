@@ -81,16 +81,16 @@ const Navigation = () => {
                         {t("panel.navigation.file-browser")}
                     </Nav.Link>
                 )}
-                {controllerService.build.includes("(wifi") && (
-                    <Nav.Link eventKey={Page.FLUIDNC_WIFI}>
-                        <FontAwesomeIcon icon={faWifi as IconDefinition} />{" "}
-                        {t("panel.navigation.wifi")}
-                    </Nav.Link>
-                )}
                 {controllerService.version !== "?" && (
                     <Nav.Link eventKey={Page.FLUIDNC_CALIBRATE}>
                         <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
                         {t("panel.navigation.calibrate")}
+                    </Nav.Link>
+                )}
+                {controllerService.build.includes("(wifi") && (
+                    <Nav.Link eventKey={Page.FLUIDNC_WIFI}>
+                        <FontAwesomeIcon icon={faWifi as IconDefinition} />{" "}
+                        {t("panel.navigation.wifi")}
                     </Nav.Link>
                 )}
                 <hr />

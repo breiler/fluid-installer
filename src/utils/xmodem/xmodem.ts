@@ -87,29 +87,6 @@ export class XModem {
 
     async send(fileData: Buffer) {
         let startByte;
-
-        // Wait for send to start
-        // let transmissionStartErrors = 0;
-        // while (transmissionStartErrors < this.maxTransmissionRestarts) {
-        //     startByte = (await this.socket.read()).at(0);
-        //     console.log(startByte);
-        //     if (startByte === NAK || startByte === EOT)
-        //         throw ERROR_COULD_NOT_UPLOAD;
-        //     else if (startByte === CRC_MODE) {
-        //         break;
-        //     }
-        //     transmissionStartErrors++;
-        //     await new Promise((r) => setTimeout(r, 100));
-        // }
-        // // Discard queued-up 'C' characters
-        // // Typically this will exit with an undefined
-        // while (true) {
-        //     await new Promise((r) => setTimeout(r, 10));
-        //     if ((await this.socket.read()).at(0) != CRC_MODE) {
-        //         break;
-        //     }
-        // }
-
         let buffer: Buffer;
         try {
             startByte = (await this.socket.timedRead(2000)).at(0);

@@ -60,6 +60,13 @@ export class GetStatsCommand extends Command {
     }
 
     _updateData() {
+        if (this.json.length == 0) {
+            // The noradio version does not implement System/Stats
+            console.log(
+                "No response to System/Stats command.  Noradio version?"
+            );
+            return;
+        }
         try {
             const data = JSON.parse(this.json);
 

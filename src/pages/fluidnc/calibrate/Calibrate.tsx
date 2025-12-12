@@ -169,7 +169,7 @@ const Calibrate = () => {
 
                     console.log("Fetched config file");
 
-                    await sleep(2000);
+                    await sleep(200);
                     setPollForStatus(true);
                 }
             })
@@ -203,8 +203,13 @@ const Calibrate = () => {
     return (
         <>
             <PageTitle>Calibrate</PageTitle>
-            <SpinnerModal show={isLoading} text="Loading..." />
+            <SpinnerModal show={false /* isLoading */} text="Loading..." />
 
+            {isLoading && (
+                <AlertMessage variant="info">
+                    Loading the config file
+                </AlertMessage>
+            )}
             {!isLoading && !config && (
                 <AlertMessage variant="warning">
                     Could not find the config file <b>{configFile}</b>.<br />

@@ -33,6 +33,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import ConfigurationModal from "../../../modals/configurationmodal/ConfigurationModal";
 import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
+import AlertMessage from "../../../components/alertmessage/AlertMessage";
 import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
 import PageTitle from "../../../components/pagetitle/PageTitle";
 import usePageView from "../../../hooks/usePageView";
@@ -255,15 +256,15 @@ const FileBrowser = () => {
         <>
             <PageTitle>{t("page.file-browser.title")}</PageTitle>
             <SpinnerModal
-                show={isLoading}
+                show={false /*isLoading*/}
                 text={t("page.file-browser.loading")}
             />
             <SpinnerModal
-                show={isDownloading}
+                show={false /*isDownloading*/}
                 text={t("page.file-browser.downloading")}
             />
             <SpinnerModal
-                show={isUploading}
+                show={false /* isUploading */}
                 text={
                     t("page.file-browser.uploading") +
                     " " +
@@ -271,6 +272,22 @@ const FileBrowser = () => {
                     "..."
                 }
             />
+            {isLoading && (
+                <AlertMessage variant="info">
+                    {t("page.file-browser.loading")}
+                </AlertMessage>
+            )}
+            {isDownloading && (
+                <AlertMessage variant="info">
+                    {t("page.file-browser.downloading")}
+                </AlertMessage>
+            )}
+            {isUploading && (
+                <AlertMessage variant="info">
+                    {t("page.file-browser.uploading")}
+                </AlertMessage>
+            )}
+
             {showNewConfigDialog && (
                 <CreateFileModal
                     show={

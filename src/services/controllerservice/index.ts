@@ -4,6 +4,8 @@ import { DeleteFileCommand } from "./commands/DeleteFileCommand";
 import { GetConfigFilenameCommand } from "./commands/GetConfigFilenameCommand";
 import { ListFilesCommand } from "./commands/ListFilesCommand";
 import { SetConfigFilenameCommand } from "./commands/SetConfigFilenameCommand";
+import { GetStatusCommand } from "./commands/GetStatusCommand";
+import { ShowStartupCommand } from "./commands/ShowStartupCommand";
 import type { ControllerFile } from "./types";
 import { ControllerStatus } from "./ControllerService";
 
@@ -15,5 +17,7 @@ export {
     ListFilesCommand,
     ControllerFile,
     SetConfigFilenameCommand,
+    GetStatusCommand,
+    ShowStartupCommand,
     ControllerStatus
 };

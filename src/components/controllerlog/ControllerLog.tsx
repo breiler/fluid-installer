@@ -10,7 +10,7 @@ type ControllerLogProps = {
     controllerService?: ControllerService | undefined;
 };
 
-let buffer = "";
+const buffer = "";
 
 const ControllerLog = ({
     show = false,
@@ -20,20 +20,13 @@ const ControllerLog = ({
 }: ControllerLogProps) => {
     const [rows, setRows] = useState<ReactNode[]>([]);
 
-    const reader = (data) => {
-        buffer = buffer + data.toString();
-        const newRows: ReactNode[] = [];
-        while (buffer.indexOf("\n") > -1) {
-            const newLineIndex = buffer.indexOf("\n");
-            newRows.push(createLogLine(buffer.slice(0, newLineIndex)));
-            buffer = buffer.slice(newLineIndex + 1);
-        }
-        setRows((rows) => [...rows, ...newRows]);
+    const reader = (line) => {
+        setRows((rows) => [...rows, createLogLine(line)]);
     };
 
     useEffect(() => {
-        controllerService?.serialPort.addReader(reader);
-        return () => controllerService?.serialPort.removeReader(reader);
+        controllerService?.serialPort.addLineReader(reader);
+        return () => controllerService?.serialPort.removeLineReader(reader);
     }, [controllerService, reader]);
 
     useEffect(() => {

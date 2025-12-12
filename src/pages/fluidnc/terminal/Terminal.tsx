@@ -7,6 +7,11 @@ import React, {
 } from "react";
 import "@xterm/xterm/css/xterm.css";
 import Xterm from "../../../components/xterm/Xterm";
+import {
+    ControllerStatus,
+    GetStatusCommand,
+    ShowStartupCommand
+} from "../../../services";
 import { SerialPortState } from "../../../utils/serialport/SerialPort";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -85,34 +90,39 @@ const Terminal = () => {
     const [error, setError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const onResponse = useCallback(
-        (data) => {
-            xtermRef.current?.terminal &&
-                handleTerminalInput(data, (data) =>
-                    xtermRef.current?.terminal.write(data)
-                );
-        },
-        [xtermRef]
-    );
+    const injectData = (data) => {
+        xtermRef.current?.terminal &&
+            handleTerminalInput(data, (data) =>
+                xtermRef.current?.terminal.write(data)
+            );
+    };
+
+    const onResponse = useCallback(injectData, [xtermRef]);
 
     useEffect(() => {
-        if (controllerService) {
-            controllerService
-                .connect()
-                .then(() => controllerService.serialPort.addReader(onResponse))
-                .then(() =>
-                    controllerService.serialPort.write(Buffer.from([0x18]))
-                ) // CTRL-X reset controller
-                .then(() =>
-                    controllerService.serialPort.write(Buffer.from([0x14]))
-                ) // CTRL-T activate echo mode in FluidNC
-                .then(() =>
-                    controllerService.serialPort.write(Buffer.from([0x05]))
-                ) // CTRL-E
-                .catch((error) => {
-                    console.log(error);
-                    setError("Could not open a connection");
-                });
+        if (
+            controllerService &&
+            controllerService.status == ControllerStatus.CONNECTED
+        ) {
+            // controllerService
+            //     .connect()
+            //     .then(() => controllerService.serialPort.addReader(onResponse))
+            //     .then(() => controllerService.serialPort.writeChar(0x05)) // CTRL-E
+            //     .then(() => controllerService.serialPort.writeChar(0x3F)) // ? get status
+            //     .catch((error) => {
+            //         console.log(error);
+            //         setError("Could not open a connection");
+            //     });
+            try {
+                const savedData = controllerService.serialPort.getSavedData();
+                savedData.forEach(injectData);
+                controllerService.serialPort.addReader(onResponse);
+                controllerService.serialPort.writeChar(0x05); // CTRL-E
+                controllerService.serialPort.writeChar(0x3f); // ? get status
+            } catch (error) {
+                console.log(error);
+                setError("Could not open a connection");
+            }
         }
 
         return () => {
@@ -121,8 +131,10 @@ const Terminal = () => {
                 controllerService.serialPort.getState() ===
                     SerialPortState.CONNECTED
             ) {
-                controllerService.serialPort.write(Buffer.from([0x0c])); // CTRL-L Resetting echo mode
+                controllerService.serialPort.writeChar(0x0c); // CTRL-L Resetting echo mode
                 controllerService.serialPort!.removeReader(onResponse);
+                // Discard saved data that duplicates what we already got
+                controllerService.serialPort!.getSavedData();
             }
         };
     }, [controllerService, onResponse, xtermRef]);
@@ -131,26 +143,26 @@ const Terminal = () => {
         setIsLoading(true);
         controllerService
             ?.hardReset()
-            .then(() => controllerService.serialPort.write(Buffer.from([0x14]))) // CTRL-T activate echo mode in FluidNC
-            .then(() => controllerService.serialPort.write(Buffer.from([0x05]))) // CTRL-E
+            .then(() => controllerService.serialPort.writeChar(0x05)) // CTRL-E
+            .then(() => controllerService.serialPort.writeChar(0x3f)) // ? get status
             .finally(() => setIsLoading(false));
         xtermRef.current?.terminal.focus();
     };
 
-    const onReset = () => {
-        controllerService.serialPort.write(Buffer.from([0x18]));
+    const onReset = async () => {
+        await controllerService.serialPort.writeChar(0x18); // CTRL-X Grbl reset
     };
 
-    const onUnlock = () => {
-        controllerService?.send(new Command("$X"));
+    const onUnlock = async () => {
+        await controllerService?.send(new Command("$X"));
     };
 
-    const onGetStatus = () => {
-        controllerService?.send(new Command("?"));
+    const onGetStatus = async () => {
+        await controllerService.send(new GetStatusCommand());
     };
 
-    const onGetStartupMessages = () => {
-        controllerService?.send(new Command("$Startup/Show"));
+    const onGetStartupMessages = async () => {
+        await controllerService?.send(new ShowStartupCommand());
     };
 
     const onGetVersion = () => {
@@ -161,7 +173,7 @@ const Terminal = () => {
         <>
             <PageTitle>{t("page.terminal.title")}</PageTitle>
             <SpinnerModal
-                show={isLoading}
+                show={false /* isLoading */}
                 text={t("page.terminal.restarting")}
             />
             {!error && (

@@ -1,37 +1,48 @@
-import {
-    SerialBufferedReader,
-    SerialPort
-} from "../../utils/serialport/SerialPort";
+import { SerialPort } from "../../utils/serialport/SerialPort";
 import { NativeSerialPortEvent } from "../../utils/serialport/typings";
 import { sleep } from "../../utils/utils";
 import { XModem, XModemSocket } from "../../utils/xmodem/xmodem";
 import { Command, CommandState } from "./commands/Command";
 import { GetStatsCommand, Stats } from "./commands/GetStatsCommand";
+import { ResetCommand } from "./commands/ResetCommand";
+import { BuildInfoCommand } from "./commands/BuildInfoCommand";
 
 class XModemSocketAdapter implements XModemSocket {
     private serialPort: SerialPort;
     private buffer: Buffer = Buffer.alloc(0);
-    private unregister: () => void;
+    private resolve: (value: Buffer) => void;
+    private timer: number;
 
     constructor(serialPort: SerialPort) {
         this.serialPort = serialPort;
 
-        // Registers a reader and store the function for unregistering
-        this.unregister = this.serialPort.addReader((data) =>
-            this.onData(data)
-        );
+        // Registers a reader for exclusive access to the data
+        this.serialPort.setExclusiveReader((data) => this.onData(data));
     }
 
     onData(data: Buffer) {
+        if (data.length > 1) {
+            // console.log("got: " + new TextDecoder().decode(data));
+            // console.log("got: " + data);
+        }
         if (!this.buffer) {
             this.buffer = data;
         } else {
             this.buffer = Buffer.concat([this.buffer, data]);
         }
+        if (this.timer) {
+            clearTimeout(this.timer);
+        }
+        if (this.resolve) {
+            const result = this.buffer;
+            this.buffer = Buffer.alloc(0);
+            this.resolve(result);
+            this.resolve = undefined;
+        }
     }
 
     write(buffer) {
-        return this.serialPort.write(buffer);
+        this.serialPort.write(buffer);
     }
 
     read(): Promise<Buffer> {
@@ -40,12 +51,29 @@ class XModemSocketAdapter implements XModemSocket {
         return Promise.resolve(result);
     }
 
+    // const withTimeout = (promise: Promise<Buffer>, timeoutMs:number ) => {
+    //     const timeoutPromise = new Promise((_, reject) =>
+    //         setTimeout(() => reject(new Error('Operation timed out')), timeoutMs)
+    //                                       );
+    //     return Promise.race([promise, timeoutPromise]);
+    // }
+
+    async timedRead(timeout: number): Promise<Buffer> {
+        return new Promise<Buffer>((resolve, reject) => {
+            // onData will resolve the promise
+            this.resolve = resolve;
+            this.timer = setTimeout(() => {
+                reject("Read timed out");
+            }, timeout);
+        });
+    }
+
     peekByte(): Promise<number | undefined> {
         return Promise.resolve(this.buffer.at(0));
     }
 
     close() {
-        this.unregister && this.unregister();
+        this.serialPort.removeExclusiveReader();
     }
 }
 
@@ -63,11 +91,14 @@ export class ControllerService {
     serialPort: SerialPort;
     buffer: string;
     commands: Command[];
-    xmodemMode: boolean = false;
+    //    xmodemMode: boolean = false;
+    level: number = 0;
     _status: ControllerStatus = ControllerStatus.DISCONNECTED;
     currentVersion: string | undefined;
     statusListeners: ControllerStatusListener[];
     stats: Stats;
+    version: string;
+    build: string;
 
     constructor(serialPort: SerialPort) {
         this.serialPort = serialPort;
@@ -89,9 +120,16 @@ export class ControllerService {
     }
 
     connect = async (): Promise<ControllerStatus> => {
+        if (this.level++ != 0) {
+            return Promise.resolve(this.status);
+        }
         let success: boolean = false;
+
+        // Install the handler to dispatch serial port lines
+        // to Command listeners
+        this.serialPort.addLineReader(this.onData);
+
         if (!this.serialPort.isOpen()) {
-            const bufferedReader = new SerialBufferedReader();
             await this.serialPort.open(115200);
 
             this.serialPort
@@ -101,18 +139,13 @@ export class ControllerService {
                     () => (this.status = ControllerStatus.CONNECTION_LOST)
                 );
 
-            try {
-                this.serialPort.addReader(bufferedReader.getReader());
-                // Send reset echo mode and reset controller
-                await this.serialPort.write(Buffer.from([0x0c, 0x18]));
-                success = await this._initializeController(bufferedReader);
-            } finally {
-                this.serialPort.removeReader(bufferedReader.getReader());
-            }
+            this.status = ControllerStatus.CONNECTING;
+
+            // Reset controller
+            success = await this._initializeController();
 
             if (success) {
                 this.status = ControllerStatus.CONNECTED;
-                this.serialPort.addReader(this.onData);
             } else {
                 this.status = ControllerStatus.UNKNOWN_DEVICE;
             }
@@ -125,152 +158,111 @@ export class ControllerService {
         return Promise.resolve(this.status);
     };
 
-    private async _initializeController(
-        bufferedReader: SerialBufferedReader
-    ): Promise<boolean> {
-        const gotWelcomeString =
-            await this.waitForWelcomeString(bufferedReader);
-        if (gotWelcomeString) {
-            await this.waitForSettle(bufferedReader);
+    private async _initializeController(): Promise<boolean> {
+        const command = await this.send(new ResetCommand(0x18, 7000));
+        const { status, version, build } = command.result();
+        this.version = version;
+        this.build = build;
+        if (status == "Welcome") {
+            // Disable echo
+            await this.serialPort.writeChar(0x0c); // CTRL-L
 
-            // Clear send and read buffers
-            await this.serialPort.write(Buffer.from("\n"));
-            await bufferedReader.waitForLine(2000);
+            // Get version
+            const info_cmd = await this.send(new BuildInfoCommand(), 500);
+            this.currentVersion = info_cmd.result();
 
-            // Try and query for version
-            await this.serialPort.write(Buffer.from("$Build/Info\n"));
-            const versionResponse = await bufferedReader.waitForLine(2000);
-            this.currentVersion = versionResponse.toString();
-            await this.waitForSettle(bufferedReader);
             return true;
         }
-        return false;
-    }
-
-    private async waitForSettle(
-        bufferedReader: SerialBufferedReader,
-        waitTimeMs = 500
-    ) {
-        while ((await bufferedReader.waitForLine(waitTimeMs)).length > 0) {
-            await sleep(100);
+        if (status == "ResetLoop") {
+            console.log("Controller is in a reboot loop");
+            this.serialPort.holdReset();
+            return false;
         }
-    }
-
-    private async waitForWelcomeString(
-        bufferedReader: SerialBufferedReader
-    ): Promise<boolean> {
-        console.log("Waiting for welcome string");
-        const currentTime = Date.now();
-        let fastFlashResponses = 0;
-        while (currentTime + 15000 > Date.now()) {
-            try {
-                const response = await bufferedReader.readLine();
-                if (this.isWelcomeString(response.toString())) {
-                    console.log("Found welcome message: " + response);
-                    return true;
-                }
-
-                if (this.isFastFlashBootString(response.toString())) {
-                    fastFlashResponses++;
-                    if (fastFlashResponses >= 3) {
-                        console.log("Controller is in a reboot loop");
-                        this.serialPort.holdReset();
-                        return false;
-                    }
-                }
-                await sleep(100);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        console.log("Could not detect welcome string");
-        return false;
-    }
-
-    private isFastFlashBootString(response: string) {
-        return (
-            response.indexOf("SPI_FAST_FLASH_BOOT") > 0 ||
-            response.indexOf("rst:") > 0
-        );
     }
 
     async disconnect(notify = true): Promise<void> {
-        this.serialPort.removeReader(this.onData);
+        if (--this.level != 0) {
+            return Promise.resolve();
+        }
+        // Remove the reader that dispatches lines to Command listeners
+        this.serialPort.removeLineReader(this.onData);
         if (notify) {
             this.status = ControllerStatus.DISCONNECTED;
         }
         return this.serialPort.close();
     }
 
-    onData = (data: Buffer) => {
-        if (this.xmodemMode) {
-            return;
-        }
-
-        this.buffer += data.toString().replace(/\r/g, "");
-
-        let endLineIndex = this.buffer.indexOf("\n");
-        while (endLineIndex >= 0) {
-            let line = this.buffer.substring(0, endLineIndex);
-            this.buffer = this.buffer.substring(endLineIndex + 1);
-
-            if (this.commands.length) {
-                const command = this.commands[0];
-                if (command.debugReceive) {
-                    console.log("<<< " + line);
-                }
-                if (line.startsWith("<")) {
-                    // Get Status Report (?) is uniquely a single-character command
-                    // whose response does not end with "ok" or "error"
-                    command.onStatusReport(line.slice(1, -1));
-                } else if (line.startsWith("ok")) {
-                    // Format is just "ok"
-                    command.onDone();
-                } else if (line.startsWith("error")) {
-                    command.onError(line);
-                } else if (line.startsWith("[")) {
-                    if (line.endsWith("]")) {
-                        line = line.slice(1, -1);
-                        const pos = line.indexOf(":");
-                        let tag: string;
-                        let value: string;
-                        if (pos == -1) {
-                            tag = line;
-                            value = undefined;
-                        } else {
-                            tag = line.substring(0, pos);
-                            value = line.substring(pos + 1);
-                        }
-                        command.onMsg(tag, value);
-                    } else {
-                        console.error("Unterminated message " + line);
-                    }
-                } else if (line.startsWith("$")) {
-                    line = line.substring(1);
-                    let name: string;
-                    let value: string;
-                    const pos = line.indexOf("=");
-                    if (pos == -1) {
-                        name = line;
-                        value = undefined;
-                    } else {
-                        name = line.substring(0, pos);
-                        value = line.substring(pos + 1);
-                    }
-                    command.onItem(name, value);
-                } else {
-                    command.onText?.(line);
-                }
-
-                if (command.state == CommandState.DONE) {
-                    this.commands = this.commands.slice(1);
-                }
-            } else if (line.length) {
+    /**
+     * Decodes a line of Grbl response data, dispathing its payload
+     * to the corresponding function in the current Command object.
+     *
+     * @param line of data from Grbl/FluidNC
+     */
+    onData = (line: string) => {
+        if (this.commands.length) {
+            const command = this.commands[0];
+            if (command.debugReceive) {
                 console.log("<<< " + line);
             }
-
-            endLineIndex = this.buffer.indexOf("\n");
+            if (line.startsWith("<")) {
+                // Unlike line-oriented commands whose response ends
+                // with an "ok" or "error" line, GetStatusReport (?)
+                // is a single-character command that issues a <..>
+                // response line with no additional framing.
+                command.onStatusReport(line.slice(1, -1));
+            } else if (line == "ok") {
+                // Format is just "ok"
+                command.onDone();
+            } else if (
+                typeof command.command == "string" &&
+                line == command.command
+            ) {
+                // Commands are usually sent with echo disabled.
+                // Ignore echo-back of commands just in case.
+                // This would not work for a hand-typed command that included
+                // erasures and whatnot, but here we only expect to see the
+                // result of a Command that WebInstaller sent.
+                return;
+            } else if (line.startsWith("error")) {
+                command.onError(line);
+            } else if (line.startsWith("[")) {
+                if (line.endsWith("]")) {
+                    line = line.slice(1, -1);
+                    const pos = line.indexOf(":");
+                    let tag: string;
+                    let value: string;
+                    if (pos == -1) {
+                        tag = line;
+                        value = undefined;
+                    } else {
+                        tag = line.substring(0, pos);
+                        value = line.substring(pos + 1);
+                    }
+                    command.onMsg(tag, value);
+                } else {
+                    console.error("Unterminated message " + line);
+                }
+            } else if (line.startsWith("$")) {
+                line = line.substring(1);
+                let name: string;
+                let value: string;
+                const pos = line.indexOf("=");
+                if (pos == -1) {
+                    name = line;
+                    value = undefined;
+                } else {
+                    name = line.substring(0, pos);
+                    value = line.substring(pos + 1);
+                }
+                command.onItem(name, value);
+            } else {
+                command.onText?.(line);
+            }
+            if (command.state == CommandState.DONE) {
+                this.commands = this.commands.slice(1);
+            }
+        } else if (line.length) {
+            // console.log("<<< " + line);
         }
     };
 
@@ -283,11 +275,19 @@ export class ControllerService {
         await sleep(100);
     };
 
-    send = async <T extends Command>(
-        command: T,
+    // Waiting for other commands to finish
+
+    wait = async () => {
+        while (this.commands.length > 0) {
+            await sleep(100);
+        }
+    };
+
+    send = async (
+        command: Command,
         timeoutMs: number = 0
-    ): Promise<T> => {
-        if (this.status !== ControllerStatus.CONNECTED) {
+    ): Promise<Command> => {
+        if (this.status === ControllerStatus.DISCONNECTED) {
             return command;
         }
 
@@ -295,10 +295,7 @@ export class ControllerService {
             console.log("sending " + command.command);
         }
 
-        // Waiting for other commands to finish
-        while (this.commands.length > 0) {
-            await sleep(100);
-        }
+        await this.wait();
 
         this.commands.push(command);
         const result = new Promise<T>((resolve, reject) => {
@@ -318,7 +315,13 @@ export class ControllerService {
             });
         });
 
-        this.serialPort.write(Buffer.from((command as Command).command + "\n"));
+        const toSend = (command as Command).command;
+        // Do not add a newline for single-character realtime commands
+        if (typeof toSend == "number") {
+            await this.serialPort.writeChar(toSend);
+        } else {
+            await this.serialPort.writeln(toSend);
+        }
         return result;
     };
 
@@ -327,70 +330,64 @@ export class ControllerService {
     };
 
     downloadFile = async (file: string): Promise<Buffer> => {
-        this.xmodemMode = true;
-        await this.serialPort.write(Buffer.from("$X\r\n"));
+        //        this.xmodemMode = true;
+
+        // Cancel possible Alarm state
+        await this.serialPort.writeln("$X");
         await new Promise((resolve) => setTimeout(resolve, 300));
 
-        await this.serialPort.write(
-            Buffer.from("$Xmodem/Send=" + file + "\r\n")
-        );
+        await this.serialPort.writeln("$Xmodem/Send=" + file);
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
         const fileData = await xmodem.receive();
         xmodem.close();
-        this.xmodemMode = false;
+        //        this.xmodemMode = false;
 
         return Promise.resolve(fileData);
     };
 
     uploadFile = async (file: string, fileData: Buffer): Promise<void> => {
-        this.xmodemMode = true;
-        await this.serialPort.write(Buffer.from("$X\r\n"));
+        //        this.xmodemMode = true;
+        await this.serialPort.writeln("$X");
         await new Promise((resolve) => setTimeout(resolve, 300));
 
-        await this.serialPort.write(
-            Buffer.from("$Xmodem/Receive=" + file + "\r\n")
-        );
+        await this.serialPort.writeln("$Xmodem/Receive=" + file);
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
         await xmodem.send(fileData);
         xmodem.close();
-        this.xmodemMode = false;
+        //        this.xmodemMode = false;
 
         await new Promise((resolve) => setTimeout(resolve, 3000));
         return Promise.resolve();
     };
 
-    hardReset = async () => {
+    hardReset = async (): Promise<ResetCommand> => {
         this.status = ControllerStatus.CONNECTING;
+        await this.wait();
+
+        const command = new ResetCommand("<HardReset>");
+        this.commands.push(command);
         await this.serialPort.hardReset();
-        const bufferedReader = new SerialBufferedReader();
+        const result = new Promise<ResetCommand>((resolve, reject) => {
+            const timer = setTimeout(() => {
+                this._removeCommand(command);
+                this.status = ControllerStatus.UNKNOWN_DEVICE;
+                reject("Command timed out");
+            }, 10000);
 
-        try {
-            this.serialPort.addReader(bufferedReader.getReader());
-            const okay = await this._initializeController(bufferedReader);
-            this.status = okay
-                ? ControllerStatus.CONNECTED
-                : ControllerStatus.UNKNOWN_DEVICE;
-        } finally {
-            this.serialPort.removeReader(bufferedReader.getReader());
-        }
-        return Promise.resolve();
+            (command as Command).addListener(() => {
+                if (timer) {
+                    clearTimeout(timer);
+                }
+                this.status = ControllerStatus.CONNECTED;
+                resolve(command);
+            });
+        });
+        return result;
     };
-
-    private isWelcomeString(response: string | undefined) {
-        if (response) {
-            //     console.log(response);
-        }
-        return (
-            response &&
-            (response.startsWith("GrblHAL ") ||
-                response.startsWith("Grbl ") ||
-                response.indexOf(" [FluidNC v") > 0)
-        );
-    }
 
     addListener(listener: ControllerStatusListener) {
         this.statusListeners.push(listener);

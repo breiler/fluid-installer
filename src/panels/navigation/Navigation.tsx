@@ -22,7 +22,7 @@ import useTrackEvent, {
     TrackAction,
     TrackCategory
 } from "../../hooks/useTrackEvent";
-import useControllerState from "../../store/ControllerState";
+// import useControllerState from "../../store/ControllerState";
 
 const Navigation = () => {
     const navigate = useNavigate();
@@ -33,8 +33,8 @@ const Navigation = () => {
     const controllerService = useContext(ControllerServiceContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const stats = useControllerState((state) => state.stats);
-    const version = useControllerState((state) => state.version);
+    //    const stats = useControllerState((state) => state.stats);
+    //    const version = useControllerState((state) => state.version);
 
     const restart = () => {
         trackEvent(TrackCategory.Restart, TrackAction.RestartClick);
@@ -73,7 +73,7 @@ const Navigation = () => {
                     <FontAwesomeIcon icon={faTerminal as IconDefinition} />{" "}
                     {t("panel.navigation.terminal")}
                 </Nav.Link>
-                {version !== "?" && (
+                {controllerService.version !== "?" && (
                     <Nav.Link eventKey={Page.FLUIDNC_FILEBROWSER}>
                         <FontAwesomeIcon
                             icon={faFolderOpen as IconDefinition}
@@ -81,13 +81,13 @@ const Navigation = () => {
                         {t("panel.navigation.file-browser")}
                     </Nav.Link>
                 )}
-                {stats.version && (
+                {controllerService.build.includes("(wifi") && (
                     <Nav.Link eventKey={Page.FLUIDNC_WIFI}>
                         <FontAwesomeIcon icon={faWifi as IconDefinition} />{" "}
                         {t("panel.navigation.wifi")}
                     </Nav.Link>
                 )}
-                {version !== "?" && (
+                {controllerService.version !== "?" && (
                     <Nav.Link eventKey={Page.FLUIDNC_CALIBRATE}>
                         <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
                         {t("panel.navigation.calibrate")}

@@ -35,6 +35,7 @@ import {
 } from "../../../services/controllerservice/commands/GetSettingsCommand";
 import { Command } from "../../../services";
 import { Spinner } from "../../../components";
+import AlertMessage from "../../../components/alertmessage/AlertMessage";
 import WiFiStats from "./WifiStats";
 import { sleep } from "../../../utils/utils";
 import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
@@ -136,7 +137,9 @@ const WiFiSettings = () => {
         setIsSaving(true);
         const setSetting = async (name: string, value: string) => {
             if (value != settings.get(name)) {
-                await controllerService.send(new Command(name + "=" + value));
+                await controllerService.send(
+                    new Command("$" + name + "=" + value)
+                );
             }
         };
         try {
@@ -179,20 +182,47 @@ const WiFiSettings = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        sleep(1000)
+        sleep(100)
+            .then(() => refreshStats())
             .then(() => refresh())
             .then(() => refreshAccessPoints())
-            .then(() => refreshStats())
             .finally(() => setIsLoading(false));
     }, [controllerService]);
 
     return (
         <Form>
-            <SpinnerModal show={isLoading} text={`Loading ${loadingType}...`} />
-            <SpinnerModal show={isSaving} text={`Saving network settings...`} />
+            <SpinnerModal
+                show={false /* isLoading */}
+                text={`Loading ${loadingType}...`}
+            />
+            <SpinnerModal
+                show={false /* isSaving */}
+                text={`Saving network settings...`}
+            />
+
+            {/*isLoading && loadingType != "access points" && (
+                <AlertMessage variant="info">
+                    {`Loading ${loadingType}...`}
+                </AlertMessage>
+            )*/}
 
             <PageTitle>Configure WiFi</PageTitle>
 
+            <h4 style={{ marginTop: "24px" }}>Current WiFi connection</h4>
+            <>
+                <Row>
+                    {!isSaving && (
+                        <Col>
+                            <WiFiStats
+                                stats={stats ?? {}}
+                                onRefresh={() => refreshStats()}
+                            />
+                        </Col>
+                    )}
+                </Row>
+            </>
+
+            <h4 style={{ marginTop: "24px" }}>General settings</h4>
             <TextField
                 label="Hostname"
                 disabled={isSaving || isLoading}
@@ -223,25 +253,17 @@ const WiFiSettings = () => {
                 value={wifiMode}
             />
 
-            <>
-                <Row>
-                    <Col lg={4} className="d-none d-lg-block"></Col>
-                    {!isSaving && (
-                        <Col>
-                            <WiFiStats
-                                stats={stats ?? {}}
-                                onRefresh={() => refreshStats()}
-                            />
-                        </Col>
-                    )}
-                </Row>
-            </>
-
             {(wifiMode === "STA>AP" || wifiMode === "STA") && (
                 <>
                     <h4 style={{ marginTop: "24px" }}>
                         Client station settings
                     </h4>
+                    {isLoading && loadingType == "access points" && (
+                        <AlertMessage variant="info">
+                            {`Loading ${loadingType}...`}
+                        </AlertMessage>
+                    )}
+
                     <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm="4">
                             SSID

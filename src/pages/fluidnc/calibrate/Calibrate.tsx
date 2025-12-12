@@ -12,6 +12,8 @@ import {
     GpioStatus
 } from "../../../services/controllerservice/commands/GetGpioDumpCommand";
 import AlertMessage from "../../../components/alertmessage/AlertMessage";
+import { Spinner } from "../../../components";
+
 import { Link } from "react-router-dom";
 import jsYaml from "js-yaml";
 import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
@@ -208,6 +210,7 @@ const Calibrate = () => {
             {isLoading && (
                 <AlertMessage variant="info">
                     Loading the config file
+                    <Spinner />
                 </AlertMessage>
             )}
             {!isLoading && !config && (

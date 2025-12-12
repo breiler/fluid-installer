@@ -274,17 +274,17 @@ const FileBrowser = () => {
             />
             {isLoading && (
                 <AlertMessage variant="info">
-                    {t("page.file-browser.loading")}
+                    {t("page.file-browser.loading")} <Spinner />
                 </AlertMessage>
             )}
             {isDownloading && (
                 <AlertMessage variant="info">
-                    {t("page.file-browser.downloading")}
+                    {t("page.file-browser.downloading")} <Spinner />
                 </AlertMessage>
             )}
             {isUploading && (
                 <AlertMessage variant="info">
-                    {t("page.file-browser.uploading")}
+                    {t("page.file-browser.uploading")} <Spinner />
                 </AlertMessage>
             )}
 

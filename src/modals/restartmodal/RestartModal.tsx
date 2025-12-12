@@ -41,7 +41,8 @@ const RestartModal = ({ show }: RestartModalProps) => {
             <Modal.Body>
                 {!isConnected && (
                     <div className="title">
-                        Restarting controller... <Spinner />
+                        Restarting controller
+                        <Spinner />
                     </div>
                 )}
 

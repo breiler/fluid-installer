@@ -260,7 +260,8 @@ const WiFiSettings = () => {
                     </h4>
                     {isLoading && loadingType == "access points" && (
                         <AlertMessage variant="info">
-                            {`Loading ${loadingType}...`}
+                            {`Loading ${loadingType}`}
+                            <Spinner />
                         </AlertMessage>
                     )}
 

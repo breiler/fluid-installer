@@ -20,7 +20,6 @@ import { sleep } from "../../../utils/utils";
 import "./Home.scss";
 // import { VersionCommand } from "../../../services/controllerservice/commands/VersionCommand";
 import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
-import useControllerState from "../../../store/ControllerState";
 
 const Home = () => {
     usePageView("Home");
@@ -31,7 +30,6 @@ const Home = () => {
     const [isBootError, setBootError] = useState<boolean>(false);
     const [showLogModal, setShowLogModal] = useState<boolean>(false);
     const [startupLogRows, setStartupLogRows] = useState<string[]>([]);
-    const { stats, setStats } = useControllerState((state) => state);
 
     const init = async () => {
         await sleep(1000);
@@ -138,7 +136,7 @@ const Home = () => {
                             />
                         </Col>
                     )}
-                    {stats?.version && (
+                    {controllerService.build.includes("(wifi") && (
                         <Col xs={12} md={6} lg={4}>
                             <WiFiCard
                                 onClick={() => navigate(Page.FLUIDNC_WIFI)}

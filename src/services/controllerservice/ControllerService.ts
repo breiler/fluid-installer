@@ -2,10 +2,17 @@ import { SerialPort } from "../../utils/serialport/SerialPort";
 import { NativeSerialPortEvent } from "../../utils/serialport/typings";
 import { sleep } from "../../utils/utils";
 import { XModem, XModemSocket } from "../../utils/xmodem/xmodem";
-import { Command, CommandState } from "./commands/Command";
-import { GetStatsCommand, Stats } from "./commands/GetStatsCommand";
-import { ResetCommand } from "./commands/ResetCommand";
-import { BuildInfoCommand } from "./commands/BuildInfoCommand";
+import {
+    Command,
+    CommandState,
+    GetStatsCommand,
+    Stats,
+    ResetCommand,
+    HardResetCommand,
+    BuildInfoCommand,
+    GetStatusCommand,
+    ShowStartupCommand
+} from "../../services";
 
 class XModemSocketAdapter implements XModemSocket {
     private serialPort: SerialPort;
@@ -94,11 +101,13 @@ export class ControllerService {
     //    xmodemMode: boolean = false;
     level: number = 0;
     _status: ControllerStatus = ControllerStatus.DISCONNECTED;
-    currentVersion: string | undefined;
+    build: string | undefined;
     statusListeners: ControllerStatusListener[];
     stats: Stats;
     version: string;
     build: string;
+    hasErrors: boolean = false;
+    startupLines: string[] = [];
 
     constructor(serialPort: SerialPort) {
         this.serialPort = serialPort;
@@ -108,12 +117,12 @@ export class ControllerService {
     }
 
     async getStats() {
-        if (this.currentVersion) {
+        if (this.build) {
             try {
                 const command = await this.send(new GetStatsCommand(), 5000);
                 this.stats = command.result();
             } catch (error) {
-                console.warn("Could not retreive the controller status", error);
+                console.warn("Could not retrieve the controller status", error);
             }
         }
         return this.stats;
@@ -123,7 +132,6 @@ export class ControllerService {
         if (this.level++ != 0) {
             return Promise.resolve(this.status);
         }
-        let success: boolean = false;
 
         // Install the handler to dispatch serial port lines
         // to Command listeners
@@ -142,42 +150,62 @@ export class ControllerService {
             this.status = ControllerStatus.CONNECTING;
 
             // Reset controller
-            success = await this._initializeController();
-
-            if (success) {
+            try {
+                await this._initializeController();
                 this.status = ControllerStatus.CONNECTED;
-            } else {
+            } catch (error) {
+                this.serialPort.close();
                 this.status = ControllerStatus.UNKNOWN_DEVICE;
+                return Promise.reject("_initializeController: " + error);
             }
         }
-
-        if (success) {
-            await this.getStats();
-        }
-
+        await this.getStats();
         return Promise.resolve(this.status);
     };
 
-    private async _initializeController(): Promise<boolean> {
-        const command = await this.send(new ResetCommand(0x18, 7000));
-        const { status, version, build } = command.result();
-        this.version = version;
-        this.build = build;
-        if (status == "Welcome") {
-            // Disable echo
-            await this.serialPort.writeChar(0x0c); // CTRL-L
+    private async _getControllerInfo(): void {
+        // Get version
+        const info_cmd = await this.send(new BuildInfoCommand(), 500);
+        const r = info_cmd.result();
+        this.build = r.build;
+        this.hasWiFi = r.wifiInfo.length != 0;
 
-            // Get version
-            const info_cmd = await this.send(new BuildInfoCommand(), 500);
-            this.currentVersion = info_cmd.result();
+        const startup_cmd = await this.send(new ShowStartupCommand(), 1000);
+        const sr = startup_cmd.result();
+        this.hasErrors = sr.hasErrors;
+        this.startupLines = sr.lines;
+    }
 
-            return true;
+    private async _initializeController(): Promise<void> {
+        let responsive = false;
+        await this.send(new GetStatusCommand(), 100)
+            .then((_command) => {
+                responsive = true;
+                // We only want to see if FluidNC is responding to '?';
+                // we don't need the actual information
+                // const { state, machine } = _command.result();
+            })
+            .catch(() => {
+                responseive = false;
+            });
+        if (responsive) {
+            // Check for critical alarm state and try to cancel it
+        } else {
+            const command = await this.send(new ResetCommand(0x18), 7000);
+            const r = command.result();
+            if (r.status == "ResetLoop") {
+                console.log("Controller is in a reboot loop");
+                this.serialPort.holdReset();
+                return Promise.reject();
+            }
+            this.version = r.version;
+            this.build = r.build;
         }
-        if (status == "ResetLoop") {
-            console.log("Controller is in a reboot loop");
-            this.serialPort.holdReset();
-            return false;
-        }
+
+        await this.serialPort.writeChar(0x0c); // CTRL-L - disable echo
+        await this._getControllerInfo();
+
+        return Promise.resolve();
     }
 
     async disconnect(notify = true): Promise<void> {
@@ -227,18 +255,7 @@ export class ControllerService {
                 command.onError(line);
             } else if (line.startsWith("[")) {
                 if (line.endsWith("]")) {
-                    line = line.slice(1, -1);
-                    const pos = line.indexOf(":");
-                    let tag: string;
-                    let value: string;
-                    if (pos == -1) {
-                        tag = line;
-                        value = undefined;
-                    } else {
-                        tag = line.substring(0, pos);
-                        value = line.substring(pos + 1);
-                    }
-                    command.onMsg(tag, value);
+                    command.onPushMsg(line.slice(1, -1));
                 } else {
                     console.error("Unterminated message " + line);
                 }
@@ -364,19 +381,19 @@ export class ControllerService {
         return Promise.resolve();
     };
 
-    hardReset = async (): Promise<ResetCommand> => {
+    hardReset = async (): void => {
         this.status = ControllerStatus.CONNECTING;
+        this.startupLines = null;
         await this.wait();
 
-        const command = new ResetCommand("<HardReset>");
+        const command = new HardResetCommand();
         this.commands.push(command);
-        await this.serialPort.hardReset();
-        const result = new Promise<ResetCommand>((resolve, reject) => {
+        const p = new Promise<T>((resolve, reject) => {
             const timer = setTimeout(() => {
                 this._removeCommand(command);
                 this.status = ControllerStatus.UNKNOWN_DEVICE;
                 reject("Command timed out");
-            }, 10000);
+            }, 20000); // Long timeout for WiFi connect
 
             (command as Command).addListener(() => {
                 if (timer) {
@@ -386,7 +403,15 @@ export class ControllerService {
                 resolve(command);
             });
         });
-        return result;
+
+        await this.serialPort.hardReset();
+
+        const r = (await p).result();
+        // const { status, version, build, hasErrors, startupLines } = await r.result();
+        this.build = r.build;
+        this.hasWiFi = r.build.includes("(wifi)");
+        this.hasErrors = r.hasErrors;
+        this.startupLines = r.startupLines;
     };
 
     addListener(listener: ControllerStatusListener) {

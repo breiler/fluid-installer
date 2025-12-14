@@ -8,8 +8,9 @@ export class ListFilesCommand extends Command {
         this.files = [];
     }
 
-    onMsg(tag: string, value: string) {
-        if (tag == "FILE") {
+    onPushMsg(line: string) {
+        if (line.startsWith("FILE:")) {
+            const value = line.substring(5);
             if (!value.startsWith("  ")) {
                 // Only files in root directory
                 this.files.push(value);

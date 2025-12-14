@@ -58,8 +58,8 @@ export class Command {
     // Individual commands typically override the callback
     // methods for the line types that they expect, so the
     // following default versions should rarely be executed
-    onMsg(_tag: string, _value: string) {
-        // console.trace("onMsg " + _tag + ": " + _value);
+    onPushMsg(_line: string) {
+        // console.trace("onMsg " + _line);
     }
 
     onItem(name: string, value: string) {

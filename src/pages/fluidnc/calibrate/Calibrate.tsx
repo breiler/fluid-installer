@@ -192,6 +192,10 @@ const Calibrate = () => {
         await sleep(1000);
 
         const configData = jsYaml.dump(config, { noCompatMode: true });
+
+        // FluidNC "YAML" does not implement null
+        configData.replace(/: null\n/g, ":\n");
+
         await controllerService!.uploadFile(
             "/littlefs/" + configFile,
             Buffer.from(configData)

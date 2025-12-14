@@ -174,6 +174,7 @@ const WiFiSettings = () => {
             }
 
             await controllerService?.hardReset();
+            await refreshStats();
             await refresh();
         } finally {
             setIsSaving(false);

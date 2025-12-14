@@ -36,7 +36,7 @@ export class GetStatusCommand extends Command {
             .map((value) => Number(value));
 
         return {
-            state: statusLine.substring(1, statusLine.indexOf("|")),
+            state: statusLine.substring(0, statusLine.indexOf("|")),
             machine: {
                 x: mposCoord?.[0],
                 y: mposCoord?.[1],

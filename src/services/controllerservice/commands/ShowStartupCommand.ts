@@ -1,22 +1,24 @@
 import { Command } from "./Command";
 
 export class ShowStartupCommand extends Command {
-    _startup_lines: string[] = [];
-    _has_errors: boolean = false;
+    _startupLines: string[] = [];
+    _hasErrors: boolean = false;
 
     constructor() {
         super("$Startup/Show");
     }
-    onMsg(tag: string, value: string) {
-        if (tag != "INFO") {
-            this._has_errors = true;
+    onPushMsg(line: string) {
+        if (line.startsWith("MSG:")) {
+            if (line.substring(4).startsWith("ERR:")) {
+                this._hasErrors = true;
+            }
         }
-        this._startup_lines.push("[MSG:" + tag + ":" + value + "]");
+        this._startupLines.push("[" + line + "]");
     }
     onText(value: string) {
-        this._startup_lines.push(value);
+        this._startupLines.push(value);
     }
-    result(): { hasErrors: boolean; data: string[] } {
-        return { hasErrors: this._has_errors, data: this._startup_lines };
+    result(): { hasErrors: boolean; lines: string[] } {
+        return { hasErrors: this._hasErrors, lines: this._startupLines };
     }
 }

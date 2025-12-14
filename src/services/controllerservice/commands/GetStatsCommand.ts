@@ -40,9 +40,9 @@ export class GetStatsCommand extends Command {
     }
 
     // Handle the encapsulated response style
-    onMsg(tag: string, value: string) {
-        if (tag == "JSON") {
-            this.json += value;
+    onPushMsg(line: string) {
+        if (line.startsWith("JSON:")) {
+            this.json += line.substring(5);
         }
     }
 

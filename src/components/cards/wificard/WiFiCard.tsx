@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import Card from "../card";
 import Button from "../../button";
@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWifi } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Stats } from "../../../services/controllerservice/commands/GetStatsCommand";
-import useControllerState from "../../../store/ControllerState";
+import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
 
 type WiFiCardProps = {
     disabled?: boolean;
@@ -30,7 +30,8 @@ const WebUiLink = ({ stats }: { stats: Stats }) => {
 
 export const WiFiCard = ({ onClick, disabled = false }: WiFiCardProps) => {
     const { t } = useTranslation();
-    const stats = useControllerState((state) => state.stats);
+    const controllerService = useContext(ControllerServiceContext);
+    const stats = controllerService.stats;
 
     return (
         <Card

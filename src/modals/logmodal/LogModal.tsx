@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../../components";
 import { Modal } from "react-bootstrap";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faCopy, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import Log from "../../components/log/Log";
@@ -14,6 +14,20 @@ type RestartModalProps = {
 };
 
 const LogModal = ({ show, setShow, rows }: RestartModalProps) => {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        if (rows && rows.length > 0) {
+            try {
+                await navigator.clipboard.writeText(rows.join("\n"));
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            } catch (err) {
+                console.error("Failed to copy text: ", err);
+            }
+        }
+    };
+
     return (
         <Modal show={show} size="lg" centered>
             <Modal.Body>
@@ -23,6 +37,14 @@ const LogModal = ({ show, setShow, rows }: RestartModalProps) => {
             </Modal.Body>
 
             <Modal.Footer>
+                <Button onClick={handleCopy}>
+                    <>
+                        <FontAwesomeIcon
+                            icon={(copied ? faCheck : faCopy) as IconDefinition}
+                        />{" "}
+                        {copied ? "Copied!" : "Copy"}
+                    </>
+                </Button>
                 <Button onClick={() => setShow(false)}>
                     <>
                         <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}

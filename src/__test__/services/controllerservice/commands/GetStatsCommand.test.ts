@@ -3,11 +3,10 @@ import { GetStatsCommand } from "../../../../services/controllerservice/commands
 
 test("GetStatsCommand", () => {
     const command = new GetStatsCommand();
-    command.onMsg(
-        "JSON",
-        '{"cmd":"420","status":"ok","data":[{"id":"SSID","value":"test1"},'
+    command.onPushMsg(
+        'JSON:{"cmd":"420","status":"ok","data":[{"id":"SSID","value":"test1"},'
     );
-    command.onMsg("JSON", '{"id":"Connected to","value":"test2"}]}');
+    command.onPushMsg('JSON:{"id":"Connected to","value":"test2"}]}');
     command._updateData();
 
     const stats = command.result();

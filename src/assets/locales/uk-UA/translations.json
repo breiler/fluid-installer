@@ -141,7 +141,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Оновити FluidNC на вашому контролері",
+            "upgrade-description": "Upgrade FluidNC from",
             "install-description": "Схоже, що на контролері не встановлено FluidNC. Бажаєте встановити його?",
             "upgrade-button": "Оновити FluidNC",
             "install-button": "Встановити FluidNC"

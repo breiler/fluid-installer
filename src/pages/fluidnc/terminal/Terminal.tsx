@@ -93,10 +93,8 @@ const TerminalComponent = () => {
                 savedData.forEach(injectData);
                 controllerService.serialPort.addReader(injectData);
                 controllerService.serialPort.writeChar(0x05); // CTRL-E
-                // controllerService.serialPort.writeChar(0x3f); // ? get status
             } catch (error) {
                 console.log(error);
-                setError("Terminal start failed");
             }
         }
 
@@ -141,7 +139,6 @@ const Terminal = () => {
         controllerService.serialPort.writeChar(0x05); // CTRL-E
         controllerService.serialPort.writeChar(0x3f); // ? get status
         setIsLoading(false);
-        // xtermRef.current?.terminal.focus();
     };
 
     const onReset = async () => {
@@ -220,7 +217,7 @@ const Terminal = () => {
                     {t("page.terminal.version")}
                 </Button>
                 <Button
-                    onClick={setShowLogModal}
+                    onClick={() => setShowLogModal(true)}
                     variant="secondary"
                     title={t("page.terminal.startup-description")}
                     disabled={isLoading}

@@ -14,13 +14,11 @@ const InitConfig = () => {
         const command = await controllerService.send(
             new GetConfigFilenameCommand()
         );
-        setConfigFilename(command.getFilename());
+        setConfigFilename(command.result());
 
         const listFiles = await controllerService.send(new ListFilesCommand());
         setConfigExists(
-            !!listFiles
-                .result()
-                .find((file) => file.name === command.getFilename())
+            !!listFiles.result().find((file) => file.name === command.result())
         );
 
         controllerService.disconnect();
@@ -31,9 +29,6 @@ const InitConfig = () => {
             return;
         }
         run();
-
-        // controllerService.connect().then(async () => {
-        // });
     }, [controllerService]);
 
     return (

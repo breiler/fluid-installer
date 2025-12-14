@@ -49,7 +49,7 @@ class XModemSocketAdapter implements XModemSocket {
     }
 
     write(buffer) {
-        this.serialPort.write(buffer);
+        return this.serialPort.write(buffer);
     }
 
     read(): Promise<Buffer> {
@@ -57,13 +57,6 @@ class XModemSocketAdapter implements XModemSocket {
         this.buffer = Buffer.alloc(0);
         return Promise.resolve(result);
     }
-
-    // const withTimeout = (promise: Promise<Buffer>, timeoutMs:number ) => {
-    //     const timeoutPromise = new Promise((_, reject) =>
-    //         setTimeout(() => reject(new Error('Operation timed out')), timeoutMs)
-    //                                       );
-    //     return Promise.race([promise, timeoutPromise]);
-    // }
 
     async timedRead(timeout: number): Promise<Buffer> {
         return new Promise<Buffer>((resolve, reject) => {
@@ -105,9 +98,9 @@ export class ControllerService {
     statusListeners: ControllerStatusListener[];
     stats: Stats;
     version: string;
-    build: string;
     hasErrors: boolean = false;
     startupLines: string[] = [];
+    hasWiFi: boolean;
 
     constructor(serialPort: SerialPort) {
         this.serialPort = serialPort;
@@ -163,7 +156,7 @@ export class ControllerService {
         return Promise.resolve(this.status);
     };
 
-    private async _getControllerInfo(): void {
+    private async _getControllerInfo(): Promise<void> {
         // Get version
         const info_cmd = await this.send(new BuildInfoCommand(), 500);
         const r = info_cmd.result();
@@ -300,10 +293,10 @@ export class ControllerService {
         }
     };
 
-    send = async (
-        command: Command,
+    send = async <T extends Command>(
+        command: T,
         timeoutMs: number = 0
-    ): Promise<Command> => {
+    ): Promise<T> => {
         if (this.status === ControllerStatus.DISCONNECTED) {
             return command;
         }
@@ -381,14 +374,14 @@ export class ControllerService {
         return Promise.resolve();
     };
 
-    hardReset = async (): void => {
+    hardReset = async (): Promise<void> => {
         this.status = ControllerStatus.CONNECTING;
         this.startupLines = null;
         await this.wait();
 
         const command = new HardResetCommand();
         this.commands.push(command);
-        const p = new Promise<T>((resolve, reject) => {
+        const p = new Promise<HardResetCommand>((resolve, reject) => {
             const timer = setTimeout(() => {
                 this._removeCommand(command);
                 this.status = ControllerStatus.UNKNOWN_DEVICE;

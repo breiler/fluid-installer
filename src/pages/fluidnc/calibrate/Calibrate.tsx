@@ -16,7 +16,6 @@ import { Spinner } from "../../../components";
 
 import { Link } from "react-router-dom";
 import jsYaml from "js-yaml";
-import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
 
 type AxisPinsProps = {
     axis: string;
@@ -209,7 +208,6 @@ const Calibrate = () => {
     return (
         <>
             <PageTitle>Calibrate</PageTitle>
-            <SpinnerModal show={false /* isLoading */} text="Loading..." />
 
             {isLoading && (
                 <AlertMessage variant="info">

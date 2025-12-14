@@ -9,7 +9,7 @@ import {
     faWifi
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext /* , useState */ } from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Nav } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +20,6 @@ import useTrackEvent, {
     TrackAction,
     TrackCategory
 } from "../../hooks/useTrackEvent";
-// import useControllerState from "../../store/ControllerState";
 
 const Navigation = () => {
     const navigate = useNavigate();

@@ -38,7 +38,6 @@ import { Spinner } from "../../../components";
 import AlertMessage from "../../../components/alertmessage/AlertMessage";
 import WiFiStats from "./WifiStats";
 import { sleep } from "../../../utils/utils";
-import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
 
 const getSignalColor = (signal: number) => {
     if (signal > 60) {
@@ -122,7 +121,7 @@ const WiFiSettings = () => {
                 setStationIpMode(settings.get("Sta/IPMode"));
                 setStationPassword(settings.get("Sta/Password"));
                 setStationMinSecurity(settings.get("Sta/MinSecurity"));
-                setStationIP(settings.get("StaIP"));
+                setStationIP(settings.get("Sta/IP"));
                 setStationGateway(settings.get("Sta/Gateway"));
                 setStationNetmask(settings.get("Sta/Netmask"));
                 setApSSID(settings.get("AP/SSID"));
@@ -145,17 +144,16 @@ const WiFiSettings = () => {
         try {
             setSetting("Hostname", hostname);
             setSetting("WiFi/Mode", wifiMode);
+
             if (wifiMode === "STA>AP" || wifiMode === "STA") {
                 setSetting("Sta/SSID", stationSSID);
-                setSetting("Sta/IPMode", stationIpMode);
+                setSetting("Sta/IpMode", stationIpMode);
                 setSetting("Sta/MinSecurity", stationMinSecurity);
                 setSetting("Sta/IP", stationIP);
                 setSetting("Sta/Gateway", stationGateway);
                 setSetting("Sta/Netmask", stationNetmask);
-                if (
-                    stationPassword !== settings.get() &&
-                    stationPassword !== "********"
-                ) {
+
+                if (stationPassword !== settings.get("Sta/Password")) {
                     await controllerService?.send(
                         new Command(
                             "$Sta/Password=" +
@@ -202,23 +200,7 @@ const WiFiSettings = () => {
 
     return (
         <Form>
-            <SpinnerModal
-                show={false /* isLoading */}
-                text={`Loading ${loadingType}...`}
-            />
-            <SpinnerModal
-                show={false /* isSaving */}
-                text={`Saving network settings...`}
-            />
-
-            {/*isLoading && loadingType != "access points" && (
-                <AlertMessage variant="info">
-                    {`Loading ${loadingType}...`} <Spinner />
-                </AlertMessage>
-            )*/}
-
             <PageTitle>Configure WiFi</PageTitle>
-
             <h4 style={{ marginTop: "24px" }}>Current WiFi connection</h4>
             <>
                 <Row>
@@ -288,14 +270,11 @@ const WiFiSettings = () => {
                                     type="text"
                                     onChange={(e) =>
                                         setStationSSID(e.target.value)
-                                    }
-                                ></Form.Control>
+                                    }></Form.Control>
                                 <Dropdown
-                                    onToggle={() => refreshAccessPoints()}
-                                >
+                                    onToggle={() => refreshAccessPoints()}>
                                     <Dropdown.Toggle
-                                        disabled={isSaving || isLoading}
-                                    >
+                                        disabled={isSaving || isLoading}>
                                         <FontAwesomeIcon
                                             icon={faSearch as IconDefinition}
                                         />
@@ -311,13 +290,11 @@ const WiFiSettings = () => {
                                                             setStationSSID(
                                                                 accessPoint.ssid
                                                             )
-                                                        }
-                                                    >
+                                                        }>
                                                         <Badge
                                                             bg={getSignalColor(
                                                                 accessPoint.signal
-                                                            )}
-                                                        >
+                                                            )}>
                                                             <FontAwesomeIcon
                                                                 icon={
                                                                     faWifi as IconDefinition
@@ -523,8 +500,7 @@ const WiFiSettings = () => {
 
             <div
                 className="d-flex justify-content-end"
-                style={{ marginTop: "16px" }}
-            >
+                style={{ marginTop: "16px" }}>
                 <Button
                     onClick={() => saveSettings()}
                     disabled={
@@ -544,8 +520,7 @@ const WiFiSettings = () => {
                             apChannel === settings?.get("AP/Channel") &&
                             apIP === settings?.get("AP/IP") &&
                             apCountry === settings?.get("AP/Country"))
-                    }
-                >
+                    }>
                     <FontAwesomeIcon icon={faSave as Icon} /> Save{" "}
                     {isSaving && <Spinner />}
                 </Button>

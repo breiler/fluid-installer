@@ -186,7 +186,7 @@ export class ControllerService {
                 // const { state, machine } = _command.result();
             })
             .catch(() => {
-                responseive = false;
+                responsive = false;
             });
         if (responsive) {
             // Check for critical alarm state and try to cancel it

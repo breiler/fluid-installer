@@ -119,7 +119,7 @@ const WiFiSettings = () => {
                 setWifiMode(settings.get("WiFi/Mode"));
                 setHostname(settings.get("Hostname"));
                 setStationSSID(settings.get("Sta/SSID"));
-                setStationIpMode(settings.get("Sta/IpMode"));
+                setStationIpMode(settings.get("Sta/IPMode"));
                 setStationPassword(settings.get("Sta/Password"));
                 setStationMinSecurity(settings.get("Sta/MinSecurity"));
                 setStationIP(settings.get("StaIP"));
@@ -152,7 +152,10 @@ const WiFiSettings = () => {
                 setSetting("Sta/IP", stationIP);
                 setSetting("Sta/Gateway", stationGateway);
                 setSetting("Sta/Netmask", stationNetmask);
-                if (stationPassword !== settings.get()) {
+                if (
+                    stationPassword !== settings.get() &&
+                    stationPassword !== "********"
+                ) {
                     await controllerService?.send(
                         new Command(
                             "$Sta/Password=" +
@@ -168,7 +171,10 @@ const WiFiSettings = () => {
                 setSetting("AP/IP", apIP);
                 setSetting("AP/Country", apCountry);
 
-                if (apPassword !== settings.get("AP/Password")) {
+                if (
+                    apPassword !== settings.get("AP/Password") &&
+                    apPassword !== "********"
+                ) {
                     await controllerService?.send(
                         new Command(
                             "$AP/Password=" + encodePassword(apPassword ?? "")
@@ -393,7 +399,7 @@ const WiFiSettings = () => {
                                 label="IP"
                                 disabled={isSaving || isLoading}
                                 value={stationIP}
-                                placeholder="Password"
+                                placeholder="IP"
                                 setValue={(value) => setStationIP("" + value)}
                             />
                             <TextField

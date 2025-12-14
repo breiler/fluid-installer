@@ -32,7 +32,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import ConfigurationModal from "../../../modals/configurationmodal/ConfigurationModal";
-import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
+import AlertMessage from "../../../components/alertmessage/AlertMessage";
 import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
 import PageTitle from "../../../components/pagetitle/PageTitle";
 import usePageView from "../../../hooks/usePageView";
@@ -78,7 +78,6 @@ const FileBrowser = () => {
     const [isDownloading, setIsDownloading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [showNewConfigDialog, setShowNewConfigDialog] = useState(false);
-    const [currentFileName, setCurrentFileName] = useState("");
     const [fileSystem, setFileSystem] = useState<"/sd/" | "/localfs/">(
         "/localfs/"
     );
@@ -221,7 +220,6 @@ const FileBrowser = () => {
                 }
 
                 for (const file of files) {
-                    setCurrentFileName(file.name);
                     await fileUpload(file, onSave);
                 }
                 resolve(1);
@@ -229,7 +227,6 @@ const FileBrowser = () => {
             input.click();
         }).finally(() => {
             setIsUploading(false);
-            setCurrentFileName("");
         });
     };
 
@@ -254,23 +251,22 @@ const FileBrowser = () => {
     return (
         <>
             <PageTitle>{t("page.file-browser.title")}</PageTitle>
-            <SpinnerModal
-                show={isLoading}
-                text={t("page.file-browser.loading")}
-            />
-            <SpinnerModal
-                show={isDownloading}
-                text={t("page.file-browser.downloading")}
-            />
-            <SpinnerModal
-                show={isUploading}
-                text={
-                    t("page.file-browser.uploading") +
-                    " " +
-                    currentFileName +
-                    "..."
-                }
-            />
+            {isLoading && (
+                <AlertMessage variant="info">
+                    {t("page.file-browser.loading")} <Spinner />
+                </AlertMessage>
+            )}
+            {isDownloading && (
+                <AlertMessage variant="info">
+                    {t("page.file-browser.downloading")} <Spinner />
+                </AlertMessage>
+            )}
+            {isUploading && (
+                <AlertMessage variant="info">
+                    {t("page.file-browser.uploading")} <Spinner />
+                </AlertMessage>
+            )}
+
             {showNewConfigDialog && (
                 <CreateFileModal
                     show={

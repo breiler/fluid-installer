@@ -17,11 +17,12 @@ export type Status = {
 export class GetStatusCommand extends Command {
     status_report: string;
     constructor() {
-        super("?");
+        super(0x3f);
         this.status_report = "";
     }
     onStatusReport(report: string) {
         this.status_report = report;
+        this.onDone();
     }
 
     result(): Status {
@@ -35,7 +36,7 @@ export class GetStatusCommand extends Command {
             .map((value) => Number(value));
 
         return {
-            state: statusLine.substring(1, statusLine.indexOf("|")),
+            state: statusLine.substring(0, statusLine.indexOf("|")),
             machine: {
                 x: mposCoord?.[0],
                 y: mposCoord?.[1],

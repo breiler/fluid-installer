@@ -10,28 +10,25 @@ const InitConfig = () => {
     const [configFilename, setConfigFilename] = useState<string>("");
     const [configExists, setConfigExists] = useState<boolean>(false);
 
+    const run = async () => {
+        const command = await controllerService.send(
+            new GetConfigFilenameCommand()
+        );
+        setConfigFilename(command.result());
+
+        const listFiles = await controllerService.send(new ListFilesCommand());
+        setConfigExists(
+            !!listFiles.result().find((file) => file.name === command.result())
+        );
+
+        controllerService.disconnect();
+    };
+
     useEffect(() => {
         if (!controllerService) {
             return;
         }
-
-        controllerService.connect().then(async () => {
-            const command = await controllerService.send(
-                new GetConfigFilenameCommand()
-            );
-            setConfigFilename(command.getFilename());
-
-            const listFiles = await controllerService.send(
-                new ListFilesCommand()
-            );
-            setConfigExists(
-                !!listFiles
-                    .result()
-                    .find((file) => file.name === command.getFilename())
-            );
-
-            controllerService.disconnect();
-        });
+        run();
     }, [controllerService]);
 
     return (

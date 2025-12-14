@@ -7,9 +7,9 @@ export class VersionCommand extends Command {
         this.version = "?";
     }
 
-    onMsg(tag: string, value: string) {
-        if (tag == "VER") {
-            const match = value.match(/^([0-9.]+)/);
+    onPushMsg(line: string) {
+        if (line.startsWith("VER:")) {
+            const match = line.substring(4).match(/^([0-9.]+)/);
             this.version = match?.[1] ?? "?";
         }
     }

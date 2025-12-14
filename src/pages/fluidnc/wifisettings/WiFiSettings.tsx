@@ -35,9 +35,9 @@ import {
 } from "../../../services/controllerservice/commands/GetSettingsCommand";
 import { Command } from "../../../services";
 import { Spinner } from "../../../components";
+import AlertMessage from "../../../components/alertmessage/AlertMessage";
 import WiFiStats from "./WifiStats";
 import { sleep } from "../../../utils/utils";
-import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
 
 const getSignalColor = (signal: number) => {
     if (signal > 60) {
@@ -118,10 +118,10 @@ const WiFiSettings = () => {
                 setWifiMode(settings.get("WiFi/Mode"));
                 setHostname(settings.get("Hostname"));
                 setStationSSID(settings.get("Sta/SSID"));
-                setStationIpMode(settings.get("Sta/IpMode"));
+                setStationIpMode(settings.get("Sta/IPMode"));
                 setStationPassword(settings.get("Sta/Password"));
                 setStationMinSecurity(settings.get("Sta/MinSecurity"));
-                setStationIP(settings.get("StaIP"));
+                setStationIP(settings.get("Sta/IP"));
                 setStationGateway(settings.get("Sta/Gateway"));
                 setStationNetmask(settings.get("Sta/Netmask"));
                 setApSSID(settings.get("AP/SSID"));
@@ -135,42 +135,54 @@ const WiFiSettings = () => {
     const saveSettings = async () => {
         setIsSaving(true);
         const setSetting = async (name: string, value: string) => {
-            if (value != settings.get(name)) {
-                await controllerService.send(new Command(name + "=" + value));
+            if (value && value != settings.get(name)) {
+                await controllerService.send(
+                    new Command("$" + name + "=" + value)
+                );
             }
         };
         try {
             setSetting("Hostname", hostname);
             setSetting("WiFi/Mode", wifiMode);
-            setSetting("Sta/SSID", stationSSID);
-            setSetting("Sta/IpMode", stationIpMode);
-            setSetting("Sta/MinSecurity", stationMinSecurity);
-            setSetting("Sta/IP", stationIP);
-            setSetting("Sta/Gateway", stationGateway);
-            setSetting("Sta/Netmask", stationNetmask);
 
-            if (stationPassword !== settings.get()) {
-                await controllerService?.send(
-                    new Command(
-                        "$Sta/Password=" + encodePassword(stationPassword ?? "")
-                    )
-                );
+            if (wifiMode === "STA>AP" || wifiMode === "STA") {
+                setSetting("Sta/SSID", stationSSID);
+                setSetting("Sta/IPMode", stationIpMode);
+                setSetting("Sta/MinSecurity", stationMinSecurity);
+                setSetting("Sta/IP", stationIP);
+                setSetting("Sta/Gateway", stationGateway);
+                setSetting("Sta/Netmask", stationNetmask);
+
+                if (stationPassword !== settings.get("Sta/Password")) {
+                    await controllerService?.send(
+                        new Command(
+                            "$Sta/Password=" +
+                                encodePassword(stationPassword ?? "")
+                        )
+                    );
+                }
             }
 
-            setSetting("AP/SSID", apSSID);
-            setSetting("AP/Channel", apChannel);
-            setSetting("AP/IP", apIP);
-            setSetting("AP/Country", apCountry);
+            if (wifiMode === "STA>AP" || wifiMode === "AP") {
+                setSetting("AP/SSID", apSSID);
+                setSetting("AP/Channel", apChannel);
+                setSetting("AP/IP", apIP);
+                setSetting("AP/Country", apCountry);
 
-            if (apPassword !== settings.get("AP/Password")) {
-                await controllerService?.send(
-                    new Command(
-                        "$AP/Password=" + encodePassword(apPassword ?? "")
-                    )
-                );
+                if (
+                    apPassword !== settings.get("AP/Password") &&
+                    apPassword !== "********"
+                ) {
+                    await controllerService?.send(
+                        new Command(
+                            "$AP/Password=" + encodePassword(apPassword ?? "")
+                        )
+                    );
+                }
             }
 
             await controllerService?.hardReset();
+            await refreshStats();
             await refresh();
         } finally {
             setIsSaving(false);
@@ -179,20 +191,31 @@ const WiFiSettings = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        sleep(1000)
+        sleep(100)
+            .then(() => refreshStats())
             .then(() => refresh())
             .then(() => refreshAccessPoints())
-            .then(() => refreshStats())
             .finally(() => setIsLoading(false));
     }, [controllerService]);
 
     return (
         <Form>
-            <SpinnerModal show={isLoading} text={`Loading ${loadingType}...`} />
-            <SpinnerModal show={isSaving} text={`Saving network settings...`} />
-
             <PageTitle>Configure WiFi</PageTitle>
+            <h4 style={{ marginTop: "24px" }}>Current WiFi connection</h4>
+            <>
+                <Row>
+                    {!isSaving && (
+                        <Col>
+                            <WiFiStats
+                                stats={stats ?? {}}
+                                onRefresh={() => refreshStats()}
+                            />
+                        </Col>
+                    )}
+                </Row>
+            </>
 
+            <h4 style={{ marginTop: "24px" }}>General settings</h4>
             <TextField
                 label="Hostname"
                 disabled={isSaving || isLoading}
@@ -223,25 +246,17 @@ const WiFiSettings = () => {
                 value={wifiMode}
             />
 
-            <>
-                <Row>
-                    <Col lg={4} className="d-none d-lg-block"></Col>
-                    {!isSaving && (
-                        <Col>
-                            <WiFiStats
-                                stats={stats ?? {}}
-                                onRefresh={() => refreshStats()}
-                            />
-                        </Col>
-                    )}
-                </Row>
-            </>
-
             {(wifiMode === "STA>AP" || wifiMode === "STA") && (
                 <>
                     <h4 style={{ marginTop: "24px" }}>
                         Client station settings
                     </h4>
+                    {isLoading && loadingType == "access points" && (
+                        <AlertMessage variant="info">
+                            {`Loading ${loadingType}`} <Spinner />
+                        </AlertMessage>
+                    )}
+
                     <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm="4">
                             SSID
@@ -354,10 +369,7 @@ const WiFiSettings = () => {
                         disabled={isSaving || isLoading}
                         options={[
                             { name: "Static", value: "Static" },
-                            {
-                                name: "DHCP",
-                                value: "DHCP"
-                            }
+                            { name: "DHCP", value: "DHCP" }
                         ]}
                         setValue={async (value) => setStationIpMode(value)}
                         value={stationIpMode}
@@ -369,7 +381,7 @@ const WiFiSettings = () => {
                                 label="IP"
                                 disabled={isSaving || isLoading}
                                 value={stationIP}
-                                placeholder="Password"
+                                placeholder="IP"
                                 setValue={(value) => setStationIP("" + value)}
                             />
                             <TextField
@@ -502,7 +514,7 @@ const WiFiSettings = () => {
                         (hostname === settings?.get("Hostname") &&
                             wifiMode === settings?.get("WiFi/Mode") &&
                             stationSSID === settings?.get("Sta/SSID") &&
-                            stationIpMode === settings?.get("Sta/IpMode") &&
+                            stationIpMode === settings?.get("Sta/IPMode") &&
                             stationPassword === settings?.get("Sta/Password") &&
                             stationMinSecurity ===
                                 settings?.get("Sta/MinSecurity") &&

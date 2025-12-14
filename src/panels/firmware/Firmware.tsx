@@ -51,7 +51,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
         "showPrerelease",
         false
     );
-    const [isLoading, setLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const choice = useMemo(
         () => selectedChoices[selectedChoices.length - 1],
@@ -62,7 +62,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
         setSelectedRelease(release);
 
         if (release) {
-            setLoading(true);
+            setIsLoading(true);
             githubService
                 .getReleaseManifest(release)
                 .then((manifest) => {
@@ -74,7 +74,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                         "Could not download the release asset " + error
                     );
                 })
-                .finally(() => setLoading(false));
+                .finally(() => setIsLoading(false));
         }
     };
 

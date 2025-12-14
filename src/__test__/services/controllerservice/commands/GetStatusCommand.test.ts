@@ -4,7 +4,7 @@ import { GetStatusCommand } from "../../../../services/controllerservice/command
 test("GetStatusCommand ", () => {
     const command = new GetStatusCommand();
     command.onStatusReport(
-        "<Idle|MPos:1.000,10.000,100.000|FS:0,0|WCO:0.000,0.000,0.000>"
+        "Idle|MPos:1.000,10.000,100.000|FS:0,0|WCO:0.000,0.000,0.000"
     );
 
     const stats = command.result();

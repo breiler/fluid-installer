@@ -10,10 +10,9 @@ export type GpioStatus = {
 const regexp = /^(\d+) (GPIO\d+) ([IO])([01]).*$/;
 
 export class GetGpioDumpCommand extends Command {
-    response: string[];
+    response: string[] = [];
     constructor() {
         super("$GPIO/Dump");
-        this.response = [];
     }
 
     onText(text: string) {

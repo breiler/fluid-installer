@@ -8,7 +8,7 @@ export enum CommandState {
 type StateListener = (state: CommandState) => void;
 
 export class Command {
-    command: string;
+    command: string | number;
     state: CommandState;
 
     /**
@@ -27,7 +27,7 @@ export class Command {
         this.listeners.push(listener);
     }
 
-    constructor(command: string) {
+    constructor(command: string | number) {
         this.state = CommandState.INITIATED;
         this.command = command;
     }
@@ -51,12 +51,15 @@ export class Command {
         this.onDone();
     }
 
-    getCommand() {
+    getCommand(): string | number {
         return this.command;
     }
 
-    onMsg(tag: string, value: string) {
-        console.trace("onMsg " + tag + ": " + value);
+    // Individual commands typically override the callback
+    // methods for the line types that they expect, so the
+    // following default versions should rarely be executed
+    onPushMsg(_line: string) {
+        // console.trace("onMsg " + _line);
     }
 
     onItem(name: string, value: string) {
@@ -71,7 +74,7 @@ export class Command {
         console.trace("onText: " + text);
     }
 
-    onStatusReport(report: string) {
-        console.trace("onStatusReport: " + report);
+    onStatusReport(_report: string) {
+        // console.trace("onStatusReport: " + _report);
     }
 }

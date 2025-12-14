@@ -11,7 +11,7 @@ const EOT = 0x04; // End of text
 const ACK = 0x06; // ACKnowlege
 const NAK = 0x15; // Negative AcKnowlege
 const CAN = 0x18; // CANcel character
-const FILLER = 0x1a;
+const DOS_EOF = 0x1a; // CTRL-Z, the old DOS end-of-file marker
 const CRC_MODE = 0x43; // 'C'
 
 const ERROR_COULD_NOT_START = "Transmission could not start";
@@ -78,7 +78,7 @@ const crc16Hex = (buffer: Buffer) => {
 
 export class XModem {
     private socket: XModemSocket;
-    private maxTransmissionRestarts = 4;
+    private maxTransmissionRestarts = 20;
     private maxUploadErrors = 5;
 
     constructor(socket: XModemSocket) {
@@ -87,18 +87,16 @@ export class XModem {
 
     async send(fileData: Buffer) {
         let startByte;
-
-        // Wait for send to start
-        let transmissionStartErrors = 0;
-        while (transmissionStartErrors < this.maxTransmissionRestarts) {
-            startByte = (await this.socket.read()).at(0);
-            if (startByte === NAK || startByte === EOT)
+        let buffer: Buffer;
+        try {
+            startByte = (await this.socket.timedRead(2000)).at(0);
+            if (startByte != CRC_MODE) {
+                console.log("XModem wrong start byte:" + startByte);
                 throw ERROR_COULD_NOT_UPLOAD;
-            else if (startByte === CRC_MODE) {
-                break;
             }
-            transmissionStartErrors++;
-            await new Promise((r) => setTimeout(r, 100));
+        } catch (error) {
+            console.log("XModem receiver failed to start:" + error);
+            throw ERROR_COULD_NOT_UPLOAD;
         }
 
         let blockNumber = 1;
@@ -111,7 +109,7 @@ export class XModem {
             if (blockData.length < 1024) {
                 blockData = Buffer.concat([
                     blockData,
-                    Buffer.alloc(1024 - blockData.length, FILLER)
+                    Buffer.alloc(1024 - blockData.length, DOS_EOF)
                 ]);
             }
 
@@ -133,26 +131,46 @@ export class XModem {
                 );
                 await this.socket.write(packet);
 
-                while (true) {
-                    startByte = (await this.socket.read()).at(0);
-                    console.debug("Waiting for ACK... ", startByte);
-                    if (startByte === ACK) {
-                        console.debug("Block done #" + blockNumber);
-                        blockDone = true;
-                        blockNumber++;
-                        break;
-                    }
-                    if (startByte === NAK || startByte === CRC_MODE) {
-                        console.log("Recived error for block #" + blockNumber);
-                        errorCount++;
-                        break;
-                    }
-                    if (startByte === CAN || startByte === EOT) {
-                        console.log("Recieved CAN from controller, aborting");
-                        throw ERROR_COULD_NOT_UPLOAD;
-                    }
-                    await new Promise((r) => setTimeout(r, 100));
+                //                let buffer:Buffer;
+                try {
+                    buffer = await this.socket.timedRead(500);
+                } catch (error) {
+                    console.log("XModem:" + error);
+                    throw error;
                 }
+                if (buffer.length != 1) {
+                    console.log(
+                        "Should not happen - buffer length is " + buffer.length
+                    );
+                    throw ERROR_COULD_NOT_UPLOAD;
+                }
+                startByte = buffer.at(0);
+                if (startByte === ACK) {
+                    // console.debug("Block done #" + blockNumber);
+                    blockDone = true;
+                    blockNumber++;
+                    break;
+                }
+                if (startByte === NAK) {
+                    console.log(
+                        "Retrying due to NAK for block #" + blockNumber
+                    );
+                    errorCount++;
+                    break;
+                }
+                if (startByte === CRC_MODE) {
+                    console.log(
+                        "Aborting due to CRC_MODE error for block #" +
+                            blockNumber
+                    );
+                    throw ERROR_COULD_NOT_UPLOAD;
+                }
+                if (startByte === CAN || startByte === EOT) {
+                    console.log("Aborting due to CAN or EOT from controller");
+                    throw ERROR_COULD_NOT_UPLOAD;
+                }
+                console.log("Got unexpected character " + startByte);
+                throw ERROR_COULD_NOT_UPLOAD;
             }
         }
 
@@ -191,7 +209,7 @@ export class XModem {
             }
 
             if (block.length > 5) {
-                console.debug("Concatinating block #" + blockNumber);
+                // console.debug("Concatenating block #" + blockNumber);
                 blockNumber++;
                 result = Buffer.concat([result, block]);
                 await this.socket.write(Buffer.from([ACK]));
@@ -318,9 +336,9 @@ export class XModem {
 }
 
 const trimBuffer = (result: Buffer): Buffer => {
-    // Trim any trailing FILLER characters
+    // Trim any trailing DOS_EOF characters
     let i = result.length - 1;
-    while (i >= 0 && result.at(i) === FILLER) {
+    while (i >= 0 && result.at(i) === DOS_EOF) {
         i--;
     }
 

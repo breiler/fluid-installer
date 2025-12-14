@@ -12,56 +12,7 @@ export enum SerialPortState {
 }
 
 export type SerialReader = (data: Buffer) => void;
-
-export class SerialBufferedReader {
-    clear() {
-        this.buffer = Buffer.from([]);
-    }
-    private buffer: Buffer = Buffer.from([]);
-
-    private reader: SerialReader = (data: Buffer) => {
-        this.buffer = Buffer.concat([this.buffer, data]);
-    };
-
-    read(): Buffer {
-        const result = this.buffer;
-        this.buffer = Buffer.from([]);
-        return result;
-    }
-
-    async readLine(): Promise<Buffer> {
-        const index = this.buffer.indexOf("\n");
-        if (index >= 0) {
-            let line = this.buffer.subarray(0, index);
-            this.buffer = this.buffer.subarray(index + 1);
-            // remove trailing CR
-            if (line.at(line.length - 1) === 13) {
-                line = line.subarray(0, line.length - 1);
-            }
-            return line;
-        }
-
-        return Buffer.from([]);
-    }
-
-    getReader(): SerialReader {
-        return this.reader;
-    }
-
-    async waitForLine(timeoutMs: number): Promise<Buffer> {
-        const currentTime = Date.now();
-
-        while (currentTime + timeoutMs > Date.now()) {
-            const response = await this.readLine();
-            if (response.length > 0) {
-                return response;
-            }
-            await sleep(10);
-        }
-
-        return Promise.resolve(Buffer.from([]));
-    }
-}
+export type LineReader = (data: string) => void;
 
 const FLASH_BAUD_RATE = 921600;
 
@@ -95,10 +46,14 @@ export class SerialPort {
     private listeners: Map<SerialPortEvent, (() => void)[]> = new Map();
     private serialPort: NativeSerialPort;
     private state: SerialPortState = SerialPortState.DISCONNECTED;
-    private readers: SerialReader[] = [];
     private reader: ReadableStreamDefaultReader<Uint8Array>;
+    private exclusiveReader: SerialReader | undefined = undefined;
+    private readers: SerialReader[] = [];
+    private lineReaders: LineReader[] = [];
+    private reading: false;
     private deviceInfo: DeviceInfo;
     private dtrState: boolean = false;
+    private savedData: Buffer[] = [];
 
     constructor(serialPort: NativeSerialPort) {
         this.serialPort = serialPort;
@@ -176,7 +131,7 @@ export class SerialPort {
 
         this.state = SerialPortState.CONNECTING;
         return this.serialPort
-            .open({ baudRate })
+            .open({ baudRate, bufferSize: 10000 })
             .then(() => {
                 this.state = SerialPortState.CONNECTED;
                 this.startReading();
@@ -200,14 +155,10 @@ export class SerialPort {
         }
 
         this.state = SerialPortState.DISCONNECTING;
-        if (this.serialPort.readable?.locked) {
-            try {
-                await this.reader.releaseLock();
-                await this.reader.cancel();
-                await sleep(500);
-            } catch (_error) {
-                console.error(_error);
-            }
+        this.reading = false;
+        while (this.serialPort.readable?.locked) {
+            this.reader.cancel();
+            await sleep(10);
         }
 
         return this.serialPort.close().then(() => {
@@ -216,12 +167,22 @@ export class SerialPort {
         });
     };
 
+    getSavedData = (): Buffer[] => {
+        const result = this.savedData;
+        this.savedData = [];
+        return result;
+    };
+
     getState = (): SerialPortState => {
         return this.state;
     };
 
     getReaders(): SerialReader[] {
         return this.readers;
+    }
+
+    getLineReaders(): LineReader[] {
+        return this.lineReaders;
     }
 
     getNativeSerialPort = (): NativeSerialPort => {
@@ -251,8 +212,44 @@ export class SerialPort {
         }
     };
 
+    writeln = async (line: string): Promise<void> => {
+        const toSend = Buffer.from(line + "\n");
+        this.savedData.push(toSend);
+        this.write(toSend);
+    };
+
+    writeChar = async (char: number): Promise<void> => {
+        if (char >= 0x20 && char < 0x7f) {
+            // Printable
+            this.savedData.push(Buffer.from([char]));
+        } else {
+            const msg = "[0x" + char.toString(16) + "]";
+            this.savedData.push(Buffer.from(msg));
+        }
+        this.write(Buffer.from([char]));
+    };
+
     /**
-     * Adds a reader that will be noitified everytime there is serial data
+     * Sets a reader to receive the data exclusively, blocking all
+     * other readers.  This is used for things like XModem whose data
+     * cannot be interpreted in the normal fashion.  At most one
+     * exclusive reader can be active.
+     *
+     * @param reader
+     */
+    setExclusiveReader = (reader: SerialReader): void => {
+        this.exclusiveReader = reader;
+    };
+
+    /**
+     * Removes the exclusive reader so other readers can receive data.
+     */
+    removeExclusiveReader = (): void => {
+        this.exclusiveReader = undefined;
+    };
+
+    /**
+     * Adds a reader that will be notified everytime there is serial data
      *
      * @param reader
      * @returns a function for unregistering the reader
@@ -268,13 +265,30 @@ export class SerialPort {
         this.readers = this.readers.filter((r) => r !== reader);
     };
 
+    /**
+     * Adds a reader that will be notified everytime there is a line of serial data
+     *
+     * @param reader
+     * @returns a function for unregistering the reader
+     */
+    addLineReader = (reader: LineReader): (() => void) => {
+        this.lineReaders.push(reader);
+
+        // Return method for removing the reader
+        return () => this.removeLineReader(reader);
+    };
+
+    removeLineReader = (reader: LineReader) => {
+        this.lineReaders = this.lineReaders.filter((r) => r !== reader);
+    };
+
     hardReset = async () => {
         await this.serialPort.setSignals({
             dataTerminalReady: false,
             requestToSend: true
         });
         await new Promise((r) => setTimeout(r, 100));
-        await this.serialPort.setSignals({ dataTerminalReady: true });
+        await this.serialPort.setSignals({ requestToSend: false });
         await new Promise((r) => setTimeout(r, 50));
     };
 
@@ -288,31 +302,64 @@ export class SerialPort {
     };
 
     private startReading = async () => {
+        const decoder = new TextDecoder();
+        let lineBuffer: string = "";
+        this.reading = true;
         while (
+            // this.close() sets reading to false to make the loop exit
+            this.reading &&
             this.state === SerialPortState.CONNECTED &&
             this.serialPort.readable
         ) {
-            this.reader = this.serialPort.readable.getReader();
             try {
-                while (this.state === SerialPortState.CONNECTED) {
-                    const { value, done } = await this.reader.read();
-                    if (done) {
-                        this.reader.releaseLock();
-                        break;
-                    }
-                    if (value) {
-                        this.readers.forEach((reader) =>
-                            reader(Buffer.from(value))
-                        );
+                this.reader = this.serialPort.readable.getReader();
+                // We set a timeout to interrupt stalled reads so that
+                // external code can easily stop the read loop without
+                // needing the .reader variable
+                const { value, done } = await this.reader.read();
+                this.reader.releaseLock();
+                if (done) {
+                    // We get here when this.close() executes this.reader.cancel()
+                    return;
+                }
+
+                const valueAsBuffer = Buffer.from(value);
+                this.savedData.push(valueAsBuffer);
+                if (this.exclusiveReader) {
+                    this.exclusiveReader(valueAsBuffer);
+                } else {
+                    this.readers.forEach((reader) => reader(valueAsBuffer));
+                    lineBuffer += decoder.decode(value).replace(/\r/g, "");
+                    while (true) {
+                        const pos = lineBuffer.indexOf("\n");
+                        if (pos == -1) {
+                            break;
+                        }
+                        const line = lineBuffer.substring(0, pos);
+                        lineBuffer = lineBuffer.slice(pos + 1);
+                        this.lineReaders.forEach((reader) => reader(line));
                     }
                 }
-                if (this.state === SerialPortState.DISCONNECTING) {
-                    // Final read to flush
-                    await this.reader.read();
+            } catch (error) {
+                if (error.message === "Releasing Default reader") {
+                    // Timeout; retry
+                    continue;
                 }
-            } catch (_error) {
-                console.error(_error);
-                this.dispatchEvent(SerialPortEvent.CONNECTION_ERROR);
+                if (error instanceof Error) {
+                    const nonFatal = [
+                        "BufferOverrunError",
+                        "FramingError",
+                        "BreakError",
+                        "ParityError"
+                    ];
+                    if (nonFatal.includes(error.name)) {
+                        // Retryable
+                        continue;
+                    }
+                }
+                console.error(error);
+                throw error;
+                // this.dispatchEvent(SerialPortEvent.CONNECTION_ERROR);
             }
         }
     };

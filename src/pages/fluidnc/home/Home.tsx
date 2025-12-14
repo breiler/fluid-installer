@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -13,86 +13,28 @@ import PageTitle from "../../../components/pagetitle/PageTitle";
 import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
 import usePageView from "../../../hooks/usePageView";
 import Page from "../../../model/Page";
-import { GetStartupShowCommand } from "../../../services/controllerservice/commands/GetStartupShowCommand";
-import { GetStatsCommand } from "../../../services/controllerservice/commands/GetStatsCommand";
-import { sleep } from "../../../utils/utils";
 import "./Home.scss";
-import { VersionCommand } from "../../../services/controllerservice/commands/VersionCommand";
-import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
-import useControllerState from "../../../store/ControllerState";
 
 const Home = () => {
     usePageView("Home");
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
     const controllerService = useContext(ControllerServiceContext);
-    const [isBootError, setBootError] = useState<boolean>(false);
     const [showLogModal, setShowLogModal] = useState<boolean>(false);
-    const [startupLogRows, setStartupLogRows] = useState<string[]>([]);
-    const { version, setVersion, stats, setStats } = useControllerState(
-        (state) => state
-    );
-
-    const init = async () => {
-        if (!controllerService) return;
-        await sleep(1000);
-        await controllerService
-            .send(new GetStatsCommand(), 5000)
-            .then((command) => setStats(command.result()))
-            .catch((error) => {
-                console.warn("Got an error while fetching stats", error);
-            });
-
-        await controllerService
-            .send(new VersionCommand(), 5000)
-            .then((command) => setVersion(command.result()))
-            .catch((error) => {
-                console.error("Got an error while fetching version", error);
-                throw "Got an error while fetching version";
-            });
-
-        await controllerService
-            .send(new GetStartupShowCommand())
-            .then((command) => {
-                setBootError(
-                    !!command.messages.find(
-                        (line) => line.indexOf("[MSG:ERR:") > -1
-                    )
-                );
-                setStartupLogRows(command.messages);
-            })
-            .catch((error) => {
-                console.error(
-                    "Got an error while checking startup messages",
-                    error
-                );
-                throw "Got an error while checking startup messages";
-            });
-
-        return Promise.resolve();
-    };
-
-    useEffect(() => {
-        if (!controllerService) return;
-        setIsLoading(true);
-        init().finally(() => setIsLoading(false));
-    }, [controllerService]);
 
     return (
         <>
-            <SpinnerModal show={isLoading} text="Loading..." />
             <LogModal
                 show={showLogModal}
                 setShow={setShowLogModal}
-                rows={startupLogRows}
+                rows={controllerService.startupLines}
             />
             <PageTitle>{t("page.connection.title")}</PageTitle>
             <p>{t("page.home.description")}</p>
             <div className="container text-center select-mode">
                 <Row>
                     <Col xs={12}>
-                        {isBootError && (
+                        {controllerService.hasErrors && (
                             <AlertMessage variant="danger">
                                 {t("page.home.error-while-booting")}
                                 <br />
@@ -118,7 +60,7 @@ const Home = () => {
                             onClick={() => navigate(Page.FLUIDNC_TERMINAL)}
                         />
                     </Col>
-                    {version !== "?" && (
+                    {controllerService.version !== "?" && (
                         <Col xs={12} md={6} lg={4}>
                             <FileBrowserCard
                                 onClick={() =>
@@ -127,20 +69,29 @@ const Home = () => {
                             />
                         </Col>
                     )}
-                    {stats?.version && (
-                        <Col xs={12} md={6} lg={4}>
-                            <WiFiCard
-                                onClick={() => navigate(Page.FLUIDNC_WIFI)}
-                            />
-                        </Col>
-                    )}
-                    {version !== "?" && (
+                    {controllerService.version !== "?" && (
                         <Col xs={12} md={6} lg={4}>
                             <CalibrateCard
                                 onClick={() => navigate(Page.FLUIDNC_CALIBRATE)}
                             />
                         </Col>
                     )}
+                    {controllerService.hasWiFi && (
+                        <Col xs={12} md={6} lg={4}>
+                            <WiFiCard
+                                onClick={() => navigate(Page.FLUIDNC_WIFI)}
+                            />
+                        </Col>
+                    )}
+                    {/* false && (
+                    <Col xs={12} md={6} lg={4}>
+                        <LogModal
+                            show={showLogModal}
+                            setShow={setShowLogModal}
+                            rows={controllerService.startupLines}
+                        />
+                    </Col>
+                    )*/}
                 </Row>
             </div>
         </>

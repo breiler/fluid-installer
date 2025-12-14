@@ -12,9 +12,10 @@ import {
     GpioStatus
 } from "../../../services/controllerservice/commands/GetGpioDumpCommand";
 import AlertMessage from "../../../components/alertmessage/AlertMessage";
+import { Spinner } from "../../../components";
+
 import { Link } from "react-router-dom";
 import jsYaml from "js-yaml";
-import SpinnerModal from "../../../modals/spinnermodal/SpinnerModal";
 
 type AxisPinsProps = {
     axis: string;
@@ -169,7 +170,7 @@ const Calibrate = () => {
 
                     console.log("Fetched config file");
 
-                    await sleep(2000);
+                    await sleep(200);
                     setPollForStatus(true);
                 }
             })
@@ -190,6 +191,10 @@ const Calibrate = () => {
         await sleep(1000);
 
         const configData = jsYaml.dump(config, { noCompatMode: true });
+
+        // FluidNC "YAML" does not implement null
+        configData.replace(/: null\n/g, ":\n");
+
         await controllerService!.uploadFile(
             "/littlefs/" + configFile,
             Buffer.from(configData)
@@ -203,8 +208,13 @@ const Calibrate = () => {
     return (
         <>
             <PageTitle>Calibrate</PageTitle>
-            <SpinnerModal show={isLoading} text="Loading..." />
 
+            {isLoading && (
+                <AlertMessage variant="info">
+                    Loading the config file
+                    <Spinner />
+                </AlertMessage>
+            )}
             {!isLoading && !config && (
                 <AlertMessage variant="warning">
                     Could not find the config file <b>{configFile}</b>.<br />

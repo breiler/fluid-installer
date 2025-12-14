@@ -15,6 +15,6 @@ test("VersionCommand unkown version", () => {
 
 test("VersionCommand empty version", () => {
     const command = new VersionCommand();
-    command.onMsg("VER:");
+    command.onPushMsg("VER:");
     expect(command.result()).toBe("?");
 });

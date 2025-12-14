@@ -1,13 +1,15 @@
 import { Command } from "./Command";
 
+type HardResetCommandResponse = {
+    status: string;
+    version: string;
+    build: string;
+    hasErrors: boolean;
+    startupLines: string[];
+};
+
 export class HardResetCommand extends Command {
-    _response: {
-        status: string;
-        version: string;
-        build: string;
-        hasErrors: boolean;
-        startupLines: string[];
-    } = {
+    _response: HardResetCommandResponse = {
         status: "",
         version: "?",
         build: "?",
@@ -53,7 +55,13 @@ export class HardResetCommand extends Command {
     onText(text: string) {
         if (this.isRebootString(text)) {
             if (++this.reboots >= 3) {
-                this._response = "ResetLoop";
+                this._response = {
+                    status: "ResetLoop",
+                    version: "?",
+                    build: "?",
+                    hasErrors: true,
+                    startupLines: []
+                };
                 super.onDone();
             }
             return;
@@ -71,7 +79,7 @@ export class HardResetCommand extends Command {
         }
     }
 
-    result(): string {
+    result(): HardResetCommandResponse {
         return this._response;
     }
 }

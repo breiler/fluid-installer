@@ -1,7 +1,9 @@
 import { Command } from "./Command";
 
+type ResetCommandResponse = { status: string; version: string; build: string };
+
 export class ResetCommand extends Command {
-    _response: { status: string; version: string; build: string } = {
+    _response: ResetCommandResponse = {
         status: "",
         version: "?",
         build: "?"
@@ -38,7 +40,11 @@ export class ResetCommand extends Command {
     onText(text: string) {
         if (this.isRebootString(text)) {
             if (++this.reboots >= 3) {
-                this._response = "ResetLoop";
+                this._response = {
+                    status: "ResetLoop",
+                    version: "?",
+                    build: "?"
+                };
                 super.onDone();
             }
             return;
@@ -56,7 +62,7 @@ export class ResetCommand extends Command {
         }
     }
 
-    result(): string {
+    result(): ResetCommandResponse {
         return this._response;
     }
 }

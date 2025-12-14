@@ -186,7 +186,7 @@ export class ControllerService {
         } else {
             const command = await this.send(new ResetCommand(0x18), 7000);
             const r = command.result();
-            if (r.status == "ResetLoop") {
+            if (r.status === "ResetLoop") {
                 console.log("Controller is in a reboot loop");
                 this.serialPort.holdReset();
                 return Promise.reject();
@@ -400,7 +400,6 @@ export class ControllerService {
         await this.serialPort.hardReset();
 
         const r = (await p).result();
-        // const { status, version, build, hasErrors, startupLines } = await r.result();
         this.build = r.build;
         this.hasWiFi = r.build.includes("(wifi)");
         this.hasErrors = r.hasErrors;

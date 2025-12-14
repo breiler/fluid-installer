@@ -147,7 +147,7 @@ const WiFiSettings = () => {
 
             if (wifiMode === "STA>AP" || wifiMode === "STA") {
                 setSetting("Sta/SSID", stationSSID);
-                setSetting("Sta/IpMode", stationIpMode);
+                setSetting("Sta/IPMode", stationIpMode);
                 setSetting("Sta/MinSecurity", stationMinSecurity);
                 setSetting("Sta/IP", stationIP);
                 setSetting("Sta/Gateway", stationGateway);
@@ -270,11 +270,14 @@ const WiFiSettings = () => {
                                     type="text"
                                     onChange={(e) =>
                                         setStationSSID(e.target.value)
-                                    }></Form.Control>
+                                    }
+                                ></Form.Control>
                                 <Dropdown
-                                    onToggle={() => refreshAccessPoints()}>
+                                    onToggle={() => refreshAccessPoints()}
+                                >
                                     <Dropdown.Toggle
-                                        disabled={isSaving || isLoading}>
+                                        disabled={isSaving || isLoading}
+                                    >
                                         <FontAwesomeIcon
                                             icon={faSearch as IconDefinition}
                                         />
@@ -290,11 +293,13 @@ const WiFiSettings = () => {
                                                             setStationSSID(
                                                                 accessPoint.ssid
                                                             )
-                                                        }>
+                                                        }
+                                                    >
                                                         <Badge
                                                             bg={getSignalColor(
                                                                 accessPoint.signal
-                                                            )}>
+                                                            )}
+                                                        >
                                                             <FontAwesomeIcon
                                                                 icon={
                                                                     faWifi as IconDefinition
@@ -500,7 +505,8 @@ const WiFiSettings = () => {
 
             <div
                 className="d-flex justify-content-end"
-                style={{ marginTop: "16px" }}>
+                style={{ marginTop: "16px" }}
+            >
                 <Button
                     onClick={() => saveSettings()}
                     disabled={
@@ -520,7 +526,8 @@ const WiFiSettings = () => {
                             apChannel === settings?.get("AP/Channel") &&
                             apIP === settings?.get("AP/IP") &&
                             apCountry === settings?.get("AP/Country"))
-                    }>
+                    }
+                >
                     <FontAwesomeIcon icon={faSave as Icon} /> Save{" "}
                     {isSaving && <Spinner />}
                 </Button>

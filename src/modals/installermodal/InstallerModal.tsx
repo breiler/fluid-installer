@@ -60,7 +60,10 @@ const InstallerModal = ({
 
     const onLogData = (data: string) => {
         setLog((l) => l + data);
-        console.log(data);
+    };
+
+    const reader = (line) => {
+        setLog((l) => l + line + "\n");
     };
 
     const onInstall = async (baud: number, files: string[]) => {
@@ -84,6 +87,7 @@ const InstallerModal = ({
                 TrackAction.InstallFail,
                 "Disconnect - " + error
             );
+            controllerService?.serialPort.removeLineReader(reader);
         }
 
         let hasErrors = false;
@@ -109,6 +113,7 @@ const InstallerModal = ({
         });
 
         try {
+            controllerService?.serialPort.addLineReader(reader);
             const status = await controllerService?.connect();
             if (status !== ControllerStatus.CONNECTED) {
                 setErrorMessage(t("modal.installer.error-reconnecting"));
@@ -174,6 +179,7 @@ const InstallerModal = ({
                 "Post install - " + error
             );
         }
+        controllerService?.serialPort.removeLineReader(reader);
     };
 
     return (

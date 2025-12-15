@@ -186,13 +186,13 @@ export class ControllerService {
         } else {
             const command = await this.send(new ResetCommand(0x18), 7000);
             const r = command.result();
+            this.version = r.version;
+            this.build = r.build;
             if (r.status === "ResetLoop") {
                 console.log("Controller is in a reboot loop");
                 this.serialPort.holdReset();
-                return Promise.reject();
+                return Promise.resolve();
             }
-            this.version = r.version;
-            this.build = r.build;
         }
 
         await this.serialPort.writeChar(0x0c); // CTRL-L - disable echo

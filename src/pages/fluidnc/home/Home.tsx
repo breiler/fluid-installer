@@ -46,6 +46,18 @@ const Home = () => {
                                 </a>
                             </AlertMessage>
                         )}
+                        {controllerService.looping && (
+                            <AlertMessage variant="danger">
+                                Controller is in a reset loop
+                                <br />
+                                <a
+                                    href="#"
+                                    onClick={() => setShowLogModal(true)}
+                                >
+                                    {t("page.home.show-details")}
+                                </a>
+                            </AlertMessage>
+                        )}
                     </Col>
                 </Row>
                 <Row>

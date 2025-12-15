@@ -99,6 +99,7 @@ export class ControllerService {
     stats: Stats;
     version: string;
     hasErrors: boolean = false;
+    looping: boolean = false;
     startupLines: string[] = [];
     hasWiFi: boolean;
 
@@ -147,12 +148,14 @@ export class ControllerService {
                 await this._initializeController();
                 this.status = ControllerStatus.CONNECTED;
             } catch (error) {
-                this.serialPort.close();
+                await this.serialPort.close();
                 this.status = ControllerStatus.UNKNOWN_DEVICE;
                 return Promise.reject("_initializeController: " + error);
             }
         }
-        await this.getStats();
+        if (!this.looping) {
+            await this.getStats();
+        }
         return Promise.resolve(this.status);
     };
 
@@ -163,13 +166,16 @@ export class ControllerService {
         this.build = r.build;
         this.hasWiFi = r.wifiInfo.length != 0;
 
-        const startup_cmd = await this.send(new ShowStartupCommand(), 1000);
-        const sr = startup_cmd.result();
-        this.hasErrors = sr.hasErrors;
-        this.startupLines = sr.lines;
+        if (this.startupLines.length == 0) {
+            const startup_cmd = await this.send(new ShowStartupCommand(), 1000);
+            const sr = startup_cmd.result();
+            this.hasErrors = sr.hasErrors;
+            this.startupLines = sr.lines;
+        }
     }
 
     private async _initializeController(): Promise<void> {
+        this.startupLines = [];
         let responsive = false;
         await this.send(new GetStatusCommand(), 100)
             .then((_command) => {
@@ -184,17 +190,30 @@ export class ControllerService {
         if (responsive) {
             // Check for critical alarm state and try to cancel it
         } else {
-            const command = await this.send(new ResetCommand(0x18), 7000);
-            const r = command.result();
-            if (r.status === "ResetLoop") {
-                console.log("Controller is in a reboot loop");
-                this.serialPort.holdReset();
-                return Promise.reject();
+            try {
+                const command = await this.send(new ResetCommand(0x18), 7000);
+                const r = command.result();
+                if (r.status === "ResetLoop") {
+                    console.log("Controller is in a reboot loop");
+                    this.serialPort.holdReset();
+                    this.looping = true;
+                    return Promise.resolve();
+                }
+                this.version = r.version;
+                this.build = r.build;
+            } catch (_error) {
+                // Error is probably "Command timed out"
+                await this.hardReset().catch((_error) => {
+                    console.log("Hard reset did not work");
+                    this.serialPort.holdReset();
+                    this.looping = true;
+                    return Promise.resolve();
+                });
             }
-            this.version = r.version;
-            this.build = r.build;
         }
 
+        this.looping = false;
+        await sleep(200);
         await this.serialPort.writeChar(0x0c); // CTRL-L - disable echo
         await this._getControllerInfo();
 
@@ -379,7 +398,7 @@ export class ControllerService {
         this.startupLines = null;
         await this.wait();
 
-        const command = new HardResetCommand();
+        const command = await new HardResetCommand();
         this.commands.push(command);
         const p = new Promise<HardResetCommand>((resolve, reject) => {
             const timer = setTimeout(() => {
@@ -397,7 +416,7 @@ export class ControllerService {
             });
         });
 
-        await this.serialPort.hardReset();
+        this.serialPort.hardReset();
 
         const r = (await p).result();
         this.build = r.build;

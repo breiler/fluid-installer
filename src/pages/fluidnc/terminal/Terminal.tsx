@@ -10,12 +10,10 @@ import {
     faCodeBranch,
     faLockOpen,
     faPowerOff,
-    faQuestion,
-    faSquarePollHorizontal
+    faQuestion
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
-import LogModal from "../../../modals/logmodal/LogModal";
 import PageTitle from "../../../components/pagetitle/PageTitle";
 import usePageView from "../../../hooks/usePageView";
 import { Command } from "../../../services";
@@ -131,7 +129,6 @@ const Terminal = () => {
     const { t } = useTranslation();
     const controllerService = useContext(ControllerServiceContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [showLogModal, setShowLogModal] = useState<boolean>(false);
 
     const onRestart = async () => {
         setIsLoading(true);
@@ -160,11 +157,6 @@ const Terminal = () => {
     return (
         <>
             <PageTitle>{t("page.terminal.title")}</PageTitle>
-            <LogModal
-                show={showLogModal}
-                setShow={setShowLogModal}
-                rows={controllerService.startupLines}
-            />
             <div>
                 <Button
                     onClick={onRestart}
@@ -215,18 +207,6 @@ const Terminal = () => {
                 >
                     <FontAwesomeIcon icon={faCodeBranch as IconDefinition} />{" "}
                     {t("page.terminal.version")}
-                </Button>
-                <Button
-                    onClick={() => setShowLogModal(true)}
-                    variant="secondary"
-                    title={t("page.terminal.startup-description")}
-                    disabled={isLoading}
-                    style={buttonStyle}
-                >
-                    <FontAwesomeIcon
-                        icon={faSquarePollHorizontal as IconDefinition}
-                    />{" "}
-                    {t("page.terminal.startup")}
                 </Button>
             </div>
             <TerminalComponent />

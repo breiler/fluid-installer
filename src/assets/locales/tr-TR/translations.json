@@ -141,7 +141,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "FluidNC yazılımınızı güncelleyin.",
+            "upgrade-description": "Upgrade FluidNC from",
             "install-description": "Kontrolcüde FluidNC yüklü değil görünüyor, yüklemek ister misiniz?",
             "upgrade-button": "FluidNC yazılımını yükselt",
             "install-button": "FluidNC yazılımını yükle"

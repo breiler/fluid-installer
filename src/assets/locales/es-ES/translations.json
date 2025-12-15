@@ -141,7 +141,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Actualice FluidNC en su controlador",
+            "upgrade-description": "Upgrade FluidNC from",
             "install-description": "Parece que el controlador no tiene instalado FluidNC, ¿desea instalarlo?",
             "upgrade-button": "Actualice FluidNC",
             "install-button": "Instale FluidNC"

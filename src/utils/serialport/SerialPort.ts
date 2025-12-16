@@ -50,7 +50,7 @@ export class SerialPort {
     private exclusiveReader: SerialReader | undefined = undefined;
     private readers: SerialReader[] = [];
     private lineReaders: LineReader[] = [];
-    private reading: false;
+    private reading: boolean = false;
     private deviceInfo: DeviceInfo;
     private dtrState: boolean = false;
     private savedData: Buffer[] = [];

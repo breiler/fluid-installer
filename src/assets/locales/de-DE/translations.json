@@ -141,7 +141,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade von FluidNC auf deinem Controller",
+            "upgrade-description": "Upgrade FluidNC from",
             "install-description": "FluidNC scheint nicht installiert zu sein, möchtest du es installieren?",
             "upgrade-button": "FluidNC upgraden",
             "install-button": "FluidNC installieren"

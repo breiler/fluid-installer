@@ -141,7 +141,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Uppgradera FluidNC på din hårdvara",
+            "upgrade-description": "Upgrade FluidNC from",
             "install-description": "Din enhet verkar inte ha FluidNC installerat, vill du installera det?",
             "upgrade-button": "Uppgradera",
             "install-button": "Installera"

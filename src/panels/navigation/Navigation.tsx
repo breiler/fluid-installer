@@ -6,16 +6,19 @@ import {
     faRightFromBracket,
     faSliders,
     faTerminal,
+    faSquarePollHorizontal,
     faWifi
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Nav } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import LogModal from "../../modals/logmodal/LogModal";
 import "./Navigation.scss";
 import Page from "../../model/Page";
+import AlertMessage from "../../components/alertmessage/AlertMessage";
 import useTrackEvent, {
     TrackAction,
     TrackCategory
@@ -26,6 +29,7 @@ const Navigation = () => {
     const location = useLocation();
     const { t } = useTranslation();
     const trackEvent = useTrackEvent();
+    const [showLogModal, setShowLogModal] = useState<boolean>(false);
 
     const controllerService = useContext(ControllerServiceContext);
 
@@ -40,6 +44,11 @@ const Navigation = () => {
 
     return (
         <>
+            <LogModal
+                show={showLogModal}
+                setShow={setShowLogModal}
+                rows={controllerService.startupLines}
+            />
             <Nav
                 variant="pills"
                 activeKey={location.pathname}
@@ -47,6 +56,11 @@ const Navigation = () => {
                 className="flex-column navigation-container"
                 onSelect={handleSelect}
             >
+                {controllerService.looping && (
+                    <AlertMessage variant="danger">
+                        Controller is in a reset loop
+                    </AlertMessage>
+                )}
                 <Nav.Link eventKey={Page.FLUIDNC_HOME}>
                     <FontAwesomeIcon icon={faHome as IconDefinition} />{" "}
                     {t("panel.navigation.home")}
@@ -59,7 +73,7 @@ const Navigation = () => {
                     <FontAwesomeIcon icon={faTerminal as IconDefinition} />{" "}
                     {t("panel.navigation.terminal")}
                 </Nav.Link>
-                {controllerService.version !== "?" && (
+                {controllerService.version && (
                     <Nav.Link eventKey={Page.FLUIDNC_FILEBROWSER}>
                         <FontAwesomeIcon
                             icon={faFolderOpen as IconDefinition}
@@ -67,7 +81,7 @@ const Navigation = () => {
                         {t("panel.navigation.file-browser")}
                     </Nav.Link>
                 )}
-                {controllerService.version !== "?" && (
+                {controllerService.version && (
                     <Nav.Link eventKey={Page.FLUIDNC_CALIBRATE}>
                         <FontAwesomeIcon icon={faSliders as IconDefinition} />{" "}
                         {t("panel.navigation.calibrate")}
@@ -80,6 +94,12 @@ const Navigation = () => {
                     </Nav.Link>
                 )}
                 <hr />
+                <Nav.Link onClick={() => setShowLogModal(true)}>
+                    <FontAwesomeIcon
+                        icon={faSquarePollHorizontal as IconDefinition}
+                    />{" "}
+                    {t("page.terminal.startup")}
+                </Nav.Link>
                 <Nav.Link onClick={disconnect}>
                     <FontAwesomeIcon
                         icon={faRightFromBracket as IconDefinition}

@@ -1,12 +1,16 @@
 import { Command } from "./Command";
 
-type ResetCommandResponse = { status: string; version: string; build: string };
+type ResetCommandResponse = {
+    status: string;
+    version: string | undefined;
+    build: string | undefined;
+};
 
 export class ResetCommand extends Command {
     _response: ResetCommandResponse = {
-        status: "",
-        version: "?",
-        build: "?"
+        status: "Unknown",
+        version: undefined,
+        build: undefined
     };
     reboots: number = 0;
 
@@ -42,8 +46,8 @@ export class ResetCommand extends Command {
             if (++this.reboots >= 3) {
                 this._response = {
                     status: "ResetLoop",
-                    version: "?",
-                    build: "?"
+                    version: undefined,
+                    build: undefined
                 };
                 super.onDone();
             }
@@ -54,8 +58,8 @@ export class ResetCommand extends Command {
             this._response.status = "Welcome";
 
             const match = text.match(/Grbl.* ([0-9.]+) \[(.*) '\$'/);
-            this._response.version = match?.[1] ?? "?";
-            this._response.build = match?.[2] ?? "?";
+            this._response.version = match?.[1] ?? undefined;
+            this._response.build = match?.[2] ?? undefined;
 
             super.onDone();
             return;

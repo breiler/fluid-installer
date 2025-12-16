@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Badge,
     Button,
@@ -82,6 +83,8 @@ const WiFiSettings = () => {
     const [apChannel, setApChannel] = useState<string>();
     const [apIP, setApIP] = useState<string>();
     const [apCountry, setApCountry] = useState<string>();
+
+    const { t } = useTranslation();
 
     const refreshAccessPoints = async () => {
         setLoadingType("access points");
@@ -180,6 +183,9 @@ const WiFiSettings = () => {
                     );
                 }
             }
+
+            // Give the controller time to finish writing FLASH
+            await sleep(400);
 
             await controllerService?.hardReset();
             await refreshStats();
@@ -377,8 +383,12 @@ const WiFiSettings = () => {
 
                     {stationIpMode === "Static" && (
                         <>
+                            <h4 style={{ marginTop: "24px" }}>
+                                Static IP settings
+                            </h4>
+
                             <TextField
-                                label="IP"
+                                label="IP Address"
                                 disabled={isSaving || isLoading}
                                 value={stationIP}
                                 placeholder="IP"
@@ -528,8 +538,16 @@ const WiFiSettings = () => {
                             apCountry === settings?.get("AP/Country"))
                     }
                 >
-                    <FontAwesomeIcon icon={faSave as Icon} /> Save{" "}
-                    {isSaving && <Spinner />}
+                    {isSaving && (
+                        <>
+                            {t("page.terminal.restarting")} <Spinner />
+                        </>
+                    )}
+                    {!isSaving && (
+                        <>
+                            <FontAwesomeIcon icon={faSave as Icon} /> Save{" "}
+                        </>
+                    )}
                 </Button>
             </div>
         </Form>

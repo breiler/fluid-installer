@@ -24,8 +24,10 @@ const Log = ({ show = false, showExpand, onShow, children }: LogProps) => {
         <div className="log-container">
             {show && (
                 <div className="log">
-                    <pre>{children}</pre>
-                    <div ref={bottom} />
+                    <pre>
+                        {children}
+                        <div ref={bottom} />
+                    </pre>
                 </div>
             )}
             {(showExpand || showExpand === undefined) && (

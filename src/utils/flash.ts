@@ -117,7 +117,7 @@ export const flashDevice = async (
         await transport.setRTS(false);
         await new Promise((r) => setTimeout(r, 50));
         await transport.disconnect();
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 100));
     }
     return Promise.resolve();
 };

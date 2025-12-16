@@ -133,50 +133,47 @@ const Calibrate = () => {
     }, [pollForStatus, controllerService, setGpioStatusList]);
 
     useEffect(() => {
-        if (!controllerService) {
-            return;
-        }
+        async function fetchData() {
+            if (!controllerService) {
+                return;
+            }
 
-        setIsLoading(true);
-        controllerService
-            .connect()
-            .then(async () => {
-                await controllerService.serialPort.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
-                const configFilenameCommand = await controllerService.send(
-                    new GetConfigFilenameCommand()
-                );
-                setConfigFile(configFilenameCommand.result());
-                console.log(
-                    "Configured config file",
+            setIsLoading(true);
+            // await controllerService.serialPort.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
+            const configFilenameCommand = await controllerService.send(
+                new GetConfigFilenameCommand()
+            );
+            setConfigFile(configFilenameCommand.result());
+            console.log(
+                "Configured config file",
+                configFilenameCommand.result()
+            );
+
+            const listCommand = await controllerService.send(
+                new ListFilesCommand()
+            );
+
+            const configFileExists =
+                listCommand
+                    .result()
+                    .map((f) => f.name)
+                    .indexOf(configFilenameCommand.result()) > -1;
+
+            console.log("Config file exists", configFileExists);
+            if (configFileExists) {
+                const fileData = await controllerService.downloadFile(
                     configFilenameCommand.result()
                 );
+                setConfig(fileDataToConfig(fileData.toString()));
 
-                const listCommand = await controllerService.send(
-                    new ListFilesCommand()
-                );
+                console.log("Fetched config file");
 
-                const configFileExists =
-                    listCommand
-                        .result()
-                        .map((f) => f.name)
-                        .indexOf(configFilenameCommand.result()) > -1;
-
-                console.log("Config file exists", configFileExists);
-                if (configFileExists) {
-                    const fileData = await controllerService.downloadFile(
-                        configFilenameCommand.result()
-                    );
-                    setConfig(fileDataToConfig(fileData.toString()));
-
-                    console.log("Fetched config file");
-
-                    await sleep(200);
-                    setPollForStatus(true);
-                }
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+                await sleep(200);
+                setPollForStatus(true);
+            }
+            setIsLoading(false);
+        }
+        fetchData();
     }, [
         controllerService,
         setIsLoading,

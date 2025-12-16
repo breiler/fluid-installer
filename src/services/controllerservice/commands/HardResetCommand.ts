@@ -24,9 +24,6 @@ export class HardResetCommand extends Command {
     }
 
     private isWelcomeString(text: string | undefined) {
-        if (text) {
-            //     console.log(text);
-        }
         return (
             text &&
             (text.startsWith("GrblHAL ") ||

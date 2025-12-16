@@ -5,14 +5,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Footer.scss";
 import { useTranslation } from "react-i18next";
+import usePopupTerminalStore from "../../store/PopupTerminalStore";
+import { faTerminal } from "@fortawesome/free-solid-svg-icons/faTerminal";
+import { Button } from "react-bootstrap";
 
 const Footer = () => {
     const { t } = useTranslation();
+    const { showPopupTerminal, setShowPopupTerminal, isConnected } =
+        usePopupTerminalStore();
 
     return (
         <footer className="footer page-footer font-small blue pt-4">
-            <ul className="list-unstyled text-start">
-                <li>
+            <ul className="list-unstyled d-flex align-items-center mb-0">
+                <li className="me-3">
                     <a
                         href="http://wiki.fluidnc.com/"
                         target="_blank"
@@ -23,7 +28,7 @@ const Footer = () => {
                         {t("footer.documentation")}
                     </a>
                 </li>
-                <li>
+                <li className="me-3">
                     <a
                         href="https://discord.gg/j29vtknJnU"
                         target="_blank"
@@ -33,7 +38,7 @@ const Footer = () => {
                         Discord
                     </a>
                 </li>
-                <li>
+                <li className="me-3">
                     <a
                         href="https://github.com/bdring/FluidNC"
                         target="_blank"
@@ -43,7 +48,7 @@ const Footer = () => {
                         FluidNC
                     </a>
                 </li>
-                <li>
+                <li className="me-3">
                     <a
                         href="https://github.com/bdring/FluidDial"
                         target="_blank"
@@ -53,7 +58,7 @@ const Footer = () => {
                         FluidDial
                     </a>
                 </li>
-                <li>
+                <li className="me-3">
                     <a
                         href="https://github.com/breiler/fluid-installer"
                         target="_blank"
@@ -63,7 +68,7 @@ const Footer = () => {
                         Installer
                     </a>
                 </li>
-                <li>
+                <li className="me-3">
                     <a
                         href="https://crowdin.com/project/fluid-installer"
                         target="_blank"
@@ -75,6 +80,20 @@ const Footer = () => {
                         {t("header.translate")}
                     </a>
                 </li>
+                {isConnected && (
+                    <li className="ms-auto" style={{ marginRight: "20px" }}>
+                        <Button
+                            variant="secondary"
+                            onClick={() =>
+                                setShowPopupTerminal(!showPopupTerminal)
+                            }
+                        >
+                            <FontAwesomeIcon
+                                icon={faTerminal as IconDefinition}
+                            />
+                        </Button>
+                    </li>
+                )}
             </ul>
         </footer>
     );

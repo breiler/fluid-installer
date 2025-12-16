@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { ControllerServiceContext } from "../context/ControllerServiceContext";
 import LostConnectionModal from "../modals/lostconnectionmodal/LostConnectionModal";
@@ -7,16 +7,22 @@ import useControllerStatus from "../hooks/useControllerStatus";
 import { Col, Container, Row } from "react-bootstrap";
 import Navigation from "../panels/navigation/Navigation";
 import Connection from "../pages/fluidnc/connection/Connection";
+import { TerminalPopup } from "../components/terminalpopup/TerminalPopup";
+import usePopupTerminalStore from "../store/PopupTerminalStore";
 
 const FluidNCOutlet = () => {
     const [controllerService, setControllerService] =
         useState<ControllerService>();
+    const { setIsConnected } = usePopupTerminalStore();
 
     const onCloseConnection = () => {
         setControllerService(undefined);
     };
 
     const controllerStatus = useControllerStatus(controllerService);
+    useEffect(() => {
+        setIsConnected(controllerStatus !== ControllerStatus.DISCONNECTED);
+    }, [controllerStatus]);
 
     if (
         !controllerService ||
@@ -38,6 +44,7 @@ const FluidNCOutlet = () => {
                     </Col>
                 </Row>
             </Container>
+            <TerminalPopup />
         </ControllerServiceContext.Provider>
     );
 };

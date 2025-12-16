@@ -417,7 +417,7 @@ export class ControllerService {
             });
         });
 
-        this.serialPort.hardReset();
+        await this.serialPort.hardReset();
 
         const r = (await p).result();
         this.build = r.build;

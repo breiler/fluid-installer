@@ -399,7 +399,7 @@ export class ControllerService {
         this.startupLines = null;
         await this.wait();
 
-        const command = await new HardResetCommand();
+        const command = new HardResetCommand();
         this.commands.push(command);
         const p = new Promise<HardResetCommand>((resolve, reject) => {
             const timer = setTimeout(() => {

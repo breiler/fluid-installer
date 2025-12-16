@@ -18,7 +18,7 @@ class XModemSocketAdapter implements XModemSocket {
     private serialPort: SerialPort;
     private buffer: Buffer = Buffer.alloc(0);
     private resolve: (value: Buffer) => void;
-    private timer: number;
+    private timer: ReturnType<typeof setTimeout>;
 
     constructor(serialPort: SerialPort) {
         this.serialPort = serialPort;
@@ -28,10 +28,6 @@ class XModemSocketAdapter implements XModemSocket {
     }
 
     onData(data: Buffer) {
-        if (data.length > 1) {
-            // console.log("got: " + new TextDecoder().decode(data));
-            // console.log("got: " + data);
-        }
         if (!this.buffer) {
             this.buffer = data;
         } else {

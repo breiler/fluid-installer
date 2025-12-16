@@ -15,6 +15,7 @@ export type SerialReader = (data: Buffer) => void;
 export type LineReader = (data: string) => void;
 
 const FLASH_BAUD_RATE = 921600;
+const MAX_SAVED_LINES = 1000;
 
 export enum SerialPortEvent {
     DISCONNECTED,
@@ -168,9 +169,7 @@ export class SerialPort {
     };
 
     getSavedData = (): Buffer[] => {
-        const result = this.savedData;
-        this.savedData = [];
-        return result;
+        return this.savedData;
     };
 
     getState = (): SerialPortState => {
@@ -215,6 +214,9 @@ export class SerialPort {
     writeln = async (line: string): Promise<void> => {
         const toSend = Buffer.from(line + "\n");
         this.savedData.push(toSend);
+        if (this.savedData.length > MAX_SAVED_LINES) {
+            this.savedData.slice(this.savedData.length - MAX_SAVED_LINES);
+        }
         this.write(toSend);
     };
 

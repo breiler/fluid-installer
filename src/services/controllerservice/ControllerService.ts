@@ -163,6 +163,7 @@ export class ControllerService {
         // Get version
         const info_cmd = await this.send(new BuildInfoCommand(), 500);
         const r = info_cmd.result();
+        this.version = r.version;
         this.build = r.build;
         this.hasWiFi = r.wifiInfo.length != 0;
 

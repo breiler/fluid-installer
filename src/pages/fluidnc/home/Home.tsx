@@ -46,11 +46,6 @@ const Home = () => {
                                 </a>
                             </AlertMessage>
                         )}
-                        {controllerService.looping && (
-                            <AlertMessage variant="danger">
-                                Controller is in a reset loop
-                            </AlertMessage>
-                        )}
                     </Col>
                 </Row>
                 <Row>
@@ -65,7 +60,7 @@ const Home = () => {
                             onClick={() => navigate(Page.FLUIDNC_TERMINAL)}
                         />
                     </Col>
-                    {controllerService.version !== "?" && (
+                    {controllerService.version && (
                         <Col xs={12} md={6} lg={4}>
                             <FileBrowserCard
                                 onClick={() =>
@@ -74,7 +69,7 @@ const Home = () => {
                             />
                         </Col>
                     )}
-                    {controllerService.version !== "?" && (
+                    {controllerService.version && (
                         <Col xs={12} md={6} lg={4}>
                             <CalibrateCard
                                 onClick={() => navigate(Page.FLUIDNC_CALIBRATE)}

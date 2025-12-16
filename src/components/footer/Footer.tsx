@@ -84,6 +84,7 @@ const Footer = () => {
                     <li className="ms-auto" style={{ marginRight: "20px" }}>
                         <Button
                             variant="secondary"
+                            size="sm"
                             onClick={() =>
                                 setShowPopupTerminal(!showPopupTerminal)
                             }

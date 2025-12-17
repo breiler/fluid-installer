@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Editor from "../../components/editor/Editor";
 import { Alert } from "react-bootstrap";
 import jsYaml from "js-yaml";
+import type { YAMLException } from "js-yaml";
 
 import Ajv, { ErrorObject } from "ajv/dist/2020";
 
@@ -29,11 +30,11 @@ export const ConfigValidation = () => {
             const regexp = /^(\s*.*:[ \t]*)(#\S.*)$/gm;
             const transformedValue = config.replace(regexp, '$1"$2"');
             jsonConfig = jsYaml.load(transformedValue || "");
-        } catch (e: YAMLException) {
+        } catch (error) {
             setErrors([
                 {
                     instancePath: "",
-                    message: `YAML syntax error: ${e.message}`,
+                    message: `YAML syntax error: ${(error as YAMLException).message}`,
                     keyword: "syntax",
                     schemaPath: "",
                     params: {}

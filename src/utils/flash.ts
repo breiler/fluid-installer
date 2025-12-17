@@ -93,6 +93,8 @@ export const flashDevice = async (
                 data: convertUint8ArrayToBinaryString(f.data)
             })),
             flashSize: "keep",
+            flashMode: "keep",
+            flashFreq: "keep",
             eraseAll: erase,
             compress: true,
             reportProgress: (fileIndex, written, total) => {

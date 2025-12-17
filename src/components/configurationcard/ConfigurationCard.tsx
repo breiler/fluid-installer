@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../card";
+import Card from "../cards/card";
 import Button from "../button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs } from "@fortawesome/free-solid-svg-icons";

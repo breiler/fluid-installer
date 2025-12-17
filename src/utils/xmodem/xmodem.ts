@@ -3,6 +3,7 @@ export interface XModemSocket {
     write: (buffer: Buffer) => Promise<void>;
     read: () => Promise<Buffer>;
     close: () => void;
+    timedRead: (timeout: number) => Promise<Buffer>;
 }
 
 const SOH = 0x01; // Start of header

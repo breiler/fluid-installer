@@ -1,5 +1,11 @@
 import { Command } from "./Command";
 
+export type BuildInfo = {
+    version: string;
+    build: string;
+    wifiInfo: string[];
+};
+
 export class BuildInfoCommand extends Command {
     _version: string = "";
     _build: string = "";
@@ -20,12 +26,14 @@ export class BuildInfoCommand extends Command {
                 this._build = match?.[2] ?? "";
             }
             if (fields[0] == "MSG" && fields[1].startsWith("Mode")) {
-                this._wifiInfo.push(fields.slice(1));
+                for (const field of fields.slice(1)) {
+                    this._wifiInfo.push(field);
+                }
             }
         }
     }
 
-    result(): { version: string; build: string; wifiInfo: string } {
+    result(): BuildInfo {
         return {
             version: this._version,
             build: this._build,

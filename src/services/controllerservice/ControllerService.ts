@@ -31,7 +31,10 @@ class XModemSocketAdapter implements XModemSocket {
         if (!this.buffer) {
             this.buffer = data;
         } else {
-            this.buffer = Buffer.concat([this.buffer, data]);
+            this.buffer = Buffer.concat([
+                this.buffer,
+                data
+            ] as readonly Uint8Array[]);
         }
         if (this.timer) {
             clearTimeout(this.timer);

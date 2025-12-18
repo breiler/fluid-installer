@@ -6,7 +6,6 @@ import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Card } from "react-bootstrap";
 import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
-import useControllerState from "../../../store/ControllerState";
 
 type InstallCardProps = {
     disabled?: boolean;
@@ -17,7 +16,6 @@ export const InstallCard = ({
     onClick,
     disabled = false
 }: InstallCardProps) => {
-    const version = useControllerState((state) => state.version);
     const controllerService = useContext(ControllerServiceContext);
     const { t } = useTranslation();
 
@@ -30,13 +28,13 @@ export const InstallCard = ({
                         size="4x"
                     />
                 </div>
-                {controllerService.version !== "?" && (
+                {controllerService.version && (
                     <>
                         <p>{t("card.install.upgrade-description")}</p>
                         <p>{controllerService.build}</p>
                     </>
                 )}
-                {controllerService.version === "?" && (
+                {!controllerService.version && (
                     <p>{t("card.install.install-description")}</p>
                 )}
             </Card.Body>
@@ -44,7 +42,7 @@ export const InstallCard = ({
             <Card.Footer>
                 <Button onClick={onClick} disabled={disabled}>
                     <>
-                        {version
+                        {controllerService.version
                             ? t("card.install.upgrade-button")
                             : t("card.install.install-button")}
                     </>

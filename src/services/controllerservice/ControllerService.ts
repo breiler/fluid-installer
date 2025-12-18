@@ -174,6 +174,31 @@ export class ControllerService {
         }
     }
 
+    private async _isInResetLoop(): Promise<boolean> {
+        try {
+            const command = await this.send(new ResetCommand(0x18), 7000);
+            const r = command.result();
+            if (r.status === "ResetLoop") {
+                console.log("Controller is in a reboot loop");
+                this.serialPort.holdReset();
+                return true;
+            }
+            this.version = r.version;
+            this.build = r.build;
+        } catch (_error) {
+            // Error is probably "Command timed out", try and reset
+            try {
+                await this.hardReset();
+            } catch (_error) {
+                console.log("Hard reset did not work");
+                this.serialPort.holdReset();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private async _initializeController(): Promise<void> {
         this.startupLines = [];
         let responsive = false;
@@ -187,35 +212,24 @@ export class ControllerService {
             .catch(() => {
                 responsive = false;
             });
-        if (responsive) {
-            // Check for critical alarm state and try to cancel it
-        } else {
-            try {
-                const command = await this.send(new ResetCommand(0x18), 7000);
-                const r = command.result();
-                if (r.status === "ResetLoop") {
-                    console.log("Controller is in a reboot loop");
-                    this.serialPort.holdReset();
-                    this.looping = true;
-                    return Promise.resolve();
-                }
-                this.version = r.version;
-                this.build = r.build;
-            } catch (_error) {
-                // Error is probably "Command timed out"
-                await this.hardReset().catch((_error) => {
-                    console.log("Hard reset did not work");
-                    this.serialPort.holdReset();
-                    this.looping = true;
-                    return Promise.resolve();
-                });
+
+        // Check for critical alarm state and try to cancel it
+        if (!responsive) {
+            this.looping = await this._isInResetLoop();
+            if (this.looping) {
+                return Promise.resolve();
             }
         }
 
         this.looping = false;
         await sleep(200);
         await this.serialPort.writeChar(0x0c); // CTRL-L - disable echo
-        await this._getControllerInfo();
+
+        try {
+            await this._getControllerInfo();
+        } catch (error) {
+            console.log("Could not get controller info", error);
+        }
 
         return Promise.resolve();
     }

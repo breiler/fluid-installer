@@ -6,17 +6,12 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Alert } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
-const BOOLOADER_WARNING_TIMEOUT = 8000;
-
 const BootloaderInfo = () => {
     const [showBootloaderWarning, setShowBootloaderWarning] = useState(false);
     const { t } = useTranslation();
 
     useEffect(() => {
         setShowBootloaderWarning(false);
-        setTimeout(() => {
-            setShowBootloaderWarning(true);
-        }, BOOLOADER_WARNING_TIMEOUT);
     }, []);
 
     return (

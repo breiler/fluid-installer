@@ -74,6 +74,7 @@ const FileBrowser = () => {
     const [editFile, setEditFile] = useState<EditFile | undefined>();
     const [uploadError, setUploadError] = useState<string | undefined>();
 
+    const [isInaccessible, setIsInaccessible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -83,10 +84,6 @@ const FileBrowser = () => {
     );
 
     const init = async () => {
-        if (!controllerService) {
-            return;
-        }
-
         setIsLoading(true);
         await controllerService.write(Buffer.from([0x0c])); // CTRL-L Restting echo mode
         await refreshFileList();
@@ -101,35 +98,30 @@ const FileBrowser = () => {
 
     useEffect(() => {
         init();
-    }, [controllerService]);
-
-    useEffect(() => {
-        refresh();
     }, [fileSystem]);
 
     const refresh = async () => {
+        setUploadError(undefined);
         setIsLoading(true);
         await refreshFileList();
         setIsLoading(false);
     };
 
     const refreshFileList = async (): Promise<void> => {
-        if (!controllerService) {
-            return Promise.resolve();
-        }
         setFiles([]);
         return controllerService
             .send(new ListFilesCommand(fileSystem === "/sd/"))
             .then((listCommand) => {
-                setFiles(listCommand.result());
+                const files = listCommand.result();
+                setFiles(files);
+                setIsInaccessible(files.length === 0);
+            })
+            .catch((_error) => {
+                setIsInaccessible(true);
             });
     };
 
     const onDelete = async (file: ControllerFile) => {
-        if (!controllerService) {
-            return;
-        }
-
         await controllerService.send(
             new DeleteFileCommand(fileSystem, file.name)
         );
@@ -137,9 +129,6 @@ const FileBrowser = () => {
     };
 
     const onDownload = async (file: ControllerFile) => {
-        if (!controllerService) {
-            return;
-        }
         setIsDownloading(true);
 
         try {
@@ -161,10 +150,6 @@ const FileBrowser = () => {
     };
 
     const onEditConfiguration = async (file: ControllerFile) => {
-        if (!controllerService) {
-            return;
-        }
-
         setIsDownloading(true);
         controllerService
             .downloadFile(fileSystem + file.name)
@@ -177,10 +162,6 @@ const FileBrowser = () => {
     };
 
     const onEditFile = async (file: ControllerFile) => {
-        if (!controllerService) {
-            return;
-        }
-
         setIsDownloading(true);
         controllerService
             .downloadFile(fileSystem + file.name)
@@ -193,9 +174,6 @@ const FileBrowser = () => {
     };
 
     const onCreateConfig = async (filename: string, content?: string) => {
-        if (!controllerService) {
-            return;
-        }
         setEditConfiguration({
             file: { id: filename, name: filename, size: 0 },
             fileData: content
@@ -251,6 +229,12 @@ const FileBrowser = () => {
     return (
         <>
             <PageTitle>{t("page.file-browser.title")}</PageTitle>
+            {isInaccessible && (
+                <AlertMessage variant="warning">
+                    Filesytem is inaccessible or empty
+                </AlertMessage>
+            )}
+
             {isLoading && (
                 <AlertMessage variant="info">
                     {t("page.file-browser.loading")} <Spinner />

@@ -383,11 +383,12 @@ export class ControllerService {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
-        const fileData = await xmodem.receive();
-        xmodem.close();
-        //        this.xmodemMode = false;
-
-        return Promise.resolve(fileData);
+        try {
+            const fileData = await xmodem.receive();
+            return Promise.resolve(fileData);
+        } finally {
+            xmodem.close();
+        }
     };
 
     uploadFile = async (file: string, fileData: Buffer): Promise<void> => {
@@ -399,9 +400,11 @@ export class ControllerService {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const xmodem = new XModem(new XModemSocketAdapter(this.serialPort));
-        await xmodem.send(fileData);
-        xmodem.close();
-        //        this.xmodemMode = false;
+        try {
+            await xmodem.send(fileData);
+        } finally {
+            xmodem.close();
+        }
 
         await new Promise((resolve) => setTimeout(resolve, 3000));
         return Promise.resolve();

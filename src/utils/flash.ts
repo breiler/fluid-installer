@@ -1,11 +1,4 @@
-import {
-    ClassicReset,
-    ESPLoader,
-    FlashOptions,
-    LoaderOptions,
-    ResetConstructors,
-    Transport
-} from "esptool-js";
+import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
 import CryptoJS from "crypto-js";
 import { FlashProgress } from "../services/FlashService";
 import { NativeSerialPort } from "./serialport/typings";
@@ -16,40 +9,6 @@ export type FlashFile = {
     fileName: string;
     data: Uint8Array;
     address: number;
-};
-
-/**
- * Custom reset sequence
- */
-const resetConstructors: ResetConstructors = {
-    classicReset: (transport: Transport, resetDelay: number) => {
-        const classicReset = new ClassicReset(transport, resetDelay);
-
-        // Override the reset function
-        classicReset.reset = async () => {
-            console.log("Using classic reset sequence");
-            const serialDevice: NativeSerialPort = transport.device;
-
-            // D0|R1|W100|D1|R0|W50|D0
-            await serialDevice.setSignals({
-                dataTerminalReady: false,
-                requestToSend: true
-            });
-            await new Promise((r) => setTimeout(r, 100));
-            await serialDevice.setSignals({
-                dataTerminalReady: true,
-                requestToSend: false
-            });
-            await new Promise((r) => setTimeout(r, 50));
-            await serialDevice.setSignals({
-                dataTerminalReady: false,
-                requestToSend: false
-            });
-            return Promise.resolve();
-        };
-
-        return classicReset;
-    }
 };
 
 export const flashDevice = async (
@@ -77,8 +36,7 @@ export const flashDevice = async (
         const loaderOptions = {
             transport,
             baudrate: baud,
-            terminal: terminal,
-            resetConstructors: resetConstructors
+            terminal: terminal
         } as LoaderOptions;
         loader = new ESPLoader(loaderOptions);
         await loader!.main();

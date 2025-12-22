@@ -47,7 +47,7 @@ export class Command {
     }
 
     onError(error: string) {
-        console.error("Command ", this.command, "failed with ", error);
+        console.log("Command ", this.command, "failed with ", error);
         this.onDone();
     }
 

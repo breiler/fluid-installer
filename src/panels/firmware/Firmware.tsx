@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "../../components";
 import {
@@ -25,6 +25,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faFileArrowUp, faSliders } from "@fortawesome/free-solid-svg-icons";
 import UploadCustomImageModal from "../../modals/installermodal/UploadCustomImageModal";
 import VersionCard from "../../components/cards/versioncard/VersionCard";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 
 type Props = {
     onInstall: (
@@ -44,6 +45,9 @@ const Firmware = ({ onInstall, githubService }: Props) => {
     const [uploadCustomImage, setUploadCustomImage] = useState<boolean>(false);
     const [selectedRelease, setSelectedRelease] = useState<GithubRelease>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
+    const [unsupportedMessage, setUnsupportedMessage] = useState<
+        string | undefined
+    >();
     const [releaseManifest, setReleaseManifest] = useState<
         GithubReleaseManifest | undefined
     >();
@@ -52,11 +56,27 @@ const Firmware = ({ onInstall, githubService }: Props) => {
         false
     );
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [mcu, setMcu] = useState<string | undefined>(undefined);
 
-    const choice = useMemo(
-        () => selectedChoices[selectedChoices.length - 1],
-        [selectedChoices]
-    );
+    const controllerService = useContext(ControllerServiceContext);
+
+    const chooseMcu = () => {
+        if (mcu && selectedChoices.length == 1) {
+            for (mcuentry of selectedChoices[0].choices) {
+                if (mcuentry.name === mcu) {
+                    setSelectedChoices((choices) => [...choices, mcuentry]);
+                    setUnsupportedMessage("");
+                    return;
+                }
+            }
+            setUnsupportedMessage("This release does not support " + mcu);
+        }
+    };
+
+    const choice = useMemo(() => {
+        chooseMcu();
+        return selectedChoices[selectedChoices.length - 1];
+    }, [selectedChoices]);
     const chooseFirmware = (id) => {
         const release = releases.find((r) => r.id + "" === id + "");
         setSelectedRelease(release);
@@ -84,10 +104,10 @@ const Firmware = ({ onInstall, githubService }: Props) => {
             .then((releases) => {
                 setReleases(releases);
             })
-            .catch((err) => {
-                console.error(err);
+            .catch((error) => {
+                console.error(error);
                 setErrorMessage(
-                    "Could not download releases, please again later"
+                    "Could not download releases, please try again later"
                 );
             });
     };
@@ -99,6 +119,35 @@ const Firmware = ({ onInstall, githubService }: Props) => {
             setSelectedChoices((choices) => [...choices, choice]);
         }
     };
+
+    // The key is the MCU name returned by esploader.
+    // The value is the corresponding name in FluidNC manifests
+    const mcuMap = new Map<string, string>([
+        ["ESP32-S3", "esp32s3"],
+        ["ESP32", "esp32"]
+    ]);
+
+    useEffect(() => {
+        const getMcu = async (): string => {
+            await controllerService.serialPort
+                .getInfo()
+                .then((result) => {
+                    setMcu(mcuMap.get(result.mcu));
+                })
+                .catch((error) => {
+                    console.log("Cannot get MCU:" + error);
+                    setErrorMessage("Could not determine the MCU type");
+                    setMcu(undefined);
+                });
+        };
+        if (mcu === undefined) {
+            getMcu();
+        }
+    }, []);
+
+    useEffect(() => {
+        chooseMcu();
+    }, [mcu]);
 
     useEffect(() => {
         if (releases && releases.length) {
@@ -120,9 +169,15 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                 />
             )}
 
-            {!errorMessage && (
+            {!errorMessage && !mcu && (
+                <PageTitle>{"Getting MCU Type ..."}</PageTitle>
+            )}
+
+            {!errorMessage && mcu && (
                 <>
-                    <PageTitle>{t("panel.firmware.install")}</PageTitle>
+                    <PageTitle>
+                        {t("panel.firmware.install") + " on " + mcu}
+                    </PageTitle>
                     <p>{t("panel.firmware.install-description")}</p>
 
                     <Row>
@@ -220,7 +275,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                     </Col>
                 </Row>
             )}
-            {!isLoading && selectedRelease && (
+            {!isLoading && mcu && selectedRelease && (
                 <div>
                     <Row>
                         <Col
@@ -236,14 +291,22 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                                 setSelectedChoices={setSelectedChoices}
                             />
                             <hr />
-                            {choice && releaseManifest && !choice.images && (
-                                <div>
-                                    <Choice
-                                        choice={choice}
-                                        onSelect={onSelect}
-                                    />
+                            {unsupportedMessage && (
+                                <div className="alert alert-danger">
+                                    {unsupportedMessage}
                                 </div>
                             )}
+                            {!unsupportedMessage &&
+                                choice &&
+                                releaseManifest &&
+                                !choice.images && (
+                                    <div>
+                                        <Choice
+                                            choice={choice}
+                                            onSelect={onSelect}
+                                        />
+                                    </div>
+                                )}
                         </Col>
                     </Row>
                     <Row>

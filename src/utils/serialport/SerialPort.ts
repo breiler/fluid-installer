@@ -85,6 +85,7 @@ export class SerialPort {
             const flashIdLowbyte = (flashId >> 16) & 0xff;
 
             this.deviceInfo = {
+                mcu: loader.chip.CHIP_NAME,
                 description: await loader.chip.getChipDescription(loader),
                 features: await loader.chip.getChipFeatures(loader),
                 frequency: await loader.chip.getCrystalFreq(loader),

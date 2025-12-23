@@ -62,7 +62,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
 
     const chooseMcu = () => {
         if (mcu && selectedChoices.length == 1) {
-            for (mcuentry of selectedChoices[0].choices) {
+            for (const mcuentry of selectedChoices[0].choices) {
                 if (mcuentry.name === mcu) {
                     setSelectedChoices((choices) => [...choices, mcuentry]);
                     setUnsupportedMessage("");

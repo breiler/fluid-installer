@@ -83,6 +83,7 @@ export const flashDevice = async (
 };
 
 export type DeviceInfo = {
+    mcu: string;
     description: string;
     features: string[];
     frequency: number;

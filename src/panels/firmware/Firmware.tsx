@@ -20,12 +20,17 @@ import {
     Dropdown
 } from "react-bootstrap";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faFileArrowUp, faSliders } from "@fortawesome/free-solid-svg-icons";
 import UploadCustomImageModal from "../../modals/installermodal/UploadCustomImageModal";
 import VersionCard from "../../components/cards/versioncard/VersionCard";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+    faWarning,
+    faFileArrowUp,
+    faSliders
+} from "@fortawesome/free-solid-svg-icons";
+import { Alert } from "react-bootstrap";
 
 type Props = {
     onInstall: (
@@ -45,6 +50,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
     const [uploadCustomImage, setUploadCustomImage] = useState<boolean>(false);
     const [selectedRelease, setSelectedRelease] = useState<GithubRelease>();
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
+    const [warningMessage, setWarningMessage] = useState<string | undefined>();
     const [unsupportedMessage, setUnsupportedMessage] = useState<
         string | undefined
     >();
@@ -136,8 +142,9 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                 })
                 .catch((error) => {
                     console.log("Cannot get MCU:" + error);
-                    setErrorMessage("Could not determine the MCU type");
-                    setMcu(undefined);
+                    setWarningMessage(
+                        "Could not determine the MCU type.  Choose it manually."
+                    );
                 });
         };
         if (mcu === undefined) {
@@ -160,7 +167,14 @@ const Firmware = ({ onInstall, githubService }: Props) => {
     return (
         <div className="firmware-component">
             {errorMessage && (
-                <div className="alert alert-danger">{errorMessage}</div>
+                <Alert variant="danger">
+                    <FontAwesomeIcon
+                        color="danger"
+                        icon={faWarning as IconDefinition}
+                        size="lg"
+                    />{" "}
+                    {errorMessage}
+                </Alert>
             )}
 
             {uploadCustomImage && (
@@ -275,6 +289,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                     </Col>
                 </Row>
             )}
+
             {!isLoading && mcu && selectedRelease && (
                 <div>
                     <Row>
@@ -291,6 +306,17 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                                 setSelectedChoices={setSelectedChoices}
                             />
                             <hr />
+                            {warningMessage && (
+                                <Row>
+                                    <Alert variant="warning">
+                                        <FontAwesomeIcon
+                                            icon={faWarning as IconDefinition}
+                                            size="lg"
+                                        />{" "}
+                                        {warningMessage}
+                                    </Alert>
+                                </Row>
+                            )}
                             {unsupportedMessage && (
                                 <div className="alert alert-danger">
                                     {unsupportedMessage}

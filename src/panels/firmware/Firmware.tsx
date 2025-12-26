@@ -183,14 +183,15 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                 />
             )}
 
-            {!errorMessage && !mcu && (
+            {!warningMessage && !mcu && (
                 <PageTitle>{"Getting MCU Type ..."}</PageTitle>
             )}
 
-            {!errorMessage && mcu && (
+            {!errorMessage && (
                 <>
                     <PageTitle>
-                        {t("panel.firmware.install") + " on " + mcu}
+                        {t("panel.firmware.install") +
+                            (mcu ? " on " + mcu : "")}
                     </PageTitle>
                     <p>{t("panel.firmware.install-description")}</p>
 
@@ -290,7 +291,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                 </Row>
             )}
 
-            {!isLoading && mcu && selectedRelease && (
+            {!isLoading && selectedRelease && (
                 <div>
                     <Row>
                         <Col

@@ -61,6 +61,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
         "showPrerelease",
         false
     );
+    const [isDetecting, setIsDetecting] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [mcu, setMcu] = useState<string | undefined>(undefined);
 
@@ -135,6 +136,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
 
     useEffect(() => {
         const getMcu = async (): string => {
+            setIsDetecting(true);
             await controllerService.serialPort
                 .getInfo()
                 .then((result) => {
@@ -145,6 +147,9 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                     setWarningMessage(
                         "Could not determine the MCU type.  Choose it manually."
                     );
+                })
+                .finally(() => {
+                    setIsDetecting(false);
                 });
         };
         if (mcu === undefined) {
@@ -183,11 +188,9 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                 />
             )}
 
-            {!warningMessage && !mcu && (
-                <PageTitle>{"Getting MCU Type ..."}</PageTitle>
-            )}
+            {isDetecting && <PageTitle>{"Getting MCU Type ..."}</PageTitle>}
 
-            {!errorMessage && (
+            {!isDetecting && !errorMessage && (
                 <>
                     <PageTitle>
                         {t("panel.firmware.install") +
@@ -291,7 +294,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                 </Row>
             )}
 
-            {!isLoading && selectedRelease && (
+            {!isDetecting && !isLoading && selectedRelease && (
                 <div>
                     <Row>
                         <Col

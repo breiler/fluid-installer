@@ -20,7 +20,10 @@ import useTrackEvent, {
 const connectImageUrl = new URL("../../../assets/connect.svg", import.meta.url);
 
 type Props = {
-    onConnect: (controllerService: ControllerService) => void;
+    onConnect: (
+        controllerService: ControllerService,
+        serialPort: SerialPort
+    ) => void;
 };
 
 const Connection = ({ onConnect }: Props) => {
@@ -70,7 +73,7 @@ const Connection = ({ onConnect }: Props) => {
             await new Promise((r) => setTimeout(r, 3000));
             trackEvent(TrackCategory.Connect, TrackAction.ConnectionSuccess);
             setConnectionState(ConnectionState.CONNECTED);
-            onConnect(controllerService);
+            onConnect(controllerService, serialPortDevice);
         } catch (_error) {
             //Never mind
         }

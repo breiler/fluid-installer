@@ -22,7 +22,7 @@ import {
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import UploadCustomImageModal from "../../modals/installermodal/UploadCustomImageModal";
 import VersionCard from "../../components/cards/versioncard/VersionCard";
-import { ControllerServiceContext } from "../../context/ControllerServiceContext";
+import { SerialPortContext } from "../../context/SerialPortContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -65,10 +65,14 @@ const Firmware = ({ onInstall, githubService }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [mcu, setMcu] = useState<string | undefined>(undefined);
 
-    const controllerService = useContext(ControllerServiceContext);
+    const serialPort = useContext(SerialPortContext);
 
     const chooseMcu = () => {
-        if (mcu && selectedChoices.length == 1) {
+        if (
+            mcu &&
+            selectedChoices.length == 1 &&
+            selectedChoices[0]["choice-name"] == "Processor type"
+        ) {
             for (const mcuentry of selectedChoices[0].choices) {
                 if (mcuentry.name === mcu) {
                     setSelectedChoices((choices) => [...choices, mcuentry]);
@@ -137,7 +141,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
     useEffect(() => {
         const getMcu = async (): string => {
             setIsDetecting(true);
-            await controllerService.serialPort
+            await serialPort
                 .getInfo()
                 .then((result) => {
                     setMcu(mcuMap.get(result.mcu));

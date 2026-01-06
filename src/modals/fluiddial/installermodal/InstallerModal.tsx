@@ -75,6 +75,12 @@ const InstallerModal = ({
                 baud
         );
 
+        try {
+            await serialPort?.close();
+        } catch (error) {
+            console.log("Ignoring serial close failure:", error);
+        }
+
         let hasErrors = false;
         await InstallService.installChoice(
             githubService,

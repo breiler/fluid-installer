@@ -14,7 +14,9 @@ export enum SerialPortState {
 export type SerialReader = (data: Buffer) => void;
 export type LineReader = (data: string) => void;
 
-const FLASH_BAUD_RATE = 921600;
+// Use the lower baud rate for getting the chip info, since it is
+// more reliable and fast enough for the purpose.
+const INFO_BAUD_RATE = 115200;
 const MAX_SAVED_LINES = 1000;
 
 export enum SerialPortEvent {
@@ -73,7 +75,7 @@ export class SerialPort {
         try {
             const loaderOptions = {
                 transport,
-                baudrate: FLASH_BAUD_RATE,
+                baudrate: INFO_BAUD_RATE,
                 terminal: espLoaderTerminal
             } as LoaderOptions;
             const loader = new ESPLoader(loaderOptions);

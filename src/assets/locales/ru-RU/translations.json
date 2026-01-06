@@ -8,9 +8,9 @@
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
-            "fluiddial": "Используйте эту опцию, если вы хотите установить или обновить ваш FluidDial (CYD или M5Dial).",
-            "continue": "Continue"
+            "fluidnc": "Воспользуйтесь этой опцией, если хотите установить, обновить или настроить контроллер FluidNC.",
+            "fluiddial": "Воспользуйтесь этой опцией, если хотите установить или обновить свой FluidDial (CYD или M5Dial).",
+            "continue": "Продолжить выполнение"
         },
         "connection": {
             "title": "Установщик FluidNC",
@@ -57,8 +57,8 @@
             "version-description": "Получить версию прошивки"
         },
         "not-found": {
-            "title": "Page not found",
-            "go-back-home": "Возвратиться домой"
+            "title": "Страница не найдена",
+            "go-back-home": "Возвращение домой"
         },
         "fluiddial": {
             "connection": {
@@ -79,7 +79,7 @@
             "disconnect": "Отключиться"
         },
         "firmware": {
-            "install": "Установить",
+            "install": "Установка",
             "install-description": "Выберите прошивку, которую вы хотите установить на контроллер.",
             "loading": "Загрузка...",
             "install-custom-image": "Установить собственное изображение...",
@@ -141,7 +141,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC from",
+            "upgrade-description": "Обновите FluidNC с помощью",
             "install-description": "На этот контроллер, похоже, не установлен FluidNC, хотите его установить?",
             "upgrade-button": "Обновить FluidNC",
             "install-button": "Установить FluidNC"
@@ -161,7 +161,7 @@
         "wifi": {
             "configure": "Настройка WiFi",
             "configure-description": "Управление настройками WiFi контроллера",
-            "connected-to": "Подключено к",
+            "connected-to": "Подключение к",
             "access-point": "Точка доступа"
         },
         "donate": {

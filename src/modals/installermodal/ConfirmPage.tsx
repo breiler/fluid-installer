@@ -99,10 +99,9 @@ const ConfirmPage = ({
                     <SelectField
                         label={t("modal.installer.installation-speed")}
                         options={[
-                            {
-                                name: "921600 baud",
-                                value: "921600"
-                            },
+                            { name: "921600 baud", value: "921600" },
+                            { name: "460800 baud", value: "460800" },
+                            { name: "230400 baud", value: "230400" },
                             { name: "115200 baud", value: "115200" }
                         ]}
                         value={baud}

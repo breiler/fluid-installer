@@ -83,7 +83,8 @@ export const InstallService = {
             );
         } catch (error) {
             onState(InstallerState.ERROR);
-            throw "Was not able to flash device: " + error;
+            console.log(error);
+            throw "Unable to flash device. Try a lower installation speed (baud rate).";
         }
 
         return Promise.resolve();
@@ -139,7 +140,8 @@ export const InstallService = {
             );
         } catch (error) {
             onState(InstallerState.ERROR);
-            throw "Was not able to flash device: " + error;
+            console.log(error);
+            throw "Unable to flash device. Try a lower installation speed (baud rate).";
         }
 
         return Promise.resolve();

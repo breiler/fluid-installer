@@ -8,8 +8,8 @@
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
-            "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
+            "fluidnc": "如果您想要安装、升级或配置您的 FluidNC 控制器，请使用此选项。",
+            "fluiddial": "如果您想安装或升级您的 FluidDial (CYD 或 M5Dial) 等待，请使用此选项。",
             "continue": "点击继续"
         },
         "connection": {
@@ -46,7 +46,7 @@
             "restart": "重新启动",
             "restart-description": "通过设置 DTR/RTS 在控制器上进行硬重置",
             "reset": "重置",
-            "reset-description": "Resets the controller with a 0x18 command",
+            "reset-description": "重置控制器为 0x18 命令",
             "unlock": "解锁",
             "unlock-description": "用$X解锁设备",
             "status": "状态",
@@ -63,7 +63,7 @@
         "fluiddial": {
             "connection": {
                 "title": "FluidDial 在线安装程序",
-                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+                "description": "此工具将易于在设备上安装或升级 FluidNC 。请将设备连接并按 Connect 继续。"
             }
         }
     },
@@ -81,16 +81,16 @@
         "firmware": {
             "install": "安装",
             "install-description": "请选择你想要在控制器上安装的固件版本。",
-            "loading": "Loading...",
-            "install-custom-image": "Install a custom image...",
+            "loading": "加载中…",
+            "install-custom-image": "安装自定义图像...",
             "show-prereleases": "显示预发布",
             "fetching": "获取中"
         },
         "progress": {
             "title": "安装中",
-            "downloading": "Downloading package...",
-            "validating": "Validating images...",
-            "flashing": "Installing package to device..."
+            "downloading": "正在下载包文件...",
+            "validating": "正在校验图像...",
+            "flashing": "正在安装软件包..."
         },
         "bootloader": {
             "waiting": "正在等待控制器进入bootloader",
@@ -112,9 +112,9 @@
             "error-reconnecting": "重新连接时发生错误，请重启设备",
             "uploading": "上传中",
             "downloading": "下载中",
-            "downloading-description": "Downloading package...",
-            "restarting": "Restarting",
-            "restarting-description": "Waiting for controller restart...",
+            "downloading-description": "正在下载包...",
+            "restarting": "正在重启",
+            "restarting-description": "正在等待控制器重启...",
             "uploading-files": "上传文件",
             "uploading-files-description": "上传文件中……",
             "done": "已完成",
@@ -125,43 +125,43 @@
             "confirm-installation": "确认安装",
             "confirm-installation-description": "将擦除设备并安装{{release}}版本的固件",
             "not": "不",
-            "installation-speed": "Installation speed",
-            "installation-speed-help": "Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed.",
-            "install": "Install",
-            "cancel": "Cancel",
-            "select-image": "Select image",
-            "select-image-description1": "If you have downloaded a package manually you can flash the image from here.",
-            "select-image-description2": "Select the firmware.bin file to flash the controller with.",
-            "select-image-button": "Select firmware image"
+            "installation-speed": "安装速度",
+            "installation-speed-help": "一些控制器需要以较低的速度安装。如果你遇到问题，你可以尝试降低速度。",
+            "install": "安装",
+            "cancel": "取消",
+            "select-image": "选择图像",
+            "select-image-description1": "如果您手动下载了一个包，您可以从这里刷入图像。",
+            "select-image-description2": "选择要刷入控制器的固件.bin 文件。",
+            "select-image-button": "选择固件图像"
         },
         "lost-connection": {
-            "description": "Lost the connection to the controller",
-            "close": "Close"
+            "description": "无法连接到控制器",
+            "close": "关闭"
         }
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC from",
-            "install-description": "The controller does not seem to have FluidNC installed, do you wish to install it?",
-            "upgrade-button": "Upgrade FluidNC",
+            "upgrade-description": "升级FluidNC 从",
+            "install-description": "控制器似乎没有安装 FluidNC ，你想要安装它吗？",
+            "upgrade-button": "升级 FluidNC",
             "install-button": "安装 FluidNC"
         },
         "terminal": {
-            "open-terminal": "Open terminal",
-            "open-terminal-description": "Open a serial terminal to your controller"
+            "open-terminal": "打开终端",
+            "open-terminal-description": "打开一个串行终端到您的控制器"
         },
         "file-browser": {
-            "open-browser": "File browser",
-            "open-browser-description": "Manage files on the controller"
+            "open-browser": "内置文件",
+            "open-browser-description": "管理控制器上的文件"
         },
         "calibrate": {
-            "calibrate": "Calibrate",
-            "calibrate-description": "Calibrate settings on your controller"
+            "calibrate": "检查引脚",
+            "calibrate-description": "校准控制器上的设置"
         },
         "wifi": {
-            "configure": "Configure WiFi",
-            "configure-description": "Manage the controller WiFi settings",
-            "connected-to": "Connected to",
+            "configure": "配置 WiFi",
+            "configure-description": "管理控制器WiFi设置",
+            "connected-to": "连接到",
             "access-point": "接入点/无线 AP "
         },
         "donate": {

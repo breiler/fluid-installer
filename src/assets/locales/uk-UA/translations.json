@@ -8,8 +8,8 @@
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
-            "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
+            "fluidnc": "Скористайтеся цією опцією, якщо хочете встановити, оновити або налаштувати ваш контролер FluidNC.",
+            "fluiddial": "Скористайтеся цією опцією, якщо хочете встановити або оновити ваш пульт FluidDial (CYD або M5Dial).",
             "continue": "Продовжити"
         },
         "connection": {
@@ -57,13 +57,13 @@
             "version-description": "Отримати версію прошивки"
         },
         "not-found": {
-            "title": "Page not found",
+            "title": "Сторінку не знайдено",
             "go-back-home": "Повернутися додому"
         },
         "fluiddial": {
             "connection": {
-                "title": "Веб-інсталятор FluidDial",
-                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+                "title": "Вебвстановлювач FluidNC",
+                "description": "Цей інструмент спростить встановлення або оновлення FluidDial на вашому пульті. Під’єднайте пульт і натисніть «Підключитися», щоб продовжити."
             }
         }
     },
@@ -141,7 +141,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC from",
+            "upgrade-description": "Оновити FluidNC з…",
             "install-description": "Схоже, що на контролері не встановлено FluidNC. Бажаєте встановити його?",
             "upgrade-button": "Оновити FluidNC",
             "install-button": "Встановити FluidNC"

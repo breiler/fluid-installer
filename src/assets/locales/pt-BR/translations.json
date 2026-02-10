@@ -9,8 +9,8 @@
     "page": {
         "select-device": {
             "fluidnc": "Use esta opção se você quiser instalar, atualizar ou configurar o seu controlador FluidNC.",
-            "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
-            "continue": "Continue"
+            "fluiddial": "Use esta opção se você deseja instalar ou atualizar seu FluidDial (CYD ou M5Dial) pendente.",
+            "continue": "Continuar"
         },
         "connection": {
             "title": "Instalador Web FluidNC",
@@ -25,45 +25,45 @@
             "show-details": "Clique aqui para visualizar detalhes"
         },
         "file-browser": {
-            "title": "File browser",
-            "loading": "Loading...",
-            "downloading": "Downloading...",
-            "uploading": "Uploading",
-            "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",
-            "create-config": "Create config",
-            "create-new-config": "Create new config",
-            "upload": "Upload",
-            "active-config": "Active config",
-            "select-config": "Select config",
-            "select-as-config": "Select as config",
-            "edit": "Edit",
-            "delete": "Delete",
-            "download": "Download"
+            "title": "Gerenciador de arquivos",
+            "loading": "Carregando...",
+            "downloading": "Baixando...",
+            "uploading": "Enviando",
+            "config-missing": "O arquivo de configuração \"{{configFilename}}\" está faltando, você deseja criá-lo?",
+            "create-config": "Criar configuração",
+            "create-new-config": "Criar nova configuração",
+            "upload": "Enviar",
+            "active-config": "Configuração ativa",
+            "select-config": "Selecionar configuração",
+            "select-as-config": "Selecionar como configuração",
+            "edit": "Editar",
+            "delete": "Apagar",
+            "download": "Baixar"
         },
         "terminal": {
             "title": "Terminal",
-            "restarting": "Restarting controller...",
-            "restart": "Restart",
-            "restart-description": "Does a hard reset on the controller by setting DTR/RTS",
-            "reset": "Reset",
-            "reset-description": "Resets the controller with a 0x18 command",
-            "unlock": "Unlock",
-            "unlock-description": "Unlocks the controller with $X",
+            "restarting": "Reiniciando o controlador...",
+            "restart": "Reiniciar",
+            "restart-description": "Faz um reset rígido no controlador definindo DTR/RTS",
+            "reset": "Redefinir",
+            "reset-description": "Redefine o controlador com um comando 0x18",
+            "unlock": "Desbloquear",
+            "unlock-description": "Desbloqueia o controle com $X",
             "status": "Status",
-            "status-description": "Get the controller status",
-            "startup": "Startup messages",
-            "startup-description": "Get startup log messages",
-            "version": "Version",
-            "version-description": "Get the firmware version"
+            "status-description": "Obter o status do controlador",
+            "startup": "Mensagens de inicialização",
+            "startup-description": "Obter mensagens de log de inicialização",
+            "version": "Versão",
+            "version-description": "Obter a versão do firmware"
         },
         "not-found": {
-            "title": "Page not found",
-            "go-back-home": "Return back home"
+            "title": "Página não encontrada",
+            "go-back-home": "Voltar ao início"
         },
         "fluiddial": {
             "connection": {
-                "title": "FluidDial Web Installer",
-                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+                "title": "Instalador Web FluidNC",
+                "description": "Essa ferramenta irá facilitar a instalação ou atualização do FluidNC na sua controladora. Conecte a sua controladora e pressione Conectar para continuar."
             }
         }
     },
@@ -79,26 +79,26 @@
             "disconnect": "Desconectar"
         },
         "firmware": {
-            "install": "Install",
-            "install-description": "Select which firmware you want to install on your controller.",
-            "loading": "Loading...",
-            "install-custom-image": "Install a custom image...",
-            "show-prereleases": "Show pre-releases",
-            "fetching": "Fetching"
+            "install": "Instalar",
+            "install-description": "Selecione qual firmware você deseja instalar no seu controlador.",
+            "loading": "Carregando...",
+            "install-custom-image": "Instalar uma imagem personalizada...",
+            "show-prereleases": "Mostrar pré-lançamentos",
+            "fetching": "Buscando"
         },
         "progress": {
-            "title": "Installing",
-            "downloading": "Downloading package...",
-            "validating": "Validating images...",
-            "flashing": "Installing package to device..."
+            "title": "Instalando",
+            "downloading": "baixando pacote...",
+            "validating": "Validando imagens...",
+            "flashing": "Instalando pacote no dispositivo..."
         },
         "bootloader": {
-            "waiting": "Waiting for controller to enter bootloader...",
-            "not-active": "Bootloader not active - Try holding down the BOOT switch"
+            "waiting": "Esperando o controle entrar no bootloader...",
+            "not-active": "Bootloader não está ativo - Tente segurar o botão BOOT"
         },
         "unsupported": {
             "title": "Navegador não suportado",
-            "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
+            "description": "Seu navegador da Web atual não é suportado, por favor use o Chrome, Edge ou Opera"
         }
     },
     "component": {
@@ -109,39 +109,39 @@
     },
     "modal": {
         "installer": {
-            "error-reconnecting": "An error occured while reconnecting, please reboot the controller",
-            "uploading": "Uploading",
-            "downloading": "Downloading",
-            "downloading-description": "Downloading package...",
-            "restarting": "Restarting",
-            "restarting-description": "Waiting for controller restart...",
-            "uploading-files": "Uploading files",
-            "uploading-files-description": "Uploading files...",
-            "done": "Done",
-            "done-description": "The controller has been successfully installed and is ready to be used.",
-            "continue": "Continue",
-            "error": "Error!",
-            "close": "Close",
-            "confirm-installation": "Confirm installation",
-            "confirm-installation-description": "This will install the firmware \"{{release}}\" to the controller. It will {{not}} erase the controller.",
-            "not": "not",
-            "installation-speed": "Installation speed",
-            "installation-speed-help": "Some controllers need to be installed at a lower speed. If you are experiencing problems you can try and decrease the speed.",
-            "install": "Install",
-            "cancel": "Cancel",
-            "select-image": "Select image",
-            "select-image-description1": "If you have downloaded a package manually you can flash the image from here.",
-            "select-image-description2": "Select the firmware.bin file to flash the controller with.",
-            "select-image-button": "Select firmware image"
+            "error-reconnecting": "Ocorreu um erro ao reconectar. Por favor, reinicie o controlador",
+            "uploading": "Enviando",
+            "downloading": "Baixando",
+            "downloading-description": "Baixando pacote...",
+            "restarting": "Reiniciando",
+            "restarting-description": "Aguardando reinicialização do controlador...",
+            "uploading-files": "Enviando Arquivos",
+            "uploading-files-description": "Enviando arquivos...",
+            "done": "Concluído",
+            "done-description": "O controlador foi instalado com sucesso e está pronto para ser usado.",
+            "continue": "Continar",
+            "error": "Erro!",
+            "close": "Fechar",
+            "confirm-installation": "Confirmar a instalação",
+            "confirm-installation-description": "Isto irá instalar o firmware \"{{release}}\" no controle. Ele irá {{not}} apagar o controlador.",
+            "not": "não",
+            "installation-speed": "Velocidade de instalação",
+            "installation-speed-help": "Alguns controles precisam ser instalados a uma velocidade inferior. Se você estiver enfrentando problemas, tente diminuir a velocidade.",
+            "install": "Instalar",
+            "cancel": "Cancelar",
+            "select-image": "Selecione a imagem",
+            "select-image-description1": "Se você baixou um pacote manualmente você pode instalar a imagem daqui.",
+            "select-image-description2": "Selecione o arquivo firmware.bin para instalar no controlador.",
+            "select-image-button": "Selecionar imagem do firmware"
         },
         "lost-connection": {
-            "description": "Lost the connection to the controller",
-            "close": "Close"
+            "description": "Perdeu a conexão com o controlador",
+            "close": "Fechar"
         }
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC from",
+            "upgrade-description": "Atualizar FluidNC de",
             "install-description": "A controladora parece não ter o FluidNC instalado, deseja instalá-lo?",
             "upgrade-button": "Atualizar o FluidNC",
             "install-button": "Instalar o FluidNC"
@@ -165,7 +165,7 @@
             "access-point": "Ponto de Acesso"
         },
         "donate": {
-            "description": "Please consider a donation to the FluidNC project via the links below to keep it going."
+            "description": "Por favor, considere uma doação para o projeto FluidNC através dos links abaixo para mantê-la."
         }
     }
 }

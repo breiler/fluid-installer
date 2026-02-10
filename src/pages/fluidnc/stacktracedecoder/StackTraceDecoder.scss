@@ -21,7 +21,7 @@
 
     .form-select {
         border: 2px solid var(--bs-border-color);
-        
+
         &:focus {
             border-color: var(--bs-primary);
             box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
@@ -39,7 +39,7 @@
 }
 
 .decoder-textarea {
-    font-family: 'Courier New', Consolas, monospace;
+    font-family: "Courier New", Consolas, monospace;
     font-size: 13px;
     min-height: 120px;
     resize: vertical;
@@ -96,7 +96,7 @@
     margin-bottom: 20px;
 
     .result-table {
-        font-family: 'Courier New', Consolas, monospace;
+        font-family: "Courier New", Consolas, monospace;
         font-size: 12px;
         margin-bottom: 0;
 
@@ -150,7 +150,7 @@
     color: var(--bs-gray-100);
     padding: 15px;
     border-radius: 6px;
-    font-family: 'Courier New', Consolas, monospace;
+    font-family: "Courier New", Consolas, monospace;
     font-size: 12px;
     margin-top: 20px;
     border: 1px solid var(--bs-border-color);

@@ -1,14 +1,14 @@
 {
     "header": {
         "documentation": "Documentação",
-        "translate": "Add translations"
+        "translate": "Adicionar tradução"
     },
     "footer": {
         "documentation": "Documentação"
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
+            "fluidnc": "Use esta opção se você quiser instalar, atualizar ou configurar o seu controlador FluidNC.",
             "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
             "continue": "Continue"
         },
@@ -97,7 +97,7 @@
             "not-active": "Bootloader not active - Try holding down the BOOT switch"
         },
         "unsupported": {
-            "title": "Browser not supported",
+            "title": "Navegador não suportado",
             "description": "Your current web browser is not supported, please use Chrome, Edge or Opera instead"
         }
     },

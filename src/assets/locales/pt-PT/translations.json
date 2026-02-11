@@ -75,6 +75,7 @@
             "file-browser": "Navegador de arquivos",
             "wifi": "Wi-Fi",
             "calibrate": "Calibrar",
+            "stacktrace-decoder": "Decode Stack Trace",
             "restart": "Reiniciar",
             "disconnect": "Desconectar"
         },
@@ -163,6 +164,10 @@
             "configure-description": "Gerenciar configurações de Wi-Fi da controladora",
             "connected-to": "Conectado a",
             "access-point": "Ponto de Acesso"
+        },
+        "stacktrace": {
+            "open": "Decode Stack Trace",
+            "description": "Decode ESP32 stack traces using .addrinfo files"
         },
         "donate": {
             "description": "Please consider a donation to the FluidNC project via the links below to keep it going."

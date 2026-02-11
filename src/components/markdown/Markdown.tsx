@@ -8,6 +8,11 @@ type Props = {
     children: string;
 };
 export const Markdown = ({ children }: Props) => {
+    // Guard against undefined or null children
+    if (!children) {
+        return null;
+    }
+
     return (
         <ErrorBoundary
             fallback={

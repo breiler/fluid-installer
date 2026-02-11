@@ -8,6 +8,7 @@ import { FileBrowserCard } from "../../../components/cards/filebrowsercard/FileB
 import { InstallCard } from "../../../components/cards/installcard/InstallCard";
 import { TerminalCard } from "../../../components/cards/terminalcard/TerminalCard";
 import { WiFiCard } from "../../../components/cards/wificard/WiFiCard";
+import { StackTraceDecoderCard } from "../../../components/cards/stacktracedecodercard/StackTraceDecoderCard";
 import LogModal from "../../../modals/logmodal/LogModal";
 import PageTitle from "../../../components/pagetitle/PageTitle";
 import { ControllerServiceContext } from "../../../context/ControllerServiceContext";
@@ -83,6 +84,13 @@ const Home = () => {
                             />
                         </Col>
                     )}
+                    <Col xs={12} md={6} lg={4}>
+                        <StackTraceDecoderCard
+                            onClick={() =>
+                                navigate(Page.FLUIDNC_STACKTRACE_DECODER)
+                            }
+                        />
+                    </Col>
                     {/* false && (
                     <Col xs={12} md={6} lg={4}>
                         <LogModal

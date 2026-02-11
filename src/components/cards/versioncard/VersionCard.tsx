@@ -45,7 +45,9 @@ const VersionCard = ({ release, isLatest }: Props) => {
 
                 {release && (
                     <ShowMore maxHeight={250}>
-                        <Markdown>{release.body}</Markdown>
+                        <Markdown>
+                            {release.body || "No release notes available."}
+                        </Markdown>
                     </ShowMore>
                 )}
             </Card.Body>

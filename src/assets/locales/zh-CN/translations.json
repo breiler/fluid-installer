@@ -75,6 +75,7 @@
             "file-browser": "内置文件",
             "wifi": "配置WiFi网络",
             "calibrate": "检查引脚",
+            "stacktrace-decoder": "Decode Stack Trace",
             "restart": "重启",
             "disconnect": "断开连接"
         },
@@ -163,6 +164,10 @@
             "configure-description": "管理控制器WiFi设置",
             "connected-to": "连接到",
             "access-point": "接入点/无线 AP "
+        },
+        "stacktrace": {
+            "open": "Decode Stack Trace",
+            "description": "Decode ESP32 stack traces using .addrinfo files"
         },
         "donate": {
             "description": "请考虑通过以下链接向 FluidNC 项目捐款，以使其继续发展。"

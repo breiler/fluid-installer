@@ -8,7 +8,7 @@
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
+            "fluidnc": "Utilice esta opción si desea instalar, actualizar o configurar su controlador FluidNC.",
             "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
             "continue": "Continue"
         },

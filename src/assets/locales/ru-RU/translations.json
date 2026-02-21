@@ -75,7 +75,7 @@
             "file-browser": "Файловый менеджер",
             "wifi": "Wi-Fi",
             "calibrate": "Калибровка",
-            "stacktrace-decoder": "Decode Stack Trace",
+            "stacktrace-decoder": "Декодировать трассировку стека",
             "restart": "Перезагрузка",
             "disconnect": "Отключиться"
         },
@@ -166,8 +166,8 @@
             "access-point": "Точка доступа"
         },
         "stacktrace": {
-            "open": "Decode Stack Trace",
-            "description": "Decode ESP32 stack traces using .addrinfo files"
+            "open": "Декодировать трассировку стека",
+            "description": "Декодируйте следы стека ESP32 с помощью файлов addrinfo"
         },
         "donate": {
             "description": "Пожалуйста, подумайте о пожертвовании проекту FluidNC через ссылки ниже, чтобы продолжать его."

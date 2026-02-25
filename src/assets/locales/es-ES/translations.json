@@ -8,7 +8,7 @@
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
+            "fluidnc": "Utilice esta opción si desea instalar, actualizar o configurar su controlador FluidNC.",
             "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
             "continue": "Continue"
         },
@@ -75,6 +75,7 @@
             "file-browser": "Explorador de archivos",
             "wifi": "WiFi",
             "calibrate": "Calibrar",
+            "stacktrace-decoder": "Decode Stack Trace",
             "restart": "Reiniciar",
             "disconnect": "Desconectar"
         },
@@ -163,6 +164,10 @@
             "configure-description": "Administrar la configuración Wi-Fi del controlador",
             "connected-to": "Conectado a",
             "access-point": "Punto de acceso"
+        },
+        "stacktrace": {
+            "open": "Decode Stack Trace",
+            "description": "Decode ESP32 stack traces using .addrinfo files"
         },
         "donate": {
             "description": "Considere hacer una donación al proyecto FluidNC a través de los enlaces a continuación para sostener el proyecto."

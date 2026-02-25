@@ -75,6 +75,7 @@
             "file-browser": "Dosya Gezgini",
             "wifi": "WiFi",
             "calibrate": "Kalibre et",
+            "stacktrace-decoder": "Decode Stack Trace",
             "restart": "Yeniden Başlat",
             "disconnect": "Bağlantıyı kes"
         },
@@ -163,6 +164,10 @@
             "configure-description": "Kontrolcü WiFi ayarlarını yönetin.",
             "connected-to": "Bağlı Olunan",
             "access-point": "Erişim Noktası (Access Point)"
+        },
+        "stacktrace": {
+            "open": "Decode Stack Trace",
+            "description": "Decode ESP32 stack traces using .addrinfo files"
         },
         "donate": {
             "description": "Lütfen FluidNC projesinin devamı için aşağıdaki bağlantılar aracılığıyla bağış yapmayı düşünün."

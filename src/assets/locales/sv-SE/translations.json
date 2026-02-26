@@ -75,7 +75,7 @@
             "file-browser": "Filhanterare",
             "wifi": "WiFi",
             "calibrate": "Kalibrera",
-            "stacktrace-decoder": "Decode Stack Trace",
+            "stacktrace-decoder": "Avkoda stack trace",
             "restart": "Starta om",
             "disconnect": "Stäng anslutning"
         },
@@ -142,7 +142,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC from",
+            "upgrade-description": "Uppgradera FluidNC från",
             "install-description": "Din enhet verkar inte ha FluidNC installerat, vill du installera det?",
             "upgrade-button": "Uppgradera",
             "install-button": "Installera"
@@ -166,8 +166,8 @@
             "access-point": "Accesspunkt"
         },
         "stacktrace": {
-            "open": "Decode Stack Trace",
-            "description": "Decode ESP32 stack traces using .addrinfo files"
+            "open": "Avkoda stack trace",
+            "description": "Avkoda ESP32 stack trace med .addrinfo-filer"
         },
         "donate": {
             "description": "Vänligen överväg en donation till FluidNC-projektet via länkarna nedan för att hålla igång det."

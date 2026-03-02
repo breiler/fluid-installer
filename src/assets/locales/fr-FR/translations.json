@@ -75,7 +75,7 @@
             "file-browser": "Navigateur de fichiers",
             "wifi": "Wi-Fi",
             "calibrate": "Étalonner",
-            "stacktrace-decoder": "",
+            "stacktrace-decoder": "Decode Stack Trace",
             "restart": "Redémarrer",
             "disconnect": "Déconnecter"
         },

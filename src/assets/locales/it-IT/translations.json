@@ -81,7 +81,7 @@
         },
         "firmware": {
             "install": "Install",
-            "install-description": "Select which firmware you want to install on your controller.",
+            "install-description": ".",
             "loading": "Caricamento...",
             "install-custom-image": "Install a custom image...",
             "show-prereleases": "Show pre-releases",

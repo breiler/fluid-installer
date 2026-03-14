@@ -43,6 +43,8 @@ const Flag = ({ language }: FlagProps) => {
             return <span className={"fi fi-it"}>&nbsp;</span>;
         case "zh":
             return <span className={"fi fi-cn"}>&nbsp;</span>;
+        case "cs":
+            return <span className={"fi fi-cz"}>&nbsp;</span>;
         default:
             return <span className={`fi fi-${language}`}>&nbsp;</span>;
     }
@@ -65,7 +67,6 @@ const LanguageDropDown = ({ language }: LanguageDropDownProps) => {
 const Header = () => {
     const { t, i18n } = useTranslation();
     const location = useLocation();
-
     return (
         <Navbar
             expand="sm"
@@ -124,7 +125,7 @@ const Header = () => {
                     className="right"
                     title={
                         <>
-                            <Flag language={i18n.resolvedLanguage} />
+                            <Flag language={i18n.language} />
                             {Language[i18n.language]}
                         </>
                     }

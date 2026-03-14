@@ -17,6 +17,7 @@ import italianTranslation from "./assets/locales/it-IT/translations.json";
 import polishTranslation from "./assets/locales/pl-PL/translations.json";
 import turkishTranslations from "./assets/locales/tr-TR/translations.json";
 import chineseTranslations from "./assets/locales/zh-CN/translations.json";
+import czechTranslations from "./assets/locales/cs-CZ/translations.json";
 
 i18n.use(Backend)
     .use(LanguageDetector)
@@ -30,6 +31,7 @@ i18n.use(Backend)
     });
 
 // This orders the language bar
+i18n.addResourceBundle("cs", "translation", czechTranslations);
 i18n.addResourceBundle("de", "translation", germanTranslations);
 i18n.addResourceBundle("en", "translation", englishTranslations);
 i18n.addResourceBundle("es", "translation", spanishTranslations);
@@ -46,6 +48,7 @@ i18n.addResourceBundle("uk", "translation", ukrainianTranslation);
 i18n.addResourceBundle("zh", "translation", chineseTranslations);
 
 export const Language = {
+    cs: "Čeština",
     en: "English",
     es: "Español",
     zh: "中国人",
@@ -59,7 +62,7 @@ export const Language = {
     fr: "Français",
     ru: "Русский",
     tr: "Türkçe",
-    uk: "Yкраїнська"
+    uk: "Yкpaїнcькa"
 };
 
 export default i18n;

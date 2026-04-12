@@ -167,7 +167,7 @@
         },
         "stacktrace": {
             "open": "Decode Stack Trace",
-            "description": "Decode ESP32 stack traces using .addrinfo files"
+            "description": "使用 .addrinfo 文件解码 ESP32 堆栈跟踪"
         },
         "donate": {
             "description": "请考虑通过以下链接向 FluidNC 项目捐款，以使其继续发展。"

@@ -75,7 +75,7 @@
             "file-browser": "内置文件",
             "wifi": "配置WiFi网络",
             "calibrate": "检查引脚",
-            "stacktrace-decoder": "Decode Stack Trace",
+            "stacktrace-decoder": "堆栈跟踪解码",
             "restart": "重启",
             "disconnect": "断开连接"
         },

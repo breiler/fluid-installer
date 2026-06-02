@@ -8,9 +8,9 @@
     },
     "page": {
         "select-device": {
-            "fluidnc": "Use this option if you want to install, upgrade or configure your FluidNC controller.",
-            "fluiddial": "Use this option if you want to install or upgrade your FluidDial (CYD or M5Dial) pendant.",
-            "continue": "Continue"
+            "fluidnc": "FluidNC kontrol cihazınızı kurmak, yükseltmek veya yapılandırmak istiyorsanız bu seçeneği kullanın.",
+            "fluiddial": "FluidDial (CYD veya M5Dial) kumanda panelinizi kurmak veya yükseltmek istiyorsanız bu seçeneği kullanın.",
+            "continue": "Tamam"
         },
         "connection": {
             "title": "FluidNC Web Yükleyicisi",
@@ -57,8 +57,8 @@
             "version-description": "Yazılım sürümünü görüntüle"
         },
         "not-found": {
-            "title": "Page not found",
-            "go-back-home": "Return back home"
+            "title": "Sayfa Bulunamadı",
+            "go-back-home": "Ana Sayfaya Dön"
         },
         "fluiddial": {
             "connection": {
@@ -167,7 +167,7 @@
         },
         "stacktrace": {
             "open": "Decode Stack Trace",
-            "description": "Decode ESP32 stack traces using .addrinfo files"
+            "description": ".addrinfo dosyalarını kullanarak ESP32 yığın izlerini çözümleyin"
         },
         "donate": {
             "description": "Lütfen FluidNC projesinin devamı için aşağıdaki bağlantılar aracılığıyla bağış yapmayı düşünün."

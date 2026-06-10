@@ -42,15 +42,15 @@
         },
         "terminal": {
             "title": "Terminal",
-            "restarting": "Reiniciando o controlador...",
+            "restarting": "Reiniciando a controladora...",
             "restart": "Reiniciar",
-            "restart-description": "Faz um reset rígido no controlador definindo DTR/RTS",
+            "restart-description": "Faz um reset rígido na controladora definindo DTR/RTS",
             "reset": "Redefinir",
-            "reset-description": "Redefine o controlador com um comando 0x18",
+            "reset-description": "Redefine a controladora com um comando 0x18",
             "unlock": "Desbloquear",
-            "unlock-description": "Desbloqueia o controle com $X",
+            "unlock-description": "Desbloqueia a controladora com $X",
             "status": "Status",
-            "status-description": "Obter o status do controlador",
+            "status-description": "Obter o status da controladora",
             "startup": "Mensagens de inicialização",
             "startup-description": "Obter mensagens de log de inicialização",
             "version": "Versão",
@@ -81,7 +81,7 @@
         },
         "firmware": {
             "install": "Instalar",
-            "install-description": "Selecione qual firmware você deseja instalar no seu controlador.",
+            "install-description": "Selecione qual firmware você deseja instalar na sua controladora.",
             "loading": "Carregando...",
             "install-custom-image": "Instalar uma imagem personalizada...",
             "show-prereleases": "Mostrar pré-lançamentos",
@@ -89,12 +89,12 @@
         },
         "progress": {
             "title": "Instalando",
-            "downloading": "baixando pacote...",
+            "downloading": "Baixando pacote...",
             "validating": "Validando imagens...",
             "flashing": "Instalando pacote no dispositivo..."
         },
         "bootloader": {
-            "waiting": "Esperando o controle entrar no bootloader...",
+            "waiting": "Esperando a controladora entrar no modo bootloader...",
             "not-active": "Bootloader não está ativo - Tente segurar o botão BOOT"
         },
         "unsupported": {
@@ -110,16 +110,16 @@
     },
     "modal": {
         "installer": {
-            "error-reconnecting": "Ocorreu um erro ao reconectar. Por favor, reinicie o controlador",
+            "error-reconnecting": "Ocorreu um erro ao reconectar. Por favor, reinicie a controladora",
             "uploading": "Enviando",
             "downloading": "Baixando",
             "downloading-description": "Baixando pacote...",
             "restarting": "Reiniciando",
-            "restarting-description": "Aguardando reinicialização do controlador...",
+            "restarting-description": "Aguardando reinicialização da controladora...",
             "uploading-files": "Enviando Arquivos",
             "uploading-files-description": "Enviando arquivos...",
             "done": "Concluído",
-            "done-description": "O controlador foi instalado com sucesso e está pronto para ser usado.",
+            "done-description": "A controladora foi instalada com sucesso, e está pronta para ser usada.",
             "continue": "Continuar",
             "error": "Erro!",
             "close": "Fechar",
@@ -132,11 +132,11 @@
             "cancel": "Cancelar",
             "select-image": "Selecione a imagem",
             "select-image-description1": "Se você baixou um pacote manualmente você pode instalar a imagem daqui.",
-            "select-image-description2": "Selecione o arquivo firmware.bin para instalar no controlador.",
+            "select-image-description2": "Selecione o arquivo firmware.bin para instalar na controladora.",
             "select-image-button": "Selecionar imagem do firmware"
         },
         "lost-connection": {
-            "description": "Perdeu a conexão com o controlador",
+            "description": "Perdeu a conexão com a controladora",
             "close": "Fechar"
         }
     },
@@ -170,7 +170,7 @@
             "description": "Decode ESP32 stack traces using .addrinfo files"
         },
         "donate": {
-            "description": "Por favor, considere uma doação para o projeto FluidNC através dos links abaixo para mantê-la."
+            "description": "Por favor, considere uma doação para o projeto FluidNC através dos links abaixo para mantê-lo."
         }
     }
 }

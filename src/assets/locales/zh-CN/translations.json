@@ -121,7 +121,7 @@
             "done": "已完成",
             "done-description": "控制器已成功安装，可以开始使用。",
             "continue": "继续",
-            "error": "错误! ",
+            "error": "错误!",
             "close": "关闭",
             "confirm-installation": "确认安装",
             "confirm-installation-description": "将擦除设备并安装{{release}}版本的固件",
@@ -166,7 +166,7 @@
             "access-point": "接入点/无线 AP "
         },
         "stacktrace": {
-            "open": "001",
+            "open": "Decode Stack Trace",
             "description": "使用 .addrinfo 文件解码 ESP32 堆栈跟踪"
         },
         "donate": {

@@ -10,7 +10,7 @@
         "select-device": {
             "fluidnc": "FluidNC kontrol cihazınızı kurmak, yükseltmek veya yapılandırmak istiyorsanız bu seçeneği kullanın.",
             "fluiddial": "FluidDial (CYD veya M5Dial) kumanda panelinizi kurmak veya yükseltmek istiyorsanız bu seçeneği kullanın.",
-            "continue": "Tamam"
+            "continue": "Devam Et"
         },
         "connection": {
             "title": "FluidNC Web Yükleyicisi",
@@ -62,8 +62,8 @@
         },
         "fluiddial": {
             "connection": {
-                "title": "FluidDial Web Installer",
-                "description": "This tool will make it easy to install or upgrade FluidDial on your pendant. Plug in your pendant and press Connect to continue."
+                "title": "FluidDial Web Yükleyici",
+                "description": "Bu araç, FluidDial'ı kumandanıza kolayca kurmanızı veya yükseltmenizi sağlayacaktır. Kumandanızı prize takın ve devam etmek için Bağlan düğmesine basın."
             }
         }
     },
@@ -75,7 +75,7 @@
             "file-browser": "Dosya Gezgini",
             "wifi": "WiFi",
             "calibrate": "Kalibre et",
-            "stacktrace-decoder": "Decode Stack Trace",
+            "stacktrace-decoder": "Yığın İzini Çöz",
             "restart": "Yeniden Başlat",
             "disconnect": "Bağlantıyı kes"
         },
@@ -142,7 +142,7 @@
     },
     "card": {
         "install": {
-            "upgrade-description": "Upgrade FluidNC from",
+            "upgrade-description": "FluidNC'yi yükseltin",
             "install-description": "Kontrolcüde FluidNC yüklü değil görünüyor, yüklemek ister misiniz?",
             "upgrade-button": "FluidNC yazılımını yükselt",
             "install-button": "FluidNC yazılımını yükle"
@@ -166,7 +166,7 @@
             "access-point": "Erişim Noktası (Access Point)"
         },
         "stacktrace": {
-            "open": "Decode Stack Trace",
+            "open": "Yığın İzini Çöz",
             "description": ".addrinfo dosyalarını kullanarak ESP32 yığın izlerini çözümleyin"
         },
         "donate": {

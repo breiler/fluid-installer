@@ -10,6 +10,9 @@ import {
     Row,
     Image
 } from "react-bootstrap";
+import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import Button from "../../components/button";
 import ConfigService, {
     ConfigBoard,
@@ -18,6 +21,7 @@ import ConfigService, {
 import { Config } from "../../model/Config";
 import { fileDataToConfig } from "../../utils/utils";
 import AlertMessage from "../../components/alertmessage/AlertMessage";
+import { openWizard } from "../../services/WizardService";
 
 type Props = {
     show: boolean;
@@ -248,6 +252,36 @@ const CreateFileModal = ({
             </ModalBody>
             <ModalFooter>
                 <Button onClick={onCancel}>Cancel</Button>
+                {createNew && (
+                    <Button
+                        disabled={!filename.trim()}
+                        onClick={() => {
+                            // Same as clicking OK (creates the file record
+                            // with whatever content is currently staged --
+                            // blank, or a chosen template -- and opens it in
+                            // the normal config editor), immediately
+                            // followed by opening the wizard, so the user
+                            // lands straight in a design session instead of
+                            // an extra click. The editor's own "Open in
+                            // Wizard"/companion-handoff machinery
+                            // (ConfigurationModal.tsx) takes it from there --
+                            // no separate handoff logic needed here, since
+                            // by the time the wizard tab finishes loading and
+                            // sends its "ready" signal, the editor (and its
+                            // message listener) is already mounted.
+                            onCreate(filename, content);
+                            openWizard();
+                        }}
+                    >
+                        <>
+                            <FontAwesomeIcon
+                                icon={faExternalLink as IconDefinition}
+                                style={{ marginRight: "8px" }}
+                            />
+                            Create with Wizard
+                        </>
+                    </Button>
+                )}
                 <Button
                     buttonType="btn-success"
                     onClick={() => onCreate(filename, content)}

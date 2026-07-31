@@ -105,6 +105,37 @@ const ConfigurationModal = ({
                 );
                 return;
             }
+            // Additional hardening on top of the origin check above (per a
+            // PR review comment): WIZARD_ORIGIN is a GitHub Pages user-site
+            // origin, which is shared across every project that account
+            // publishes -- the origin check alone can't distinguish "the
+            // real wizard" from some other unrelated project hosted at the
+            // same account. Pin to the specific window that sent the FIRST
+            // accepted message (normally already known anyway, via
+            // wizardWindowRef being set the moment openWizard() returns --
+            // this fallback mainly covers the tab having been reloaded
+            // in-between, losing that JS reference), and reject any later
+            // message whose `event.source` doesn't match. Scope, honestly:
+            // this doesn't stop the wizard's OWN code from misbehaving if
+            // IT is compromised (a message from a compromised-but-genuine
+            // wizard tab still has the correct `event.source` and origin,
+            // same as legitimate) -- it only rules out some OTHER, unrelated
+            // window happening to also live at this shared origin and
+            // getting a message through by simply matching WIZARD_ORIGIN.
+            const sourceWindow = event.source as Window | null;
+            if (!wizardWindowRef.current && sourceWindow) {
+                wizardWindowRef.current = sourceWindow;
+            }
+            if (
+                wizardWindowRef.current &&
+                sourceWindow &&
+                sourceWindow !== wizardWindowRef.current
+            ) {
+                console.debug(
+                    "[webinstaller] ignoring message from a window other than the tracked wizard tab"
+                );
+                return;
+            }
             if (isFluidNCWizardReadyMessage(event.data)) {
                 // The wizard tab has finished booting (loaded its own
                 // schema/role data) and is now able to accept a config to

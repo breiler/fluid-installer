@@ -45,11 +45,36 @@
  */
 const PRODUCTION_WIZARD_BASE_URL =
     "https://mitchbradley.github.io/FluidNC-config-wizard";
-export const WIZARD_BASE_URL =
-    (typeof localStorage !== "undefined" &&
-        localStorage.getItem("fluidnc-wizard-base-url")) ||
-    PRODUCTION_WIZARD_BASE_URL;
-export const WIZARD_ORIGIN = new URL(WIZARD_BASE_URL).origin;
+
+// Both wrapped in try/catch -- this whole block runs at MODULE LOAD, so an
+// uncaught throw here would break the entire app on import, not just this
+// one feature. Two distinct ways that could happen, per PR review: (1)
+// localStorage itself can throw just by being accessed, not just by being
+// missing -- some browsers/embedded webviews/strict-privacy or CSP
+// contexts throw a SecurityError on ANY localStorage access rather than
+// leaving it undefined; (2) a bad override value (typo'd while testing,
+// stray whitespace, a copy-paste mistake) would make `new URL(...)` throw.
+// Either way, silently fall back to the real production URL/origin rather
+// than let a purely local, developer-only debugging aid ever take down
+// the app for a real user.
+export const WIZARD_BASE_URL = (() => {
+    try {
+        const override =
+            typeof localStorage !== "undefined"
+                ? localStorage.getItem("fluidnc-wizard-base-url")?.trim()
+                : null;
+        return override || PRODUCTION_WIZARD_BASE_URL;
+    } catch (_e) {
+        return PRODUCTION_WIZARD_BASE_URL;
+    }
+})();
+export const WIZARD_ORIGIN = (() => {
+    try {
+        return new URL(WIZARD_BASE_URL).origin;
+    } catch (_e) {
+        return new URL(PRODUCTION_WIZARD_BASE_URL).origin;
+    }
+})();
 
 // Fixed popup name (not undefined/"_blank") so repeated clicks re-focus the
 // SAME wizard tab instead of spawning a new one each time -- window.open()

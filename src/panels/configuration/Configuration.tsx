@@ -93,7 +93,47 @@ const Configuration = ({
                         value={config.board ?? "None"}
                         options={[
                             { name: "None", value: "None" },
-                            { name: "6 Pack", value: "6 Pack" }
+                            {
+                                name: "4x CNC Controller (Integrated ESP32 and TMC2209)",
+                                value: "4x CNC Controller (Integrated ESP32 and TMC2209)"
+                            },
+                            {
+                                name: "6x CNC Controller",
+                                value: "6x CNC Controller"
+                            },
+                            {
+                                name: "BigTreeTech Rodent (V1.0)",
+                                value: "BigTreeTech Rodent (V1.0)"
+                            },
+                            {
+                                name: "BigTreeTech Rodent (V1.1)",
+                                value: "BigTreeTech Rodent (V1.1)"
+                            },
+                            {
+                                name: "Corgi CNC Controller",
+                                value: "Corgi CNC Controller"
+                            },
+                            {
+                                name: "Doberman CNC Controller",
+                                value: "Doberman CNC Controller"
+                            },
+                            {
+                                name: "FluidNC Pen/Laser CNC Controller (SPI)",
+                                value: "FluidNC Pen/Laser CNC Controller (SPI)"
+                            },
+                            { name: "MKS DLC32 V2.1", value: "MKS DLC32 V2.1" },
+                            {
+                                name: "PiBot FluidNC Controller V4.96 Pro",
+                                value: "PiBot FluidNC Controller V4.96 Pro"
+                            },
+                            {
+                                name: "PiBot FluidNC Controller V5.88 Ultra",
+                                value: "PiBot FluidNC Controller V5.88 Ultra"
+                            },
+                            {
+                                name: "TMC2209 Pen/Laser CNC Controller V2",
+                                value: "TMC2209 Pen/Laser CNC Controller V2"
+                            }
                         ]}
                         setValue={(value) => appendConfig({ board: value })}
                     />

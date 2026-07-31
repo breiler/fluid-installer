@@ -21,7 +21,9 @@ const LatestVersionCard = () => {
 
     return (
         <div className="latestVersionCard">
-            <VersionCard release={latestRelease} isLatest={true} />
+            {latestRelease && (
+                <VersionCard release={latestRelease} isLatest={true} />
+            )}
         </div>
     );
 };

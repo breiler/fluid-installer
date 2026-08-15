@@ -11,25 +11,14 @@ import "./Firmware.scss";
 import Choice from "../../components/choice";
 import PageTitle from "../../components/pagetitle/PageTitle";
 import FirmwareBreadCrumbList from "./FirmwareBreadcrumbList";
-import {
-    Col,
-    FormCheck,
-    Row,
-    Form,
-    DropdownButton,
-    Dropdown
-} from "react-bootstrap";
+import { Col, FormCheck, Row, Form, Button } from "react-bootstrap";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import UploadCustomImageModal from "../../modals/installermodal/UploadCustomImageModal";
 import VersionCard from "../../components/cards/versioncard/VersionCard";
 import { SerialPortContext } from "../../context/SerialPortContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import {
-    faWarning,
-    faFileArrowUp,
-    faSliders
-} from "@fortawesome/free-solid-svg-icons";
+import { faWarning, faFileArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { Alert } from "react-bootstrap";
 
 type Props = {
@@ -139,7 +128,7 @@ const Firmware = ({ onInstall, githubService }: Props) => {
     ]);
 
     useEffect(() => {
-        const getMcu = async (): string => {
+        const getMcu = async (): Promise<void> => {
             setIsDetecting(true);
             await serialPort
                 .getInfo()
@@ -203,88 +192,62 @@ const Firmware = ({ onInstall, githubService }: Props) => {
                     <p>{t("panel.firmware.install-description")}</p>
 
                     <Row>
-                        <Col sm="12" md="12" lg="9" xl="8">
-                            <Row>
-                                <Col>
-                                    <Form.Select
-                                        size="lg"
-                                        onChange={(event) =>
-                                            chooseFirmware(event.target.value)
-                                        }
-                                    >
-                                        {!releases?.length && (
-                                            <option>
-                                                {t("panel.firmware.loading")}
-                                            </option>
-                                        )}
-                                        {releases.map((release) => (
-                                            <option
-                                                key={release.id}
-                                                value={release.id}
-                                            >
-                                                {release.name}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                </Col>
-                                <Col
-                                    xs="3"
-                                    sm="3"
-                                    md="2"
-                                    lg="2"
-                                    style={{ paddingLeft: 0 }}
-                                >
-                                    <DropdownButton
-                                        variant="outline"
-                                        className={"d-grid"}
-                                        size="lg"
-                                        title={
-                                            <FontAwesomeIcon
-                                                icon={
-                                                    faSliders as IconDefinition
-                                                }
-                                            />
-                                        }
-                                    >
-                                        <Dropdown.Item
-                                            onClick={() =>
-                                                setShowPrerelease(
-                                                    (
-                                                        showPrerelease !==
-                                                        "true"
-                                                    ).toString()
-                                                )
-                                            }
-                                        >
-                                            {" "}
-                                            <FormCheck
-                                                type="switch"
-                                                label={t(
-                                                    "panel.firmware.show-prereleases"
-                                                )}
-                                                checked={
-                                                    showPrerelease === "true"
-                                                }
-                                            />
-                                        </Dropdown.Item>
-                                        <Dropdown.Divider />
-                                        <Dropdown.Item
-                                            onClick={() =>
-                                                setUploadCustomImage(true)
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={
-                                                    faFileArrowUp as IconDefinition
-                                                }
-                                            />
-                                            {t(
-                                                "panel.firmware.install-custom-image"
-                                            )}
-                                        </Dropdown.Item>
-                                    </DropdownButton>
-                                </Col>
-                            </Row>
+                        <Col
+                            sm="12"
+                            md="12"
+                            lg="9"
+                            xl="8"
+                            className="d-flex align-items-center justify-content-between gap-3"
+                        >
+                            <FormCheck
+                                type="switch"
+                                label={t("panel.firmware.show-prereleases")}
+                                checked={showPrerelease === "true"}
+                                onChange={() =>
+                                    setShowPrerelease(
+                                        (showPrerelease !== "true").toString()
+                                    )
+                                }
+                            />
+                            <Button
+                                variant="outline-secondary"
+                                onClick={() => setUploadCustomImage(true)}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faFileArrowUp as IconDefinition}
+                                />{" "}
+                                {t("panel.firmware.install-custom-image")}
+                            </Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col
+                            sm="12"
+                            md="12"
+                            lg="9"
+                            xl="8"
+                            style={{ marginTop: "10px" }}
+                        >
+                            <Form.Select
+                                size="lg"
+                                value={
+                                    selectedRelease ? selectedRelease.id : ""
+                                }
+                                onChange={(event) =>
+                                    chooseFirmware(event.target.value)
+                                }
+                            >
+                                {!releases?.length && (
+                                    <option>
+                                        {t("panel.firmware.loading")}
+                                    </option>
+                                )}
+                                {releases.map((release) => (
+                                    <option key={release.id} value={release.id}>
+                                        {release.name}
+                                    </option>
+                                ))}
+                            </Form.Select>
                         </Col>
                     </Row>
                 </>

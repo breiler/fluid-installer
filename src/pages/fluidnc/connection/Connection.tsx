@@ -1,7 +1,9 @@
 import React, { useCallback } from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Spinner } from "../../../components";
 import ConnectionState from "../../../model/ConnectionState";
+import Page from "../../../model/Page";
 import { ControllerService } from "../../../services";
 import { SerialPort } from "../../../utils/serialport/SerialPort";
 import "./connection.scss";
@@ -135,6 +137,17 @@ const Connection = ({ onConnect }: Props) => {
                                             t("page.connection.connect")}
                                     </>
                                 </Button>
+                            </div>
+                        )}
+
+                        {connectionState === ConnectionState.DISCONNECTED && (
+                            <div
+                                className="mx-auto mt-3"
+                                style={{ textAlign: "center" }}
+                            >
+                                <Link to={Page.FLUIDNC_STACKTRACE_DECODER}>
+                                    {t("page.connection.decode-stack-trace")}
+                                </Link>
                             </div>
                         )}
 

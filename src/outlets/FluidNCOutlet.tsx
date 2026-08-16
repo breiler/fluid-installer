@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { ControllerServiceContext } from "../context/ControllerServiceContext";
 import {
     CapturedBacktraceContext,
@@ -15,6 +15,10 @@ import Navigation from "../panels/navigation/Navigation";
 import Connection from "../pages/fluidnc/connection/Connection";
 import { TerminalPopup } from "../components/terminalpopup/TerminalPopup";
 import usePopupTerminalStore from "../store/PopupTerminalStore";
+import Page from "../model/Page";
+
+// Routes under /fluidnc that don't need an active controller connection.
+const CONNECTION_OPTIONAL_ROUTES: string[] = [Page.FLUIDNC_STACKTRACE_DECODER];
 
 const decoder = new TextDecoder();
 
@@ -25,6 +29,7 @@ const FluidNCOutletInner = () => {
     const [serialPort, setSerialPort] = useState<SerialPort | undefined>();
     const { setIsConnected } = usePopupTerminalStore();
     const backtraceContext = React.useContext(CapturedBacktraceContext);
+    const location = useLocation();
 
     const onCloseConnection = () => {
         setControllerService(undefined);
@@ -139,6 +144,17 @@ const FluidNCOutletInner = () => {
         !controllerService ||
         controllerStatus === ControllerStatus.DISCONNECTED
     ) {
+        if (CONNECTION_OPTIONAL_ROUTES.includes(location.pathname)) {
+            return (
+                <Container>
+                    <Row>
+                        <Col style={{ marginTop: "32px" }}>
+                            <Outlet />
+                        </Col>
+                    </Row>
+                </Container>
+            );
+        }
         return <Connection onConnect={setServices} />;
     }
 

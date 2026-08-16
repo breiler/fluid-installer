@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import PageTitle from "../../../components/pagetitle/PageTitle";
 import usePageView from "../../../hooks/usePageView";
 import useBacktraceLine from "../../../hooks/useBacktraceLine";
+import Page from "../../../model/Page";
 import "./StackTraceDecoder.scss";
 
 interface GithubRelease {
@@ -389,6 +391,7 @@ const StackTraceDecoder = () => {
 
     return (
         <>
+            <Link to={Page.FLUIDNC_HOME}>&larr; Back to FluidNC</Link>
             <PageTitle>Stack Trace Decoder</PageTitle>
             <p>Decode ESP32 stack backtraces using .addrinfo symbol files.</p>
 

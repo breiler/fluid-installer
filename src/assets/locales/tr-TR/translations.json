@@ -17,7 +17,8 @@
             "description": "Bu araç, kontrolcünüze FluIDNC'yi kurmanızı veya yükseltmenizi kolaylaştıracaktır. Denetleyicinizi bilgisayarınıza bağlayın ve devam etmek için Bağlan tuşuna basın.",
             "connect": "Bağlan",
             "connecting": "Bağlanıyor...",
-            "establishing-connection": "Kontrolcüye bağlanıyor"
+            "establishing-connection": "Kontrolcüye bağlanıyor",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Şimdi bir cihaza bağlısınız, lütfen aşağıdan bir eylem seçin",

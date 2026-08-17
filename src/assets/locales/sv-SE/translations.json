@@ -17,7 +17,8 @@
             "description": "Detta verktyg gör det enkelt att installera eller uppgradera FluidNC på din enhet. Koppla in din enhet och klicka på \"Anslut\" för att fortsätta.",
             "connect": "Anslut",
             "connecting": "Ansluter",
-            "establishing-connection": "Etablerar en anslutning till din enhet"
+            "establishing-connection": "Etablerar en anslutning till din enhet",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Du är nu ansluten till din enhet, välj nedan vad du vill göra",

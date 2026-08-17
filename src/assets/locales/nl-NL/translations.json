@@ -17,7 +17,8 @@
             "description": "Deze tool maakt het gemakkelijk om FluidNC op uw controller te installeren of bij te werken. Sluit uw controller aan en druk op Verbinden om door te gaan.",
             "connect": "Verbinden",
             "connecting": "Bezig met verbinden",
-            "establishing-connection": "Verbinding met controller tot stand brengen"
+            "establishing-connection": "Verbinding met controller tot stand brengen",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Je bent nu verbonden met een apparaat, kies hieronder een actie",

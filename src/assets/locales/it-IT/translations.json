@@ -17,7 +17,8 @@
             "description": "Questo strumento renderà facile installazione o aggiornamento FluidNC sul tuo dispositivo. Collega il controller e premi Connetti per continuare.",
             "connect": "Connetti",
             "connecting": "Connessione in corso",
-            "establishing-connection": "Stabilire la connessione al controller"
+            "establishing-connection": "Stabilire la connessione al controller",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Sei ora connesso a un dispositivo, scegli un'azione qui sotto",

@@ -17,7 +17,8 @@
             "description": "Essa ferramenta irá facilitar a instalação ou atualização do FluidNC na sua controladora. Conecte a sua controladora e pressione Conectar para continuar.",
             "connect": "Conectar",
             "connecting": "Conectando",
-            "establishing-connection": "Estabelecendo conexão com a controladora"
+            "establishing-connection": "Estabelecendo conexão com a controladora",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Agora você está conectado a um dispositivo, por favor selecione uma ação abaixo",

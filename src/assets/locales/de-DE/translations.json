@@ -17,7 +17,8 @@
             "description": "Dieses Tool vereinfacht die Installation oder Aktualisierung von FluidNC auf Ihrem Controller. Schließen Sie Ihren Controller an und drücken Sie die Verbinden-Taste, um fortzufahren.",
             "connect": "Verbinden",
             "connecting": "Verbindung wird hergestellt",
-            "establishing-connection": "Verbindung zum Controller wird hergestellt"
+            "establishing-connection": "Verbindung zum Controller wird hergestellt",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Sie sind jetzt mit einem Gerät verbunden. Bitte wählen Sie unten eine Aktion aus",

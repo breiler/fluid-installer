@@ -17,7 +17,8 @@
             "description": "To narzędzie ułatwi instalację lub aktualizację FluidNC na Twoim kontrolerze. Podłącz kontroler do komputera i naciśnij Połącz, aby kontynuować.",
             "connect": "Połącz",
             "connecting": "Łączenie...",
-            "establishing-connection": "Łączenie z kontrolerem"
+            "establishing-connection": "Łączenie z kontrolerem",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Jesteś teraz połączony z urządzeniem, wybierz akcję poniżej",

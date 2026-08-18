@@ -17,7 +17,8 @@
             "description": "此工具将易于在设备上安装或升级 FluidNC 。请将设备连接并按 Connect 继续。",
             "connect": "连接",
             "connecting": "连接中",
-            "establishing-connection": "建立到控制器的连接"
+            "establishing-connection": "建立到控制器的连接",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "您已连接到设备，请可以进行下面的操作",

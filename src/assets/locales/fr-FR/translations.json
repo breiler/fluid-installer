@@ -17,7 +17,8 @@
             "description": "Cet outil facilitera l'installation ou la mise à niveau de FluidNC sur votre contrôleur. Branchez votre contrôleur et cliquez sur Connecter pour continuer.",
             "connect": "Connecter",
             "connecting": "Connexion en cours",
-            "establishing-connection": "Établissement de la connexion au contrôleur"
+            "establishing-connection": "Établissement de la connexion au contrôleur",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Vous êtes maintenant connecté à un appareil, veuillez choisir une action ci-dessous",

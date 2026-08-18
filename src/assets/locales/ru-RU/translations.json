@@ -17,7 +17,8 @@
             "description": "Этот инструмент упростит установку или обновление FluidNC на контроллере. Подключите контроллер и нажмите Подключиться, чтобы продолжить.",
             "connect": "Подключено",
             "connecting": "Подключение",
-            "establishing-connection": "Установка соединения с контроллером"
+            "establishing-connection": "Установка соединения с контроллером",
+            "decode-stack-trace": "Decode a stack trace without connecting"
         },
         "home": {
             "description": "Теперь вы подключены к устройству, пожалуйста, выберите действие ниже",

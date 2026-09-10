@@ -84,5 +84,8 @@
         "react-markdown": "^8.0.7",
         "remark-gfm": "^3.0.1",
         "zustand": "^5.0.8"
+    },
+    "@parcel/resolver-default": {
+        "packageExports": true
     }
 }

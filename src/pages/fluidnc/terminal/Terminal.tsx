@@ -21,34 +21,35 @@ import { TerminalComponent } from "../../../components/terminalcomponent/Termina
 const buttonStyle = { marginBottom: "16px", marginRight: "16px" };
 
 // Realtime override characters accepted by FluidNC, as listed in FluidTerm2's
-// Ctrl-O "Send Override" menu.
-const realtimeCommands: { code: number; label: string }[] = [
-    { code: 0x84, label: "Safety Door" },
-    { code: 0x85, label: "Jog Cancel" },
-    { code: 0x86, label: "Debug Report" },
-    { code: 0x87, label: "Macro 0" },
-    { code: 0x88, label: "Macro 1" },
-    { code: 0x89, label: "Macro 2" },
-    { code: 0x8a, label: "Macro 3" },
-    { code: 0x90, label: "Feed Override Reset" },
-    { code: 0x91, label: "Feed Override Coarse +" },
-    { code: 0x92, label: "Feed Override Coarse -" },
-    { code: 0x93, label: "Feed Override Fine +" },
-    { code: 0x94, label: "Feed Override Fine -" },
-    { code: 0x95, label: "Rapid Override Reset" },
-    { code: 0x96, label: "Rapid Override Medium" },
-    { code: 0x97, label: "Rapid Override Low" },
-    { code: 0x98, label: "Rapid Override Extra Low" },
-    { code: 0x99, label: "Spindle Override Reset" },
-    { code: 0x9a, label: "Spindle Override Coarse +" },
-    { code: 0x9b, label: "Spindle Override Coarse -" },
-    { code: 0x9c, label: "Spindle Override Fine +" },
-    { code: 0x9d, label: "Spindle Override Fine -" },
-    { code: 0x9e, label: "Spindle Override Stop" },
-    { code: 0xa0, label: "Coolant Flood Override Toggle" },
-    { code: 0xa1, label: "Coolant Mist Override Toggle" },
-    { code: 0xc4, label: "Single Block Off" },
-    { code: 0xc5, label: "Single Block On" }
+// Ctrl-O "Send Override" menu. `key` resolves to
+// page.terminal.realtime-items.<key> in the translation files.
+const realtimeCommands: { code: number; key: string }[] = [
+    { code: 0x84, key: "safety-door" },
+    { code: 0x85, key: "jog-cancel" },
+    { code: 0x86, key: "debug-report" },
+    { code: 0x87, key: "macro-0" },
+    { code: 0x88, key: "macro-1" },
+    { code: 0x89, key: "macro-2" },
+    { code: 0x8a, key: "macro-3" },
+    { code: 0x90, key: "feed-override-reset" },
+    { code: 0x91, key: "feed-override-coarse-plus" },
+    { code: 0x92, key: "feed-override-coarse-minus" },
+    { code: 0x93, key: "feed-override-fine-plus" },
+    { code: 0x94, key: "feed-override-fine-minus" },
+    { code: 0x95, key: "rapid-override-reset" },
+    { code: 0x96, key: "rapid-override-medium" },
+    { code: 0x97, key: "rapid-override-low" },
+    { code: 0x98, key: "rapid-override-extra-low" },
+    { code: 0x99, key: "spindle-override-reset" },
+    { code: 0x9a, key: "spindle-override-coarse-plus" },
+    { code: 0x9b, key: "spindle-override-coarse-minus" },
+    { code: 0x9c, key: "spindle-override-fine-plus" },
+    { code: 0x9d, key: "spindle-override-fine-minus" },
+    { code: 0x9e, key: "spindle-override-stop" },
+    { code: 0xa0, key: "coolant-flood-override-toggle" },
+    { code: 0xa1, key: "coolant-mist-override-toggle" },
+    { code: 0xc4, key: "single-block-off" },
+    { code: 0xc5, key: "single-block-on" }
 ];
 
 const Terminal = () => {
@@ -181,7 +182,8 @@ const Terminal = () => {
                                 key={cmd.code}
                                 onClick={() => onSendRealtime(cmd.code)}
                             >
-                                {cmd.label} (0x
+                                {t(`page.terminal.realtime-items.${cmd.key}`)}{" "}
+                                (0x
                                 {cmd.code.toString(16).padStart(2, "0")})
                             </Dropdown.Item>
                         ))}

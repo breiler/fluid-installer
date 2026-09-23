@@ -232,9 +232,7 @@ export class SerialPort {
             echo = Buffer.from("[0x" + char.toString(16) + "]");
         }
         this.savedData.push(echo);
-        if (this.exclusiveReader) {
-            this.exclusiveReader(echo);
-        } else {
+        if (!this.exclusiveReader) {
             this.readers.forEach((reader) => reader(echo));
         }
         this.write(Buffer.from([char]));

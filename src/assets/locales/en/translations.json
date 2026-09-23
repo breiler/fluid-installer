@@ -51,10 +51,16 @@
             "unlock-description": "Unlocks the controller with $X",
             "status": "Status",
             "status-description": "Get the controller status",
+            "feedhold": "Feed Hold",
+            "feedhold-description": "Sends a ! feed hold realtime command",
+            "cyclestart": "Cycle Start",
+            "cyclestart-description": "Sends a ~ cycle start realtime command",
             "startup": "Startup messages",
             "startup-description": "Get startup log messages",
             "version": "Version",
-            "version-description": "Get the firmware version"
+            "version-description": "Get the firmware version",
+            "realtime": "Realtime",
+            "realtime-description": "Send a realtime override character to the controller"
         },
         "not-found": {
             "title": "Page not found",

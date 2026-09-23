@@ -224,12 +224,18 @@ export class SerialPort {
     };
 
     writeChar = async (char: number): Promise<void> => {
+        let echo: Buffer;
         if (char >= 0x20 && char < 0x7f) {
             // Printable
-            this.savedData.push(Buffer.from([char]));
+            echo = Buffer.from([char]);
         } else {
-            const msg = "[0x" + char.toString(16) + "]";
-            this.savedData.push(Buffer.from(msg));
+            echo = Buffer.from("[0x" + char.toString(16) + "]");
+        }
+        this.savedData.push(echo);
+        if (this.exclusiveReader) {
+            this.exclusiveReader(echo);
+        } else {
+            this.readers.forEach((reader) => reader(echo));
         }
         this.write(Buffer.from([char]));
     };

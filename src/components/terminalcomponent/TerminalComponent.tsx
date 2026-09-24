@@ -69,13 +69,15 @@ export const TerminalComponent = () => {
         }
 
         return () => {
+            if (!controllerService) {
+                return;
+            }
+            controllerService.serialPort.removeReader(reader);
+            controllerService.serialPort.removeEchoReader(reader);
             if (
-                controllerService &&
                 controllerService.serialPort.getState() ===
-                    SerialPortState.CONNECTED
+                SerialPortState.CONNECTED
             ) {
-                controllerService.serialPort!.removeReader(reader);
-                controllerService.serialPort!.removeEchoReader(reader);
                 controllerService.serialPort.writeChar(0x0c); // CTRL-L Resetting echo mode
             }
         };

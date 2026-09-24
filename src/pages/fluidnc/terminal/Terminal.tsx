@@ -47,9 +47,7 @@ const realtimeCommands: { code: number; key: string }[] = [
     { code: 0x9d, key: "spindle-override-fine-minus" },
     { code: 0x9e, key: "spindle-override-stop" },
     { code: 0xa0, key: "coolant-flood-override-toggle" },
-    { code: 0xa1, key: "coolant-mist-override-toggle" },
-    { code: 0xc4, key: "single-block-off" },
-    { code: 0xc5, key: "single-block-on" }
+    { code: 0xa1, key: "coolant-mist-override-toggle" }
 ];
 
 const Terminal = () => {

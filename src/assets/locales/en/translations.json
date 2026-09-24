@@ -85,9 +85,7 @@
                 "spindle-override-fine-minus": "Spindle Override Fine -",
                 "spindle-override-stop": "Spindle Override Stop",
                 "coolant-flood-override-toggle": "Coolant Flood Override Toggle",
-                "coolant-mist-override-toggle": "Coolant Mist Override Toggle",
-                "single-block-off": "Single Block Off",
-                "single-block-on": "Single Block On"
+                "coolant-mist-override-toggle": "Coolant Mist Override Toggle"
             }
         },
         "not-found": {

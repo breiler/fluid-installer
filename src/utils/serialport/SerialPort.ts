@@ -52,6 +52,7 @@ export class SerialPort {
     private reader: ReadableStreamDefaultReader<Uint8Array>;
     private exclusiveReader: SerialReader | undefined = undefined;
     private readers: SerialReader[] = [];
+    private echoReaders: SerialReader[] = [];
     private lineReaders: LineReader[] = [];
     private reading: boolean = false;
     private deviceInfo: DeviceInfo;
@@ -232,9 +233,7 @@ export class SerialPort {
             echo = Buffer.from("[0x" + char.toString(16) + "]");
         }
         this.savedData.push(echo);
-        if (!this.exclusiveReader) {
-            this.readers.forEach((reader) => reader(echo));
-        }
+        this.echoReaders.forEach((reader) => reader(echo));
         this.write(Buffer.from([char]));
     };
 
@@ -272,6 +271,28 @@ export class SerialPort {
 
     removeReader = (reader: SerialReader) => {
         this.readers = this.readers.filter((r) => r !== reader);
+    };
+
+    /**
+     * Adds a reader that will be notified when writeChar() sends a
+     * character, so that a view like the terminal can display a local
+     * echo of what was sent. Unlike addReader(), this is not notified of
+     * data actually received from the controller, so it is safe for a
+     * subscriber that parses incoming protocol data (e.g. XModem, or a
+     * backtrace-line scanner) to leave this alone and only use addReader().
+     *
+     * @param reader
+     * @returns a function for unregistering the reader
+     */
+    addEchoReader = (reader: SerialReader): (() => void) => {
+        this.echoReaders.push(reader);
+
+        // Return method for removing the reader
+        return () => this.removeEchoReader(reader);
+    };
+
+    removeEchoReader = (reader: SerialReader) => {
+        this.echoReaders = this.echoReaders.filter((r) => r !== reader);
     };
 
     /**

@@ -62,6 +62,7 @@ export const TerminalComponent = () => {
                 const savedData = controllerService.serialPort.getSavedData();
                 savedData.forEach(reader);
                 controllerService.serialPort.addReader(reader);
+                controllerService.serialPort.addEchoReader(reader);
             } catch (error) {
                 console.log(error);
             }
@@ -74,6 +75,7 @@ export const TerminalComponent = () => {
                     SerialPortState.CONNECTED
             ) {
                 controllerService.serialPort!.removeReader(reader);
+                controllerService.serialPort!.removeEchoReader(reader);
                 controllerService.serialPort.writeChar(0x0c); // CTRL-L Resetting echo mode
             }
         };

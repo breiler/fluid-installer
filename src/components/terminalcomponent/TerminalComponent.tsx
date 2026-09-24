@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { Buffer } from "buffer";
 import Xterm from "../xterm/Xterm";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import { ControllerStatus } from "../../services";
@@ -78,7 +79,11 @@ export const TerminalComponent = () => {
                 controllerService.serialPort.getState() ===
                 SerialPortState.CONNECTED
             ) {
-                controllerService.serialPort.writeChar(0x0c); // CTRL-L Resetting echo mode
+                // CTRL-L Resetting echo mode -- write() directly rather than
+                // writeChar(), since the terminal's own reader was just
+                // unregistered above and this housekeeping byte shouldn't
+                // be broadcast as a local echo to any other subscriber.
+                controllerService.serialPort.write(Buffer.from([0x0c]));
             }
         };
     }, []);

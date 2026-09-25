@@ -2,6 +2,7 @@ import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import "property-information";
 import "./Markdown.scss";
 
 type Props = {

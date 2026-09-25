@@ -53,7 +53,7 @@
             "status": "Статус",
             "status-description": "Отримати стан контролера",
             "feedhold": "Feed Hold",
-            "feedhold-description": "Sends a ! feed hold realtime command",
+            "feedhold-description": "Надсилає ~ команду запуску циклу в реальному часі",
             "cyclestart": "Початок циклу",
             "cyclestart-description": "Надсилає ~ команду запуску циклу в реальному часі",
             "startup": "Повідомлення під час запуску",

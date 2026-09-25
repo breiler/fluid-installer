@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { Buffer } from "buffer";
 import Xterm from "../xterm/Xterm";
 import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import { ControllerStatus } from "../../services";
@@ -62,19 +63,27 @@ export const TerminalComponent = () => {
                 const savedData = controllerService.serialPort.getSavedData();
                 savedData.forEach(reader);
                 controllerService.serialPort.addReader(reader);
+                controllerService.serialPort.addEchoReader(reader);
             } catch (error) {
                 console.log(error);
             }
         }
 
         return () => {
+            if (!controllerService) {
+                return;
+            }
+            controllerService.serialPort.removeReader(reader);
+            controllerService.serialPort.removeEchoReader(reader);
             if (
-                controllerService &&
                 controllerService.serialPort.getState() ===
-                    SerialPortState.CONNECTED
+                SerialPortState.CONNECTED
             ) {
-                controllerService.serialPort!.removeReader(reader);
-                controllerService.serialPort.writeChar(0x0c); // CTRL-L Resetting echo mode
+                // CTRL-L Resetting echo mode -- write() directly rather than
+                // writeChar(), since the terminal's own reader was just
+                // unregistered above and this housekeeping byte shouldn't
+                // be broadcast as a local echo to any other subscriber.
+                controllerService.serialPort.write(Buffer.from([0x0c]));
             }
         };
     }, []);

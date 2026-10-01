@@ -8,13 +8,7 @@ import {
     SetConfigFilenameCommand
 } from "../../../services/controllerservice";
 import { Button } from "../../../components";
-import {
-    Alert,
-    ButtonGroup,
-    Spinner,
-    Stack,
-    ToggleButton
-} from "react-bootstrap";
+import { Alert, ButtonGroup, Spinner, ToggleButton } from "react-bootstrap";
 import {
     faTrash,
     faFile,
@@ -40,6 +34,7 @@ import CreateFileModal from "../../../modals/createfilemodal/CreateFileModal";
 import { generateNewFileName } from "../../../utils/utils";
 import { useTranslation } from "react-i18next";
 import EditFileModal from "../../../modals/editfilemodal/EditFileModal";
+import "./FileBrowser.scss";
 
 type EditFile = {
     file: ControllerFile;
@@ -228,7 +223,63 @@ const FileBrowser = () => {
 
     return (
         <>
-            <PageTitle>{t("page.file-browser.title")}</PageTitle>
+            <div className="file-browser-toolbar">
+                <PageTitle>{t("page.file-browser.title")}</PageTitle>
+                <ButtonGroup>
+                    <ToggleButton
+                        value={fileSystem}
+                        id={"toggle-localfs"}
+                        type="checkbox"
+                        variant="outline-primary"
+                        checked={fileSystem === "/localfs/"}
+                        onChange={() => setFileSystem("/localfs/")}
+                    >
+                        <FontAwesomeIcon icon={faMicrochip as IconDefinition} />{" "}
+                        Flash
+                    </ToggleButton>
+                    <ToggleButton
+                        value={fileSystem}
+                        id={"toggle-sd"}
+                        type="checkbox"
+                        variant="outline-primary"
+                        checked={fileSystem === "/sd/"}
+                        onChange={() => setFileSystem("/sd/")}
+                    >
+                        <FontAwesomeIcon icon={faSdCard as IconDefinition} /> SD
+                    </ToggleButton>
+                </ButtonGroup>
+                <Button onClick={refresh} buttonType="">
+                    <FontAwesomeIcon
+                        icon={faRefresh as IconDefinition}
+                        size="xs"
+                    />
+                </Button>
+                <div className="ms-auto">
+                    {fileSystem !== "/sd/" && (
+                        <Button
+                            onClick={() => setShowNewConfigDialog(true)}
+                            buttonType="btn-warning"
+                        >
+                            <FontAwesomeIcon
+                                icon={faEdit as IconDefinition}
+                                size="xs"
+                            />{" "}
+                            {t("page.file-browser.create-new-config")}
+                        </Button>
+                    )}
+                    <Button
+                        onClick={() => onUpload()}
+                        style={{ marginRight: "0px" }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faUpload as IconDefinition}
+                            size="xs"
+                        />{" "}
+                        {t("page.file-browser.upload")}
+                    </Button>
+                </div>
+            </div>
+
             {isInaccessible && (
                 <AlertMessage variant="warning">
                     Filesytem is inaccessible or empty
@@ -305,7 +356,18 @@ const FileBrowser = () => {
                     </>
                 )}
 
-            <div style={{ height: 300, marginTop: "16px" }}>
+            {uploadError && (
+                <Alert
+                    variant="danger"
+                    onClose={() => setUploadError(undefined)}
+                    dismissible
+                    style={{ marginTop: "16px" }}
+                >
+                    {uploadError}
+                </Alert>
+            )}
+
+            <div style={{ marginTop: "16px" }}>
                 <ul className="list-group">
                     {isLoading && (
                         <li className="list-group-item">
@@ -511,82 +573,6 @@ const FileBrowser = () => {
                         );
                     })}
                 </ul>
-
-                {uploadError && (
-                    <Alert
-                        variant="danger"
-                        onClose={() => setUploadError(undefined)}
-                        dismissible
-                        style={{ marginTop: "16px" }}
-                    >
-                        {uploadError}
-                    </Alert>
-                )}
-
-                <Stack direction="horizontal" style={{ marginTop: 12 }}>
-                    <Stack direction="horizontal">
-                        <ButtonGroup>
-                            <ToggleButton
-                                value={fileSystem}
-                                id={"toggle-localfs"}
-                                type="checkbox"
-                                variant="outline-primary"
-                                checked={fileSystem === "/localfs/"}
-                                onChange={() => setFileSystem("/localfs/")}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faMicrochip as IconDefinition}
-                                />{" "}
-                                Flash
-                            </ToggleButton>
-                            <ToggleButton
-                                value={fileSystem}
-                                id={"toggle-sd"}
-                                type="checkbox"
-                                variant="outline-primary"
-                                checked={fileSystem === "/sd/"}
-                                onChange={() => setFileSystem("/sd/")}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSdCard as IconDefinition}
-                                />{" "}
-                                SD
-                            </ToggleButton>
-                        </ButtonGroup>
-
-                        <Button onClick={refresh} buttonType="">
-                            <FontAwesomeIcon
-                                icon={faRefresh as IconDefinition}
-                                size="xs"
-                            />
-                        </Button>
-                    </Stack>
-                    <div className="p-2 ms-auto">
-                        {fileSystem !== "/sd/" && (
-                            <Button
-                                onClick={() => setShowNewConfigDialog(true)}
-                                buttonType="btn-warning"
-                            >
-                                <FontAwesomeIcon
-                                    icon={faEdit as IconDefinition}
-                                    size="xs"
-                                />{" "}
-                                {t("page.file-browser.create-new-config")}
-                            </Button>
-                        )}
-                    </div>
-
-                    <Button
-                        onClick={() => onUpload()}
-                        style={{ marginRight: "0px" }}
-                    >
-                        <FontAwesomeIcon
-                            icon={faUpload as IconDefinition}
-                            size="xs"
-                        />{" "}
-                        {t("page.file-browser.upload")}
-                    </Button>
-                </Stack>
             </div>
         </>
     );

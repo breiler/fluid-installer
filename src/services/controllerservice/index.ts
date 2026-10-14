@@ -3,6 +3,7 @@ import { Command, CommandState } from "./commands/Command";
 import { DeleteFileCommand } from "./commands/DeleteFileCommand";
 import { GetConfigFilenameCommand } from "./commands/GetConfigFilenameCommand";
 import { ListFilesCommand } from "./commands/ListFilesCommand";
+import { MakeDirectoryCommand } from "./commands/MakeDirectoryCommand";
 import { SetConfigFilenameCommand } from "./commands/SetConfigFilenameCommand";
 import { GetStatsCommand, Stats } from "./commands/GetStatsCommand";
 import { GetStatusCommand } from "./commands/GetStatusCommand";
@@ -20,6 +21,7 @@ export {
     DeleteFileCommand,
     GetConfigFilenameCommand,
     ListFilesCommand,
+    MakeDirectoryCommand,
     ControllerFile,
     SetConfigFilenameCommand,
     Stats,

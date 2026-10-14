@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import {
     ListFilesCommand,
+    MakeDirectoryCommand,
     ControllerFile,
     DeleteFileCommand,
     GetConfigFilenameCommand,
@@ -21,7 +22,10 @@ import {
     faFileCode,
     faRefresh,
     faMicrochip,
-    faSdCard
+    faSdCard,
+    faFolder,
+    faFolderPlus,
+    faTurnUp
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -62,6 +66,10 @@ const FileBrowser = () => {
     const { t } = useTranslation();
     const controllerService = useContext(ControllerServiceContext);
     const [files, setFiles] = useState<ControllerFile[]>([]);
+    const [directories, setDirectories] = useState<ControllerFile[]>([]);
+    // Directory being shown, relative to the filesystem root:
+    // "" for the root, otherwise "a/b/" with a trailing slash
+    const [currentDir, setCurrentDir] = useState<string>("");
     const [freeBytes, setFreeBytes] = useState<number | undefined>();
     const [configFilename, setConfigFilename] = useState<string>("");
     const [editConfiguration, setEditConfiguration] = useState<
@@ -78,6 +86,14 @@ const FileBrowser = () => {
     const [fileSystem, setFileSystem] = useState<"/sd/" | "/localfs/">(
         "/localfs/"
     );
+    const dirPath = fileSystem + currentDir;
+    // The config file and its controls only make sense in the LocalFS root
+    const atConfigRoot = fileSystem === "/localfs/" && currentDir === "";
+
+    const changeFileSystem = (fs: "/sd/" | "/localfs/") => {
+        setCurrentDir("");
+        setFileSystem(fs);
+    };
 
     const init = async () => {
         setIsLoading(true);
@@ -94,7 +110,7 @@ const FileBrowser = () => {
 
     useEffect(() => {
         init();
-    }, [fileSystem]);
+    }, [fileSystem, currentDir]);
 
     const refresh = async () => {
         setUploadError(undefined);
@@ -105,14 +121,26 @@ const FileBrowser = () => {
 
     const refreshFileList = async (): Promise<void> => {
         setFiles([]);
+        setDirectories([]);
         setFreeBytes(undefined);
         return controllerService
-            .send(new ListFilesCommand(fileSystem === "/sd/"))
+            .send(
+                new ListFilesCommand(
+                    fileSystem === "/sd/",
+                    currentDir.replace(/\/$/, "")
+                )
+            )
             .then((listCommand) => {
                 const files = listCommand.result();
+                const directories = listCommand.directories();
                 setFiles(files);
+                setDirectories(directories);
                 setFreeBytes(listCommand.freeBytes);
-                setIsInaccessible(files.length === 0);
+                setIsInaccessible(
+                    currentDir === "" &&
+                        files.length === 0 &&
+                        directories.length === 0
+                );
             })
             .catch((_error) => {
                 setIsInaccessible(true);
@@ -121,8 +149,40 @@ const FileBrowser = () => {
 
     const onDelete = async (file: ControllerFile) => {
         await controllerService.send(
-            new DeleteFileCommand(fileSystem, file.name)
+            new DeleteFileCommand(fileSystem, currentDir + file.name)
         );
+        await refresh();
+    };
+
+    const onDeleteDirectory = async (dir: ControllerFile) => {
+        if (
+            !window.confirm(
+                t("page.file-browser.delete-folder-confirm", {
+                    name: currentDir + dir.name
+                })
+            )
+        ) {
+            return;
+        }
+        await onDelete(dir);
+    };
+
+    const onNewFolder = async () => {
+        const name = window.prompt(t("page.file-browser.new-folder-prompt"));
+        if (!name?.trim()) {
+            return;
+        }
+        const command = await controllerService.send(
+            new MakeDirectoryCommand(fileSystem, currentDir + name.trim())
+        );
+        if (command.error) {
+            setUploadError(
+                t("page.file-browser.new-folder-failed", {
+                    error: command.error
+                })
+            );
+            return;
+        }
         await refresh();
     };
 
@@ -131,7 +191,7 @@ const FileBrowser = () => {
 
         try {
             const fileData = await controllerService.downloadFile(
-                fileSystem + file.name
+                dirPath + file.name
             );
             const fileBlob = new Blob([fileData], {
                 type: "application/octet-binary;charset=utf-8"
@@ -150,7 +210,7 @@ const FileBrowser = () => {
     const onEditConfiguration = async (file: ControllerFile) => {
         setIsDownloading(true);
         controllerService
-            .downloadFile(fileSystem + file.name)
+            .downloadFile(dirPath + file.name)
             .then((fileData) => {
                 setEditConfiguration({ file, fileData, createNew: false });
             })
@@ -162,7 +222,7 @@ const FileBrowser = () => {
     const onEditFile = async (file: ControllerFile) => {
         setIsDownloading(true);
         controllerService
-            .downloadFile(fileSystem + file.name)
+            .downloadFile(dirPath + file.name)
             .then((fileData) => {
                 setEditFile({ file, fileData, createNew: false });
             })
@@ -208,7 +268,7 @@ const FileBrowser = () => {
 
     const onSave = async (file: ControllerFile, fileData: Buffer) => {
         return await controllerService
-            ?.uploadFile(fileSystem + file.name, fileData)
+            ?.uploadFile(dirPath + file.name, fileData)
             .then(async () => await refreshFileList())
             .catch((error) => setUploadError(error));
     };
@@ -235,7 +295,7 @@ const FileBrowser = () => {
                         type="checkbox"
                         variant="outline-primary"
                         checked={fileSystem === "/localfs/"}
-                        onChange={() => setFileSystem("/localfs/")}
+                        onChange={() => changeFileSystem("/localfs/")}
                     >
                         <FontAwesomeIcon icon={faMicrochip as IconDefinition} />{" "}
                         Flash
@@ -246,7 +306,7 @@ const FileBrowser = () => {
                         type="checkbox"
                         variant="outline-primary"
                         checked={fileSystem === "/sd/"}
-                        onChange={() => setFileSystem("/sd/")}
+                        onChange={() => changeFileSystem("/sd/")}
                     >
                         <FontAwesomeIcon icon={faSdCard as IconDefinition} /> SD
                     </ToggleButton>
@@ -258,7 +318,14 @@ const FileBrowser = () => {
                     />
                 </Button>
                 <div className="ms-auto">
-                    {fileSystem !== "/sd/" && (
+                    <Button onClick={onNewFolder}>
+                        <FontAwesomeIcon
+                            icon={faFolderPlus as IconDefinition}
+                            size="xs"
+                        />{" "}
+                        {t("page.file-browser.new-folder")}
+                    </Button>
+                    {atConfigRoot && (
                         <Button
                             onClick={() => setShowNewConfigDialog(true)}
                             buttonType="btn-warning"
@@ -340,7 +407,7 @@ const FileBrowser = () => {
             )}
 
             {configFilename &&
-                fileSystem !== "/sd/" &&
+                atConfigRoot &&
                 !isLoading &&
                 !files.find((file) => file.name === configFilename) && (
                     <>
@@ -371,6 +438,37 @@ const FileBrowser = () => {
             )}
 
             <div style={{ marginTop: "16px" }}>
+                {currentDir && (
+                    <div className="file-browser-path">
+                        <a href="#" onClick={() => setCurrentDir("")}>
+                            {fileSystem === "/sd/" ? "SD" : "Flash"}
+                        </a>
+                        {currentDir
+                            .split("/")
+                            .filter((part) => part)
+                            .map((part, index, parts) => (
+                                <span key={index}>
+                                    {" / "}
+                                    {index === parts.length - 1 ? (
+                                        part
+                                    ) : (
+                                        <a
+                                            href="#"
+                                            onClick={() =>
+                                                setCurrentDir(
+                                                    parts
+                                                        .slice(0, index + 1)
+                                                        .join("/") + "/"
+                                                )
+                                            }
+                                        >
+                                            {part}
+                                        </a>
+                                    )}
+                                </span>
+                            ))}
+                    </div>
+                )}
                 <ul className="list-group">
                     {isLoading && (
                         <li className="list-group-item">
@@ -378,6 +476,103 @@ const FileBrowser = () => {
                             {t("page.file-browser.loading")}
                         </li>
                     )}
+                    {currentDir && !isLoading && (
+                        <li className="list-group-item">
+                            <div className="p-2">
+                                <a
+                                    href="#"
+                                    style={{ textDecoration: "none" }}
+                                    title={t("page.file-browser.parent-folder")}
+                                    onClick={() =>
+                                        setCurrentDir(
+                                            currentDir.replace(/[^/]+\/$/, "")
+                                        )
+                                    }
+                                >
+                                    <FontAwesomeIcon
+                                        style={{
+                                            verticalAlign: "middle",
+                                            marginRight: "8px"
+                                        }}
+                                        icon={faTurnUp as IconDefinition}
+                                        size="2x"
+                                    />
+                                    <span className="align-middle">..</span>
+                                </a>
+                            </div>
+                        </li>
+                    )}
+                    {directories
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((dir) => (
+                            <li
+                                key={"dir-" + dir.id}
+                                className="list-group-item"
+                            >
+                                <div className="d-flex w-100">
+                                    <div className="p-2 flex-grow-1 align-self-center">
+                                        <a
+                                            href="#"
+                                            style={{ textDecoration: "none" }}
+                                            title={t(
+                                                "page.file-browser.open-folder"
+                                            )}
+                                            onClick={() =>
+                                                setCurrentDir(
+                                                    currentDir + dir.name + "/"
+                                                )
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                style={{
+                                                    verticalAlign: "middle",
+                                                    marginRight: "8px"
+                                                }}
+                                                icon={
+                                                    faFolder as IconDefinition
+                                                }
+                                                size="2x"
+                                            />
+                                            <span className="align-middle">
+                                                {dir.name}
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <div className="p-2 align-self-center">
+                                        {dir.size} b
+                                    </div>
+                                    <div
+                                        className="align-self-center"
+                                        style={{
+                                            minWidth: "44px",
+                                            marginLeft: "8px",
+                                            marginRight: "10px"
+                                        }}
+                                    >
+                                        <Button
+                                            title={
+                                                t("page.file-browser.delete") +
+                                                " " +
+                                                dir.name
+                                            }
+                                            style={{ marginRight: "0px" }}
+                                            disabled={isDownloading}
+                                            buttonType={"btn-danger"}
+                                            onClick={() =>
+                                                onDeleteDirectory(dir)
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faTrash as IconDefinition}
+                                                size="xs"
+                                            />
+                                        </Button>
+                                    </div>
+                                    <div style={{ minWidth: "60px" }} />
+                                    <div style={{ minWidth: "130px" }} />
+                                </div>
+                            </li>
+                        ))}
                     {files.sort().map((file) => {
                         let icon = faFile as IconDefinition;
                         if (
@@ -530,7 +725,7 @@ const FileBrowser = () => {
                                     >
                                         {(file.name.endsWith(".yml") ||
                                             file.name.endsWith(".yaml")) &&
-                                            fileSystem !== "/sd/" && (
+                                            atConfigRoot && (
                                                 <ToggleButton
                                                     id={
                                                         "select-file-" +

@@ -1,18 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faClose, faFire } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Col, Modal } from "react-bootstrap";
+import { Alert, Button, Col, Modal } from "react-bootstrap";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import {
+    ControllerFile,
+    ControllerStatus,
     FirmwareChoice,
     FirmwareFile,
     GithubRelease,
-    GithubReleaseManifest
+    GithubReleaseManifest,
+    ListFilesCommand
 } from "../../services";
+import { ControllerServiceContext } from "../../context/ControllerServiceContext";
 import SelectField from "../../components/fields/SelectField";
 import BooleanField from "../../components/fields/BooleanField";
+
+const LOCALFS_PREFIX = "/localfs/";
+const BLOCK_SIZE = 4096; // LittleFS block size on FluidNC
+const SPACE_MARGIN = 2 * BLOCK_SIZE; // Metadata overhead
+
+const blocks = (bytes: number) => Math.ceil(bytes / BLOCK_SIZE) * BLOCK_SIZE;
+const kb = (bytes: number) => Math.ceil(bytes / 1024) + " KB";
+
+type LocalFsInfo = {
+    files: ControllerFile[];
+    freeBytes: number;
+};
+
+type SpaceShortage = {
+    needed: number;
+    available: number;
+    largestFiles: ControllerFile[];
+};
 
 type Props = {
     onCancel: () => void;
@@ -32,6 +54,71 @@ const ConfirmPage = ({
     const [baud, setBaud] = useLocalStorage("baud", "921600");
     const [files, setFiles] = useState<string[]>([]);
     const { t } = useTranslation();
+    const controllerService = useContext(ControllerServiceContext);
+    const [localFs, setLocalFs] = useState<LocalFsInfo | undefined>();
+    const [checkingSpace, setCheckingSpace] = useState(false);
+
+    const localFsFiles = files
+        .map((key) => manifest.files?.[key] as FirmwareFile)
+        .filter((file) => file?.["controller-path"].startsWith(LOCALFS_PREFIX));
+
+    // A fresh install erases the filesystem, so there is nothing to check
+    const needsSpaceCheck = !choice.erase && localFsFiles.length > 0;
+
+    // List LocalFS once, the first time a LocalFS file is selected.
+    // If the controller can't be listed (not FluidNC, or too old to report
+    // free space) the check is skipped rather than blocking the install.
+    useEffect(() => {
+        if (!needsSpaceCheck || localFs || checkingSpace) {
+            return;
+        }
+        if (controllerService?.status !== ControllerStatus.CONNECTED) {
+            return;
+        }
+        setCheckingSpace(true);
+        controllerService
+            .send(new ListFilesCommand(), 5000)
+            .then((command) => {
+                if (command.freeBytes !== undefined) {
+                    setLocalFs({
+                        files: command.result(),
+                        freeBytes: command.freeBytes
+                    });
+                }
+            })
+            .catch((error) => console.log("Could not list LocalFS", error))
+            .finally(() => setCheckingSpace(false));
+    }, [needsSpaceCheck]);
+
+    const getShortage = (): SpaceShortage | undefined => {
+        if (!needsSpaceCheck || !localFs) {
+            return undefined;
+        }
+        // Overwriting a file frees its blocks, so they count as available
+        const replaced = localFs.files.filter((f) =>
+            localFsFiles.some(
+                (file) => file["controller-path"] === LOCALFS_PREFIX + f.name
+            )
+        );
+        const available =
+            localFs.freeBytes +
+            replaced.reduce((sum, f) => sum + blocks(f.size), 0);
+        const needed =
+            localFsFiles.reduce((sum, file) => sum + blocks(file.size), 0) +
+            SPACE_MARGIN;
+        if (needed <= available) {
+            return undefined;
+        }
+        return {
+            needed,
+            available,
+            largestFiles: localFs.files
+                .filter((f) => !replaced.includes(f))
+                .sort((a, b) => b.size - a.size)
+                .slice(0, 5)
+        };
+    };
+    const shortage = getShortage();
 
     return (
         <>
@@ -95,6 +182,28 @@ const ConfirmPage = ({
                         })}
                 </Col>
 
+                {shortage && (
+                    <Alert variant="danger">
+                        {t("modal.installer.insufficient-space", {
+                            needed: kb(shortage.needed),
+                            available: kb(shortage.available)
+                        })}
+                        {shortage.largestFiles.length > 0 && (
+                            <>
+                                <br />
+                                {t("modal.installer.largest-files")}
+                                <ul className="mb-0">
+                                    {shortage.largestFiles.map((f) => (
+                                        <li key={f.name}>
+                                            {f.name} ({kb(f.size)})
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
+                    </Alert>
+                )}
+
                 <Col lg={8}>
                     <SelectField
                         label={t("modal.installer.installation-speed")}
@@ -115,7 +224,10 @@ const ConfirmPage = ({
                     <FontAwesomeIcon icon={faClose as IconDefinition} />{" "}
                     {t("modal.installer.cancel")}
                 </Button>
-                <Button onClick={() => onInstall(+baud, files)}>
+                <Button
+                    onClick={() => onInstall(+baud, files)}
+                    disabled={checkingSpace || !!shortage}
+                >
                     <FontAwesomeIcon
                         icon={faFire as IconDefinition}
                         style={{ marginRight: "8px" }}

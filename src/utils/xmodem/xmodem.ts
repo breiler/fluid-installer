@@ -22,6 +22,8 @@ const ERROR_MISSING_HEADER = "Missing header";
 const ERROR_CHECKSUM = "Checksum error";
 const ERROR_COULD_NOT_DOWNLOAD = "Could not download!";
 const ERROR_COULD_NOT_UPLOAD = "Could not upload!";
+const ERROR_CANCELED_BY_CONTROLLER =
+    "The controller canceled the upload. Its filesystem is probably full - delete unneeded files using the File browser and try again.";
 
 const crcTable = [
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7, 0x8108,
@@ -139,6 +141,12 @@ export class XModem {
                     console.log("XModem:" + error);
                     throw error;
                 }
+                // FluidNC cancels with CAN CAN CAN, which usually arrives
+                // as a single multi-byte read, so check for it first
+                if (buffer.includes(CAN)) {
+                    console.log("Aborting due to CAN from controller");
+                    throw ERROR_CANCELED_BY_CONTROLLER;
+                }
                 if (buffer.length != 1) {
                     console.log(
                         "Should not happen - buffer length is " + buffer.length
@@ -166,8 +174,8 @@ export class XModem {
                     );
                     throw ERROR_COULD_NOT_UPLOAD;
                 }
-                if (startByte === CAN || startByte === EOT) {
-                    console.log("Aborting due to CAN or EOT from controller");
+                if (startByte === EOT) {
+                    console.log("Aborting due to EOT from controller");
                     throw ERROR_COULD_NOT_UPLOAD;
                 }
                 console.log("Got unexpected character " + startByte);
@@ -185,7 +193,9 @@ export class XModem {
             if (readByte == ACK) {
                 break;
             } else if (readByte == CAN) {
-                throw ERROR_COULD_NOT_UPLOAD;
+                // The last packet is written at EOT, so a full filesystem
+                // can also show up here
+                throw ERROR_CANCELED_BY_CONTROLLER;
             }
         }
     }

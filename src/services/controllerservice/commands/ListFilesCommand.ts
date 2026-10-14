@@ -3,6 +3,9 @@ import { ControllerFile } from "../types";
 
 export class ListFilesCommand extends Command {
     files: string[];
+    // From the trailing "[/littlefs Free:98.00 KB Used:...]" line;
+    // undefined if the firmware did not report it
+    freeBytes: number | undefined;
     constructor(sd: boolean = false) {
         super(sd ? "$SD/List" : "$LocalFS/List");
         this.files = [];
@@ -15,6 +18,12 @@ export class ListFilesCommand extends Command {
                 // Only files in root directory
                 this.files.push(value);
             }
+            return;
+        }
+        const free = line.match(/ Free:([0-9.]+) (B|KB|MB|GB)/);
+        if (free) {
+            const scale = { B: 1, KB: 1024, MB: 1024 ** 2, GB: 1024 ** 3 };
+            this.freeBytes = Math.floor(parseFloat(free[1]) * scale[free[2]]);
         }
     }
 

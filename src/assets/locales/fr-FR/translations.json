@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "Explorateur de fichiers",
             "loading": "Chargement en cours...",
+            "free-space": "Free Space",
             "downloading": "Téléchargement en cours...",
             "uploading": "Téléchargement en cours",
             "config-missing": "Le fichier de configuration \"{{configFilename}}\" est manquant, voulez-vous le créer ?",
@@ -166,7 +167,9 @@
             "select-image": "Sélectionner une image",
             "select-image-description1": "Si vous avez téléchargé un micrologiciel manuellement, vous pouvez flasher l'image du micrologiciel à partir d'ici.",
             "select-image-description2": "Sélectionnez le fichier firmware.bin avec lequel le contrôleur sera flashé.",
-            "select-image-button": "Sélectionnez l'image du micrologiciel"
+            "select-image-button": "Sélectionnez l'image du micrologiciel",
+            "insufficient-space": "Not enough free space on the controller's local filesystem: the selected files need {{needed}} but only {{available}} is available. Delete unneeded files using the File browser, then try again.",
+            "largest-files": "Largest files on the controller:"
         },
         "lost-connection": {
             "description": "Connexion avec le contrôleur perdue",

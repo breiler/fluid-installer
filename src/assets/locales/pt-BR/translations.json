@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "Gerenciador de arquivos",
             "loading": "Carregando...",
+            "free-space": "Free Space",
             "downloading": "Baixando...",
             "uploading": "Enviando",
             "config-missing": "O arquivo de configuração \"{{configFilename}}\" está faltando, você deseja criá-lo?",
@@ -166,7 +167,9 @@
             "select-image": "Selecione a imagem",
             "select-image-description1": "Se você baixou um pacote manualmente você pode instalar a imagem daqui.",
             "select-image-description2": "Selecione o arquivo firmware.bin para instalar na controladora.",
-            "select-image-button": "Selecionar imagem do firmware"
+            "select-image-button": "Selecionar imagem do firmware",
+            "insufficient-space": "Not enough free space on the controller's local filesystem: the selected files need {{needed}} but only {{available}} is available. Delete unneeded files using the File browser, then try again.",
+            "largest-files": "Largest files on the controller:"
         },
         "lost-connection": {
             "description": "Perdeu a conexão com a controladora",

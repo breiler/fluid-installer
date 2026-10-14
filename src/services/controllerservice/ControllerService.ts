@@ -86,6 +86,10 @@ export enum ControllerStatus {
 
 export type ControllerStatusListener = (status: ControllerStatus) => void;
 
+// Upper bound on a restartTimeoutOnActivity wait, so a device that
+// talks continuously but never says the expected thing still fails.
+const MAX_ACTIVITY_TIMEOUT_MS = 60000;
+
 export class ControllerService {
     serialPort: SerialPort;
     buffer: string;
@@ -255,6 +259,7 @@ export class ControllerService {
     onData = (line: string) => {
         if (this.commands.length) {
             const command = this.commands[0];
+            command.onActivity?.();
             if (command.debugReceive) {
                 console.log("<<< " + line);
             }
@@ -342,18 +347,13 @@ export class ControllerService {
 
         this.commands.push(command);
         const result = new Promise<T>((resolve, reject) => {
-            let timer;
-            if (timeoutMs > 0) {
-                timer = setTimeout(() => {
-                    this._removeCommand(command);
-                    reject("Command timed out");
-                }, timeoutMs);
-            }
+            const cancelTimeout = this._startTimeout(command, timeoutMs, () => {
+                this._removeCommand(command);
+                reject("Command timed out");
+            });
 
             (command as Command).addListener(() => {
-                if (timer) {
-                    clearTimeout(timer);
-                }
+                cancelTimeout();
                 resolve(command);
             });
         });
@@ -366,6 +366,40 @@ export class ControllerService {
             await this.serialPort.writeln(toSend);
         }
         return result;
+    };
+
+    /**
+     * Starts the timeout for a command and returns a function that cancels it.
+     * If the command sets restartTimeoutOnActivity, each received line
+     * restarts the timer, but the total wait is capped at
+     * MAX_ACTIVITY_TIMEOUT_MS so a device that never stops talking
+     * still times out.
+     */
+    _startTimeout = (
+        command: Command,
+        timeoutMs: number,
+        onTimeout: () => void
+    ): (() => void) => {
+        if (timeoutMs <= 0) {
+            return () => {};
+        }
+        let timer = setTimeout(onTimeout, timeoutMs);
+        let capTimer;
+        if (command.restartTimeoutOnActivity) {
+            command.onActivity = () => {
+                clearTimeout(timer);
+                timer = setTimeout(onTimeout, timeoutMs);
+            };
+            capTimer = setTimeout(
+                onTimeout,
+                Math.max(timeoutMs, MAX_ACTIVITY_TIMEOUT_MS)
+            );
+        }
+        return () => {
+            clearTimeout(timer);
+            clearTimeout(capTimer);
+            command.onActivity = undefined;
+        };
     };
 
     _removeCommand = (command: Command) => {
@@ -418,16 +452,18 @@ export class ControllerService {
         const command = new HardResetCommand();
         this.commands.push(command);
         const p = new Promise<HardResetCommand>((resolve, reject) => {
-            const timer = setTimeout(() => {
-                this._removeCommand(command);
-                this.status = ControllerStatus.UNKNOWN_DEVICE;
-                reject("Command timed out");
-            }, 20000); // Long timeout for WiFi connect
+            const cancelTimeout = this._startTimeout(
+                command,
+                20000, // Long timeout for WiFi connect
+                () => {
+                    this._removeCommand(command);
+                    this.status = ControllerStatus.UNKNOWN_DEVICE;
+                    reject("Command timed out");
+                }
+            );
 
             (command as Command).addListener(() => {
-                if (timer) {
-                    clearTimeout(timer);
-                }
+                cancelTimeout();
                 this.status = ControllerStatus.CONNECTED;
                 resolve(command);
             });

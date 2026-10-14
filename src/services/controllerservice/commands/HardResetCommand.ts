@@ -20,6 +20,7 @@ export class HardResetCommand extends Command {
 
     constructor() {
         super("<HardReset>");
+        this.restartTimeoutOnActivity = true;
         console.log("Waiting for welcome string");
     }
 

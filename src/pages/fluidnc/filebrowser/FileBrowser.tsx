@@ -62,6 +62,7 @@ const FileBrowser = () => {
     const { t } = useTranslation();
     const controllerService = useContext(ControllerServiceContext);
     const [files, setFiles] = useState<ControllerFile[]>([]);
+    const [freeBytes, setFreeBytes] = useState<number | undefined>();
     const [configFilename, setConfigFilename] = useState<string>("");
     const [editConfiguration, setEditConfiguration] = useState<
         EditFile | undefined
@@ -104,11 +105,13 @@ const FileBrowser = () => {
 
     const refreshFileList = async (): Promise<void> => {
         setFiles([]);
+        setFreeBytes(undefined);
         return controllerService
             .send(new ListFilesCommand(fileSystem === "/sd/"))
             .then((listCommand) => {
                 const files = listCommand.result();
                 setFiles(files);
+                setFreeBytes(listCommand.freeBytes);
                 setIsInaccessible(files.length === 0);
             })
             .catch((_error) => {
@@ -572,6 +575,29 @@ const FileBrowser = () => {
                             </li>
                         );
                     })}
+                    {freeBytes !== undefined && (
+                        // Same columns as a file row, so the figure lines up
+                        // under the file sizes
+                        <li className="list-group-item">
+                            <div className="d-flex w-100">
+                                <div className="p-2 flex-grow-1">
+                                    {t("page.file-browser.free-space")}
+                                </div>
+                                <div className="p-2">
+                                    {Math.round(freeBytes / 1024)} kB
+                                </div>
+                                <div
+                                    style={{
+                                        minWidth: "44px",
+                                        marginLeft: "8px",
+                                        marginRight: "10px"
+                                    }}
+                                />
+                                <div style={{ minWidth: "60px" }} />
+                                <div style={{ minWidth: "130px" }} />
+                            </div>
+                        </li>
+                    )}
                 </ul>
             </div>
         </>

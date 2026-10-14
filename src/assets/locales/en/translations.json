@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "File browser",
             "loading": "Loading...",
+            "free-space": "Free Space",
             "downloading": "Downloading...",
             "uploading": "Uploading",
             "config-missing": "The configuration file \"{{configFilename}}\" is missing, do you want to create it?",

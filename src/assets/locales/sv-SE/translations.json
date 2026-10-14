@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "Filhanterare",
             "loading": "Laddar...",
+            "free-space": "Free Space",
             "downloading": "Laddar ner...",
             "uploading": "Laddar upp",
             "config-missing": "Konfigurationsfilen \"{{configFilename}}\" saknas, vill du skapa den?",
@@ -166,7 +167,9 @@
             "select-image": "Installera eget paket",
             "select-image-description1": "Om du har laddat ner ett paket manuellt kan du installera den här.",
             "select-image-description2": "Välj den firmware.bin-fil du vill installera.",
-            "select-image-button": "Välj paket"
+            "select-image-button": "Välj paket",
+            "insufficient-space": "Not enough free space on the controller's local filesystem: the selected files need {{needed}} but only {{available}} is available. Delete unneeded files using the File browser, then try again.",
+            "largest-files": "Largest files on the controller:"
         },
         "lost-connection": {
             "description": "Tappade anslutningen till enheten",

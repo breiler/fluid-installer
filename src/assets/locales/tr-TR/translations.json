@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "Dosya Gezgini",
             "loading": "Yükleniyor...",
+            "free-space": "Free Space",
             "downloading": "İndiriliyor...",
             "uploading": "Karşıya yükleniyor",
             "config-missing": "",
@@ -166,7 +167,9 @@
             "select-image": "İmaj Seç",
             "select-image-description1": "Manuel olarak bir paketi indirdiyseniz, imajı buradan yükleyebilirsiniz.",
             "select-image-description2": "Kontrolcüye yüklenecek firmware.bin dosyasını seçin.",
-            "select-image-button": "Yazılım dosyasını seçin"
+            "select-image-button": "Yazılım dosyasını seçin",
+            "insufficient-space": "Not enough free space on the controller's local filesystem: the selected files need {{needed}} but only {{available}} is available. Delete unneeded files using the File browser, then try again.",
+            "largest-files": "Largest files on the controller:"
         },
         "lost-connection": {
             "description": "Kontrolcü ile bağlantı koptu.",

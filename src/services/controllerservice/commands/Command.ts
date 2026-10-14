@@ -23,6 +23,21 @@ export class Command {
 
     listeners: StateListener[] = [];
 
+    /**
+     * Set to true to treat the timeout as an inactivity timeout:
+     * every received line restarts the timer.  Used for commands
+     * that wait through a reboot, whose duration depends on the
+     * config (e.g. WiFi connect) but which print steadily while
+     * making progress.
+     */
+    restartTimeoutOnActivity: boolean = false;
+
+    /**
+     * Called by the controller service for every received line
+     * while this command is active.
+     */
+    onActivity?: () => void;
+
     addListener(listener: StateListener) {
         this.listeners.push(listener);
     }

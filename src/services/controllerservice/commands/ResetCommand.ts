@@ -16,6 +16,7 @@ export class ResetCommand extends Command {
 
     constructor(command: string | number) {
         super(command);
+        this.restartTimeoutOnActivity = true;
         console.log("Waiting for welcome string");
     }
 

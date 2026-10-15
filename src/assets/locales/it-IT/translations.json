@@ -40,7 +40,13 @@
             "select-as-config": "Seleziona come configurazione",
             "edit": "Modifica",
             "delete": "Elimina",
-            "download": "Scarica"
+            "download": "Scarica",
+            "new-folder": "New folder",
+            "new-folder-prompt": "Name of the new folder",
+            "new-folder-failed": "Could not create the folder ({{error}}). Creating folders needs a FluidNC version later than v4.1.1.",
+            "open-folder": "Open folder",
+            "parent-folder": "Parent folder",
+            "delete-folder-confirm": "Delete the folder \"{{name}}\" and everything in it?"
         },
         "terminal": {
             "title": "Terminale",

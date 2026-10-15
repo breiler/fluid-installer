@@ -40,7 +40,13 @@
             "select-as-config": "选择为配置文件",
             "edit": "编辑",
             "delete": "删除",
-            "download": "下载"
+            "download": "下载",
+            "new-folder": "New folder",
+            "new-folder-prompt": "Name of the new folder",
+            "new-folder-failed": "Could not create the folder ({{error}}). Creating folders needs a FluidNC version later than v4.1.1.",
+            "open-folder": "Open folder",
+            "parent-folder": "Parent folder",
+            "delete-folder-confirm": "Delete the folder \"{{name}}\" and everything in it?"
         },
         "terminal": {
             "title": "终端",

@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "内置文件",
             "loading": "加载中",
+            "free-space": "Free Space",
             "downloading": "下载中",
             "uploading": "上传中",
             "config-missing": "缺少配置文件“{{configFilename}}”，是否要创建它？",
@@ -39,7 +40,13 @@
             "select-as-config": "选择为配置文件",
             "edit": "编辑",
             "delete": "删除",
-            "download": "下载"
+            "download": "下载",
+            "new-folder": "New folder",
+            "new-folder-prompt": "Name of the new folder",
+            "new-folder-failed": "Could not create the folder ({{error}}). Creating folders needs a FluidNC version later than v4.1.1.",
+            "open-folder": "Open folder",
+            "parent-folder": "Parent folder",
+            "delete-folder-confirm": "Delete the folder \"{{name}}\" and everything in it?"
         },
         "terminal": {
             "title": "终端",
@@ -166,7 +173,9 @@
             "select-image": "选择图像",
             "select-image-description1": "如果您手动下载了一个包，您可以从这里刷入图像。",
             "select-image-description2": "选择要刷入控制器的固件.bin 文件。",
-            "select-image-button": "选择固件图像"
+            "select-image-button": "选择固件图像",
+            "insufficient-space": "Not enough free space on the controller's local filesystem: the selected files need {{needed}} but only {{available}} is available. Delete unneeded files using the File browser, then try again.",
+            "largest-files": "Largest files on the controller:"
         },
         "lost-connection": {
             "description": "无法连接到控制器",

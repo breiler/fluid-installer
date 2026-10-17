@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "Browser dei file",
             "loading": "Caricamento in corso...",
+            "free-space": "Free Space",
             "downloading": "Download in corso...",
             "uploading": "Caricamento",
             "config-missing": "Il file di configurazione \"{{configFilename}}\" è mancante, vuoi crearlo?",
@@ -39,7 +40,13 @@
             "select-as-config": "Seleziona come configurazione",
             "edit": "Modifica",
             "delete": "Elimina",
-            "download": "Scarica"
+            "download": "Scarica",
+            "new-folder": "New folder",
+            "new-folder-prompt": "Name of the new folder",
+            "new-folder-failed": "Could not create the folder ({{error}}). Creating folders needs a FluidNC version later than v4.1.1.",
+            "open-folder": "Open folder",
+            "parent-folder": "Parent folder",
+            "delete-folder-confirm": "Delete the folder \"{{name}}\" and everything in it?"
         },
         "terminal": {
             "title": "Terminale",
@@ -166,7 +173,9 @@
             "select-image": "Seleziona l'immagine",
             "select-image-description1": "Se hai scaricato manualmente un pacchetto puoi flashare l'immagine da qui.",
             "select-image-description2": "Selezionare il file firmware.bin con cui flashare il controller.",
-            "select-image-button": "Seleziona immagine firmware"
+            "select-image-button": "Seleziona immagine firmware",
+            "insufficient-space": "Not enough free space on the controller's local filesystem: the selected files need {{needed}} but only {{available}} is available. Delete unneeded files using the File browser, then try again.",
+            "largest-files": "Largest files on the controller:"
         },
         "lost-connection": {
             "description": "Connessione al controller interrotta",

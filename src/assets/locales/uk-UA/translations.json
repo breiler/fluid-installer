@@ -28,6 +28,7 @@
         "file-browser": {
             "title": "Оглядач файлів",
             "loading": "Завантаження...",
+            "free-space": "Free Space",
             "downloading": "Завантаження...",
             "uploading": "Вивантаження",
             "config-missing": "Файл конфігурації {{configFilename}} відсутній. Бажаєте створити його?",
@@ -39,7 +40,13 @@
             "select-as-config": "Обрати як конфіг",
             "edit": "Редагувати",
             "delete": "Видалити",
-            "download": "Завантажити"
+            "download": "Завантажити",
+            "new-folder": "New folder",
+            "new-folder-prompt": "Name of the new folder",
+            "new-folder-failed": "Could not create the folder ({{error}}). Creating folders needs a FluidNC version later than v4.1.1.",
+            "open-folder": "Open folder",
+            "parent-folder": "Parent folder",
+            "delete-folder-confirm": "Delete the folder \"{{name}}\" and everything in it?"
         },
         "terminal": {
             "title": "Термінал",
@@ -166,7 +173,9 @@
             "select-image": "Виберіть образ",
             "select-image-description1": "Якщо ви вручну завантажили пакет, можете прошити образ звідси.",
             "select-image-description2": "Виберіть файл firmware.bin, щоб прошити контролер.",
-            "select-image-button": "Виберіть образ прошивки"
+            "select-image-button": "Виберіть образ прошивки",
+            "insufficient-space": "Not enough free space on the controller's local filesystem: the selected files need {{needed}} but only {{available}} is available. Delete unneeded files using the File browser, then try again.",
+            "largest-files": "Largest files on the controller:"
         },
         "lost-connection": {
             "description": "Втрачено з’єднання з контролером",

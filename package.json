@@ -72,7 +72,7 @@
         "crypto-js": "^4.2.0",
         "esptool-js": "espressif/esptool-js#enhance/readFromSerial",
         "flag-icons": "^7.3.2",
-        "i18next": "^24.2.2",
+        "i18next": "^27.2.6",
         "i18next-browser-languagedetector": "^8.0.4",
         "i18next-http-backend": "^4.0.4",
         "js-yaml": "^4.3.1",
